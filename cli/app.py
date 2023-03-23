@@ -1233,6 +1233,26 @@ class IdentityProvider(Enum):
             logging.log(logging.WARNING, "Invalid option")
             self.setup_hasura_not_deployed()
 
+    def collect_firebase_project_email(self, recurse_count=0):
+        cmd_str = "gcloud iam service-accounts list"
+        logging.log(logging.INFO, cmd_str)
+        existing_service_accounts = os.popen(cmd_str).read().splitlines()
+        print(existing_service_accounts)
+        service_account_name = "firebase-adminsdk"
+        service_account_email = None
+        for line in existing_service_accounts:
+            print(line)
+            if service_account_name in line:
+                line = line.split(" ")
+                line = [i for i in line if i != ""]
+                service_account_email = line[1].strip()
+                break
+        if service_account_email is None:
+            time.sleep(3 * recurse_count)
+            if recurse_count < 5:
+                return self.collect_firebase_project_email(recurse_count + 1)
+        return service_account_email
+
     def setup_firebase(self):
         print("Setting up Firebase...")
         cmd_log_str = "firebase login --interactive"
@@ -1251,25 +1271,19 @@ class IdentityProvider(Enum):
             logging.log(logging.INFO, cmd_log_str)
             os.system(cmd_log_str)
             time.sleep(3)
-
-            existing_service_accounts = os.popen("gcloud iam service-accounts list").read().splitlines()
-            print(existing_service_accounts)
-            service_account_name = "firebase-adminsdk"
-            service_account_email = None
-            for line in existing_service_accounts:
-                print(line)
-                if service_account_name in line:
-                    line = line.split(" ")
-                    line = [i for i in line if i != ""]
-                    service_account_email = line[1].strip()
-                    break
-            print(service_account_email)
+            service_account_email = self.collect_firebase_project_email()
+            if service_account_email is None:
+                print("Firebase Admin SDK service account not found.")
+                return
 
             cmd_str = f"gcloud iam service-accounts keys create firebase-adminsdk.json " \
                       f"--iam-account={service_account_email}"
             logging.log(logging.INFO, cmd_str)
             os.system(cmd_str)
-            cmd_str = f"gcloud auth activate-service-account --key-file=firebase-adminsdk.json {service_account_email}"
+            cmd_str = f"gcloud auth activate-service-account " \
+                      f"--key-file=firebase-adminsdk.json " \
+                      f"--project={self.env['GCP_PROJECT_ID']} " \
+                      f"{service_account_email}"
             print(cmd_str)
             os.system(cmd_str)
             auth_token = os.popen("gcloud auth print-access-token").read().strip()
@@ -1563,6 +1577,24 @@ HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
                     f"Hasura admin secret set to {arg[0:4]}****"
                     f"{arg[-4:]}. Environment Variable: HASURA_GRAPHQL_ADMIN_SECRET")
 
+    def do_set_hasura_metadata_url(self, arg):
+        """
+        Sets the hasura metadata url.
+        Usage: set_hasura_metadata_url <url>
+        Example: set_hasura_metadata_url https://localhost:8080/v1/metadata
+        """
+        if len(arg) == 0:
+            logging.log(logging.WARNING, "Please provide a url")
+            return
+        self.hasura_url = arg
+        os.environ["HASURA_GRAPHQL_METADATA_URL"] = arg
+        env_dict = App.load_env_dict_from_json()
+        env_dict["HASURA_GRAPHQL_METADATA_URL"] = arg
+        App.save_env_dict_to_json(env_dict)
+        self.env = env_dict
+        logging.log(logging.INFO,
+                    f"Hasura metadata url set to {arg}. Environment Variable: HASURA_GRAPHQL_METADATA_URL")
+
     def do_import_hasura_metadata(self, _):
         """
         Imports the metadata from the hasura metadata url.
@@ -1596,24 +1628,6 @@ HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
               f'''"X-Hasura-Admin-Secret: {self.hasura_admin_secret}"'''
         response = os.popen(cmd).read()
         print(response)
-
-    def do_set_hasura_metadata_url(self, arg):
-        """
-        Sets the hasura metadata url.
-        Usage: set_hasura_metadata_url <url>
-        Example: set_hasura_metadata_url https://localhost:8080/v1/metadata
-        """
-        if len(arg) == 0:
-            logging.log(logging.WARNING, "Please provide a url")
-            return
-        self.hasura_url = arg
-        os.environ["HASURA_GRAPHQL_METADATA_URL"] = arg
-        env_dict = App.load_env_dict_from_json()
-        env_dict["HASURA_GRAPHQL_METADATA_URL"] = arg
-        App.save_env_dict_to_json(env_dict)
-        self.env = env_dict
-        logging.log(logging.INFO,
-                    f"Hasura metadata url set to {arg}. Environment Variable: HASURA_GRAPHQL_METADATA_URL")
 
     def do_show_env(self, _):
         """

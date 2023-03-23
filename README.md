@@ -1,5 +1,12 @@
 # Pysura
 
+### Hasura + Python = Pysura
+
+## Limitations:
+
+Currently, this only supports a Google-based deployment/stack. I think this would be fixable, but due to the amount of
+time I've spent learning gcloud it would probably be better suited to a AWS/Azure/Etc. architect to write the commands.
+
 ## Requirements:
 
 - gcloud CLI
@@ -15,7 +22,7 @@ pysura
 (pysura_cli) >>> setup
 ```
 
-What is Pysura?
+# What is Pysura?
 
 Pysura is a CLI tool that's designed to make building and deploying actions, events, and chron-jobs as easy as it is to
 do everything else in Hasura.
@@ -48,59 +55,73 @@ chron-jobs.
 
 All action inputs and outputs are converted into Pydantic models.
 
-Each action or event is placed inside its own individual file, with auth baked in. Here's an example of a generated
-action file.
-
-```python
-from fastapi import APIRouter, Depends, Request
-from security import backend_auth, UserIdentity, identity, firebase_jwt_auth, IDENTITY_PROVIDER
-from generated_types import *
-from enums import ApiResponse, ClientRole
-import logging
-
-ROUTE = "/base_generator_mutation/"  # Clear and easy to see and understand the route
-REQUIRED_ROLE = ClientRole.user.name  # Access management is a piece of cake
-action_base_generator_mutation_router = APIRouter(
-    tags=["action_base_generator_mutation"]
-)
-
-
-@action_base_generator_mutation_router.post(ROUTE,
-                                            # Authenticate before anything touches the business logic
-                                            # Authenticate with both a user identity, AND a backend secret.
-                                            # Guarantee that the request came from your app.
-                                            dependencies=[Depends(firebase_jwt_auth), Depends(backend_auth)])
-@identity(required_role=REQUIRED_ROLE,
-          identity_provider=IDENTITY_PROVIDER,
-          function_input=BaseGeneratorMutationInput)
-async def action_base_generator_mutation(_: Request,
-                                         base_generator_mutation_input: Optional[BaseGeneratorMutationInput] = None,
-                                         injected_user_identity: Optional[UserIdentity] = None
-                                         ):
-    # (AUTH-LOCK-START) - DO NOT DELETE THIS LINE!
-    # Get the user id from the injected user as well as their roles and allowed roles.
-    # Authentication fails if they don't have the allowed role for this action.
-    if injected_user_identity is None or injected_user_identity.user_id is None:
-        return {
-            "response_name": ApiResponse.UNAUTHORIZED.name,
-            "response_value": ApiResponse.UNAUTHORIZED.value
-        }
-    logging.log(logging.INFO, f"User {injected_user_identity.user_id} is authorized to access {ROUTE}")
-    # (AUTH-LOCK-END) - DO NOT DELETE THIS LINE!
-
-    # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
-    print(base_generator_mutation_input)  # Typed inputs w/Pydantic
-    response = BaseGeneratorMutationOutput(
-        data=None,
-        nodes=None,
-        response_name=ApiResponse.SUCCESS.name,
-        response_value=ApiResponse.SUCCESS.value
-    ).dict()  # Typed outputs w/Pydantic
-    return response
-    # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
-
-```
+Each action or event is placed inside its own individual file, with auth baked in.
 
 ### Who is Pysura for?
 
 Pysura is for Python developers who want to adopt GraphQL in a way that's pythony.
+
+# Pysura commands
+
+## Start pysura
+
+```commandline
+pysura
+```
+
+## Setup
+
+Automagic project setup.
+
+```commandline
+setup
+```
+
+## Quit pysura
+
+```commandline
+quit
+exit
+^Z
+```
+
+## Set a Google Cloud Project
+
+```commandline
+gcloud_set_project <project_id>
+```
+
+## Configure Hasura Instance
+
+Set Admin Secret
+
+```commandline
+set_hasura_admin_secret <admin_secret>
+```
+
+Set Hasura Metadata URL:
+
+```commandline
+set_hasura_metadata_url <metadata_url>
+```
+
+## Import the Hasura Metadata
+
+```commandline
+import_hasura_metadata
+```
+
+## Export the Hasura Metadata
+
+```commandline
+export_hasura_metadata
+```
+
+## Add a new database to hasura. (Create new Postgresql or use existing)
+
+```commandline
+add_database
+```
+
+
+
