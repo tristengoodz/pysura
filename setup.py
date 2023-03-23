@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.9.26",
+    version="0.9.28",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -30,7 +30,8 @@ setup(
     keywords="hasura, graphql, postgresql, google-cloud, python, pysura, backend, backend-in-a-box",
     python_requires=">=3.10",
     install_requires=[
-        "psycopg2"
+        "psycopg2",
+        "pydantic"
     ],
     extras_require={
     },

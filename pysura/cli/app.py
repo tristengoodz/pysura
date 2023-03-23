@@ -718,12 +718,14 @@ class IdentityProvider(Enum):
         with open(App.ENV_JSON, "w") as f:
             json.dump(env_dict, f)
 
-    def get_connection(self):
+    @staticmethod
+    def get_connection():
+        env_dict = App.load_env_dict_from_json()
         conn = psycopg2.connect(
-            host=self.env["GCP_DATABASE_DETAILS"]["primary_address"],
+            host=env_dict["GCP_DATABASE_DETAILS"]["primary_address"],
             database="postgres",
             user="postgres",
-            password=self.env["GCP_DATABASE_PASSWORD"],
+            password=env_dict["GCP_DATABASE_PASSWORD"],
             port=5432
         )
         return conn
@@ -731,25 +733,22 @@ class IdentityProvider(Enum):
     def preloop(self):
         logging.log(logging.INFO, "Starting pysura cli...")
         env_dict = App.load_env_dict_from_json()
-        self.hasura_url = env_dict.get("HASURA_GRAPHQL_METADATA_URL", None)
-        self.hasura_admin_secret = env_dict.get("HASURA_GRAPHQL_ADMIN_SECRET", None)
-        if self.hasura_url is not None:
-            os.environ["HASURA_GRAPHQL_METADATA_URL"] = self.hasura_url
-            logging.log(logging.INFO, f"Hasura metadata url set to {self.hasura_url}.")
-        if self.hasura_admin_secret is not None:
-            os.environ["HASURA_GRAPHQL_ADMIN_SECRET"] = self.hasura_admin_secret
+        hasura_url = env_dict.get("HASURA_GRAPHQL_METADATA_URL", None)
+        if hasura_url is not None:
+            os.environ["HASURA_GRAPHQL_METADATA_URL"] = hasura_url
+            logging.log(logging.INFO, f"Hasura metadata url set to {hasura_url}.")
+        hasura_admin_secret = env_dict.get("HASURA_GRAPHQL_ADMIN_SECRET", None)
+        if hasura_admin_secret is not None:
+            os.environ["HASURA_GRAPHQL_ADMIN_SECRET"] = hasura_admin_secret
             logging.log(logging.INFO,
-                        f"Hasura admin secret set to {self.hasura_admin_secret[0:4]}****"
-                        f"{self.hasura_admin_secret[-4:]}. Environment Variable: HASURA_GRAPHQL_ADMIN_SECRET")
+                        f"Hasura admin secret set to {hasura_admin_secret[0:4]}****"
+                        f"{hasura_admin_secret[-4:]}. Environment Variable: HASURA_GRAPHQL_ADMIN_SECRET")
 
     def __init__(self):
-        self.hasura_url = None
-        self.hasura_admin_secret = None
         super().__init__()
         self.intro = "Welcome to Pysura! Type help or ? to list commands."
         self.prompt = "(pysura_cli) >>> "
         self.setup_complete = False
-        self.env = App.load_env_dict_from_json()
 
     @staticmethod
     def do_exit(_):
@@ -824,7 +823,6 @@ class IdentityProvider(Enum):
         if network_id == "default":
             env_dict["GCP_NETWORK_ID"] = network_id
             App.save_env_dict_to_json(env_dict)
-            self.env = env_dict
         else:
             use_existing_network = input("Use an existing network? (y/n): ")
             if use_existing_network.lower().strip() == "exit":
@@ -852,7 +850,6 @@ class IdentityProvider(Enum):
                 print(f"Network Selected: {network_id_choice}")
                 env_dict["GCP_NETWORK_ID"] = network_id_choice
                 App.save_env_dict_to_json(env_dict)
-                self.env = env_dict
                 return
             else:
                 network_name = input("Please enter a network name: ")
@@ -869,7 +866,6 @@ class IdentityProvider(Enum):
                 os.system(cmd_log_str)
                 env_dict["GCP_NETWORK_ID"] = network_name
                 App.save_env_dict_to_json(env_dict)
-                self.env = env_dict
                 return
 
     def create_new_gcloud_database_instance(self, secondary_name=None):
@@ -951,7 +947,6 @@ class IdentityProvider(Enum):
                 env_dict["GCP_DATABASE_INSTANCE_ID"] = f"{project_id}-db"
                 env_dict["GCP_DATABASE_PASSWORD"] = default_password
                 App.save_env_dict_to_json(env_dict)
-                self.env = env_dict
                 self.configure_gcloud_database()
             else:
                 return
@@ -1003,7 +998,6 @@ class IdentityProvider(Enum):
                 }
                 current_databases.append(secondary_data)
                 App.save_env_dict_to_json(env_dict)
-                self.env = env_dict
                 self.configure_gcloud_database(secondary_data=secondary_data)
             else:
                 return
@@ -1055,9 +1049,7 @@ class IdentityProvider(Enum):
                     admin_secret = password(30)
                     print("Hasura admin secret: " + admin_secret)
                     env_dict["HASURA_GRAPHQL_ADMIN_SECRET"] = admin_secret
-                    self.hasura_admin_secret = admin_secret
                     App.save_env_dict_to_json(env_dict)
-                    self.env = env_dict
             else:
                 self.create_new_gcloud_database_instance()
         else:
@@ -1102,7 +1094,6 @@ class IdentityProvider(Enum):
                     new_databases.append(database)
                 env_dict["secondary_databases"] = new_databases
                 App.save_env_dict_to_json(env_dict)
-                self.env = env_dict
                 with open("hasura_metadata.json", "r") as f:
                     metadata = json.load(f)
                 metadata["sources"].append(
@@ -1131,8 +1122,9 @@ class IdentityProvider(Enum):
                     json.dump(metadata, f)
                 self.do_export_hasura_metadata(None)
 
-    def configure_gcloud_project(self):
-        env_dict = self.env
+    @staticmethod
+    def configure_gcloud_project():
+        env_dict = App.load_env_dict_from_json()
         project_id = env_dict.get("GCP_PROJECT_ID", None)
         if project_id is None:
             print("Please configure a GCP project first.")
@@ -1157,7 +1149,6 @@ class IdentityProvider(Enum):
                 billing_account_id_choice = billing_account_ids[int(billing_account_id.strip())]
                 env_dict["GCP_BILLING_ACCOUNT"] = billing_account_id_choice
                 App.save_env_dict_to_json(env_dict)
-                self.env = env_dict
             except IndexError:
                 print("Invalid billing account id.")
                 return
@@ -1168,18 +1159,19 @@ class IdentityProvider(Enum):
         logging.log(logging.INFO, cmd_log_str)
         os.system(cmd_log_str)
 
-    def create_serverless_vpc_connectors(self):
+    @staticmethod
+    def create_serverless_vpc_connectors():
         cmd_log_str = "gcloud services enable vpcaccess.googleapis.com"
         logging.log(logging.INFO, cmd_log_str)
         os.system(cmd_log_str)
-        env_dict = self.env
+        env_dict = App.load_env_dict_from_json()
         project_id = env_dict.get("GCP_PROJECT_ID", None)
         if project_id is None:
             print("Please configure a GCP project first.")
             return
         vpc_connector = env_dict.get("GCP_VCP_CONNECTOR", None)
         if vpc_connector is None:
-            region = self.env.get("GCP_DATABASE_DETAILS", None)
+            region = env_dict.get("GCP_DATABASE_DETAILS", None)
             if region is None:
                 print("Please configure a GCP database instance first.")
                 return
@@ -1194,19 +1186,17 @@ class IdentityProvider(Enum):
             env_dict["GCP_VCP_CONNECTOR"] = "default"
             vpc_connector = "default"
             App.save_env_dict_to_json(env_dict)
-            self.env = env_dict
         print(f"Using VPC connector: {vpc_connector}")
 
     def deploy_hasura_to_google(self):
         print("Hasura will be deployed to GCP...")
         env_dict = App.load_env_dict_from_json()
-        if self.env.get("gcloud_logged_in", None) is None:
+        if env_dict.get("gcloud_logged_in", None) is None:
             cmd_log_str = "gcloud auth login"
             logging.log(logging.INFO, cmd_log_str)
             os.system(cmd_log_str)
             env_dict["gcloud_logged_in"] = True
             App.save_env_dict_to_json(env_dict)
-        self.env = env_dict
 
         use_existing_project = input("Use an existing project? (y/n): ")
         if use_existing_project.lower().strip() == "exit":
@@ -1235,13 +1225,15 @@ class IdentityProvider(Enum):
             logging.log(logging.WARNING, "Invalid option")
             self.setup_hasura_not_deployed()
 
-    def setup_firebase(self):
+    @staticmethod
+    def setup_firebase():
         print("Setting up Firebase...")
+        env_dict = App.load_env_dict_from_json()
         cmd_log_str = f"gcloud services enable identitytoolkit.googleapis.com " \
-                      f"--project={self.env['GCP_PROJECT_ID']}"
+                      f"--project={env_dict['GCP_PROJECT_ID']}"
         logging.log(logging.INFO, cmd_log_str)
         os.system(cmd_log_str)
-        cmd_log_str = f"firebase projects:addfirebase {self.env['GCP_PROJECT_ID']}"
+        cmd_log_str = f"firebase projects:addfirebase {env_dict['GCP_PROJECT_ID']}"
         logging.log(logging.INFO, cmd_log_str)
         os.system(cmd_log_str)
         cmd_log_str = "firebase login --interactive"
@@ -1257,12 +1249,12 @@ class IdentityProvider(Enum):
             print("Do not enable linting!!")
             print("Do not npm install!!")
             input("Press enter when ready to continue.")
-            cmd_log_str = f"firebase init functions --project={self.env['GCP_PROJECT_ID']}"
+            cmd_log_str = f"firebase init functions --project={env_dict['GCP_PROJECT_ID']}"
             logging.log(logging.INFO, cmd_log_str)
             os.system(cmd_log_str)
             with open("functions/index.js", "w") as f:
-                f.write(App.FIREBASE_INDEX.replace("HASURA_ROOT_URL", self.env["HASURA_ROOT_URL"]).replace(
-                    "HASURA_GRAPHQL_ADMIN_SECRET", self.env["HASURA_GRAPHQL_ADMIN_SECRET"]))
+                f.write(App.FIREBASE_INDEX.replace("HASURA_ROOT_URL", env_dict["HASURA_ROOT_URL"]).replace(
+                    "HASURA_GRAPHQL_ADMIN_SECRET", env_dict["HASURA_GRAPHQL_ADMIN_SECRET"]))
 
             with open("functions/package.json", "r") as f:
                 package_lines = f.readlines()
@@ -1279,34 +1271,35 @@ class IdentityProvider(Enum):
                 f.writelines(new_package_lines)
 
             # Create the service account
-            if self.env.get("GCP_ADMIN_SERVICE_ACCOUNT", None) is None:
-                service_account_name = f"{self.env['GCP_PROJECT_ID']}admin"
+            env_dict = App.load_env_dict_from_json()
+            if env_dict.get("GCP_ADMIN_SERVICE_ACCOUNT", None) is None:
+                service_account_name = f"{env_dict['GCP_PROJECT_ID']}admin"
                 cmd_log_str = f"gcloud iam service-accounts create {service_account_name} " \
-                              f"--project={self.env['GCP_PROJECT_ID']} " \
+                              f"--project={env_dict['GCP_PROJECT_ID']} " \
                               f"--display-name=admin"
                 logging.log(logging.INFO, cmd_log_str)
                 os.system(cmd_log_str)
-                service_account_email = f"{self.env['GCP_PROJECT_ID']}admin@{self.env['GCP_PROJECT_ID']}" \
+                service_account_email = f"{env_dict['GCP_PROJECT_ID']}admin@{env_dict['GCP_PROJECT_ID']}" \
                                         f".iam.gserviceaccount.com"
                 # Add cloud run invoker and firebase admin roles
-                cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                cmd_log_str = f"gcloud projects add-iam-policy-binding {env_dict['GCP_PROJECT_ID']} " \
                               f"--member=serviceAccount:{service_account_email} " \
                               f"--role=roles/run.admin"
                 logging.log(logging.INFO, cmd_log_str)
                 os.system(cmd_log_str)
-                cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                cmd_log_str = f"gcloud projects add-iam-policy-binding {env_dict['GCP_PROJECT_ID']} " \
                               f"--member=serviceAccount:{service_account_email} " \
                               f"--role=roles/firebase.admin"
                 logging.log(logging.INFO, cmd_log_str)
                 os.system(cmd_log_str)
                 # Add the cloudbuild.builds.builder
-                cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                cmd_log_str = f"gcloud projects add-iam-policy-binding {env_dict['GCP_PROJECT_ID']} " \
                               f"--member=serviceAccount:{service_account_email} " \
                               f"--role=roles/cloudbuild.builds.builder"
                 logging.log(logging.INFO, cmd_log_str)
                 os.system(cmd_log_str)
                 # Add the firebaseauth.admin role
-                cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                cmd_log_str = f"gcloud projects add-iam-policy-binding {env_dict['GCP_PROJECT_ID']} " \
                               f"--member=serviceAccount:{service_account_email} " \
                               f"--role=roles/firebaseauth.admin"
                 logging.log(logging.INFO, cmd_log_str)
@@ -1315,12 +1308,12 @@ class IdentityProvider(Enum):
                           f"--iam-account={service_account_email}"
                 logging.log(logging.INFO, cmd_str)
                 os.system(cmd_str)
-                self.env["GCP_ADMIN_SERVICE_ACCOUNT"] = service_account_email
-                self.env["GCP_ADMIN_SERVICE_ACCOUNT_NAME"] = service_account_name
-                App.save_env_dict_to_json(self.env)
+                env_dict["GCP_ADMIN_SERVICE_ACCOUNT"] = service_account_email
+                env_dict["GCP_ADMIN_SERVICE_ACCOUNT_NAME"] = service_account_name
+                App.save_env_dict_to_json(env_dict)
             else:
-                service_account_email = self.env["GCP_ADMIN_SERVICE_ACCOUNT"]
-                service_account_name = self.env["GCP_ADMIN_SERVICE_ACCOUNT_NAME"]
+                service_account_email = env_dict["GCP_ADMIN_SERVICE_ACCOUNT"]
+                service_account_name = env_dict["GCP_ADMIN_SERVICE_ACCOUNT_NAME"]
             print(f"Activating service account: {service_account_email} -> {service_account_name}")
             cmd_str = f"gcloud auth activate-service-account --key-file=admin.json {service_account_email}"
             print(cmd_str)
@@ -1328,20 +1321,20 @@ class IdentityProvider(Enum):
             auth_token = os.popen("gcloud auth print-access-token").read().strip()
             curl_command = f"curl -X POST -H 'Authorization:Bearer {auth_token}' -H 'Content-Type:application/json' " \
                            f"'https://identitytoolkit.googleapis.com/v2/projects" \
-                           f"/{self.env['GCP_PROJECT_ID']}/identityPlatform:initializeAuth'"
+                           f"/{env_dict['GCP_PROJECT_ID']}/identityPlatform:initializeAuth'"
             response = os.popen(curl_command).read()
             print(response)
             curl_command = f"curl -H 'Authorization:Bearer {auth_token}' -H 'Content-Type:application/json' " \
                            f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
-                           f"/{self.env['GCP_PROJECT_ID']}/config'"
+                           f"/{env_dict['GCP_PROJECT_ID']}/config'"
             curl_response = os.popen(curl_command).read()
             response = json.loads(curl_response)
             print(response)
             body_data = {
                 "authorizedDomains": [
                     "localhost",
-                    f"{self.env['GCP_PROJECT_ID']}.firebaseapp.com",
-                    f"{self.env['GCP_PROJECT_ID']}.web.app"
+                    f"{env_dict['GCP_PROJECT_ID']}.firebaseapp.com",
+                    f"{env_dict['GCP_PROJECT_ID']}.web.app"
                 ],
                 "signIn": {
                     "phoneNumber": {
@@ -1365,14 +1358,14 @@ class IdentityProvider(Enum):
                            f"-H 'Authorization:Bearer {auth_token}' " \
                            f"-H 'Content-Type:application/json' " \
                            f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
-                           f"/{self.env['GCP_PROJECT_ID']}/config?updateMask=Config.authorizedDomains," \
-                           f"Config.signIn.email,Config.signIn.phoneNumer,Config.signIn.anonymous," \
+                           f"/{env_dict['GCP_PROJECT_ID']}/config?updateMask=Config.authorizedDomains," \
+                           f"Config.signIn.email,Config.signIn.phoneNumber,Config.signIn.anonymous," \
                            f"Config.signIn.allowDuplicateEmails' " \
                            f"-d '{json.dumps(body_data)}'"
             response = os.popen(curl_command).read()
             print(response)
             print(f"Please enable phone sign in for the firebase project: "
-                  f"https://console.firebase.google.com/project/{self.env['GCP_PROJECT_ID']}/authentication/providers")
+                  f"https://console.firebase.google.com/project/{env_dict['GCP_PROJECT_ID']}/authentication/providers")
             done = input("Press enter when done.")
             if done.lower().strip() == "exit":
                 return
@@ -1404,15 +1397,14 @@ class IdentityProvider(Enum):
         service_id = input("Please select a service: ")
         if service_id.lower().strip() == "exit":
             return
+        env_dict = App.load_env_dict_from_json()
         try:
             service_id = service_ids[int(service_id.strip())]
-            self.env["HASURA_SERVICE_NAME"] = service_id
-            self.env["HASURA_ROOT_URL"] = service_datas[service_id]["service_url"]
-            hasura_metadata_url = f"{self.env['HASURA_ROOT_URL']}/v1/metadata"
-            self.env["HASURA_GRAPHQL_METADATA_URL"] = hasura_metadata_url
-            App.save_env_dict_to_json(self.env)
-            self.hasura_url = self.env["HASURA_GRAPHQL_METADATA_URL"]
-            App.save_env_dict_to_json(self.env)
+            env_dict["HASURA_SERVICE_NAME"] = service_id
+            env_dict["HASURA_ROOT_URL"] = service_datas[service_id]["service_url"]
+            hasura_metadata_url = f"{env_dict['HASURA_ROOT_URL']}/v1/metadata"
+            env_dict["HASURA_GRAPHQL_METADATA_URL"] = hasura_metadata_url
+            App.save_env_dict_to_json(env_dict)
         except IndexError:
             print("Invalid service id.")
             return
@@ -1438,13 +1430,13 @@ class IdentityProvider(Enum):
   "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
   "audience": "PROJECT_ID",
   "issuer": "https://securetoken.google.com/PROJECT_ID"
-}""".replace("PROJECT_ID", self.env["GCP_PROJECT_ID"])
-        self.env["HASURA_GRAPHQL_JWT_SECRET"] = jwt_config
-        App.save_env_dict_to_json(self.env)
+}""".replace("PROJECT_ID", env_dict["GCP_PROJECT_ID"])
+        env_dict["HASURA_GRAPHQL_JWT_SECRET"] = jwt_config
+        App.save_env_dict_to_json(env_dict)
         print("Finishing Autodeployer...")
         self.do_deploy_hasura(None)
         ip_address = os.popen("curl ifconfig.me").read().strip()
-        cmd_log_str = (f"gcloud sql instances patch {self.env['GCP_DATABASE_INSTANCE_ID']} "
+        cmd_log_str = (f"gcloud sql instances patch {env_dict['GCP_DATABASE_INSTANCE_ID']} "
                        f"--authorized-networks={ip_address}")
         logging.log(logging.INFO, cmd_log_str)
         os.system(cmd_log_str)
@@ -1479,7 +1471,8 @@ class IdentityProvider(Enum):
         self.do_export_hasura_metadata(None)
         print("Autodeployer Finished.")
 
-    def do_gcloud_set_project(self, project_id=""):
+    @staticmethod
+    def do_gcloud_set_project(project_id=""):
         """Change the active project for the current session."""
         if project_id == "":
             project_id_choice = None
@@ -1515,13 +1508,14 @@ class IdentityProvider(Enum):
         if env_dict.get("GCP_PROJECT_ID", None) != project_id_choice:
             env_dict["GCP_PROJECT_ID"] = project_id_choice
             App.save_env_dict_to_json(env_dict)
-        self.env = env_dict
 
-    def do_deploy_hasura(self, _):
+    # TODO: FIX AUTODEPLOYER AND SPLIT OFF
+    @staticmethod
+    def do_deploy_hasura(_):
         """Redeploys the hasura instance to gcloud. Updates environment variables."""
         print("Deploying Hasura")
-        env = self.env
-        cmd_log_str = f"gcloud config set project {env['GCP_PROJECT_ID']}"
+        env_dict = App.load_env_dict_from_json()
+        cmd_log_str = f"gcloud config set project {env_dict['GCP_PROJECT_ID']}"
         logging.log(logging.INFO, cmd_log_str)
         os.system(cmd_log_str)
         if os.path.isdir("hasura"):
@@ -1529,60 +1523,60 @@ class IdentityProvider(Enum):
         else:
             os.mkdir("hasura")
             os.chdir("hasura")
-            cmd_log_str = f"gcloud services enable run.googleapis.com --project={env['GCP_PROJECT_ID']}"
+            cmd_log_str = f"gcloud services enable run.googleapis.com --project={env_dict['GCP_PROJECT_ID']}"
             logging.log(logging.INFO, cmd_log_str)
             os.system(cmd_log_str)
             account_id = None
-            if self.env.get("GCLOUD_SERVICE_ACCOUNT", None) is None:
+            if env_dict.get("GCLOUD_SERVICE_ACCOUNT", None) is None:
                 account_choices = os.popen("gcloud iam service-accounts list").read().splitlines()
                 for i, account in enumerate(account_choices):
                     if "Compute Engine default service account" in account:
                         account_id = account.replace("Compute Engine default service account",
                                                      "").strip().split(" ")[0].strip()
                         break
-                cmd_log_str = (f"gcloud projects add-iam-policy-binding {env['GCP_PROJECT_ID']} "
+                cmd_log_str = (f"gcloud projects add-iam-policy-binding {env_dict['GCP_PROJECT_ID']} "
                                f"--member=serviceAccount:{account_id} "
                                f"--role=roles/cloudbuild.builds.builder"
                                )
                 logging.log(logging.INFO, cmd_log_str)
                 os.system(cmd_log_str)
-                self.env["GCLOUD_SERVICE_ACCOUNT"] = account_id
-                App.save_env_dict_to_json(self.env)
+                env_dict["GCLOUD_SERVICE_ACCOUNT"] = account_id
+                App.save_env_dict_to_json(env_dict)
             cmd_log_str = "docker pull --platform=linux/amd64 hasura/graphql-engine:latest"
             logging.log(logging.INFO, cmd_log_str)
             os.system(cmd_log_str)
-            cmd_log_str = f"docker tag hasura/graphql-engine:latest gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest"
+            cmd_log_str = f"docker tag hasura/graphql-engine:latest gcr.io/{env_dict['GCP_PROJECT_ID']}/hasura:latest"
             logging.log(logging.INFO, cmd_log_str)
             os.system(cmd_log_str)
-            cmd_log_str = f"docker push gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest"
+            cmd_log_str = f"docker push gcr.io/{env_dict['GCP_PROJECT_ID']}/hasura:latest"
             logging.log(logging.INFO, cmd_log_str)
             os.system(cmd_log_str)
         template_env = f"""HASURA_GRAPHQL_CORS_DOMAIN: '*'
 HASURA_GRAPHQL_ENABLED_CORS: 'true'
 HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
-        secondaries = self.env.get("secondary_databases", [])
+        secondaries = env_dict.get("secondary_databases", [])
         for i, secondary in enumerate(secondaries):
             template_env += f"\nHASURA_GRAPHQL_DATABASE_URL_{secondary['name']}: " \
                             f"{secondary['HASURA_GRAPHQL_DATABASE_URL']}"
-        env_vars = self.env.get("env_vars", [])
+        env_vars = env_dict.get("env_vars", [])
         for i, env_var in enumerate(env_vars):
             template_env += f"\n{env_var['key']}: '{env_var['value']}'"
-        if env.get("HASURA_GRAPHQL_ADMIN_SECRET", None) is not None:
-            template_env += f"\nHASURA_GRAPHQL_ADMIN_SECRET: '{env['HASURA_GRAPHQL_ADMIN_SECRET']}'"
-        if env.get("HASURA_GRAPHQL_DATABASE_URL", None) is not None:
-            template_env += f"\nHASURA_GRAPHQL_DATABASE_URL: '{env['HASURA_GRAPHQL_DATABASE_URL']}'"
-        if self.env.get("HASURA_GRAPHQL_JWT_SECRET", None) is not None:
-            template_env += f"\nHASURA_GRAPHQL_JWT_SECRET: '{self.env['HASURA_GRAPHQL_JWT_SECRET']}'"
+        if env_dict.get("HASURA_GRAPHQL_ADMIN_SECRET", None) is not None:
+            template_env += f"\nHASURA_GRAPHQL_ADMIN_SECRET: '{env_dict['HASURA_GRAPHQL_ADMIN_SECRET']}'"
+        if env_dict.get("HASURA_GRAPHQL_DATABASE_URL", None) is not None:
+            template_env += f"\nHASURA_GRAPHQL_DATABASE_URL: '{env_dict['HASURA_GRAPHQL_DATABASE_URL']}'"
+        if env_dict.get("HASURA_GRAPHQL_JWT_SECRET", None) is not None:
+            template_env += f"\nHASURA_GRAPHQL_JWT_SECRET: '{env_dict['HASURA_GRAPHQL_JWT_SECRET']}'"
         with open("env.yaml", "w") as f:
             f.write(template_env)
         deploy_command = (f"gcloud run deploy hasura "
-                          f"--image=gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest "
+                          f"--image=gcr.io/{env_dict['GCP_PROJECT_ID']}/hasura:latest "
                           f"--env-vars-file=env.yaml "
                           f"--min-instances=1 "
                           f"--max-instances=10 "
                           f"--cpu=1 "
                           f"--memory=2048Mi "
-                          f"--vpc-connector={env['GCP_VCP_CONNECTOR']} "
+                          f"--vpc-connector={env_dict['GCP_VCP_CONNECTOR']} "
                           f"--port=8080 "
                           f"--command='graphql-engine' "
                           f"--args='serve' "
@@ -1594,7 +1588,8 @@ HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
         os.system(deploy_command)
         os.chdir("../..")
 
-    def do_set_hasura_admin_secret(self, arg):
+    @staticmethod
+    def do_set_hasura_admin_secret(arg):
         """
         Sets the hasura admin secret.
         Usage: set_hasura_admin_secret <secret>
@@ -1603,17 +1598,15 @@ HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
         if len(arg) == 0:
             logging.log(logging.WARNING, "Please provide a secret")
             return
-        self.hasura_admin_secret = arg
-        os.environ["HASURA_GRAPHQL_ADMIN_SECRET"] = arg
         env_dict = App.load_env_dict_from_json()
         env_dict["HASURA_GRAPHQL_ADMIN_SECRET"] = arg
         App.save_env_dict_to_json(env_dict)
-        self.env = env_dict
         logging.log(logging.INFO,
                     f"Hasura admin secret set to {arg[0:4]}****"
                     f"{arg[-4:]}. Environment Variable: HASURA_GRAPHQL_ADMIN_SECRET")
 
-    def do_set_hasura_metadata_url(self, arg):
+    @staticmethod
+    def do_set_hasura_metadata_url(arg):
         """
         Sets the hasura metadata url.
         Usage: set_hasura_metadata_url <url>
@@ -1622,57 +1615,63 @@ HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
         if len(arg) == 0:
             logging.log(logging.WARNING, "Please provide a url")
             return
-        self.hasura_url = arg
-        os.environ["HASURA_GRAPHQL_METADATA_URL"] = arg
         env_dict = App.load_env_dict_from_json()
         env_dict["HASURA_GRAPHQL_METADATA_URL"] = arg
+        os.environ["HASURA_GRAPHQL_METADATA_URL"] = arg
         App.save_env_dict_to_json(env_dict)
-        self.env = env_dict
         logging.log(logging.INFO,
                     f"Hasura metadata url set to {arg}. Environment Variable: HASURA_GRAPHQL_METADATA_URL")
 
-    def do_import_hasura_metadata(self, _):
+    @staticmethod
+    def do_import_hasura_metadata(_):
         """
         Imports the metadata from the hasura metadata url.
         Usage: import
         """
-        if self.hasura_url is None:
+        env_dict = App.load_env_dict_from_json()
+        hasura_url = env_dict.get("HASURA_GRAPHQL_METADATA_URL")
+        if hasura_url is None:
             logging.log(logging.WARNING, "Please set the hasura url first")
             return
-        if self.hasura_admin_secret is None:
+        hasura_admin_secret = env_dict.get("HASURA_GRAPHQL_ADMIN_SECRET")
+        if hasura_admin_secret is None:
             logging.log(logging.WARNING, "Please set the hasura admin secret first")
             return
-        cmd = f"""curl -d'{{"type": "export_metadata", "args": {{}}}}' {self.hasura_url} -H "X-Hasura-Admin-Secret: {
-        self.hasura_admin_secret}" -o hasura_metadata.json"""
+        cmd = f"""curl -d'{{"type": "export_metadata", "args": {{}}}}' {hasura_url} -H "X-Hasura-Admin-Secret: {
+        hasura_admin_secret}" -o hasura_metadata.json"""
         print(cmd)
         os.system(cmd)
 
-    def do_export_hasura_metadata(self, _):
+    @staticmethod
+    def do_export_hasura_metadata(_):
         """
         Exports the metadata to the hasura metadata url.
         """
         env_dict = App.load_env_dict_from_json()
         hasura_url = env_dict.get("HASURA_GRAPHQL_METADATA_URL")
-        if self.hasura_url is None:
+        if hasura_url is None:
             logging.log(logging.WARNING, "Please set the hasura url first")
             return
-        if self.hasura_admin_secret is None:
+        hasura_admin_secret = env_dict.get("HASURA_GRAPHQL_ADMIN_SECRET")
+        if hasura_admin_secret is None:
             logging.log(logging.WARNING, "Please set the hasura admin secret first")
             return
         with open("hasura_metadata.json", "r") as f:
             json_data = json.load(f)
         json_data = json.dumps(json_data)
-        cmd = f"""curl -d'{{"type": "replace_metadata", "args": {json_data}}}' {self.hasura_url} -H """ + \
-              f'''"X-Hasura-Admin-Secret: {self.hasura_admin_secret}"'''
+        cmd = f"""curl -d'{{"type": "replace_metadata", "args": {json_data}}}' {hasura_url} -H """ + \
+              f'''"X-Hasura-Admin-Secret: {hasura_admin_secret}"'''
         response = os.popen(cmd).read()
         print(response)
 
-    def do_show_env(self, _):
+    @staticmethod
+    def do_show_env(_):
         """
         Shows the environment variables.
         Usage: show_env
         """
-        print(self.env)
+        env_dict = App.load_env_dict_from_json()
+        print(env_dict)
 
     def do_setup(self, _):
         """Automagically build and deploy Hasura with no rate limits and baked in phone Auth."""
@@ -1907,10 +1906,11 @@ from pydantic import BaseModel
             os.chdir(f"microservices/{microservice_name}")
             with open("app.py", "w") as f:
                 f.write(App.APP_PY)
-            project_id = self.env['GCP_PROJECT_ID']
-            hasura_graphql_admin_secret = self.env['HASURA_GRAPHQL_ADMIN_SECRET']
-            hasura_graphql_url_root = f"{self.env['HASURA_ROOT_URL']}/v1/graphql"
-            fastapi_event_secret = self.env.get('FASTAPI_EVENT_SECRET', None)
+            env_dict = App.load_env_dict_from_json()
+            project_id = env_dict['GCP_PROJECT_ID']
+            hasura_graphql_admin_secret = env_dict['HASURA_GRAPHQL_ADMIN_SECRET']
+            hasura_graphql_url_root = f"{env_dict['HASURA_ROOT_URL']}/v1/graphql"
+            fastapi_event_secret = env_dict.get('FASTAPI_EVENT_SECRET', None)
             if fastapi_event_secret is None:
                 fastapi_event_secret = password(30)
                 # Enable secret manager
@@ -1945,9 +1945,10 @@ from pydantic import BaseModel
                     f"gcloud secrets create BACKEND_FIREBASE_SERVICE_ACCOUNT --project {project_id} --data-file=secret")
                 logging.log(logging.INFO, cmd_log_str)
                 os.system(cmd_log_str)
-                self.env["FASTAPI_EVENT_SECRET"] = fastapi_event_secret
+                env_dict = App.load_env_dict_from_json()
+                env_dict["FASTAPI_EVENT_SECRET"] = fastapi_event_secret
                 os.chdir("../../..")
-                self.save_env_dict_to_json(self.env)
+                App.save_env_dict_to_json(env_dict)
                 os.chdir(f"microservices/{microservice_name}")
                 os.remove("secret")
 
@@ -2024,10 +2025,11 @@ from pydantic import BaseModel
             if service_id == microservice_name:
                 service_url = service_data[3]
         os.chdir("../../..")
-        env_vars = self.env.get("env_vars", [])
+        env_dict = App.load_env_dict_from_json()
+        env_vars = env_dict.get("env_vars", [])
         env_vars.append({"key": backend_url_key, "value": service_url})
-        self.env["env_vars"] = env_vars
-        self.save_env_dict_to_json(self.env)
+        env_dict["env_vars"] = env_vars
+        App.save_env_dict_to_json(env_dict)
         self.do_deploy_hasura(None)
         self.do_export_hasura_metadata(None)
 
