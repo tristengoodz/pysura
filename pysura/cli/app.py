@@ -1055,6 +1055,7 @@ class IdentityProvider(Enum):
                     admin_secret = password(30)
                     print("Hasura admin secret: " + admin_secret)
                     env_dict["HASURA_GRAPHQL_ADMIN_SECRET"] = admin_secret
+                    self.hasura_admin_secret = admin_secret
                     App.save_env_dict_to_json(env_dict)
                     self.env = env_dict
             else:
@@ -1650,6 +1651,8 @@ HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
         """
         Exports the metadata to the hasura metadata url.
         """
+        env_dict = App.load_env_dict_from_json()
+        hasura_url = env_dict.get("HASURA_GRAPHQL_METADATA_URL")
         if self.hasura_url is None:
             logging.log(logging.WARNING, "Please set the hasura url first")
             return
