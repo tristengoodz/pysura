@@ -1233,6 +1233,37 @@ class IdentityProvider(Enum):
             logging.log(logging.WARNING, "Invalid option")
             self.setup_hasura_not_deployed()
 
+    def recursive_collect_service_account(self, retries=0):
+        existing_service_accounts = os.popen("gcloud iam service-accounts list").read()
+        service_account_name = f"{self.env['GCP_PROJECT_ID']}admin"
+        service_account_email = None
+        for line in existing_service_accounts.split("\n"):
+            if service_account_name in line:
+                line = line.split(" ")
+                line = [i for i in line if i != ""]
+                service_account_email = line[1].strip()
+                return service_account_email
+        if service_account_email is None:
+            print("Creating service account...")
+            cmd_log_str = f"gcloud iam service-accounts create {service_account_name} " \
+                          f"--project={self.env['GCP_PROJECT_ID']}"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
+            service_account_email = None
+            for line in existing_service_accounts.split("\n"):
+                print(line)
+                if service_account_name in line:
+                    line = line.split(" ")
+                    line = [i for i in line if i != ""]
+                    service_account_email = line[1].strip()
+            if service_account_email is None:
+                print("Service account creation failed.")
+                time.sleep(3 * retries)
+                if retries < 3:
+                    return self.recursive_collect_service_account(retries=retries + 1)
+            else:
+                return service_account_email
+
     def setup_firebase(self):
         print("Setting up Firebase...")
         cmd_log_str = f"gcloud services enable identitytoolkit.googleapis.com " \
@@ -1276,23 +1307,35 @@ class IdentityProvider(Enum):
             with open("functions/package.json", "w") as f:
                 f.writelines(new_package_lines)
 
-            existing_service_accounts = os.popen("gcloud iam service-accounts list").read().splitlines()
-            print(existing_service_accounts)
-            service_account_name = "firebase-adminsdk"
-            service_account_email = None
-            for line in existing_service_accounts:
-                print(line)
-                if service_account_name in line:
-                    line = line.split(" ")
-                    line = [i for i in line if i != ""]
-                    service_account_email = line[1].strip()
-            print(service_account_email)
-
-            cmd_str = f"gcloud iam service-accounts keys create firebase-adminsdk.json " \
+            service_account_email = self.recursive_collect_service_account()
+            # Add cloud run invoker and firebase admin roles
+            cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                          f"--member=serviceAccount:{service_account_email} " \
+                          f"--role=roles/run.admin"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
+            cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                          f"--member=serviceAccount:{service_account_email} " \
+                          f"--role=roles/firebase.admin"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
+            # Add the cloudbuild.builds.builder
+            cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                          f"--member=serviceAccount:{service_account_email} " \
+                          f"--role=roles/cloudbuild.builds.builder"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
+            # Add the firebaseauth.admin role
+            cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                          f"--member=serviceAccount:{service_account_email} " \
+                          f"--role=roles/firebaseauth.admin"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
+            cmd_str = f"gcloud iam service-accounts keys create admin.json " \
                       f"--iam-account={service_account_email}"
             logging.log(logging.INFO, cmd_str)
             os.system(cmd_str)
-            cmd_str = f"gcloud auth activate-service-account --key-file=firebase-adminsdk.json {service_account_email}"
+            cmd_str = f"gcloud auth activate-service-account --key-file=admin.json {service_account_email}"
             print(cmd_str)
             os.system(cmd_str)
             auth_token = os.popen("gcloud auth print-access-token").read().strip()
@@ -1312,13 +1355,32 @@ class IdentityProvider(Enum):
                     "localhost",
                     f"{self.env['GCP_PROJECT_ID']}.firebaseapp.com",
                     f"{self.env['GCP_PROJECT_ID']}.web.app"
-                ]
+                ],
+                "signIn": {
+                    "phoneNumber": {
+                        "enabled": True,
+                        "testPhoneNumbers": [
+                            {"+15555215551", "000001"},
+                            {"+15555215552", "000002"}
+                        ]
+                    },
+                    "email": {
+                        "enabled": False,
+                        "passwordRequired": False
+                    },
+                    "anonymous": {
+                        "enabled": False
+                    },
+                    "allowDuplicateEmails": False
+                }
             }
             curl_command = f"curl -X PATCH " \
                            f"-H 'Authorization:Bearer {auth_token}' " \
                            f"-H 'Content-Type:application/json' " \
                            f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
-                           f"/{self.env['GCP_PROJECT_ID']}/config?updateMask=Config.authorizedDomains' " \
+                           f"/{self.env['GCP_PROJECT_ID']}/config?updateMask=Config.authorizedDomains," \
+                           f"Config.signIn.email,Config.signIn.phoneNumer,Config.signIn.anonymous," \
+                           f"Config.signIn.allowDuplicateEmails' " \
                            f"-d '{json.dumps(body_data)}'"
             response = os.popen(curl_command).read()
             print(response)
