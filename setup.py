@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.9.0",
+    version="0.9.5",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -14,7 +14,7 @@ setup(
     description="A Python library used to generate a backend for custom logic using Hasura as a Data-layer",
     url="https://github.com/tristengoodz/pysura",
     classifiers=[
-        "Development Status :: 3 - Beta",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Build Tools",
         "License :: OSI Approved :: MIT License",

@@ -3,6 +3,7 @@
 ```commandline
 pip install pysura
 pysura
+(pysura_cli) >>> setup
 ```
 
 ## Requirements:

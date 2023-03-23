@@ -810,6 +810,7 @@ class IdentityProvider(Enum):
             create_response = os.popen(
                 f"gcloud projects create {project_name} --organization={organization_id_choice}")
         print(create_response.read())
+        self.deploy_hasura_to_google()
 
     def configure_gcloud_vpc(self):
         print("Configuring VPC using Google Cloud...")
@@ -875,10 +876,6 @@ class IdentityProvider(Enum):
         if project_id is None:
             print("Please configure a GCP project first.")
             return
-        network_id = env_dict.get("GCP_NETWORK_ID", None)
-        if network_id is None:
-            print("Please configure a GCP network first.")
-            return
         if secondary_name is None:
             os.system(f"gcloud services enable servicenetworking.googleapis.com --project={project_id}")
             os.system(f"gcloud services enable compute.googleapis.com --project={project_id}")
@@ -938,6 +935,10 @@ class IdentityProvider(Enum):
             else:
                 return
         else:
+            network_id = env_dict.get("GCP_NETWORK_ID", None)
+            if network_id is None:
+                print("Please configure a GCP network first.")
+                return
             cpu_number = input("Please enter the number of CPUs: ")
             if cpu_number.lower().strip() == "exit":
                 return
@@ -1078,7 +1079,6 @@ class IdentityProvider(Enum):
                 env_dict["secondary_databases"] = new_databases
                 App.save_env_dict_to_json(env_dict)
                 self.env = env_dict
-                self.do_deploy_hasura(None)
                 with open("hasura_metadata.json", "r") as f:
                     metadata = json.load(f)
                 metadata["sources"].append(
@@ -1407,9 +1407,6 @@ class IdentityProvider(Enum):
         env_dict = App.load_env_dict_from_json()
         if env_dict.get("GCP_PROJECT_ID", None) != project_id_choice:
             env_dict["GCP_PROJECT_ID"] = project_id_choice
-            for key in env_dict.keys():
-                if key.startswith("GCP_"):
-                    env_dict.pop(key)
             App.save_env_dict_to_json(env_dict)
         self.env = env_dict
 
@@ -1430,9 +1427,7 @@ class IdentityProvider(Enum):
             os.system(f"docker push gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest")
         template_env = f"""HASURA_GRAPHQL_CORS_DOMAIN: '*'
 HASURA_GRAPHQL_ENABLED_CORS: 'true'
-HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
-HASURA_GRAPHQL_ADMIN_SECRET: '{env['HASURA_GRAPHQL_ADMIN_SECRET']}'
-HASURA_GRAPHQL_DATABASE_URL: '{env['HASURA_GRAPHQL_DATABASE_URL']}'"""
+HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
         secondaries = self.env.get("secondary_databases", [])
         for i, secondary in enumerate(secondaries):
             template_env += f"\nHASURA_GRAPHQL_DATABASE_URL_{secondary['name']}: " \
@@ -1440,6 +1435,10 @@ HASURA_GRAPHQL_DATABASE_URL: '{env['HASURA_GRAPHQL_DATABASE_URL']}'"""
         env_vars = self.env.get("env_vars", [])
         for i, env_var in enumerate(env_vars):
             template_env += f"\n{env_var['key']}: '{env_var['value']}'"
+        if env.get("HASURA_GRAPHQL_ADMIN_SECRET", None) is not None:
+            template_env += f"\nHASURA_GRAPHQL_ADMIN_SECRET: '{env['HASURA_GRAPHQL_ADMIN_SECRET']}'"
+        if env.get("HASURA_GRAPHQL_DATABASE_URL", None) is not None:
+            template_env += f"\nHASURA_GRAPHQL_DATABASE_URL: '{env['HASURA_GRAPHQL_DATABASE_URL']}'"
         if self.env.get("HASURA_GRAPHQL_JWT_SECRET", None) is not None:
             template_env += f"\nHASURA_GRAPHQL_JWT_SECRET: '{self.env['HASURA_GRAPHQL_JWT_SECRET']}'"
         with open("env.yaml", "w") as f:
@@ -1892,6 +1891,3 @@ from pydantic import BaseModel
 def cli():
     app = App()
     app.cmdloop()
-
-
-cli()
