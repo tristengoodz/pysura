@@ -2,15 +2,18 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.9.24",
+    version="0.9.25",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "pysura=cli.app:cli"
+            "pysura=pysura.cli.app:cli"
         ]
     },
+    package_dir={"pysura": "pysura"},
     package_data={
-        "pysura": ["library_data/*.*"],
+        "pysura": [
+            "library_data/*"
+        ],
     },
     author="Tristen Harr",
     author_email="tristen@thegoodzapp.com",

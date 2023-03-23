@@ -1345,10 +1345,10 @@ class IdentityProvider(Enum):
                 "signIn": {
                     "phoneNumber": {
                         "enabled": True,
-                        "testPhoneNumbers": [
-                            {"+15555215551": "000001"},
-                            {"+15555215552": "000002"}
-                        ]
+                        "testPhoneNumbers": {
+                            "+15555215551": "000001",
+                            "+15555215552": "000002"
+                        }
                     },
                     "email": {
                         "enabled": False,
@@ -1381,7 +1381,7 @@ class IdentityProvider(Enum):
             cmd_log_str = "firebase deploy --only functions --force"
             logging.log(logging.INFO, cmd_log_str)
             os.system(cmd_log_str)
-        os.chdir("..")
+        os.chdir("../..")
 
     def setup_hasura_deployed(self):
         services = os.popen("gcloud run services list").read()
@@ -1591,7 +1591,7 @@ HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
                           f"--no-cpu-throttling")
         print(deploy_command)
         os.system(deploy_command)
-        os.chdir("..")
+        os.chdir("../..")
 
     def do_set_hasura_admin_secret(self, arg):
         """
@@ -1932,7 +1932,7 @@ from pydantic import BaseModel
                 cmd_log_str = f"gcloud secrets create FASTAPI_EVENT_SECRET --project {project_id} --data-file=secret"
                 logging.log(logging.INFO, cmd_log_str)
                 os.system(cmd_log_str)
-                os.chdir("../..")
+                os.chdir("../../..")
                 with open('firebase/firebase-adminsdk.json', 'r') as f:
                     firebase_adminsdk_json = json.load(f)
                 os.chdir(f"microservices/{microservice_name}")
@@ -1943,7 +1943,7 @@ from pydantic import BaseModel
                 logging.log(logging.INFO, cmd_log_str)
                 os.system(cmd_log_str)
                 self.env["FASTAPI_EVENT_SECRET"] = fastapi_event_secret
-                os.chdir("../..")
+                os.chdir("../../..")
                 self.save_env_dict_to_json(self.env)
                 os.chdir(f"microservices/{microservice_name}")
                 os.remove("secret")
@@ -1962,7 +1962,7 @@ from pydantic import BaseModel
             with open("security.py", "w") as f:
                 f.write(App.SECURITY_PY)
 
-            os.chdir("../..")
+            os.chdir("../../..")
             with open("hasura_metadata.json", "r") as f:
                 hasura_metadata = json.load(f)
             hasura_metadata["custom_types"] = App.MICROSERVICE_DEFAULT_TYPES.get("custom_types", {})
@@ -2020,7 +2020,7 @@ from pydantic import BaseModel
             service_id = service_data[1]
             if service_id == microservice_name:
                 service_url = service_data[3]
-        os.chdir("../..")
+        os.chdir("../../..")
         env_vars = self.env.get("env_vars", [])
         env_vars.append({"key": backend_url_key, "value": service_url})
         self.env["env_vars"] = env_vars
