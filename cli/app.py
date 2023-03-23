@@ -818,7 +818,7 @@ class IdentityProvider(Enum):
         if project_id is None:
             print("Please configure a GCP project first.")
             return
-        
+
         if network_id == "default":
             env_dict["GCP_NETWORK_ID"] = network_id
             App.save_env_dict_to_json(env_dict)
@@ -1218,18 +1218,27 @@ class IdentityProvider(Enum):
             os.chdir("firebase")
             os.system(f"gcloud services enable identitytoolkit.googleapis.com --project={self.env['GCP_PROJECT_ID']}")
             os.system(f"firebase projects:addfirebase {self.env['GCP_PROJECT_ID']}")
+            time.sleep(3)
+
             existing_service_accounts = os.popen("gcloud iam service-accounts list").read().splitlines()
+            print(existing_service_accounts)
             service_account_name = "firebase-adminsdk"
             service_account_email = None
             for line in existing_service_accounts:
+                print(line)
                 if service_account_name in line:
                     line = line.split(" ")
                     line = [i for i in line if i != ""]
-                    service_account_email = line[1]
+                    service_account_email = line[1].strip()
                     break
-            os.system(f"gcloud iam service-accounts keys create "
-                      f"firebase-adminsdk.json --iam-account={service_account_email}")
-            os.system(f"gcloud auth activate-service-account --key-file=firebase-adminsdk.json {service_account_email}")
+            print(service_account_email)
+
+            cmd_str = f"gcloud iam service-accounts keys create firebase-adminsdk.json --iam-account={service_account_email}"
+            logging.log(logging.INFO, cmd_str)
+            os.system(cmd_str)
+            cmd_str = f"gcloud auth activate-service-account --key-file=firebase-adminsdk.json {service_account_email}"
+            print(cmd_str)
+            os.system(cmd_str)
             auth_token = os.popen("gcloud auth print-access-token").read().strip()
             curl_command = f"curl -X POST -H 'Authorization:Bearer {auth_token}' -H 'Content-Type:application/json' " \
                            f"'https://identitytoolkit.googleapis.com/v2/projects" \
