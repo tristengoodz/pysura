@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.9.19",
-    packages=["cli.faster_api"],
+    version="0.9.20",
+    packages=find_packages(),
     entry_points={
         "console_scripts": [
             "pysura=cli.app:cli"
