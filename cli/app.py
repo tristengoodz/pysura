@@ -1233,28 +1233,15 @@ class IdentityProvider(Enum):
             logging.log(logging.WARNING, "Invalid option")
             self.setup_hasura_not_deployed()
 
-    def collect_firebase_project_email(self, recurse_count=0):
-        cmd_str = "gcloud iam service-accounts list"
-        logging.log(logging.INFO, cmd_str)
-        existing_service_accounts = os.popen(cmd_str).read().splitlines()
-        print(existing_service_accounts)
-        service_account_name = "firebase-adminsdk"
-        service_account_email = None
-        for line in existing_service_accounts:
-            print(line)
-            if service_account_name in line:
-                line = line.split(" ")
-                line = [i for i in line if i != ""]
-                service_account_email = line[1].strip()
-                break
-        if service_account_email is None:
-            time.sleep(3 * recurse_count)
-            if recurse_count < 5:
-                return self.collect_firebase_project_email(recurse_count + 1)
-        return service_account_email
-
     def setup_firebase(self):
         print("Setting up Firebase...")
+        cmd_log_str = f"gcloud services enable identitytoolkit.googleapis.com " \
+                      f"--project={self.env['GCP_PROJECT_ID']}"
+        logging.log(logging.INFO, cmd_log_str)
+        os.system(cmd_log_str)
+        cmd_log_str = f"firebase projects:addfirebase {self.env['GCP_PROJECT_ID']}"
+        logging.log(logging.INFO, cmd_log_str)
+        os.system(cmd_log_str)
         cmd_log_str = "firebase login --interactive"
         logging.log(logging.INFO, cmd_log_str)
         os.system(cmd_log_str)
@@ -1263,59 +1250,7 @@ class IdentityProvider(Enum):
         else:
             os.mkdir("firebase")
             os.chdir("firebase")
-            cmd_log_str = f"gcloud services enable identitytoolkit.googleapis.com " \
-                          f"--project={self.env['GCP_PROJECT_ID']}"
-            logging.log(logging.INFO, cmd_log_str)
-            os.system(cmd_log_str)
-            cmd_log_str = f"firebase projects:addfirebase {self.env['GCP_PROJECT_ID']}"
-            logging.log(logging.INFO, cmd_log_str)
-            os.system(cmd_log_str)
-            time.sleep(3)
-            service_account_email = self.collect_firebase_project_email()
-            if service_account_email is None:
-                print("Firebase Admin SDK service account not found.")
-                return
 
-            cmd_str = f"gcloud iam service-accounts keys create firebase-adminsdk.json " \
-                      f"--iam-account={service_account_email}"
-            logging.log(logging.INFO, cmd_str)
-            os.system(cmd_str)
-            cmd_str = f"gcloud auth activate-service-account " \
-                      f"--key-file=firebase-adminsdk.json " \
-                      f"--project={self.env['GCP_PROJECT_ID']} " \
-                      f"{service_account_email}"
-            print(cmd_str)
-            os.system(cmd_str)
-            auth_token = os.popen("gcloud auth print-access-token").read().strip()
-            curl_command = f"curl -X POST -H 'Authorization:Bearer {auth_token}' -H 'Content-Type:application/json' " \
-                           f"'https://identitytoolkit.googleapis.com/v2/projects" \
-                           f"/{self.env['GCP_PROJECT_ID']}/identityPlatform:initializeAuth'"
-            os.popen(curl_command).read()
-            curl_command = f"curl -H 'Authorization:Bearer {auth_token}' -H 'Content-Type:application/json' " \
-                           f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
-                           f"/{self.env['GCP_PROJECT_ID']}/config'"
-            curl_response = os.popen(curl_command).read()
-            response = json.loads(curl_response)
-            print(response)
-            body_data = {
-                "authorizedDomains": [
-                    "localhost",
-                    f"{self.env['GCP_PROJECT_ID']}.firebaseapp.com",
-                    f"{self.env['GCP_PROJECT_ID']}.web.app"
-                ]
-            }
-            curl_command = f"curl -X PATCH " \
-                           f"-H 'Authorization:Bearer {auth_token}' " \
-                           f"-H 'Content-Type:application/json' " \
-                           f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
-                           f"/{self.env['GCP_PROJECT_ID']}/config?updateMask=Config.authorizedDomains' " \
-                           f"-d '{json.dumps(body_data)}'"
-            os.popen(curl_command).read()
-            print(f"Please enable phone sign in for the firebase project: "
-                  f"https://console.firebase.google.com/project/{self.env['GCP_PROJECT_ID']}/authentication/providers")
-            done = input("Press enter when done.")
-            if done.lower().strip() == "exit":
-                return
             print("Use JavaScript, NOT TypeScript. You can change this later.")
             print("Do not enable linting!!")
             print("Do not npm install!!")
@@ -1340,6 +1275,58 @@ class IdentityProvider(Enum):
                 new_package_lines.append(line)
             with open("functions/package.json", "w") as f:
                 f.writelines(new_package_lines)
+
+            existing_service_accounts = os.popen("gcloud iam service-accounts list").read().splitlines()
+            print(existing_service_accounts)
+            service_account_name = "firebase-adminsdk"
+            service_account_email = None
+            for line in existing_service_accounts:
+                print(line)
+                if service_account_name in line:
+                    line = line.split(" ")
+                    line = [i for i in line if i != ""]
+                    service_account_email = line[1].strip()
+            print(service_account_email)
+
+            cmd_str = f"gcloud iam service-accounts keys create firebase-adminsdk.json " \
+                      f"--iam-account={service_account_email}"
+            logging.log(logging.INFO, cmd_str)
+            os.system(cmd_str)
+            cmd_str = f"gcloud auth activate-service-account --key-file=firebase-adminsdk.json {service_account_email}"
+            print(cmd_str)
+            os.system(cmd_str)
+            auth_token = os.popen("gcloud auth print-access-token").read().strip()
+            curl_command = f"curl -X POST -H 'Authorization:Bearer {auth_token}' -H 'Content-Type:application/json' " \
+                           f"'https://identitytoolkit.googleapis.com/v2/projects" \
+                           f"/{self.env['GCP_PROJECT_ID']}/identityPlatform:initializeAuth'"
+            response = os.popen(curl_command).read()
+            print(response)
+            curl_command = f"curl -H 'Authorization:Bearer {auth_token}' -H 'Content-Type:application/json' " \
+                           f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
+                           f"/{self.env['GCP_PROJECT_ID']}/config'"
+            curl_response = os.popen(curl_command).read()
+            response = json.loads(curl_response)
+            print(response)
+            body_data = {
+                "authorizedDomains": [
+                    "localhost",
+                    f"{self.env['GCP_PROJECT_ID']}.firebaseapp.com",
+                    f"{self.env['GCP_PROJECT_ID']}.web.app"
+                ]
+            }
+            curl_command = f"curl -X PATCH " \
+                           f"-H 'Authorization:Bearer {auth_token}' " \
+                           f"-H 'Content-Type:application/json' " \
+                           f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
+                           f"/{self.env['GCP_PROJECT_ID']}/config?updateMask=Config.authorizedDomains' " \
+                           f"-d '{json.dumps(body_data)}'"
+            response = os.popen(curl_command).read()
+            print(response)
+            print(f"Please enable phone sign in for the firebase project: "
+                  f"https://console.firebase.google.com/project/{self.env['GCP_PROJECT_ID']}/authentication/providers")
+            done = input("Press enter when done.")
+            if done.lower().strip() == "exit":
+                return
             cmd_log_str = "gcloud auth login"
             logging.log(logging.INFO, cmd_log_str)
             os.system(cmd_log_str)
