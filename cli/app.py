@@ -1427,7 +1427,21 @@ class IdentityProvider(Enum):
             os.mkdir("hasura")
             os.chdir("hasura")
             os.system(f"gcloud services enable run.googleapis.com --project={env['GCP_PROJECT_ID']}")
-            os.system("docker pull hasura/graphql-engine:latest --platform linux/amd64")
+            account_id = None
+            if self.env.get("GCLOUD_SERVICE_ACCOUNT", None) is None:
+                account_choices = os.popen("gcloud iam service-accounts list").read().splitlines()
+                for i, account in enumerate(account_choices):
+                    if "Compute Engine default service account" in account:
+                        account_id = account.replace("Compute Engine default service account",
+                                                     "").strip().split(" ")[0].strip()
+                        break
+                os.system(f"gcloud projects add-iam-policy-binding {env['GCP_PROJECT_ID']} "
+                          f"--member=serviceAccount:{account_id} "
+                          f"--role=roles/cloudbuild.builds.builder"
+                          )
+                self.env["GCLOUD_SERVICE_ACCOUNT"] = account_id
+                App.save_env_dict_to_json(self.env)
+            os.system("docker pull --platform=linux/amd64 hasura/graphql-engine:latest")
             os.system(f"docker tag hasura/graphql-engine:latest gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest")
             os.system(f"docker push gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest")
         template_env = f"""HASURA_GRAPHQL_CORS_DOMAIN: '*'
