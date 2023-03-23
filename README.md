@@ -125,3 +125,13 @@ add_database
 
 
 
+## Add a new action to hasura
+TODO
+
+
+TODOS:
+
+Flutterfire
+Microservice templates
+
+

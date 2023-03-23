@@ -704,6 +704,8 @@ class IdentityProvider(Enum):
 
 """
 
+    FLUTTER_CONFIG = """"""
+
     @staticmethod
     def load_env_dict_from_json():
         try:
@@ -1233,37 +1235,6 @@ class IdentityProvider(Enum):
             logging.log(logging.WARNING, "Invalid option")
             self.setup_hasura_not_deployed()
 
-    def recursive_collect_service_account(self, retries=0):
-        existing_service_accounts = os.popen("gcloud iam service-accounts list").read()
-        service_account_name = f"{self.env['GCP_PROJECT_ID']}admin"
-        service_account_email = None
-        for line in existing_service_accounts.split("\n"):
-            if service_account_name in line:
-                line = line.split(" ")
-                line = [i for i in line if i != ""]
-                service_account_email = line[1].strip()
-                return service_account_email
-        if service_account_email is None:
-            print("Creating service account...")
-            cmd_log_str = f"gcloud iam service-accounts create {service_account_name} " \
-                          f"--project={self.env['GCP_PROJECT_ID']}"
-            logging.log(logging.INFO, cmd_log_str)
-            os.system(cmd_log_str)
-            service_account_email = None
-            for line in existing_service_accounts.split("\n"):
-                print(line)
-                if service_account_name in line:
-                    line = line.split(" ")
-                    line = [i for i in line if i != ""]
-                    service_account_email = line[1].strip()
-            if service_account_email is None:
-                print("Service account creation failed.")
-                time.sleep(3 * retries)
-                if retries < 3:
-                    return self.recursive_collect_service_account(retries=retries + 1)
-            else:
-                return service_account_email
-
     def setup_firebase(self):
         print("Setting up Firebase...")
         cmd_log_str = f"gcloud services enable identitytoolkit.googleapis.com " \
@@ -1307,7 +1278,8 @@ class IdentityProvider(Enum):
             with open("functions/package.json", "w") as f:
                 f.writelines(new_package_lines)
 
-            service_account_email = self.recursive_collect_service_account()
+            service_account_email = f"{self.env['GCP_PROJECT_ID']}admin-@{self.env['GCP_PROJECT_ID']}" \
+                                    f".iam.gserviceaccount.com"
             # Add cloud run invoker and firebase admin roles
             cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
                           f"--member=serviceAccount:{service_account_email} " \

@@ -1,9 +1,9 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name="pysura",
-    version="0.9.15",
-    packages=find_packages(),
+    version="0.9.18",
+    packages=["cli.fasterapi"],
     entry_points={
         "console_scripts": [
             "pysura=cli.app:cli"
@@ -12,6 +12,7 @@ setup(
     author="Tristen Harr",
     author_email="tristen@thegoodzapp.com",
     description="A Python library used to generate a backend for custom logic using Hasura as a Data-layer",
+    long_description=open("README.md").read(),
     url="https://github.com/tristengoodz/pysura",
     classifiers=[
         "Development Status :: 4 - Beta",
