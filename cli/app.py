@@ -807,67 +807,66 @@ class IdentityProvider(Enum):
         if organization_id_choice is None:
             create_response = os.popen(f"gcloud projects create {project_name}", )
         else:
-            create_response = os.popen(
-                f"gcloud projects create {project_name} --organization={organization_id_choice}")
+            create_response = os.popen(f"gcloud projects create {project_name} --organization={organization_id_choice}")
         print(create_response.read())
         self.deploy_hasura_to_google()
 
-    def configure_gcloud_vpc(self):
+    def configure_gcloud_vpc(self, network_id="default"):
         print("Configuring VPC using Google Cloud...")
         env_dict = App.load_env_dict_from_json()
         project_id = env_dict.get("GCP_PROJECT_ID", None)
         if project_id is None:
             print("Please configure a GCP project first.")
             return
-
-        network_id = env_dict.get("GCP_NETWORK_ID", None)
-        if network_id is not None:
-            print(f"Using existing network: {network_id}")
-            return
-
-        use_existing_network = input("Use an existing network? (y/n): ")
-        if use_existing_network.lower().strip() == "exit":
-            return
-        if use_existing_network.lower().strip() == "y":
-            networks = os.popen(f"gcloud compute networks list --project={project_id}").read().splitlines()
-            network_ids = []
-            if len(networks) > 1:
-                for i, network in enumerate(networks):
-                    if i > 0:
-                        print(f"{i - 1} - {network}")
-                        network_id = network.replace("\t", " ").replace("  ", " ").split(" ")[0].strip()
-                        network_ids.append(network_id)
-            else:
-                print("No networks found.")
-                return
-            network_id = input("Please select network: ")
-            if network_id.lower().strip() == "exit":
-                return
-            try:
-                network_id_choice = network_ids[int(network_id.strip())]
-            except IndexError:
-                print("Invalid network id.")
-                return
-            print(f"Network Selected: {network_id_choice}")
-            env_dict["GCP_NETWORK_ID"] = network_id_choice
+        
+        if network_id == "default":
+            env_dict["GCP_NETWORK_ID"] = network_id
             App.save_env_dict_to_json(env_dict)
             self.env = env_dict
-            return
         else:
-            network_name = input("Please enter a network name: ")
-            if network_name.lower().strip() == "exit":
+            use_existing_network = input("Use an existing network? (y/n): ")
+            if use_existing_network.lower().strip() == "exit":
                 return
-            network_name_confirmation = input("Please confirm network name: ")
-            if network_name_confirmation.lower().strip() == "exit":
+            if use_existing_network.lower().strip() == "y":
+                networks = os.popen(f"gcloud compute networks list --project={project_id}").read().splitlines()
+                network_ids = []
+                if len(networks) > 1:
+                    for i, network in enumerate(networks):
+                        if i > 0:
+                            print(f"{i - 1} - {network}")
+                            network_id = network.replace("\t", " ").replace("  ", " ").split(" ")[0].strip()
+                            network_ids.append(network_id)
+                else:
+                    print("No networks found.")
+                    return
+                network_id = input("Please select network: ")
+                if network_id.lower().strip() == "exit":
+                    return
+                try:
+                    network_id_choice = network_ids[int(network_id.strip())]
+                except IndexError:
+                    print("Invalid network id.")
+                    return
+                print(f"Network Selected: {network_id_choice}")
+                env_dict["GCP_NETWORK_ID"] = network_id_choice
+                App.save_env_dict_to_json(env_dict)
+                self.env = env_dict
                 return
-            if network_name != network_name_confirmation:
-                print("Network names do not match.")
-                return self.configure_gcloud_vpc()
-            os.system(f"gcloud compute networks create {network_name} --subnet-mode=auto --project={project_id}")
-            env_dict["GCP_NETWORK_ID"] = network_name
-            App.save_env_dict_to_json(env_dict)
-            self.env = env_dict
-            return
+            else:
+                network_name = input("Please enter a network name: ")
+                if network_name.lower().strip() == "exit":
+                    return
+                network_name_confirmation = input("Please confirm network name: ")
+                if network_name_confirmation.lower().strip() == "exit":
+                    return
+                if network_name != network_name_confirmation:
+                    print("Network names do not match.")
+                    return self.configure_gcloud_vpc()
+                os.system(f"gcloud compute networks create {network_name} --subnet-mode=auto --project={project_id}")
+                env_dict["GCP_NETWORK_ID"] = network_name
+                App.save_env_dict_to_json(env_dict)
+                self.env = env_dict
+                return
 
     def create_new_gcloud_database_instance(self, secondary_name=None):
         print("Creating a new Google Cloud SQL Postgresql instance... This may take a few minutes.")
@@ -1450,7 +1449,7 @@ HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
         secondaries = self.env.get("secondary_databases", [])
         for i, secondary in enumerate(secondaries):
             template_env += f"\nHASURA_GRAPHQL_DATABASE_URL_{secondary['name']}: " \
-                            f"'{secondary['HASURA_GRAPHQL_DATABASE_URL']}'"
+                            f"{secondary['HASURA_GRAPHQL_DATABASE_URL']}"
         env_vars = self.env.get("env_vars", [])
         for i, env_var in enumerate(env_vars):
             template_env += f"\n{env_var['key']}: '{env_var['value']}'"
@@ -1462,22 +1461,23 @@ HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
             template_env += f"\nHASURA_GRAPHQL_JWT_SECRET: '{self.env['HASURA_GRAPHQL_JWT_SECRET']}'"
         with open("env.yaml", "w") as f:
             f.write(template_env)
-        os.system(f"gcloud run deploy hasura "
-                  f"--image=gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest "
-                  f"--env-vars-file=env.yaml "
-                  f"--min-instances=1 "
-                  f"--max-instances=10 "
-                  f"--cpu=1 "
-                  f"--memory=2048Mi "
-                  f"--vpc-connector={env['GCP_VCP_CONNECTOR']} "
-                  f"--port=8080 "
-                  f"--command='graphql-engine' "
-                  f"--args='serve' "
-                  f"--timeout=300s "
-                  f"--platform=managed "
-                  f"--allow-unauthenticated "
-                  f"--no-cpu-throttling"
-                  )
+        deploy_command = (f"gcloud run deploy hasura "
+                          f"--image=gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest "
+                          f"--env-vars-file=env.yaml "
+                          f"--min-instances=1 "
+                          f"--max-instances=10 "
+                          f"--cpu=1 "
+                          f"--memory=2048Mi "
+                          f"--vpc-connector={env['GCP_VCP_CONNECTOR']} "
+                          f"--port=8080 "
+                          f"--command='graphql-engine' "
+                          f"--args='serve' "
+                          f"--timeout=600s "
+                          f"--platform=managed "
+                          f"--allow-unauthenticated "
+                          f"--no-cpu-throttling")
+        print(deploy_command)
+        os.system(deploy_command)
         os.chdir("..")
 
     def do_set_hasura_admin_secret(self, arg):
