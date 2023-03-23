@@ -17,13 +17,13 @@ pysura
 
 What is Pysura?
 
-Pysura is a CLI tool that's designed to make building and deploying actions, events, and chron-jobs as 
-easy as it is to do everything else in Hasura.
+Pysura is a CLI tool that's designed to make building and deploying actions, events, and chron-jobs as easy as it is to
+do everything else in Hasura.
 
 Pysura does *not* use the Hasura CLI, and instead manages the metadata directly via retrieving it and overwriting it.
 
 Pysura is built to bring Python to Hasura because it's a really great language for things like actions, events, and
-chron-jobs. 
+chron-jobs.
 
 How can Pysura help me setup my project?
 
@@ -43,13 +43,13 @@ Run the setup command and follow the installer instructions and you are done.
 
 ### What is a Pysura microservice?
 
-A pysura microservice is a FastAPI application that is deployed to Cloud Run that 
-handles actions, events, and chron-jobs. 
+A pysura microservice is a FastAPI application that is deployed to Cloud Run that handles actions, events, and
+chron-jobs.
 
 All action inputs and outputs are converted into Pydantic models.
 
-Each action or event is placed inside its own individual file, with auth baked in.
-Here's an example of a generated action file.
+Each action or event is placed inside its own individual file, with auth baked in. Here's an example of a generated
+action file.
 
 ```python
 from fastapi import APIRouter, Depends, Request
@@ -58,8 +58,8 @@ from generated_types import *
 from enums import ApiResponse, ClientRole
 import logging
 
-ROUTE = "/base_generator_mutation/" # Clear and easy to see and understand the route
-REQUIRED_ROLE = ClientRole.user.name # Access management is a piece of cake
+ROUTE = "/base_generator_mutation/"  # Clear and easy to see and understand the route
+REQUIRED_ROLE = ClientRole.user.name  # Access management is a piece of cake
 action_base_generator_mutation_router = APIRouter(
     tags=["action_base_generator_mutation"]
 )
@@ -78,6 +78,8 @@ async def action_base_generator_mutation(_: Request,
                                          injected_user_identity: Optional[UserIdentity] = None
                                          ):
     # (AUTH-LOCK-START) - DO NOT DELETE THIS LINE!
+    # Get the user id from the injected user as well as their roles and allowed roles.
+    # Authentication fails if they don't have the allowed role for this action.
     if injected_user_identity is None or injected_user_identity.user_id is None:
         return {
             "response_name": ApiResponse.UNAUTHORIZED.name,
@@ -87,13 +89,13 @@ async def action_base_generator_mutation(_: Request,
     # (AUTH-LOCK-END) - DO NOT DELETE THIS LINE!
 
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
-    print(base_generator_mutation_input)
+    print(base_generator_mutation_input)  # Typed inputs w/Pydantic
     response = BaseGeneratorMutationOutput(
         data=None,
         nodes=None,
         response_name=ApiResponse.SUCCESS.name,
         response_value=ApiResponse.SUCCESS.value
-    ).dict()
+    ).dict()  # Typed outputs w/Pydantic
     return response
     # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
 

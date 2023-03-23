@@ -6,6 +6,7 @@ import json
 import random
 from string import ascii_letters, digits
 import psycopg2
+import time
 
 
 def password(length=16):
@@ -862,7 +863,9 @@ class IdentityProvider(Enum):
                 if network_name != network_name_confirmation:
                     print("Network names do not match.")
                     return self.configure_gcloud_vpc()
-                os.system(f"gcloud compute networks create {network_name} --subnet-mode=auto --project={project_id}")
+                cmd_log_str = f"gcloud compute networks create {network_name} --subnet-mode=auto --project={project_id}"
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
                 env_dict["GCP_NETWORK_ID"] = network_name
                 App.save_env_dict_to_json(env_dict)
                 self.env = env_dict
@@ -876,10 +879,16 @@ class IdentityProvider(Enum):
             print("Please configure a GCP project first.")
             return
         if secondary_name is None:
-            os.system(f"gcloud services enable servicenetworking.googleapis.com --project={project_id}")
-            os.system(f"gcloud services enable compute.googleapis.com --project={project_id}")
+            cmd_log_str = f"gcloud services enable servicenetworking.googleapis.com --project={project_id}"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
+            cmd_log_str = f"gcloud services enable compute.googleapis.com --project={project_id}"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
             self.configure_gcloud_vpc()
-            os.system(f"gcloud services enable sqladmin.googleapis.com --project={project_id}")
+            cmd_log_str = f"gcloud services enable sqladmin.googleapis.com --project={project_id}"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
             cpu_number = input("Please enter the number of CPUs for the database: ")
             if cpu_number.lower().strip() == "exit":
                 return
@@ -908,20 +917,24 @@ class IdentityProvider(Enum):
                 if network_id is None:
                     print("Please configure a GCP network first.")
                     return
-                os.system(f"gcloud compute addresses create google-managed-services-{network_id} "
-                          f"--global "
-                          f"--purpose=VPC_PEERING "
-                          f"--prefix-length=16 "
-                          f"--network={network_id} "
-                          f"--project={project_id}"
-                          )
-                os.system(f"gcloud services vpc-peerings connect "
-                          f"--service=servicenetworking.googleapis.com "
-                          f"--ranges=google-managed-services-{network_id} "
-                          f"--network={network_id} "
-                          f"--project={project_id}"
-                          )
-                os.system(
+                cmd_log_str = (f"gcloud compute addresses create google-managed-services-{network_id} "
+                               f"--global "
+                               f"--purpose=VPC_PEERING "
+                               f"--prefix-length=16 "
+                               f"--network={network_id} "
+                               f"--project={project_id}"
+                               )
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
+                cmd_log_str = (f"gcloud services vpc-peerings connect "
+                               f"--service=servicenetworking.googleapis.com "
+                               f"--ranges=google-managed-services-{network_id} "
+                               f"--network={network_id} "
+                               f"--project={project_id}"
+                               )
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
+                cmd_log_str = (
                     f"gcloud beta sql instances create {project_id}-db "
                     f"--project={project_id} "
                     f"--network=projects/{project_id}/global/networks/{network_id} "
@@ -932,6 +945,8 @@ class IdentityProvider(Enum):
                     f"--database-version=POSTGRES_14 "
                     f"--enable-google-private-path"
                 )
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
                 env_dict["GCP_DATABASE_INSTANCE_ID"] = f"{project_id}-db"
                 env_dict["GCP_DATABASE_PASSWORD"] = default_password
                 App.save_env_dict_to_json(env_dict)
@@ -966,7 +981,7 @@ class IdentityProvider(Enum):
             if confirm_creation.lower().strip() == "exit":
                 return
             if confirm_creation.lower().strip() == "y":
-                os.system(
+                cmd_log_str = (
                     f"gcloud beta sql instances create {project_id}-{secondary_name}-db "
                     f"--project={project_id} "
                     f"--network=projects/{project_id}/global/networks/{network_id} "
@@ -977,6 +992,8 @@ class IdentityProvider(Enum):
                     f"--database-version=POSTGRES_14 "
                     f"--enable-google-private-path"
                 )
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
                 current_databases = env_dict.get("secondary_databases", [])
                 secondary_data = {
                     "name": secondary_name,
@@ -1145,10 +1162,14 @@ class IdentityProvider(Enum):
         else:
             billing_account_id_choice = gcp_billing_account
         print(f"Billing Account Selected: {billing_account_id_choice}")
-        os.system(f"gcloud beta billing projects link {project_id} --billing-account={billing_account_id_choice}")
+        cmd_log_str = f"gcloud beta billing projects link {project_id} --billing-account={billing_account_id_choice}"
+        logging.log(logging.INFO, cmd_log_str)
+        os.system(cmd_log_str)
 
     def create_serverless_vpc_connectors(self):
-        os.system("gcloud services enable vpcaccess.googleapis.com")
+        cmd_log_str = "gcloud services enable vpcaccess.googleapis.com"
+        logging.log(logging.INFO, cmd_log_str)
+        os.system(cmd_log_str)
         env_dict = self.env
         project_id = env_dict.get("GCP_PROJECT_ID", None)
         if project_id is None:
@@ -1161,11 +1182,13 @@ class IdentityProvider(Enum):
                 print("Please configure a GCP database instance first.")
                 return
             region = "-".join(region["location"].split("-")[:-1])
-            os.system(f"gcloud compute networks vpc-access connectors create default "
-                      f"--network default "
-                      f"--region {region} "
-                      f"--range 10.8.0.0/28"
-                      )
+            cmd_log_str = (f"gcloud compute networks vpc-access connectors create default "
+                           f"--network default "
+                           f"--region {region} "
+                           f"--range 10.8.0.0/28"
+                           )
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
             env_dict["GCP_VCP_CONNECTOR"] = "default"
             vpc_connector = "default"
             App.save_env_dict_to_json(env_dict)
@@ -1176,7 +1199,9 @@ class IdentityProvider(Enum):
         print("Hasura will be deployed to GCP...")
         env_dict = App.load_env_dict_from_json()
         if self.env.get("gcloud_logged_in", None) is None:
-            os.system("gcloud auth login")
+            cmd_log_str = "gcloud auth login"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
             env_dict["gcloud_logged_in"] = True
             App.save_env_dict_to_json(env_dict)
         self.env = env_dict
@@ -1210,14 +1235,21 @@ class IdentityProvider(Enum):
 
     def setup_firebase(self):
         print("Setting up Firebase...")
-        os.system("firebase login --interactive")
+        cmd_log_str = "firebase login --interactive"
+        logging.log(logging.INFO, cmd_log_str)
+        os.system(cmd_log_str)
         if os.path.isdir("firebase"):
             os.chdir("firebase")
         else:
             os.mkdir("firebase")
             os.chdir("firebase")
-            os.system(f"gcloud services enable identitytoolkit.googleapis.com --project={self.env['GCP_PROJECT_ID']}")
-            os.system(f"firebase projects:addfirebase {self.env['GCP_PROJECT_ID']}")
+            cmd_log_str = f"gcloud services enable identitytoolkit.googleapis.com " \
+                          f"--project={self.env['GCP_PROJECT_ID']}"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
+            cmd_log_str = f"firebase projects:addfirebase {self.env['GCP_PROJECT_ID']}"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
             time.sleep(3)
 
             existing_service_accounts = os.popen("gcloud iam service-accounts list").read().splitlines()
@@ -1233,7 +1265,8 @@ class IdentityProvider(Enum):
                     break
             print(service_account_email)
 
-            cmd_str = f"gcloud iam service-accounts keys create firebase-adminsdk.json --iam-account={service_account_email}"
+            cmd_str = f"gcloud iam service-accounts keys create firebase-adminsdk.json " \
+                      f"--iam-account={service_account_email}"
             logging.log(logging.INFO, cmd_str)
             os.system(cmd_str)
             cmd_str = f"gcloud auth activate-service-account --key-file=firebase-adminsdk.json {service_account_email}"
@@ -1273,7 +1306,9 @@ class IdentityProvider(Enum):
             print("Do not enable linting!!")
             print("Do not npm install!!")
             input("Press enter when ready to continue.")
-            os.system(f"firebase init functions --project={self.env['GCP_PROJECT_ID']}")
+            cmd_log_str = f"firebase init functions --project={self.env['GCP_PROJECT_ID']}"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
             with open("functions/index.js", "w") as f:
                 f.write(App.FIREBASE_INDEX.replace("HASURA_ROOT_URL", self.env["HASURA_ROOT_URL"]).replace(
                     "HASURA_GRAPHQL_ADMIN_SECRET", self.env["HASURA_GRAPHQL_ADMIN_SECRET"]))
@@ -1291,8 +1326,12 @@ class IdentityProvider(Enum):
                 new_package_lines.append(line)
             with open("functions/package.json", "w") as f:
                 f.writelines(new_package_lines)
-            os.system("gcloud auth login")
-            os.system("firebase deploy --only functions --force")
+            cmd_log_str = "gcloud auth login"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
+            cmd_log_str = "firebase deploy --only functions --force"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
         os.chdir("..")
 
     def setup_hasura_deployed(self):
@@ -1355,8 +1394,10 @@ class IdentityProvider(Enum):
         print("Finishing Autodeployer...")
         self.do_deploy_hasura(None)
         ip_address = os.popen("curl ifconfig.me").read().strip()
-        os.system(f"gcloud sql instances patch {self.env['GCP_DATABASE_INSTANCE_ID']} "
-                  f"--authorized-networks={ip_address}")
+        cmd_log_str = (f"gcloud sql instances patch {self.env['GCP_DATABASE_INSTANCE_ID']} "
+                       f"--authorized-networks={ip_address}")
+        logging.log(logging.INFO, cmd_log_str)
+        os.system(cmd_log_str)
         db_string = """create table if not exists "user"
 (
     user_id    text                     default gen_random_uuid() not null,
@@ -1417,7 +1458,9 @@ class IdentityProvider(Enum):
                 print("Invalid project id.")
                 return
         print(f"Project Selected: {project_id_choice}")
-        os.system(f"gcloud config set project {project_id_choice}")
+        cmd_log_str = f"gcloud config set project {project_id_choice}"
+        logging.log(logging.INFO, cmd_log_str)
+        os.system(cmd_log_str)
         env_dict = App.load_env_dict_from_json()
         if env_dict.get("GCP_PROJECT_ID", None) != project_id_choice:
             env_dict["GCP_PROJECT_ID"] = project_id_choice
@@ -1428,14 +1471,17 @@ class IdentityProvider(Enum):
         """Redeploys the hasura instance to gcloud. Updates environment variables."""
         print("Deploying Hasura")
         env = self.env
-        os.system(f"gcloud config set project {env['GCP_PROJECT_ID']}")
-
+        cmd_log_str = f"gcloud config set project {env['GCP_PROJECT_ID']}"
+        logging.log(logging.INFO, cmd_log_str)
+        os.system(cmd_log_str)
         if os.path.isdir("hasura"):
             os.chdir("hasura")
         else:
             os.mkdir("hasura")
             os.chdir("hasura")
-            os.system(f"gcloud services enable run.googleapis.com --project={env['GCP_PROJECT_ID']}")
+            cmd_log_str = f"gcloud services enable run.googleapis.com --project={env['GCP_PROJECT_ID']}"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
             account_id = None
             if self.env.get("GCLOUD_SERVICE_ACCOUNT", None) is None:
                 account_choices = os.popen("gcloud iam service-accounts list").read().splitlines()
@@ -1444,15 +1490,23 @@ class IdentityProvider(Enum):
                         account_id = account.replace("Compute Engine default service account",
                                                      "").strip().split(" ")[0].strip()
                         break
-                os.system(f"gcloud projects add-iam-policy-binding {env['GCP_PROJECT_ID']} "
-                          f"--member=serviceAccount:{account_id} "
-                          f"--role=roles/cloudbuild.builds.builder"
-                          )
+                cmd_log_str = (f"gcloud projects add-iam-policy-binding {env['GCP_PROJECT_ID']} "
+                               f"--member=serviceAccount:{account_id} "
+                               f"--role=roles/cloudbuild.builds.builder"
+                               )
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
                 self.env["GCLOUD_SERVICE_ACCOUNT"] = account_id
                 App.save_env_dict_to_json(self.env)
-            os.system("docker pull --platform=linux/amd64 hasura/graphql-engine:latest")
-            os.system(f"docker tag hasura/graphql-engine:latest gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest")
-            os.system(f"docker push gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest")
+            cmd_log_str = "docker pull --platform=linux/amd64 hasura/graphql-engine:latest"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
+            cmd_log_str = f"docker tag hasura/graphql-engine:latest gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
+            cmd_log_str = f"docker push gcr.io/{env['GCP_PROJECT_ID']}/hasura:latest"
+            logging.log(logging.INFO, cmd_log_str)
+            os.system(cmd_log_str)
         template_env = f"""HASURA_GRAPHQL_CORS_DOMAIN: '*'
 HASURA_GRAPHQL_ENABLED_CORS: 'true'
 HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'"""
@@ -1808,26 +1862,37 @@ from pydantic import BaseModel
             if fastapi_event_secret is None:
                 fastapi_event_secret = password(30)
                 # Enable secret manager
-                os.system(f"gcloud services enable secretmanager.googleapis.com --project {project_id}")
+                cmd_log_str = f"gcloud services enable secretmanager.googleapis.com --project {project_id}"
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
                 # Create the secret
                 with open('secret', 'w') as f:
                     f.write(hasura_graphql_admin_secret)
-                os.system(
+                cmd_log_str = (
                     f"gcloud secrets create HASURA_GRAPHQL_ADMIN_SECRET --project {project_id} --data-file=secret")
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
                 with open('secret', 'w') as f:
                     f.write(hasura_graphql_url_root)
-                os.system(f"gcloud secrets create HASURA_GRAPHQL_URL_ROOT --project {project_id} --data-file=secret")
+                cmd_log_str = (
+                    f"gcloud secrets create HASURA_GRAPHQL_URL_ROOT --project {project_id} --data-file=secret")
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
                 with open('secret', 'w') as f:
                     f.write(fastapi_event_secret)
-                os.system(f"gcloud secrets create FASTAPI_EVENT_SECRET --project {project_id} --data-file=secret")
+                cmd_log_str = f"gcloud secrets create FASTAPI_EVENT_SECRET --project {project_id} --data-file=secret"
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
                 os.chdir("../..")
                 with open('firebase/firebase-adminsdk.json', 'r') as f:
                     firebase_adminsdk_json = json.load(f)
                 os.chdir(f"microservices/{microservice_name}")
                 with open('secret', 'w') as f:
                     f.write(json.dumps(firebase_adminsdk_json))
-                os.system(
+                cmd_log_str = (
                     f"gcloud secrets create BACKEND_FIREBASE_SERVICE_ACCOUNT --project {project_id} --data-file=secret")
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
                 self.env["FASTAPI_EVENT_SECRET"] = fastapi_event_secret
                 os.chdir("../..")
                 self.save_env_dict_to_json(self.env)
@@ -1893,7 +1958,9 @@ from pydantic import BaseModel
                 os.mkdir("events")
                 with open("events/__init__.py", "w") as f:
                     f.write("event_routers = []\n")
-        os.system(f"gcloud run deploy {microservice_name} --source .")
+        cmd_log_str = f"gcloud run deploy {microservice_name} --source ."
+        logging.log(logging.INFO, cmd_log_str)
+        os.system(cmd_log_str)
         services = os.popen("gcloud run services list").read()
         service_url = None
         for i, service in enumerate(services.splitlines()):
