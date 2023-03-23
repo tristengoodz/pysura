@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name="pysura",
     version="0.9.18",
-    packages=["cli.fasterapi"],
+    packages=["cli.faster_api"],
     entry_points={
         "console_scripts": [
             "pysura=cli.app:cli"
