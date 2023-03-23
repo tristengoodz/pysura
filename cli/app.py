@@ -6,7 +6,6 @@ import json
 import random
 from string import ascii_letters, digits
 import psycopg2
-import time
 
 
 def password(length=16):
@@ -1288,8 +1287,6 @@ class IdentityProvider(Enum):
                 os.system(cmd_log_str)
                 service_account_email = f"{self.env['GCP_PROJECT_ID']}admin@{self.env['GCP_PROJECT_ID']}" \
                                         f".iam.gserviceaccount.com"
-                logging.log(logging.INFO, cmd_log_str)
-                os.system(cmd_log_str)
                 # Add cloud run invoker and firebase admin roles
                 cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
                               f"--member=serviceAccount:{service_account_email} " \
