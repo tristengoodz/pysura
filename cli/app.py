@@ -880,11 +880,11 @@ class IdentityProvider(Enum):
             os.system(f"gcloud services enable compute.googleapis.com --project={project_id}")
             self.configure_gcloud_vpc()
             os.system(f"gcloud services enable sqladmin.googleapis.com --project={project_id}")
-            cpu_number = input("Please enter the number of CPUs: ")
+            cpu_number = input("Please enter the number of CPUs for the database: ")
             if cpu_number.lower().strip() == "exit":
                 return
             cpu_number = str(int(cpu_number.strip()))
-            memory = input("Please enter the amount of memory (GiB): ")
+            memory = input("Please enter the amount of memory for the database (GiB): ")
             if memory.lower().strip() == "exit":
                 return
             memory = f"{str(int(memory.strip()))}GiB"
@@ -901,6 +901,7 @@ class IdentityProvider(Enum):
                 zone = zone.strip()
             if confirm_creation.lower().strip() == "exit":
                 return
+            print("Configuring database... please be patient. Grab a coffee, or write a new command for the CLI. ;)")
             if confirm_creation.lower().strip() == "y":
                 env_dict = App.load_env_dict_from_json()
                 network_id = env_dict.get("GCP_NETWORK_ID", None)
@@ -1216,6 +1217,7 @@ class IdentityProvider(Enum):
             os.mkdir("firebase")
             os.chdir("firebase")
             os.system(f"gcloud services enable identitytoolkit.googleapis.com --project={self.env['GCP_PROJECT_ID']}")
+            os.system(f"firebase projects:addfirebase {self.env['GCP_PROJECT_ID']}")
             existing_service_accounts = os.popen("gcloud iam service-accounts list").read().splitlines()
             service_account_name = "firebase-adminsdk"
             service_account_email = None
@@ -1229,7 +1231,6 @@ class IdentityProvider(Enum):
                       f"firebase-adminsdk.json --iam-account={service_account_email}")
             os.system(f"gcloud auth activate-service-account --key-file=firebase-adminsdk.json {service_account_email}")
             auth_token = os.popen("gcloud auth print-access-token").read().strip()
-            os.system(f"firebase projects:addfirebase {self.env['GCP_PROJECT_ID']}")
             curl_command = f"curl -X POST -H 'Authorization:Bearer {auth_token}' -H 'Content-Type:application/json' " \
                            f"'https://identitytoolkit.googleapis.com/v2/projects" \
                            f"/{self.env['GCP_PROJECT_ID']}/identityPlatform:initializeAuth'"
