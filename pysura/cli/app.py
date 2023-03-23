@@ -1239,6 +1239,7 @@ class IdentityProvider(Enum):
         cmd_log_str = "firebase login --interactive"
         logging.log(logging.INFO, cmd_log_str)
         os.system(cmd_log_str)
+        env_updates = {}
         if os.path.isdir("firebase"):
             os.chdir("firebase")
         else:
@@ -1270,8 +1271,6 @@ class IdentityProvider(Enum):
             with open("functions/package.json", "w") as f:
                 f.writelines(new_package_lines)
 
-            # Create the service account
-            env_dict = App.load_env_dict_from_json()
             if env_dict.get("GCP_ADMIN_SERVICE_ACCOUNT", None) is None:
                 service_account_name = f"{env_dict['GCP_PROJECT_ID']}admin"
                 cmd_log_str = f"gcloud iam service-accounts create {service_account_name} " \
@@ -1308,12 +1307,12 @@ class IdentityProvider(Enum):
                           f"--iam-account={service_account_email}"
                 logging.log(logging.INFO, cmd_str)
                 os.system(cmd_str)
-                env_dict["GCP_ADMIN_SERVICE_ACCOUNT"] = service_account_email
-                env_dict["GCP_ADMIN_SERVICE_ACCOUNT_NAME"] = service_account_name
-                App.save_env_dict_to_json(env_dict)
+                env_updates["GCP_ADMIN_SERVICE_ACCOUNT"] = service_account_email
+                env_updates["GCP_ADMIN_SERVICE_ACCOUNT_NAME"] = service_account_name
             else:
                 service_account_email = env_dict["GCP_ADMIN_SERVICE_ACCOUNT"]
                 service_account_name = env_dict["GCP_ADMIN_SERVICE_ACCOUNT_NAME"]
+
             print(f"Activating service account: {service_account_email} -> {service_account_name}")
             cmd_str = f"gcloud auth activate-service-account --key-file=admin.json {service_account_email}"
             print(cmd_str)
@@ -1376,6 +1375,11 @@ class IdentityProvider(Enum):
             logging.log(logging.INFO, cmd_log_str)
             os.system(cmd_log_str)
         os.chdir("../..")
+        current_env = App.load_env_dict_from_json()
+        App.save_env_dict_to_json({
+            **current_env,
+            **env_updates
+        })
 
     def setup_hasura_deployed(self):
         services = os.popen("gcloud run services list").read()
@@ -1400,6 +1404,7 @@ class IdentityProvider(Enum):
         env_dict = App.load_env_dict_from_json()
         try:
             service_id = service_ids[int(service_id.strip())]
+            print(service_id)
             env_dict["HASURA_SERVICE_NAME"] = service_id
             env_dict["HASURA_ROOT_URL"] = service_datas[service_id]["service_url"]
             hasura_metadata_url = f"{env_dict['HASURA_ROOT_URL']}/v1/metadata"
