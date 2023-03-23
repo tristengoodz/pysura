@@ -1349,8 +1349,8 @@ class IdentityProvider(Enum):
                     "phoneNumber": {
                         "enabled": True,
                         "testPhoneNumbers": [
-                            {"+15555215551", "000001"},
-                            {"+15555215552", "000002"}
+                            {"+15555215551": "000001"},
+                            {"+15555215552": "000002"}
                         ]
                     },
                     "email": {
