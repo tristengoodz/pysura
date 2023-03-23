@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="pysura",
-    version="0.9.18",
+    version="0.9.19",
     packages=["cli.faster_api"],
     entry_points={
         "console_scripts": [

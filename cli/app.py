@@ -1278,35 +1278,52 @@ class IdentityProvider(Enum):
             with open("functions/package.json", "w") as f:
                 f.writelines(new_package_lines)
 
-            service_account_email = f"{self.env['GCP_PROJECT_ID']}admin-@{self.env['GCP_PROJECT_ID']}" \
-                                    f".iam.gserviceaccount.com"
-            # Add cloud run invoker and firebase admin roles
-            cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
-                          f"--member=serviceAccount:{service_account_email} " \
-                          f"--role=roles/run.admin"
-            logging.log(logging.INFO, cmd_log_str)
-            os.system(cmd_log_str)
-            cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
-                          f"--member=serviceAccount:{service_account_email} " \
-                          f"--role=roles/firebase.admin"
-            logging.log(logging.INFO, cmd_log_str)
-            os.system(cmd_log_str)
-            # Add the cloudbuild.builds.builder
-            cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
-                          f"--member=serviceAccount:{service_account_email} " \
-                          f"--role=roles/cloudbuild.builds.builder"
-            logging.log(logging.INFO, cmd_log_str)
-            os.system(cmd_log_str)
-            # Add the firebaseauth.admin role
-            cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
-                          f"--member=serviceAccount:{service_account_email} " \
-                          f"--role=roles/firebaseauth.admin"
-            logging.log(logging.INFO, cmd_log_str)
-            os.system(cmd_log_str)
-            cmd_str = f"gcloud iam service-accounts keys create admin.json " \
-                      f"--iam-account={service_account_email}"
-            logging.log(logging.INFO, cmd_str)
-            os.system(cmd_str)
+            # Create the service account
+            if self.env.get("GCP_ADMIN_SERVICE_ACCOUNT", None) is None:
+                service_account_name = f"{self.env['GCP_PROJECT_ID']}admin"
+                cmd_log_str = f"gcloud iam service-accounts create {service_account_name} " \
+                              f"--project={self.env['GCP_PROJECT_ID']} " \
+                              f"--display-name=admin"
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
+                service_account_email = f"{self.env['GCP_PROJECT_ID']}admin@{self.env['GCP_PROJECT_ID']}" \
+                                        f".iam.gserviceaccount.com"
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
+                # Add cloud run invoker and firebase admin roles
+                cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                              f"--member=serviceAccount:{service_account_email} " \
+                              f"--role=roles/run.admin"
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
+                cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                              f"--member=serviceAccount:{service_account_email} " \
+                              f"--role=roles/firebase.admin"
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
+                # Add the cloudbuild.builds.builder
+                cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                              f"--member=serviceAccount:{service_account_email} " \
+                              f"--role=roles/cloudbuild.builds.builder"
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
+                # Add the firebaseauth.admin role
+                cmd_log_str = f"gcloud projects add-iam-policy-binding {self.env['GCP_PROJECT_ID']} " \
+                              f"--member=serviceAccount:{service_account_email} " \
+                              f"--role=roles/firebaseauth.admin"
+                logging.log(logging.INFO, cmd_log_str)
+                os.system(cmd_log_str)
+                cmd_str = f"gcloud iam service-accounts keys create admin.json " \
+                          f"--iam-account={service_account_email}"
+                logging.log(logging.INFO, cmd_str)
+                os.system(cmd_str)
+                self.env["GCP_ADMIN_SERVICE_ACCOUNT"] = service_account_email
+                self.env["GCP_ADMIN_SERVICE_ACCOUNT_NAME"] = service_account_name
+                App.save_env_dict_to_json(self.env)
+            else:
+                service_account_email = self.env["GCP_ADMIN_SERVICE_ACCOUNT"]
+                service_account_name = self.env["GCP_ADMIN_SERVICE_ACCOUNT_NAME"]
+            print(f"Activating service account: {service_account_email} -> {service_account_name}")
             cmd_str = f"gcloud auth activate-service-account --key-file=admin.json {service_account_email}"
             print(cmd_str)
             os.system(cmd_str)
