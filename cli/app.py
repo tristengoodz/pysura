@@ -903,6 +903,11 @@ class IdentityProvider(Enum):
             if confirm_creation.lower().strip() == "exit":
                 return
             if confirm_creation.lower().strip() == "y":
+                env_dict = App.load_env_dict_from_json()
+                network_id = env_dict.get("GCP_NETWORK_ID", None)
+                if network_id is None:
+                    print("Please configure a GCP network first.")
+                    return
                 os.system(f"gcloud compute addresses create google-managed-services-{network_id} "
                           f"--global "
                           f"--purpose=VPC_PEERING "
