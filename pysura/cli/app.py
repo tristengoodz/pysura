@@ -1,7 +1,6 @@
 from pysura.pysura_types.root_cmd import RootCmd
 from pysura.pysura_types.google_pysura_env import *
 import json
-import site
 import os
 from pysura.pysura_types.pysura_std import PysuraStd
 from pydantic.error_wrappers import ValidationError
@@ -21,7 +20,6 @@ root.addHandler(handler)
 
 
 class GoogleRoot(RootCmd):
-    SITE_PACKAGES_URL = site.getsitepackages()[0]
 
     def __init__(self, *arg, **kwargs):
         super().__init__(*arg, **kwargs)
@@ -33,23 +31,19 @@ class GoogleRoot(RootCmd):
         return "".join(random.choices(ascii_letters + digits, k=length))
 
     @staticmethod
-    def find_path(file_name: str = "env.json"):
-        return os.path.join(GoogleRoot.SITE_PACKAGES_URL, "pysura", "library_data", file_name)
-
-    @staticmethod
-    def get_env() -> GooglePysuraEnv:
+    def get_env(file_name: str = "env.json") -> GooglePysuraEnv:
         try:
-            with open(GoogleRoot.find_path(), "r") as f:
+            with open(file_name, "r") as f:
                 return GooglePysuraEnv(**json.load(f))
         except FileNotFoundError:
             env = GooglePysuraEnv()
-            with open(GoogleRoot.find_path(), "w") as f:
+            with open(file_name, "w") as f:
                 json.dump(env.dict(), f)
             return env
 
     @staticmethod
-    def set_env(value: GooglePysuraEnv):
-        with open(GoogleRoot.find_path(), "w") as f:
+    def set_env(value: GooglePysuraEnv, file_name: str = "env.json"):
+        with open(file_name, "w") as f:
             json.dump(value.dict(), f)
 
     @staticmethod
