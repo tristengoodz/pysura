@@ -7,7 +7,7 @@ class PysuraStd:
 
     @staticmethod
     def log(log_str: str, level=logging.INFO):
-        logging.log(level, "\n" + log_str.strip("\n"))
+        logging.log(level, log_str.strip("\n"))
 
     @staticmethod
     def collect(collect_str: str, completer=None):

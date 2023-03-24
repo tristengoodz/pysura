@@ -43,6 +43,7 @@ class GoogleRoot(RootCmd):
 
     @staticmethod
     def set_env(value: GooglePysuraEnv, file_name: str = "env.json"):
+        PysuraStd.log(f"Dumping data:\n{value.json()}", level=logging.DEBUG)
         with open(file_name, "w") as f:
             json.dump(value.dict(), f)
 
@@ -287,7 +288,7 @@ class GoogleRoot(RootCmd):
         use_organization = PysuraStd.collect("Do you want to use an organization? (y/n)")
         use_org = use_organization.strip().lower() == "y"
         if use_org:
-            if env.organization is not None:
+            if env.organization is None:
                 PysuraStd.log("No organization selected.")
                 return
         project_name = PysuraStd.collect("Enter a project name: ")
