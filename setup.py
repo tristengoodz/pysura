@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.9.29",
+    version="0.10.0",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -31,7 +31,9 @@ setup(
     python_requires=">=3.10",
     install_requires=[
         "psycopg2",
-        "pydantic"
+        "pydantic",
+        "prompt_toolkit",
+        "pyyaml"
     ],
     extras_require={
     },
