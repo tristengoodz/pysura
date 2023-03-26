@@ -17,7 +17,7 @@ import json
 class RootCmd(Cmd):
 
     def setup_logging(self):
-        root_logger = logging.getLogger("pysura")
+        root_logger = logging.getLogger()
         if not root_logger.hasHandlers():
             root_logger.setLevel(logging.DEBUG)
             root_handler = logging.StreamHandler(sys.stdout)
@@ -28,7 +28,7 @@ class RootCmd(Cmd):
             root_logger.addHandler(root_handler)
         self.root = root_logger
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, logger=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.prompt = "root> "
         self.completer = WordCompleter([
@@ -38,7 +38,10 @@ class RootCmd(Cmd):
               i[0].startswith("do_")]
         ])
         self.root = None
-        self.setup_logging()
+        if logger is None:
+            self.setup_logging()
+        else:
+            self.root = logger
         self.history = InMemoryHistory()
 
     def cmdloop(self, intro=None):
@@ -108,7 +111,6 @@ class RootCmd(Cmd):
     def retry_loop(self, cmd_str, name):
         for i in range(5):
             try:
-                self.log(cmd_str, level=logging.DEBUG)
                 response = os.popen(cmd_str).read()
                 response = json.loads(response)
                 if len(response) == 0:
@@ -117,9 +119,8 @@ class RootCmd(Cmd):
                     if r["name"].split("/")[-1] == name:
                         return response
                 raise Exception(f"No {name} found.")
-            except Exception as e:
+            except Exception as _:
                 try:
-                    self.log(cmd_str, level=logging.DEBUG)
                     response = os.popen(cmd_str).read()
                     response = json.loads(response)
                     if len(response) == 0:

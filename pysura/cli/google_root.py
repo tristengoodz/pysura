@@ -731,6 +731,45 @@ class GoogleRoot(RootCmd):
         env.connectors = connector_set
         self.set_env(env)
 
+    def do_gcloud_set_secret(self, secret_key, secret_value):
+        env = self.get_env()
+        with open("secret", "w") as f:
+            f.write(secret_value)
+        cmd_str = f"gcloud secrets create {secret_key} " \
+                  f"--project={env.project.name.split('/')[-1]} " \
+                  f"--data-file=secret"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        os.remove("secret")
+
+    def do_update_default_compute_engine_service_account(self, _):
+        env = self.get_env()
+        account_choices = json.loads(os.popen(f"gcloud iam service-accounts list "
+                                              f"--project={env.project.name.split('/')[-1]} "
+                                              f"--format=json").read())
+        service_accounts = []
+        for i, account in enumerate(account_choices):
+            account_data = GoogleServiceAccount(**account)
+            if account_data.displayName == "Compute Engine default service account":
+                env.hasura_service_account = account_data
+            service_accounts.append(account_data)
+        if env.hasura_service_account is None:
+            self.log("No service account found.")
+            return
+        env.service_accounts = service_accounts
+        cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
+                       f"--member=serviceAccount:{env.hasura_service_account.email} "
+                       f"--role=roles/cloudbuild.builds.builder"
+                       )
+        self.log(cmd_log_str, level=logging.DEBUG)
+        os.system(cmd_log_str)
+        cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
+                       f"--member=serviceAccount:{env.hasura_service_account.email} "
+                       f"--role=roles/run.admin"
+                       )
+        self.log(cmd_log_str, level=logging.DEBUG)
+        os.system(cmd_log_str)
+
     def do_gcloud_deploy_hasura(self, _):
         env = self.get_env()
         if env.project is None:
@@ -743,22 +782,24 @@ class GoogleRoot(RootCmd):
             account_choices = json.loads(os.popen(f"gcloud iam service-accounts list "
                                                   f"--project={env.project.name.split('/')[-1]} "
                                                   f"--format=json").read())
-            account_id = None
+            service_accounts = []
             for i, account in enumerate(account_choices):
-                if "Compute Engine default service account" in account["displayName"]:
-                    account_id = account["email"]
-                    break
-            if account_id is None:
+                account_data = GoogleServiceAccount(**account)
+                if account_data.displayName == "Compute Engine default service account":
+                    env.hasura_service_account = account_data
+                service_accounts.append(account_data)
+            if env.hasura_service_account is None:
                 self.log("No service account found.")
                 return
+            env.service_accounts = service_accounts
             cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
-                           f"--member=serviceAccount:{account_id} "
+                           f"--member=serviceAccount:{env.hasura_service_account.email} "
                            f"--role=roles/cloudbuild.builds.builder"
                            )
             self.log(cmd_log_str, level=logging.DEBUG)
             os.system(cmd_log_str)
             cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
-                           f"--member=serviceAccount:{account_id} "
+                           f"--member=serviceAccount:{env.hasura_service_account.email} "
                            f"--role=roles/run.admin"
                            )
             self.log(cmd_log_str, level=logging.DEBUG)
@@ -804,12 +845,23 @@ class GoogleRoot(RootCmd):
         for database_credential in env.database_credentials:
             if database_credential.database_id.split('/')[-1] != env.database_credential.database_id.split('/')[-1]:
                 env_dict[
-                    f"DATABASE_URL_{database_credential.database_id.split('/')[-1]}"] = database_credential.connect_url
+                    f"HASURA_SECONDARY_URLS_{database_credential.database_id.split('/')[-1]}"
+                ] = database_credential.connect_url
         with open("env.yaml", "w") as f:
             yaml.dump(env_dict, f)
+
+        secret_text = " --update-secrets="
+        for k, v in env_dict.items():
+            if k.startswith("HASURA_"):
+                self.do_gcloud_set_secret(k, v)
+                secret_text += f"{k}={k}:latest,"
+        if secret_text == "--update-secrets=":
+            secret_text = ""
+        else:
+            secret_text = secret_text[:-1]
+
         deploy_command = (f"gcloud run deploy hasura "
                           f"--image=gcr.io/{env.project.name.split('/')[-1]}/hasura:latest "
-                          f"--env-vars-file=env.yaml "
                           f"--min-instances=1 "
                           f"--max-instances={hasura.max_instances} "
                           f"--cpu=1 "
@@ -822,7 +874,8 @@ class GoogleRoot(RootCmd):
                           f"--platform=managed "
                           f"--allow-unauthenticated "
                           f"--no-cpu-throttling "
-                          f"--project={env.project.name.split('/')[-1]} ")
+                          f"--project={env.project.name.split('/')[-1]}")
+        deploy_command += secret_text
         self.log(deploy_command, level=logging.DEBUG)
         os.system(deploy_command)
         os.remove("env.yaml")
@@ -919,3 +972,132 @@ class GoogleRoot(RootCmd):
             if env.connector is None:
                 self.do_gcloud_create_serverless_connector(connector_id=hasura_project_name)
             self.do_gcloud_deploy_hasura(None)
+
+    def do_gcloud_create_auth_service_account(self, _):
+        env = self.get_env()
+        if env.auth_service_account is not None:
+            self.log(f"Service account already created: {env.auth_service_account.email}")
+            return
+        if env.project is None:
+            self.log("No project set. Please set one with gcloud_create_project.")
+            return
+        if env.hasura_service is None:
+            self.log("No service account found.")
+            return
+        cmd_log_str = f"gcloud iam service-accounts create pysura-admin " \
+                      f"--project={env.project.name.split('/')[-1]} " \
+                      f"--display-name=pysuraadmin"
+        self.log(cmd_log_str, level=logging.DEBUG)
+        os.system(cmd_log_str)
+        cmd_str = f"gcloud iam service-accounts list " \
+                  f"--project={env.project.name.split('/')[-1]} " \
+                  f"--format=json"
+        self.log(cmd_str, level=logging.DEBUG)
+        account_choices = json.loads(os.popen(cmd_str).read())
+        service_accounts = []
+        for i, account in enumerate(account_choices):
+            account_data = GoogleServiceAccount(**account)
+            if account_data.displayName == "pysuraadmin":
+                env.auth_service_account = account_data
+            service_accounts.append(account_data)
+        if env.auth_service_account is None:
+            self.log("No service account found.")
+            return
+        cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
+                  f"--member=serviceAccount:{env.auth_service_account.email} " \
+                  f"--role=roles/firebase.admin"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
+                  f"--member=serviceAccount:{env.auth_service_account.email} " \
+                  f"--role=roles/cloudbuild.builds.builder"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
+                  f"--member=serviceAccount:{env.auth_service_account.email} " \
+                  f"--role=roles/firebaseauth.admin"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f"gcloud iam service-accounts keys create admin.json " \
+                  f"--iam-account={env.auth_service_account.email}"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        with open("admin.json", "r") as f:
+            admin_secrets = json.load(f)
+        env.auth_service_account.key_file = admin_secrets
+        env.service_accounts = service_accounts
+        self.set_env(env)
+        os.remove("admin.json")
+
+    def do_attach_firebase(self, _):
+        env = self.get_env()
+        cmd_str = f"firebase projects:addfirebase  {env.project.name.split('/')[-1]}"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f"firebase login --interactive"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        if env.auth_service_account is None:
+            self.do_gcloud_create_auth_service_account(None)
+            env = self.get_env()
+        with open("admin.json", "w") as f:
+            json.dump(env.auth_service_account.key_file, f)
+        cmd_str = f"gcloud auth activate-service-account --key-file=admin.json {env.auth_service_account.email}"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        os.remove("admin.json")
+        cmd_str = "gcloud auth print-access-token"
+        self.log(cmd_str, level=logging.DEBUG)
+        access_token = os.popen(cmd_str).read().strip()
+        cmd_str = f"curl -X POST -H 'Authorization:Bearer {access_token}' -H 'Content-Type:application/json' " \
+                  f"'https://identitytoolkit.googleapis.com/v2/projects" \
+                  f"/{env.project.name.split('/')[-1]}/identityPlatform:initializeAuth'"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f"curl -H 'Authorization:Bearer {access_token}' -H 'Content-Type:application/json' " \
+                  f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
+                  f"/{env.project.name.split('/')[-1]}/config'"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        body_data = {
+            "authorizedDomains": [
+                "localhost",
+                f"{env.project.name.split('/')[-1]}.firebaseapp.com",
+                f"{env.project.name.split('/')[-1]}.web.app"
+            ],
+            "signIn": {
+                "phoneNumber": {
+                    "enabled": True,
+                    "testPhoneNumbers": {
+                        "+15555215551": "000001",
+                        "+15555215552": "000002"
+                    }
+                },
+                "email": {
+                    "enabled": False,
+                    "passwordRequired": False
+                },
+                "anonymous": {
+                    "enabled": False
+                },
+                "allowDuplicateEmails": False
+            }
+        }
+        cmd_str = f"curl -X PATCH " \
+                  f"-H 'Authorization:Bearer {access_token}' " \
+                  f"-H 'Content-Type:application/json' " \
+                  f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
+                  f"/{env.project.name.split('/')[-1]}/config?updateMask=Config.authorizedDomains," \
+                  f"Config.signIn.email,Config.signIn.phoneNumber,Config.signIn.anonymous," \
+                  f"Config.signIn.allowDuplicateEmails' " \
+                  f"-d '{json.dumps(body_data)}'"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = "gcloud auth login"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        if os.path.isdir("pysura_auth"):
+            os.chdir("pysura_auth")
+        else:
+            os.mkdir("pysura_auth")
+            os.chdir("pysura_auth")

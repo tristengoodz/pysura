@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.10.45",
+    version="0.10.48",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -12,9 +12,12 @@ setup(
     package_dir={"pysura": "pysura"},
     package_data={
         "pysura": [
-            "library_data/*"
+            "library_data/pysura_auth/.gcloudignore",
+            "library_data/pysura_auth/main.py",
+            "library_data/pysura_auth/requirements.txt",
         ],
     },
+    include_package_data=True,
     author="Tristen Harr",
     author_email="tristen@thegoodzapp.com",
     description="A Python library used to generate a backend for custom logic using Hasura as a Data-layer",

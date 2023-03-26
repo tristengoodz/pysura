@@ -15,7 +15,7 @@ class App(RootCmd):
         """
         provider = self.collect("Please choose a provider: [google,]: ", ["google"])
         if provider == "google":
-            GoogleRoot().cmdloop()
+            GoogleRoot(logger=self.root).cmdloop()
         else:
             print("Invalid provider")
 

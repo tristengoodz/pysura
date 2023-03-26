@@ -126,7 +126,7 @@ class GoogleDatabaseBackupConfiguration(DictModel):
     transactionLogRetentionDays: int | None = None
 
 
-class GoogleDatabaseServerCaCert(BaseModel):
+class GoogleDatabaseServerCaCert(DictModel):
     cert: str | None = None
     certSerialNumber: str | None = None
     commonName: str | None = None
@@ -137,7 +137,7 @@ class GoogleDatabaseServerCaCert(BaseModel):
     sha1Fingerprint: str | None = None
 
 
-class GoogleDatabaseSettings(BaseModel):
+class GoogleDatabaseSettings(DictModel):
     activationPolicy: str | None = None
     availabilityType: str | None = None
     backupConfiguration: GoogleDatabaseBackupConfiguration | None = None
@@ -238,16 +238,16 @@ class Hasura(DictModel):
     max_instances: str | None = None
 
 
-class GoogleApiServicesDocumentation(BaseModel):
+class GoogleApiServicesDocumentation(DictModel):
     summary: str | None = None
 
 
-class GoogleApiServicesLabel(BaseModel):
+class GoogleApiServicesLabel(DictModel):
     description: str | None = None
     key: str | None = None
 
 
-class GoogleApiServicesMonitoredResource(BaseModel):
+class GoogleApiServicesMonitoredResource(DictModel):
     description: str | None = None
     displayName: str | None = None
     labels: List[GoogleApiServicesLabel] | None = None
@@ -255,20 +255,20 @@ class GoogleApiServicesMonitoredResource(BaseModel):
     type: str | None = None
 
 
-class GoogleApiServicesConsumerDestination(BaseModel):
+class GoogleApiServicesConsumerDestination(DictModel):
     metrics: List[str] | None = None
     monitoredResource: str | None = None
 
 
-class GoogleApiServicesMonitoring(BaseModel):
+class GoogleApiServicesMonitoring(DictModel):
     consumerDestinations: List[GoogleApiServicesConsumerDestination] | None = None
 
 
-class GoogleServicesUsage(BaseModel):
+class GoogleServicesUsage(DictModel):
     requirements: List[str] | None = None
 
 
-class GoogleApiServicesConfig(BaseModel):
+class GoogleApiServicesConfig(DictModel):
     authentication: Dict[str, Any] | None = None
     documentation: GoogleApiServicesDocumentation | None = None
     monitoredResources: List[GoogleApiServicesMonitoredResource] | None = None
@@ -286,13 +286,13 @@ class GoogleApiServices(DictModel):
     state: str | None = None
 
 
-class GoogleServiceTrafficItem(BaseModel):
+class GoogleServiceTrafficItem(DictModel):
     latestRevision: bool | None = None
     percent: int | None = None
     revisionName: str | None = None
 
 
-class GoogleServiceMetadata(BaseModel):
+class GoogleServiceMetadata(DictModel):
     annotations: Dict[str, Any] | None = None
     creationTimestamp: str | None = None
     generation: int | None = None
@@ -304,26 +304,26 @@ class GoogleServiceMetadata(BaseModel):
     uid: str | None = None
 
 
-class GoogleServiceEnvItem(BaseModel):
+class GoogleServiceEnvItem(DictModel):
     name: str | None = None
     value: str | None = None
 
 
-class GoogleServicePort(BaseModel):
+class GoogleServicePort(DictModel):
     containerPort: int | None = None
     name: str | None = None
 
 
-class GoogleServiceLimits(BaseModel):
+class GoogleServiceLimits(DictModel):
     cpu: str | None = None
     memory: str | None = None
 
 
-class GoogleServiceResources(BaseModel):
+class GoogleServiceResources(DictModel):
     limits: GoogleServiceLimits | None = None
 
 
-class GoogleServiceContainer(BaseModel):
+class GoogleServiceContainer(DictModel):
     args: List[str] | None = None
     command: List[str] | None = None
     env: List[GoogleServiceEnvItem] | None = None
@@ -332,34 +332,34 @@ class GoogleServiceContainer(BaseModel):
     resources: GoogleServiceResources | None = None
 
 
-class GoogleServiceTemplateSpec(BaseModel):
+class GoogleServiceTemplateSpec(DictModel):
     containerConcurrency: int | None = None
     containers: List[GoogleServiceContainer] | None = None
     serviceAccountName: str | None = None
     timeoutSeconds: int | None = None
 
 
-class GoogleServiceTemplate(BaseModel):
+class GoogleServiceTemplate(DictModel):
     metadata: GoogleServiceMetadata | None = None
     spec: GoogleServiceTemplateSpec | None = None
 
 
-class GoogleServiceSpec(BaseModel):
+class GoogleServiceSpec(DictModel):
     template: GoogleServiceTemplate | None = None
     traffic: List[GoogleServiceTrafficItem] | None = None
 
 
-class GoogleServiceAddress(BaseModel):
+class GoogleServiceAddress(DictModel):
     url: str | None = None
 
 
-class GoogleServiceCondition(BaseModel):
+class GoogleServiceCondition(DictModel):
     lastTransitionTime: str | None = None
     status: str | None = None
     type: str | None = None
 
 
-class GoogleServiceStatus(BaseModel):
+class GoogleServiceStatus(DictModel):
     address: GoogleServiceAddress | None = None
     conditions: List[GoogleServiceCondition] | None = None
     latestCreatedRevisionName: str | None = None
@@ -375,6 +375,29 @@ class GoogleService(DictModel):
     metadata: GoogleServiceMetadata | None = None
     spec: GoogleServiceSpec | None = None
     status: GoogleServiceStatus | None = None
+
+
+class GoogleSecretReplication(DictModel):
+    automatic: Dict[str, Any]
+
+
+class GoogleSecret(DictModel):
+    createTime: str | None = None
+    etag: str | None = None
+    name: str | None = None
+    replication: GoogleSecretReplication | None = None
+
+
+class GoogleServiceAccount(DictModel):
+    disabled: bool | None = None
+    displayName: str | None = None
+    email: str | None = None
+    etag: str | None = None
+    name: str | None = None
+    oauth2ClientId: str | None = None
+    projectId: str | None = None
+    uniqueId: str | None = None
+    key_file: Any | None = None
 
 
 class GooglePysuraEnv(DictModel):
@@ -403,9 +426,14 @@ class GooglePysuraEnv(DictModel):
     firewalls: List[GoogleFirewall] | None = None
     connector: GoogleConnector | None = None
     connectors: List[GoogleConnector] | None = None
+    api_services: List[GoogleApiServices] | None = None
+    services: List[GoogleService] | None = None
+    secrets: List[GoogleSecret] | None = None
+    service_accounts: List[GoogleServiceAccount] | None = None
     hasura: Hasura | None = None
     hasura_admin_secret: str | None = None
-    hasura_service_url: str | None = None
-    api_services: List[GoogleApiServices] | None = None
+    hasura_backend_event_secret: str | None = None
     hasura_service: GoogleService | None = None
-    services: List[GoogleService] | None = None
+    hasura_service_url: str | None = None
+    hasura_service_account: GoogleServiceAccount | None = None
+    auth_service_account: GoogleServiceAccount | None = None
