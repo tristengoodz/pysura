@@ -1,137 +1,59 @@
-# Pysura
+# Pysura - BETA
 
 ### Hasura + Python = Pysura
 
-## Limitations:
-
-Currently, this only supports a Google-based deployment/stack. I think this would be fixable, but due to the amount of
-time I've spent learning gcloud it would probably be better suited to a AWS/Azure/Etc. architect to write the commands.
+```commandline
+pip install pysura
+pysura
+(pysura_cli) >>> setup_hasura
+```
 
 ## Requirements:
+
+### To use Pysura to generate FastAPI microservices from Hasura metadata:
+
+- Bring your own Hasura
+- Python 3.6+
+
+### To deploy Hasura with Pysura on Google and auto-deploy your microservices:
 
 - gcloud CLI
 - gcloud beta CLI
 - A billing account with Google Cloud
 - Docker
-- Firebase CLI
-- Python 3.6+
 
-```commandline
-pip install pysura
-pysura
-(pysura_cli) >>> setup
-```
+### To bake in Phone Auth (Requires deployment on Google):
+
+- Firebase CLI - For Backed in Auth
 
 # What is Pysura?
 
-Pysura is a CLI tool that's designed to make building and deploying actions, events, and chron-jobs as easy as it is to
-do everything else in Hasura.
+Pysura is a CLI tool that's designed to make building and deploying multi-tenant enterprise grade applications as easy
+as a freshman year algorithms class. It's a highly opinionated way because it's the right way.
+
+It's kind of like running npm init, if npm was for backends, it provides your backend, auth, and database for you in the
+cloud in a way that is infinitely scalable and uses zero-trust, with fully type-safe a type-safe GraphQL backend and a
+bring-your-own front-end with built-in support for Flutter.
+
+## Do I need to deploy Hasura with Pysura to use it?
+
+Nope! You can scaffold out all events, actions, and triggers with Pysura, but when you do... Auth won't work unless you
+set it up yourself! Still useful for getting started with new projects though.
+
+## Is this just a wrapper for the Hasura CLI?
 
 Pysura does *not* use the Hasura CLI, and instead manages the metadata directly via retrieving it and overwriting it.
 
-Pysura is built to bring Python to Hasura because it's a really great language for things like actions, events, and
-chron-jobs.
+## Limitations:
 
-How can Pysura help me setup my project?
+Currently, this only supports a Google-based deployment/stack. Easily fixable. Just need a fellow AWS/Azure/Etc. wizard
+who can translate the gcloud commands. I think the portability is pretty high since everything is done from the CLI. The
+setup wizard is just curling everything.
 
-Run the setup command and follow the installer instructions and you are done.
+## Neat! But it doesn't support my cloud provider, when will you be adding AWS/Azure/Etc. support?
 
-### What the setup command does?
-
-1. Create or select an existing project in Google Cloud
-2. Select an existing billing account in Google Cloud
-3. Configure a Virtual Private cloud with subnets and firewall rules
-4. Create a Cloud SQL Postgresql instance with specified memory and storage in specified region
-5. Deploys Hasura to Cloud Run with all database connections routed through serverless VPC connectors
-6. Attaches a Firebase project to the google cloud project
-7. Enables Firebase Authentication (Requires user to enable phone authentication in the Firebase console)
-8. Builds and Deploys template firebase functions to handle authentication and authorization
-9. Attaches Firebase Authentication JWT to Hasura for RBAC
-
-### What is a Pysura microservice?
-
-A pysura microservice is a FastAPI application that is deployed to Cloud Run that handles actions, events, and
-chron-jobs.
-
-All action inputs and outputs are converted into Pydantic models.
-
-Each action or event is placed inside its own individual file, with auth baked in.
-
-### Who is Pysura for?
-
-Pysura is for Python developers who want to adopt GraphQL in a way that's pythony.
-
-# Pysura commands
-
-## Start pysura
-
-```commandline
-pysura
-```
-
-## Setup
-
-Automagic project setup.
-
-```commandline
-setup
-```
-
-## Quit pysura
-
-```commandline
-quit
-exit
-^Z
-```
-
-## Set a Google Cloud Project
-
-```commandline
-gcloud_set_project <project_id>
-```
-
-## Configure Hasura Instance
-
-Set Admin Secret
-
-```commandline
-set_hasura_admin_secret <admin_secret>
-```
-
-Set Hasura Metadata URL:
-
-```commandline
-set_hasura_metadata_url <metadata_url>
-```
-
-## Import the Hasura Metadata
-
-```commandline
-import_hasura_metadata
-```
-
-## Export the Hasura Metadata
-
-```commandline
-export_hasura_metadata
-```
-
-## Add a new database to hasura. (Create new Postgresql or use existing)
-
-```commandline
-add_database
-```
-
-
-
-## Add a new action to hasura
-TODO
-
-
-TODOS:
-
-Flutterfire
-Microservice templates
-
+I won't. You can. I built this because I needed it. If our stack changes providers, or potentially if someone was
+willing to pay for it, I'd be willing to add support for other providers. But as of now, the best bet would be to open a
+PR and add support for your provider of choice. I tried to design it to be pretty modular. The gcloud --format=json flag
+is what changed the game when I found it.
 
