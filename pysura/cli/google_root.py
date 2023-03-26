@@ -6,7 +6,7 @@ from pydantic.error_wrappers import ValidationError
 import logging
 import random
 from string import ascii_letters, digits
-import yaml
+import psycopg2
 
 
 class GoogleRoot(RootCmd):
@@ -15,6 +15,22 @@ class GoogleRoot(RootCmd):
         super().__init__(*arg, **kwargs)
         self.intro = "Welcome to Pysura for Google Architectures! Type help or ? to list commands."
         self.prompt = "(pysura_cli) >>> "
+
+    @staticmethod
+    def get_database_connection(
+            host="secret",
+            name="postgres",
+            user="postgres",
+            password="secret",
+            port=5432):
+        conn = psycopg2.connect(
+            host=host,
+            database=name,
+            user=user,
+            password=password,
+            port=port
+        )
+        return conn
 
     @staticmethod
     def password(length: int = 64):
@@ -847,12 +863,9 @@ class GoogleRoot(RootCmd):
                 env_dict[
                     f"HASURA_SECONDARY_URLS_{database_credential.database_id.split('/')[-1]}"
                 ] = database_credential.connect_url
-        with open("env.yaml", "w") as f:
-            yaml.dump(env_dict, f)
-
         secret_text = " --update-secrets="
         for k, v in env_dict.items():
-            if k.startswith("HASURA_"):
+            if k.startswith("HASURA_") and v is not None:
                 self.do_gcloud_set_secret(k, v)
                 secret_text += f"{k}={k}:latest,"
         if secret_text == "--update-secrets=":
@@ -878,7 +891,6 @@ class GoogleRoot(RootCmd):
         deploy_command += secret_text
         self.log(deploy_command, level=logging.DEBUG)
         os.system(deploy_command)
-        os.remove("env.yaml")
         services = json.loads(os.popen(f"gcloud run services list "
                                        f"--project={env.project.name.split('/')[-1]} "
                                        f"--format=json").read())
@@ -934,6 +946,21 @@ class GoogleRoot(RootCmd):
 
     def do_export_hasura_metadata(self, _):
         self.log("Exporting Hasura metadata...")
+        env = self.get_env()
+        if env.hasura_service_url is None:
+            self.log("No metadata URL set. Please set one with set_hasura_metadata_url.")
+            return
+        if env.hasura_admin_secret is None:
+            self.log("No admin secret set. Please set one with set_hasura_admin_secret.")
+            return
+        metadata_url = env.hasura_service_url + "/v1/metadata"
+        with open("hasura_metadata.json", "r") as f:
+            json_data = json.load(f)
+        json_data = json.dumps(json_data)
+        cmd_str = f"""curl -d'{{"type": "replace_metadata", "args": {json_data}}}' {metadata_url} -H """ + \
+                  f'''"X-Hasura-Admin-Secret: {env.hasura_admin_secret}"'''
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
 
     def do_gcloud_interactive(self, _):
         """
@@ -945,33 +972,89 @@ class GoogleRoot(RootCmd):
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
 
-    def do_setup_hasura(self, _):
+    def do_enable_database_local(self, database_id=""):
         env = self.get_env()
-        if env.gcloud_logged_in is False:
-            self.do_gcloud_login()
-        if env.organization is None:
-            self.do_gcloud_choose_organization(None)
-        hasura_project_name = self.collect("Hasura project name: ")
-        if self.confirm_loop(hasura_project_name):
-            if env.project is None:
-                self.do_gcloud_create_project(project_id=hasura_project_name)
-            if env.billing_account is None:
-                self.do_gcloud_link_billing_account()
-            if env.api_services is None:
-                self.do_gcloud_enable_api_services(None)
-            if env.network is None:
-                self.do_gcloud_create_network(network_id=hasura_project_name)
-            if env.address is None:
-                self.do_gcloud_create_address(address_id=hasura_project_name)
-            if env.peering is None:
-                self.do_gcloud_create_vpc_peering(peering_id=hasura_project_name)
-            if env.firewalls is None:
-                self.do_gcloud_create_firewall(firewall_id=hasura_project_name)
-            if env.database_credential is None:
-                self.do_gcloud_create_database(database_id=hasura_project_name)
-            if env.connector is None:
-                self.do_gcloud_create_serverless_connector(connector_id=hasura_project_name)
-            self.do_gcloud_deploy_hasura(None)
+        if env.database is None:
+            self.log("No database set.")
+            return
+        if database_id == "":
+            if env.database is None:
+                self.log("No database selected.")
+                return
+            database_id = env.database.name.split("/")[-1]
+
+        db_instance = None
+        db_credentials = None
+        for db, db_creds in zip(env.databases, env.database_credentials):
+            if db.name.split("/")[-1] == database_id:
+                db_instance = db
+            if db_creds.database_id.split("/")[-1] == database_id:
+                db_credentials = db_creds
+            if db_instance is not None and db_credentials is not None:
+                break
+        if db_instance is None or db_credentials is None:
+            self.log("Invalid database id.")
+            return
+        cmd_str = "curl ifconfig.me"
+        self.log(cmd_str, level=logging.DEBUG)
+        ip_address = os.popen(cmd_str).read().strip()
+        self.log(f"Your IP address is {ip_address}.")
+        cmd_str = cmd_log_str = (f"gcloud sql instances patch {db_instance.name.split('/')[-1]} "
+                                 f"--authorized-networks={ip_address}")
+        self.log(cmd_log_str, level=logging.DEBUG)
+        os.system(cmd_str)
+
+    def do_create_default_user_table(self, _):
+        env = self.get_env()
+        if env.database is None:
+            self.log("No database set.")
+            return
+        if env.database_credentials is None:
+            self.log("No database credentials set.")
+            return
+
+        host = None
+        for ip_addr in env.database.ipAddresses:
+            if ip_addr.type == "PRIVATE":
+                host = ip_addr.ipAddress
+
+        if host is None:
+            self.log("No private IP address found.")
+            return
+
+        conn = self.get_database_connection(
+            host=host,
+            password=env.database_credential.password
+        )
+
+        db_string = """create table if not exists "user"
+        (
+            user_id    text                     default gen_random_uuid() not null,
+            user_phone text                                               not null,
+            role       text                     default 'user'::text      not null,
+            created_at timestamp with time zone default now(),
+            updated_at timestamp with time zone default now(),
+            primary key (user_id),
+            unique (user_phone)
+        );"""
+        cursor = conn.cursor()
+        cursor.execute(db_string)
+        conn.commit()
+        conn.close()
+        self.do_import_hasura_metadata(None)
+        with open("hasura_metadata.json", "r") as f:
+            metadata = json.load(f)
+        metadata["sources"][0]["tables"] = [
+            {
+                "table": {
+                    "name": "user",
+                    "schema": "public"
+                }
+            }
+        ]
+        with open("hasura_metadata.json", "w") as f:
+            json.dump(metadata, f)
+        self.do_export_hasura_metadata(None)
 
     def do_gcloud_create_auth_service_account(self, _):
         env = self.get_env()
@@ -1101,3 +1184,36 @@ class GoogleRoot(RootCmd):
         else:
             os.mkdir("pysura_auth")
             os.chdir("pysura_auth")
+
+    def do_setup_hasura(self, _):
+        env = self.get_env()
+        if env.gcloud_logged_in is False:
+            self.do_gcloud_login()
+        if env.organization is None:
+            self.do_gcloud_choose_organization(None)
+        hasura_project_name = self.collect("Hasura project name: ")
+        if self.confirm_loop(hasura_project_name):
+            if env.project is None:
+                self.do_gcloud_create_project(project_id=hasura_project_name)
+            if env.billing_account is None:
+                self.do_gcloud_link_billing_account()
+            if env.api_services is None:
+                self.do_gcloud_enable_api_services(None)
+            if env.network is None:
+                self.do_gcloud_create_network(network_id=hasura_project_name)
+            if env.address is None:
+                self.do_gcloud_create_address(address_id=hasura_project_name)
+            if env.peering is None:
+                self.do_gcloud_create_vpc_peering(peering_id=hasura_project_name)
+            if env.firewalls is None:
+                self.do_gcloud_create_firewall(firewall_id=hasura_project_name)
+            if env.database_credential is None:
+                self.do_gcloud_create_database(database_id=hasura_project_name)
+            if env.connector is None:
+                self.do_gcloud_create_serverless_connector(connector_id=hasura_project_name)
+            self.do_gcloud_deploy_hasura(None)
+            self.do_gcloud_create_auth_service_account(None)
+            env = self.get_env()
+            self.do_enable_database_local(database_id=env.database.name.split("/")[-1])
+            self.do_create_default_user_table(None)
+            self.do_attach_firebase(None)
