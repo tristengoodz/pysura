@@ -785,6 +785,12 @@ class GoogleRoot(RootCmd):
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         os.system(cmd_log_str)
+        cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
+                       f"--member=serviceAccount:{env.hasura_service_account.email} "
+                       f"--role=roles/secretmanager.secretAccessor"
+                       )
+        self.log(cmd_log_str, level=logging.DEBUG)
+        os.system(cmd_log_str)
 
     def do_gcloud_deploy_hasura(self, _):
         env = self.get_env()
@@ -1015,11 +1021,11 @@ class GoogleRoot(RootCmd):
 
         host = None
         for ip_addr in env.database.ipAddresses:
-            if ip_addr.type == "PRIVATE":
+            if ip_addr.type == "PRIMARY":
                 host = ip_addr.ipAddress
 
         if host is None:
-            self.log("No private IP address found.")
+            self.log("No primary IP address found.")
             return
 
         conn = self.get_database_connection(
@@ -1185,7 +1191,30 @@ class GoogleRoot(RootCmd):
             os.mkdir("pysura_auth")
             os.chdir("pysura_auth")
 
+    def do_check_gcloud(self, _):
+        cmd_str = "gcloud version --format=json"
+        self.log(cmd_str, level=logging.DEBUG)
+        try:
+            gcloud_version = json.loads(os.popen(cmd_str).read().strip())
+            self.log(gcloud_version, level=logging.DEBUG)
+            # ensure that Google Cloud SDK is at least 411.0.0
+            if gcloud_version["Google Cloud SDK"] < "411.0.0":
+                raise Exception("Google Cloud SDK is not up to date")
+            # ensure that alpha is at least 2022.12.05
+            if gcloud_version["alpha"] < "2022.12.05":
+                raise Exception("Google Cloud SDK alpha is not up to date")
+            # ensure that beta is at least 2022.12.05
+            if gcloud_version["beta"] < "2022.12.05":
+                raise Exception("Google Cloud SDK beta is not up to date")
+            return True
+        except Exception as e:
+            self.log(str(e), level=logging.ERROR)
+            self.log("Please update Google Cloud SDK", level=logging.ERROR)
+            return False
+
     def do_setup_hasura(self, _):
+        if not self.do_check_gcloud(None):
+            return
         env = self.get_env()
         if env.gcloud_logged_in is False:
             self.do_gcloud_login()
