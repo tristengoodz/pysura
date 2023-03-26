@@ -17,14 +17,15 @@ import json
 class RootCmd(Cmd):
 
     def setup_logging(self):
-        root_logger = logging.getLogger()
-        root_logger.setLevel(logging.DEBUG)
-        root_handler = logging.StreamHandler(sys.stdout)
-        root_handler.setLevel(logging.DEBUG)
-        root_formatter = logging.Formatter(fmt="%(asctime)s %(levelname)-5s %(message)s",
-                                           datefmt="%Y-%m-%d %I:%H:%M")
-        root_handler.setFormatter(root_formatter)
-        root_logger.addHandler(root_handler)
+        root_logger = logging.getLogger("pysura")
+        if not root_logger.hasHandlers():
+            root_logger.setLevel(logging.DEBUG)
+            root_handler = logging.StreamHandler(sys.stdout)
+            root_handler.setLevel(logging.DEBUG)
+            root_formatter = logging.Formatter(fmt="%(asctime)s %(levelname)-5s %(message)s",
+                                               datefmt="%Y-%m-%d %I:%H:%M")
+            root_handler.setFormatter(root_formatter)
+            root_logger.addHandler(root_handler)
         self.root = root_logger
 
     def __init__(self, *args, **kwargs):
