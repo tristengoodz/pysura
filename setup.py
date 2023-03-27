@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.10.53",
+    version="0.10.54",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -36,9 +36,8 @@ setup(
         "psycopg2",
         "pydantic",
         "prompt_toolkit",
-        "pyyaml"
+        "python-graphql-client"
     ],
     extras_require={
-    },
-
+    }
 )

@@ -7,6 +7,9 @@ pip install pysura
 pysura
 (pysura_cli) >>> setup_hasura
 ```
+Note: The installer is doing a lot of things. Some of them take a long time, like
+creating databases, firewalls, and VPC networks. Sometimes it might look frozen,
+but give it some time to do its thing.
 
 ## Requirements:
 
@@ -20,11 +23,11 @@ pysura
 - gcloud CLI
 - gcloud beta CLI
 - A billing account with Google Cloud
-- Docker
+- Docker (Make sure it's running in the background or your deploy will fail!)
 
 ### To bake in Phone Auth (Requires deployment on Google):
 
-- Firebase CLI - For Backed in Auth
+- Firebase CLI
 
 # What is Pysura?
 
@@ -32,7 +35,7 @@ Pysura is a CLI tool that's designed to make building and deploying multi-tenant
 as a freshman year algorithms class. It's a highly opinionated way because it's the right way.
 
 It's kind of like running npm init, if npm was for backends, it provides your backend, auth, and database for you in the
-cloud in a way that is infinitely scalable and uses zero-trust, with fully type-safe a type-safe GraphQL backend and a
+cloud in a way that is infinitely scalable and uses zero-trust, with a type-safe GraphQL backend and a
 bring-your-own front-end with built-in support for Flutter.
 
 ## Do I need to deploy Hasura with Pysura to use it?

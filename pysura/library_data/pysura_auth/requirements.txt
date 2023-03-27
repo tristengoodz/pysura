@@ -44,3 +44,5 @@ uritemplate==4.1.1
 urllib3==1.26.15
 watchdog==3.0.0
 Werkzeug==2.2.3
+python-graphql-client==0.4.3
+google-cloud-secret-manager==2.12.6

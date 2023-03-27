@@ -7,6 +7,8 @@ import logging
 import random
 from string import ascii_letters, digits
 import psycopg2
+import site
+import shutil
 
 
 class GoogleRoot(RootCmd):
@@ -15,6 +17,10 @@ class GoogleRoot(RootCmd):
         super().__init__(*arg, **kwargs)
         self.intro = "Welcome to Pysura for Google Architectures! Type help or ? to list commands."
         self.prompt = "(pysura_cli) >>> "
+
+    @staticmethod
+    def get_site_packages_path(submodule="pysura_auth"):
+        return os.path.join(site.getsitepackages()[0], "pysura", "library_data", submodule)
 
     @staticmethod
     def get_database_connection(
@@ -203,6 +209,9 @@ class GoogleRoot(RootCmd):
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = f"gcloud services enable secretmanager.googleapis.com --project={project_id}"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f"gcloud services enable cloudfunctions.googleapis.com --project={project_id}"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = f"gcloud services list --project={project_id} --format=json"
@@ -882,6 +891,8 @@ class GoogleRoot(RootCmd):
             if service_data.metadata.name == "hasura":
                 env.hasura_service = service_data
                 env.hasura_service_url = service_data.status.url
+                env.hasura.HASURA_GRAPHQL_URL_ROOT = f"{service_data.status.url}/v1/graphql"
+                self.do_gcloud_set_secret("HASURA_GRAPHQL_URL_ROOT", env.hasura.HASURA_GRAPHQL_URL_ROOT)
             new_services.append(service_data)
         env.services = new_services
         self.set_env(env)
@@ -1094,6 +1105,64 @@ class GoogleRoot(RootCmd):
         self.set_env(env)
         os.remove("admin.json")
 
+    def do_attach_auth(self, _):
+        env = self.get_env()
+        if os.path.isdir("pysura_auth"):
+            os.chdir("pysura_auth")
+        else:
+            os.mkdir("pysura_auth")
+            os.chdir("pysura_auth")
+        path = self.get_site_packages_path(submodule="pysura_auth")
+        # Remove the current files
+        for root, dirs, files in os.walk(os.getcwd()):
+            for f in files:
+                os.remove(os.path.join(root, f))
+        # Copy the new files
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if "__pycache__" in root:
+                    continue
+                file_path = os.path.join(root, f)
+                shutil.copy(file_path, os.path.join(os.getcwd(), f))
+        with open("main.py", "r") as f:
+            lines = f.readlines()
+        new_lines = []
+        for line in lines:
+            if "PROJECT_ID_HERE" in line:
+                line = line.replace("PROJECT_ID_HERE", env.project.name.split("/")[-1])
+            new_lines.append(line)
+        with open("main.py", "w") as f:
+            f.writelines(new_lines)
+        cmd_str = f'gcloud functions deploy on_user_create ' \
+                  f'--runtime=python39 ' \
+                  f'--trigger-event=providers/firebase.auth/eventTypes/user.create ' \
+                  f'--trigger-resource={env.project.name.split("/")[-1]} ' \
+                  f'--min-instances=1'
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f'gcloud functions deploy on_user_delete ' \
+                  f'--runtime=python39 ' \
+                  f'--trigger-event=providers/firebase.auth/eventTypes/user.delete ' \
+                  f'--trigger-resource={env.project.name.split("/")[-1]} ' \
+                  f'--min-instances=1'
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f'gcloud functions deploy logout_user ' \
+                  f'--runtime=python39 ' \
+                  f'--trigger-http ' \
+                  f'--allow-unauthenticated ' \
+                  f'--min-instances=1'
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f'gcloud functions deploy refresh_user_claims ' \
+                  f'--runtime=python39 ' \
+                  f'--trigger-http ' \
+                  f'--allow-unauthenticated ' \
+                  f'--min-instances=1'
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        os.chdir("..")
+
     def do_attach_firebase(self, _):
         env = self.get_env()
         cmd_str = f"firebase projects:addfirebase  {env.project.name.split('/')[-1]}"
@@ -1161,11 +1230,7 @@ class GoogleRoot(RootCmd):
         cmd_str = "gcloud auth login"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        if os.path.isdir("pysura_auth"):
-            os.chdir("pysura_auth")
-        else:
-            os.mkdir("pysura_auth")
-            os.chdir("pysura_auth")
+        self.do_attach_auth(None)
 
     def do_check_gcloud(self, _):
         cmd_str = "gcloud version --format=json"
