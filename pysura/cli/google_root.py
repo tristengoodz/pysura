@@ -801,31 +801,7 @@ class GoogleRoot(RootCmd):
             self.log("No connector selected.")
             return
         if env.hasura is None:
-            account_choices = json.loads(os.popen(f"gcloud iam service-accounts list "
-                                                  f"--project={env.project.name.split('/')[-1]} "
-                                                  f"--format=json").read())
-            service_accounts = []
-            for i, account in enumerate(account_choices):
-                account_data = GoogleServiceAccount(**account)
-                if account_data.displayName == "Compute Engine default service account":
-                    env.hasura_service_account = account_data
-                service_accounts.append(account_data)
-            if env.hasura_service_account is None:
-                self.log("No service account found.")
-                return
-            env.service_accounts = service_accounts
-            cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
-                           f"--member=serviceAccount:{env.hasura_service_account.email} "
-                           f"--role=roles/cloudbuild.builds.builder"
-                           )
-            self.log(cmd_log_str, level=logging.DEBUG)
-            os.system(cmd_log_str)
-            cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
-                           f"--member=serviceAccount:{env.hasura_service_account.email} "
-                           f"--role=roles/run.admin"
-                           )
-            self.log(cmd_log_str, level=logging.DEBUG)
-            os.system(cmd_log_str)
+            self.do_update_default_compute_engine_service_account(None)
             cmd_log_str = "docker pull --platform=linux/amd64 hasura/graphql-engine:latest"
             self.log(cmd_log_str, level=logging.DEBUG)
             os.system(cmd_log_str)
