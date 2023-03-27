@@ -214,6 +214,9 @@ class GoogleRoot(RootCmd):
         cmd_str = f"gcloud services enable cloudfunctions.googleapis.com --project={project_id}"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        cmd_str = f"gcloud services enable cloudbuild.googleapis.com --project={project_id}"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
         cmd_str = f"gcloud services list --project={project_id} --format=json"
         self.log(cmd_str, level=logging.DEBUG)
         response = os.popen(cmd_str).read()
@@ -578,24 +581,24 @@ class GoogleRoot(RootCmd):
         if arg_len == 0 and not self.confirm_loop(db_name):
             self.user_input_no_loop(self.do_gcloud_create_database)
             return
-        cpu_number = self.collect("Enter the number of CPU's for the database number: ")
-        memory_amount = self.collect("Enter the amount of memory for the database (MiB): ", ["2048",
-                                                                                             "4096",
-                                                                                             "8192",
-                                                                                             "16384",
-                                                                                             "24576",
-                                                                                             "32768"])
-        db_version = self.collect("Enter the database version (Supports POSTGRES_14, ):", ["POSTGRES_14"])
+        cpu_number = self.collect("Enter the number of CPU's for the database number (Ex. 2): ")
+        memory_amount = self.collect("Enter the amount of memory for the database (MiB) (Ex. 8192): ", ["2048",
+                                                                                                        "4096",
+                                                                                                        "8192",
+                                                                                                        "16384",
+                                                                                                        "24576",
+                                                                                                        "32768"])
+        db_version = self.collect("Enter the database version (Supports POSTGRES_14, ): ", ["POSTGRES_14"])
         cpu_number = str(int(cpu_number.strip()))
         memory_amount = f"{str(int(memory_amount.strip()))}MiB"
         zone = self.gcloud_list_typed_choice(f"gcloud compute zones list "
                                              f"--project={env.project.name.split('/')[-1]} "
-                                             f"--format=json", "Enter a zone: ", "name")
+                                             f"--format=json", "Enter a zone (Ex. us-central1-b): ", "name")
         if zone is None:
             self.log("No zone selected.")
             return
         availability_types = ["regional", "zonal"]
-        availability_type = self.collect("Enter the availability type: (regional/zonal)", availability_types)
+        availability_type = self.collect("Enter the availability type (regional/zonal): ", availability_types)
         if availability_type not in availability_types:
             self.log("Invalid availability type.")
             return
@@ -679,7 +682,7 @@ class GoogleRoot(RootCmd):
             self.log("No database selected.")
             return
 
-        range_choice = self.collect("Select a range: ", [f"10.{i}.0.0/28" for i in range(8, 100)])
+        range_choice = self.collect("Select a range (Ex. 10.8.0.0/28): ", [f"10.{i}.0.0/28" for i in range(8, 100)])
         arg_len = len(connector_id.split())
         if arg_len == 0:
             connector_name = self.collect("Enter a connector name: ")
@@ -784,19 +787,22 @@ class GoogleRoot(RootCmd):
         env.service_accounts = service_accounts
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
-                       f"--role=roles/cloudbuild.builds.builder"
+                       f"--role=roles/cloudbuild.builds.builder "
+                       f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         os.system(cmd_log_str)
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
-                       f"--role=roles/run.admin"
+                       f"--role=roles/run.admin "
+                       f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         os.system(cmd_log_str)
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
-                       f"--role=roles/secretmanager.secretAccessor"
+                       f"--role=roles/secretmanager.secretAccessor "
+                       f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         os.system(cmd_log_str)
@@ -822,9 +828,9 @@ class GoogleRoot(RootCmd):
             self.log(cmd_log_str, level=logging.DEBUG)
             os.system(cmd_log_str)
             hasura_secret = self.password()
-            timeout = self.collect("Timeout (seconds)", ["60s", "300s", "600s", "900s", "1200s", "3600s"])
-            memory = self.collect("Memory", ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
-            max_instances = self.collect("Max instances: ")
+            timeout = self.collect("Timeout (Ex. 600s): ", ["60s", "300s", "600s", "900s", "1200s", "3600s"])
+            memory = self.collect("Memory (Ex. 2Gi): ", ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
+            max_instances = self.collect("Max instances (Ex. 10): ")
             hasura = Hasura(
                 HASURA_GRAPHQL_CORS_DOMAIN="*",
                 HASURA_GRAPHQL_ENABLED_CORS="true",
@@ -1133,6 +1139,14 @@ class GoogleRoot(RootCmd):
             new_lines.append(line)
         with open("main.py", "w") as f:
             f.writelines(new_lines)
+
+        cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
+                       f"--member=serviceAccount:{env.project.name.split('/')[-1]}@appspot.gserviceaccount.com "
+                       f"--role=roles/secretmanager.secretAccessor "
+                       f"--format=json"
+                       )
+        self.log(cmd_log_str, level=logging.DEBUG)
+        os.system(cmd_log_str)
         cmd_str = f'gcloud functions deploy on_user_create ' \
                   f'--runtime=python39 ' \
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.create ' \
@@ -1162,6 +1176,15 @@ class GoogleRoot(RootCmd):
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         os.chdir("..")
+        jwt_config = json.dumps(json.loads("""{
+          "type": "RS256",
+          "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
+          "audience": "PROJECT_ID",
+          "issuer": "https://securetoken.google.com/PROJECT_ID"
+        }""".replace("PROJECT_ID", env.project.name.split("/")[-1])))
+        env.hasura.HASURA_GRAPHQL_JWT_SECRET = jwt_config
+        self.set_env(env)
+        self.do_gcloud_deploy_hasura(None)
 
     def do_attach_firebase(self, _):
         env = self.get_env()
