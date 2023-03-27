@@ -1405,6 +1405,9 @@ class GoogleRoot(RootCmd):
         constants = constants.replace("WS_URL", env.hasura.HASURA_GRAPHQL_URL_ROOT.replace("https", "ws"))
         with open("lib/common/constants.dart", "w") as f:
             f.write(constants)
+        cmd_str = "flutter pub get"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
         os.chdir("..")
 
     def do_setup_pysura(self, _):

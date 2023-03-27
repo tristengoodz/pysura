@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
+from m2r import convert
 
 setup(
     name="pysura",
-    version="0.10.65",
+    version="0.10.66",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -40,7 +41,7 @@ setup(
     author="Tristen Harr",
     author_email="tristen@thegoodzapp.com",
     description="A Python library used to generate a backend for custom logic using Hasura as a Data-layer",
-    long_description=open("README.md").read(),
+    long_description=convert(open("README.md").read()),
     url="https://github.com/tristengoodz/pysura",
     classifiers=[
         "Development Status :: 4 - Beta",
