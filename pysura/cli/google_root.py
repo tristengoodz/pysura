@@ -1204,7 +1204,7 @@ class GoogleRoot(RootCmd):
         os.system(cmd_str)
         os.chdir("..")
         cmd_str = f"gcloud functions list " \
-                  f"project={env.project.name.split('/')[-1]}" \
+                  f"--project={env.project.name.split('/')[-1]} " \
                   f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
         functions = json.loads(os.popen(cmd_str).read())

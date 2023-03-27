@@ -14,17 +14,13 @@ but give it some time to do its thing.
 
 ## Requirements:
 
-### To use Pysura to generate FastAPI microservices from Hasura metadata:
-
-- Bring your own Hasura
-- Python 3.9+
-
 ### To deploy Hasura with Pysura on Google and auto-deploy your microservices:
 
 - gcloud CLI
 - gcloud beta CLI
 - A billing account with Google Cloud
 - Docker (Make sure it's running in the background or your deploy will fail!)
+- - Python 3.9+
 
 ### To bake in Phone Auth (Requires deployment on Google):
 
@@ -41,8 +37,7 @@ bring-your-own front-end with built-in support for Flutter.
 
 ## Do I need to deploy Hasura with Pysura to use it?
 
-Nope! You can scaffold out all events, actions, and triggers with Pysura, but when you do... Auth won't work unless you
-set it up yourself! Still useful for getting started with new projects though.
+As of right now yes. In the future, no!
 
 ## Is this just a wrapper for the Hasura CLI?
 
