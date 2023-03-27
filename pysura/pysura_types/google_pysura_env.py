@@ -402,8 +402,29 @@ class GoogleServiceAccount(DictModel):
     key_file: Any | None = None
 
 
+class GoogleCloudFunctionHttpsTrigger(BaseModel):
+    securityLevel: str | None = None
+    url: str | None = None
+
+
 class GoogleCloudFunction(DictModel):
-    pass
+    availableMemoryMb: int | None = None
+    buildId: str | None = None
+    buildName: str | None = None
+    dockerRegistry: str | None = None
+    entryPoint: str | None = None
+    httpsTrigger: GoogleCloudFunctionHttpsTrigger | None = None
+    ingressSettings: str | None = None
+    labels: Dict[str, Any] | None = None
+    minInstances: int | None = None
+    name: str | None = None
+    runtime: str | None = None
+    serviceAccountEmail: str | None = None
+    sourceUploadUrl: str | None = None
+    status: str | None = None
+    timeout: str | None = None
+    updateTime: str | None = None
+    versionId: str | None = None
 
 
 class GooglePysuraEnv(DictModel):
@@ -443,3 +464,4 @@ class GooglePysuraEnv(DictModel):
     hasura_service_url: str | None = None
     hasura_service_account: GoogleServiceAccount | None = None
     auth_service_account: GoogleServiceAccount | None = None
+    functions: List[GoogleCloudFunction] | None = None

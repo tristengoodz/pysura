@@ -5,6 +5,7 @@
 ```commandline
 pip install pysura
 pysura
+(pysura_cli) >>> choose_provider google
 (pysura_cli) >>> setup_hasura
 ```
 Note: The installer is doing a lot of things. Some of them take a long time, like
@@ -16,7 +17,7 @@ but give it some time to do its thing.
 ### To use Pysura to generate FastAPI microservices from Hasura metadata:
 
 - Bring your own Hasura
-- Python 3.6+
+- Python 3.9+
 
 ### To deploy Hasura with Pysura on Google and auto-deploy your microservices:
 

@@ -153,7 +153,7 @@ class GoogleRoot(RootCmd):
         cmd_str = "gcloud auth login"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        login_success = self.collect("Did you successfully login? (y/n)")
+        login_success = self.collect("Did you successfully login? (y/n) ")
         if login_success.strip().lower() == "y":
             env = self.get_env()
             env.gcloud_logged_in = True
@@ -242,7 +242,7 @@ class GoogleRoot(RootCmd):
         Usage: gcloud_project_create
         """
         env = self.get_env()
-        use_organization = self.collect("Do you want to use an organization? (y/n)")
+        use_organization = self.collect("Do you want to use an organization? (y/n) ")
         use_org = use_organization.strip().lower() == "y"
         if use_org:
             if env.organization is None:
@@ -761,14 +761,40 @@ class GoogleRoot(RootCmd):
 
     def do_gcloud_set_secret(self, secret_key, secret_value):
         env = self.get_env()
+        update_secret = False
+        for secret in env.secrets:
+            if secret.name.split("/")[-1] == secret_key:
+                update_secret = True
+                break
         with open("secret", "w") as f:
             f.write(secret_value)
-        cmd_str = f"gcloud secrets create {secret_key} " \
-                  f"--project={env.project.name.split('/')[-1]} " \
-                  f"--data-file=secret"
+        if not update_secret:
+            cmd_str = f"gcloud secrets create {secret_key} " \
+                      f"--project={env.project.name.split('/')[-1]} " \
+                      f"--data-file=secret"
+        else:
+            cmd_str = f"gcloud secrets versions add {secret_key} " \
+                      f"--project={env.project.name.split('/')[-1]} " \
+                      f"--data-file=secret"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         os.remove("secret")
+        secrets = self.retry_loop(f"gcloud secrets list --project={env.project.name.split('/')[-1]} --format=json",
+                                  f"{secret_key}")
+        secret_selected = None
+        secret_set = []
+        for secret in secrets:
+            secret_data = GoogleSecret(
+                **secret
+            )
+            secret_set.append(secret_data)
+            if secret_data.name.split("/")[-1] == secret_key:
+                secret_selected = secret_data
+        if secret_selected is None:
+            self.log("Secret not found.")
+            return
+        env.secrets = secret_set
+        self.set_env(env)
 
     def do_update_default_compute_engine_service_account(self, _):
         env = self.get_env()
@@ -1176,6 +1202,16 @@ class GoogleRoot(RootCmd):
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         os.chdir("..")
+        cmd_str = f"gcloud functions list " \
+                  f"project={env.project.name.split('/')[-1]}" \
+                  f"--format=json"
+        self.log(cmd_str, level=logging.DEBUG)
+        functions = json.loads(os.popen(cmd_str).read())
+        new_functions = []
+        for function in functions:
+            function_data = GoogleCloudFunction(**function)
+            new_functions.append(function_data)
+        env.functions = new_functions
         jwt_config = json.dumps(json.loads("""{
           "type": "RS256",
           "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
@@ -1245,7 +1281,9 @@ class GoogleRoot(RootCmd):
                   f"-H 'Content-Type:application/json' " \
                   f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
                   f"/{env.project.name.split('/')[-1]}/config?updateMask=Config.authorizedDomains," \
-                  f"Config.signIn.email,Config.signIn.phoneNumber,Config.signIn.anonymous," \
+                  f"Config.signIn.email.enabled,Config.signIn.email.passwordRequired," \
+                  f"Config.signIn.phoneNumber.enabled,Config.signIn.phoneNumber.testPhoneNumbers," \
+                  f"Config.signIn.anonymous.enabled," \
                   f"Config.signIn.allowDuplicateEmails' " \
                   f"-d '{json.dumps(body_data)}'"
         self.log(cmd_str, level=logging.DEBUG)
