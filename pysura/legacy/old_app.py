@@ -1909,7 +1909,7 @@ from pydantic import BaseModel
         else:
             os.mkdir(f"microservices/{microservice_name}")
             os.chdir(f"microservices/{microservice_name}")
-            with open("app.py", "w") as f:
+            with open("../cli/app.py", "w") as f:
                 f.write(App.APP_PY)
             env_dict = App.load_env_dict_from_json()
             project_id = env_dict['GCP_PROJECT_ID']
