@@ -26,6 +26,14 @@ but give it some time to do its thing.
 
 - Firebase CLI
 
+### To attach Flutter
+
+- npm
+- flutterfire_cli
+- Dart
+- Flutter
+
+
 # What is Pysura?
 
 Pysura is a CLI tool that's designed to make building and deploying multi-tenant enterprise grade applications as easy

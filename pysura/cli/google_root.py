@@ -767,6 +767,16 @@ class GoogleRoot(RootCmd):
                 if secret.name.split("/")[-1] == secret_key:
                     create_secret = False
                     break
+        else:
+            cmd_str = f"gcloud secrets list --project={env.project.name.split('/')[-1]} --format=json"
+            self.log(cmd_str, level=logging.DEBUG)
+            secrets = json.loads(os.popen(cmd_str).read())
+            if isinstance(secrets, list) and len(secrets) > 0:
+                for secret in secrets:
+                    secret_data = GoogleSecret(**secret)
+                    if secret_data.name.split("/")[-1] == secret_key:
+                        create_secret = False
+                        break
         with open("secret", "w") as f:
             f.write(secret_value)
         if create_secret:
@@ -1114,21 +1124,25 @@ class GoogleRoot(RootCmd):
             return
         cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
                   f"--member=serviceAccount:{env.auth_service_account.email} " \
-                  f"--role=roles/firebase.admin"
+                  f"--role=roles/firebase.admin " \
+                  f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
                   f"--member=serviceAccount:{env.auth_service_account.email} " \
-                  f"--role=roles/cloudbuild.builds.builder"
+                  f"--role=roles/cloudbuild.builds.builder " \
+                  f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
                   f"--member=serviceAccount:{env.auth_service_account.email} " \
-                  f"--role=roles/firebaseauth.admin"
+                  f"--role=roles/firebaseauth.admin " \
+                  f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = f"gcloud iam service-accounts keys create admin.json " \
-                  f"--iam-account={env.auth_service_account.email}"
+                  f"--iam-account={env.auth_service_account.email} " \
+                  f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         with open("admin.json", "r") as f:
@@ -1178,28 +1192,32 @@ class GoogleRoot(RootCmd):
                   f'--runtime=python39 ' \
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.create ' \
                   f'--trigger-resource={env.project.name.split("/")[-1]} ' \
-                  f'--min-instances=1'
+                  f'--min-instances=1 ' \
+                  f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = f'gcloud functions deploy on_user_delete ' \
                   f'--runtime=python39 ' \
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.delete ' \
                   f'--trigger-resource={env.project.name.split("/")[-1]} ' \
-                  f'--min-instances=1'
+                  f'--min-instances=1 ' \
+                  f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = f'gcloud functions deploy logout_user ' \
                   f'--runtime=python39 ' \
                   f'--trigger-http ' \
                   f'--allow-unauthenticated ' \
-                  f'--min-instances=1'
+                  f'--min-instances=1 ' \
+                  f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = f'gcloud functions deploy refresh_user_claims ' \
                   f'--runtime=python39 ' \
                   f'--trigger-http ' \
                   f'--allow-unauthenticated ' \
-                  f'--min-instances=1'
+                  f'--min-instances=1 ' \
+                  f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         os.chdir("..")
@@ -1236,6 +1254,7 @@ class GoogleRoot(RootCmd):
             env = self.get_env()
         with open("admin.json", "w") as f:
             json.dump(env.auth_service_account.key_file, f)
+        self.do_attach_flutter(None)
         cmd_str = f"gcloud auth activate-service-account --key-file=admin.json {env.auth_service_account.email}"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
@@ -1293,6 +1312,15 @@ class GoogleRoot(RootCmd):
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         self.do_attach_auth(None)
+        self.log("Please enable phone sign in in the Firebase console", level=logging.INFO)
+        self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                 f"/providers",
+                 level=logging.INFO
+                 )
+        ready = self.collect("Have you enabled phone sign in in the Firebase console? (y/n): ")
+        if ready != "y":
+            self.log("Please enable phone sign in in the Firebase console", level=logging.INFO)
+            return
 
     def do_check_gcloud(self, _):
         cmd_str = "gcloud version --format=json"
@@ -1314,6 +1342,52 @@ class GoogleRoot(RootCmd):
             self.log(str(e), level=logging.ERROR)
             self.log("Please update Google Cloud SDK", level=logging.ERROR)
             return False
+
+    def do_attach_flutter(self, _):
+        env = self.get_env()
+        if env.hasura is None:
+            self.log("Please setup Hasura first", level=logging.ERROR)
+            return
+        if os.path.isdir("frontend"):
+            self.log("frontend directory already exists", level=logging.ERROR)
+            return
+        os.mkdir("frontend")
+        os.chdir("frontend")
+        cmd_str = "flutter create ."
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f"flutterfire configure " \
+                  f"--project={env.project.name.split('/')[-1]} " \
+                  f"--platforms=android,ios,macos,web,linux,windows"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        if not os.path.exists("pubspec.yaml"):
+            self.log("pubspec.yaml not found", level=logging.ERROR)
+            return
+        os.remove("pubspec.yaml")
+        if not os.path.exists("lib/main.dart"):
+            self.log("lib/main.dart not found", level=logging.ERROR)
+            return
+        os.remove("lib/main.dart")
+        path = self.get_site_packages_path(submodule="pysura_frontend")
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
+                    continue
+                file_path = os.path.join(root, f)
+                shutil.copy(file_path, os.path.join(os.getcwd(), f))
+        app_name = self.collect("What will your public facing App name be? (iOS store/Google Playstore): ")
+        while not self.confirm_loop(app_name):
+            app_name = self.collect("What will your public facing App name be? (iOS store/Google Playstore): ")
+
+        with open("lib/common/constants.dart", "r") as f:
+            constants = f.read()
+        constants = constants.replace("APP_NAME", app_name)
+        constants = constants.replace("HTTPS_URL", env.hasura.HASURA_GRAPHQL_URL_ROOT)
+        constants = constants.replace("WS_URL", env.hasura.HASURA_GRAPHQL_URL_ROOT.replace("https", "ws"))
+        with open("lib/common/constants.dart", "w") as f:
+            f.write(constants)
+        os.chdir("..")
 
     def do_setup_hasura(self, _):
         if not self.do_check_gcloud(None):
