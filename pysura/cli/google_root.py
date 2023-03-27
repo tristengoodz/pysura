@@ -1389,7 +1389,7 @@ class GoogleRoot(RootCmd):
             f.write(constants)
         os.chdir("..")
 
-    def do_setup_hasura(self, _):
+    def do_setup_pysura(self, _):
         if not self.do_check_gcloud(None):
             return
         env = self.get_env()
