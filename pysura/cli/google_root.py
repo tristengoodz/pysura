@@ -1356,6 +1356,12 @@ class GoogleRoot(RootCmd):
         cmd_str = "flutter create ."
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        cmd_str = f"dart pub global activate flutterfire_cli"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = 'export PATH="$PATH":"$HOME/.pub-cache/bin"'
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
         cmd_str = f"flutterfire configure " \
                   f"--project={env.project.name.split('/')[-1]} " \
                   f"--platforms=android,ios,macos,web,linux,windows"
@@ -1369,13 +1375,23 @@ class GoogleRoot(RootCmd):
             self.log("lib/main.dart not found", level=logging.ERROR)
             return
         os.remove("lib/main.dart")
+        os.mkdir("lib/common")
+        os.mkdir("lib/controllers")
+        os.mkdir("lib/pages")
+        os.mkdir("lib/widgets")
         path = self.get_site_packages_path(submodule="pysura_frontend")
         for root, dirs, files in os.walk(path):
             for f in files:
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
                     continue
+                dir_path = root[root.rfind("lib"):]
                 file_path = os.path.join(root, f)
-                shutil.copy(file_path, os.path.join(os.getcwd(), f))
+                dir_paths = dir_path.split(os.sep)
+                dir_paths = ["/".join(dir_paths[:i + 1]) for i in range(len(dir_paths))]
+                for path in dir_paths:
+                    if not os.path.isdir(path):
+                        os.mkdir(path)
+                shutil.copy(file_path, dir_path)
         app_name = self.collect("What will your public facing App name be? (iOS store/Google Playstore): ")
         while not self.confirm_loop(app_name):
             app_name = self.collect("What will your public facing App name be? (iOS store/Google Playstore): ")
@@ -1390,6 +1406,9 @@ class GoogleRoot(RootCmd):
         os.chdir("..")
 
     def do_setup_pysura(self, _):
+        """
+        Setups up a Pysura project
+        """
         if not self.do_check_gcloud(None):
             return
         env = self.get_env()
