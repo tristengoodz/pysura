@@ -49,14 +49,14 @@ def execute(gql, variables):
 
 
 def on_user_create(data, context):
-    logging.log(logging.INFO, data)
-    logging.log(logging.INFO, context)
+    print(data)
+    print(context)
     return "Hello, World!"
 
 
 def on_user_delete(data, context):
-    logging.log(logging.INFO, data)
-    logging.log(logging.INFO, context)
+    print(data)
+    print(context)
     return
 
 
