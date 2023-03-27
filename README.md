@@ -5,7 +5,7 @@
 ```commandline
 pip install pysura
 pysura
-(pysura_cli) >>> choose_provider google
+(pysura_cli) >>> choose_provider
 (pysura_cli) >>> setup_hasura
 ```
 Note: The installer is doing a lot of things. Some of them take a long time, like

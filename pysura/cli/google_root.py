@@ -761,14 +761,15 @@ class GoogleRoot(RootCmd):
 
     def do_gcloud_set_secret(self, secret_key, secret_value):
         env = self.get_env()
-        update_secret = False
-        for secret in env.secrets:
-            if secret.name.split("/")[-1] == secret_key:
-                update_secret = True
-                break
+        create_secret = True
+        if isinstance(env.secrets, list) and len(env.secrets) > 0:
+            for secret in env.secrets:
+                if secret.name.split("/")[-1] == secret_key:
+                    create_secret = False
+                    break
         with open("secret", "w") as f:
             f.write(secret_value)
-        if not update_secret:
+        if create_secret:
             cmd_str = f"gcloud secrets create {secret_key} " \
                       f"--project={env.project.name.split('/')[-1]} " \
                       f"--data-file=secret"
