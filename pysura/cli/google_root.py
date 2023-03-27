@@ -542,7 +542,7 @@ class GoogleRoot(RootCmd):
                       f"--project={env.project.name.split('/')[-1]} " \
                       f"--format=json"
             self.retry_loop(cmd_str, f"{firewall_name}-allow-traffic")
-            cmd_str = f"gcloud compute firewall-rules create {firewall_name}-allow-internal  " \
+            cmd_str = f"gcloud compute firewall-rules create {firewall_name}-allow-ssh  " \
                       f"--network={env.network.name.split('/')[-1]} " \
                       f"--allow=tcp:22,tcp:3389,icmp " \
                       f"--project={env.project.name.split('/')[-1]}"
@@ -1363,7 +1363,6 @@ class GoogleRoot(RootCmd):
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = f"flutterfire configure " \
-                  f"--project={env.project.name.split('/')[-1]} " \
                   f"--platforms=android,ios,macos,web,linux,windows"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
