@@ -22,6 +22,9 @@ To deploy Hasura with Pysura with baked in Auth and a templated Flutter Frontend
 * flutterfire_cli
 * Dart
 * Flutter
+* XCode (for iOS apps) and iOS Dev Tools
+* Android Studio (for Android apps) and Android Dev Tools
+* Gradle (for Android apps)
 
 .. code-block:: commandline
 
@@ -70,9 +73,9 @@ Is this just a wrapper for the Hasura CLI?
 
 Pysura does *not* use the Hasura CLI, and instead manages the metadata directly via retrieving it and overwriting it.
 
-It's important to note that Pysura will add the local machine of its installer's IP to the allow-list for the
-database. This is to allow pysura to connect via pscopg2 for things like table management. You'll need to de-authorize
-the network if you want to remove the machine from the allow-list once setup is complete.
+It's important to note that Pysura will add the local machine of its installer's IP to the allow-list for the database.
+This is to allow pysura to connect via pscopg2 for things like table management. You'll need to de-authorize the network
+if you want to remove the machine from the allow-list once setup is complete.
 
 Limitations:
 ^^^^^^^^^^^^
@@ -92,16 +95,20 @@ is what changed the game when I found it.
 FAQ:
 ^^^^
 
-Q: I broke the installer, something wasn't enabled properly. (I didn't have docker running, didn't have gcloud installed, etc.)
+Q: I broke the installer, something wasn't enabled properly. (I didn't have docker running, didn't have gcloud
+installed, etc.)
 
-A: Best bet is to try to rerun the installer, it might throw some errors but it should recover for the most part. If it 
-doesn't, then you should trash the project and rerun the setup. Just remember to go to billing and disable the old project,
-and shut it down.
+A: Best bet is to try to rerun the installer, it might throw some errors but it should recover for the most part. If it
+doesn't, then you should trash the project and rerun the setup. Just remember to go to billing and disable the old
+project, and shut it down.
 
 Q: How do I contribute?
 
-A: Read over the current code, and see if you can make it better. If you can, open a PR. If you can't, open an issue or a feature request for something that would make it better.
+A: Read over the current code, and see if you can make it better. If you can, open a PR. If you can't, open an issue or
+a feature request for something that would make it better.
 
 Q: Is this affiliated with Hasura, Google, or Firebase?
 
-A: No, this has no affiliation with Hasura, Google, or Firebase. In no way should this be considered an official product of any of these companies. Although this makes heavy use of tools and API's provided it is in no way an official product of any company or tool used. 
+A: No, this has no affiliation with Hasura, Google, or Firebase. In no way should this be considered an official product
+of any of these companies. Although this makes heavy use of tools and API's provided it is in no way an official product
+of any company or tool used. 

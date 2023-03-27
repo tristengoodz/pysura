@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '/common/styles.dart';
 import '/pages/main/main_page_controller.dart';
 
 class MainPage extends StatelessWidget {
@@ -10,16 +8,27 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MainPageController controller = Get.put(MainPageController());
-    return Obx(
-          () =>
-          Scaffold(
-            backgroundColor: kBackgroundColor,
-            body: Center(
-              child: Text(
-                controller.title,
-              ),
+
+    return Scaffold(
+      appBar: AppBar(
+          elevation: 1,
+          centerTitle: false,
+          leading: const Icon(Icons.home),
+          title: const Text(
+            'Home',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
             ),
           ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  controller.signOut();
+                },
+                icon: const Icon(Icons.logout))
+          ]),
     );
   }
 }

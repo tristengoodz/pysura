@@ -1,3 +1,5 @@
+import sys
+
 from pysura.pysura_types.root_cmd import RootCmd
 from pysura.pysura_types.google_pysura_env import *
 import json
@@ -9,6 +11,8 @@ from string import ascii_letters, digits
 import psycopg2
 import site
 import shutil
+import plistlib
+import re
 
 
 class GoogleRoot(RootCmd):
@@ -962,6 +966,14 @@ class GoogleRoot(RootCmd):
         self.set_env(env)
         self.log(f"Set admin secret to {admin_secret}.")
 
+    def do_set_hasura_database_connection_url(self, database_connection_url):
+        env = self.get_env()
+        if env.hasura is None:
+            hasura_data = Hasura()
+            env.hasura = hasura_data
+        env.hasura.HASURA_GRAPHQL_DATABASE_URL = database_connection_url
+        self.set_env(env)
+
     def do_import_hasura_metadata(self, _):
         """
         Imports Hasura metadata.
@@ -1356,6 +1368,32 @@ class GoogleRoot(RootCmd):
         cmd_str = "flutter create ."
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        os.chdir("android")
+        cmd_str = "./gradlew signingReport"
+        self.log(cmd_str, level=logging.DEBUG)
+        response = os.popen(cmd_str).read()
+        variants = re.findall(r'Variant: (.+)', response)
+        configs = re.findall(r'Config: (.+)', response)
+        md5s = re.findall(r'MD5: (.+)', response)
+        sha1s = re.findall(r'SHA1: (.+)', response)
+        sha256s = re.findall(r'SHA-256: (.+)', response)
+        valid_until = re.findall(r'Valid until: (.+)', response)
+        signing_reports = []
+        for variant, config, md5, sha1, sha256, valid in zip(variants, configs, md5s, sha1s, sha256s, valid_until):
+            signing_report_data = {
+                'variant': variant,
+                'config': config,
+                'md5': md5,
+                'sha1': sha1,
+                'sha256': sha256,
+                'valid_until': valid
+            }
+            android_report = AndroidSigningReport(**signing_report_data)
+            signing_reports.append(android_report)
+            if android_report.variant == "debug":
+                env.android_debug_signing_report = android_report
+        env.android_signing_reports = signing_reports
+        os.chdir("..")
         if not os.path.exists("pubspec.yaml"):
             self.log("pubspec.yaml not found", level=logging.ERROR)
             return
@@ -1368,6 +1406,7 @@ class GoogleRoot(RootCmd):
         os.mkdir("lib/controllers")
         os.mkdir("lib/pages")
         os.mkdir("lib/widgets")
+        os.remove("test/widget_test.dart")
         path = self.get_site_packages_path(submodule="pysura_frontend")
         for root, dirs, files in os.walk(path):
             for f in files:
@@ -1408,10 +1447,31 @@ class GoogleRoot(RootCmd):
         cmd_str = "flutter pub get"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        with open("ios/Runner/GoogleService-Info.plist", "rb") as f:
+            ios_plist = plistlib.load(f)
+        reversed_ios_client_id = ios_plist["REVERSED_CLIENT_ID"]
+        with open("ios/Runner/Info.plist", "rb") as f:
+            ios_plist = plistlib.load(f)
+        ios_bundle = {
+            "CFBundleTypeRole": "Editor",
+            "CFBundleURLSchemes": [reversed_ios_client_id]
+        }
+        ios_plist["CFBundleURLTypes"] = [
+            ios_bundle
+        ]
+        env.ios_cf_bundle_url_types = IosCFBundleURLTypes(**ios_bundle)
+        with open("ios/Runner/Info.plist", "wb") as f:
+            plistlib.dump(ios_plist, f)
+        cmd_str = f"firebase apps:android:update {env.project.name.split('/')[-1]} " \
+                  f"--sha1 {env.android_debug_signing_report.sha1} " \
+                  f"--sha256 {env.android_debug_signing_report.sha256}"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
         cmd_str = "flutter doctor"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         os.chdir("..")
+        self.set_env(env)
 
     def do_setup_pysura(self, _):
         """

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.10.74",
+    version="0.10.77",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -39,7 +39,8 @@ setup(
     include_package_data=True,
     author="Tristen Harr",
     author_email="tristen@thegoodzapp.com",
-    description="A Python library used to generate a backend for custom logic using Hasura as a Data-layer",
+    description="A useful tool that provides commands to help ease the installation process of Hasura, "
+                "and manage its actions, events, and scheduled jobs with baked in phone Auth and a Flutter frontend.",
     long_description=open("README.rst", encoding="utf-8").read(),
     url="https://github.com/tristengoodz/pysura",
     classifiers=[

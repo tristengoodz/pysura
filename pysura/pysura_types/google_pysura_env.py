@@ -407,6 +407,20 @@ class GoogleCloudFunctionHttpsTrigger(BaseModel):
     url: str | None = None
 
 
+class AndroidSigningReport(DictModel):
+    variant: str | None = None
+    config: str | None = None
+    md5: str | None = None
+    sha1: str | None = None
+    sha256: str | None = None
+    valid_until: str | None = None
+
+
+class IosCFBundleURLTypes(DictModel):
+    CFBundleTypeRole: str | None = "Editor"
+    CFBundleURLSchemes: List[str] | None = None
+
+
 class GoogleCloudFunction(DictModel):
     availableMemoryMb: int | None = None
     buildId: str | None = None
@@ -465,3 +479,6 @@ class GooglePysuraEnv(DictModel):
     hasura_service_account: GoogleServiceAccount | None = None
     auth_service_account: GoogleServiceAccount | None = None
     functions: List[GoogleCloudFunction] | None = None
+    ios_cf_bundle_url_types: IosCFBundleURLTypes | None = None
+    android_signing_reports: [AndroidSigningReport] | None = None
+    android_debug_signing_report: AndroidSigningReport | None = None
