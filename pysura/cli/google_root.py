@@ -1383,14 +1383,17 @@ class GoogleRoot(RootCmd):
             for f in files:
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
                     continue
-                dir_path = root[root.rfind("lib"):]
-                file_path = os.path.join(root, f)
-                dir_paths = dir_path.split(os.sep)
-                dir_paths = ["/".join(dir_paths[:i + 1]) for i in range(len(dir_paths))]
-                for path in dir_paths:
-                    if not os.path.isdir(path):
-                        os.mkdir(path)
-                shutil.copy(file_path, dir_path)
+                if f == "pubspec.yaml":
+                    shutil.copy("pubspec.yaml", ".")
+                else:
+                    dir_path = root[root.rfind("lib"):]
+                    file_path = os.path.join(root, f)
+                    dir_paths = dir_path.split(os.sep)
+                    dir_paths = ["/".join(dir_paths[:i + 1]) for i in range(len(dir_paths))]
+                    for path in dir_paths:
+                        if not os.path.isdir(path):
+                            os.mkdir(path)
+                    shutil.copy(file_path, dir_path)
         app_name = self.collect("What will your public facing App name be? (iOS store/Google Playstore): ")
         while not self.confirm_loop(app_name):
             app_name = self.collect("What will your public facing App name be? (iOS store/Google Playstore): ")
