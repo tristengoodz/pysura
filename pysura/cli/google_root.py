@@ -1356,16 +1356,6 @@ class GoogleRoot(RootCmd):
         cmd_str = "flutter create ."
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        cmd_str = f"dart pub global activate flutterfire_cli"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = 'export PATH="$PATH":"$HOME/.pub-cache/bin"'
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"flutterfire configure " \
-                  f"--platforms=android,ios,macos,web,linux,windows"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
         if not os.path.exists("pubspec.yaml"):
             self.log("pubspec.yaml not found", level=logging.ERROR)
             return
@@ -1384,7 +1374,7 @@ class GoogleRoot(RootCmd):
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
                     continue
                 if f == "pubspec.yaml":
-                    shutil.copy("pubspec.yaml", ".")
+                    shutil.copy(os.path.join(root, f), ".")
                 else:
                     dir_path = root[root.rfind("lib"):]
                     file_path = os.path.join(root, f)
@@ -1405,7 +1395,20 @@ class GoogleRoot(RootCmd):
         constants = constants.replace("WS_URL", env.hasura.HASURA_GRAPHQL_URL_ROOT.replace("https", "ws"))
         with open("lib/common/constants.dart", "w") as f:
             f.write(constants)
+        cmd_str = f"dart pub global activate flutterfire_cli"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = 'export PATH="$PATH":"$HOME/.pub-cache/bin"'
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = f"flutterfire configure " \
+                  f"--platforms=android,ios,macos,web,linux,windows"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
         cmd_str = "flutter pub get"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        cmd_str = "flutter doctor"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         os.chdir("..")
