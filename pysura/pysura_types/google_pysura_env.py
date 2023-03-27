@@ -480,5 +480,5 @@ class GooglePysuraEnv(DictModel):
     auth_service_account: GoogleServiceAccount | None = None
     functions: List[GoogleCloudFunction] | None = None
     ios_cf_bundle_url_types: IosCFBundleURLTypes | None = None
-    android_signing_reports: [AndroidSigningReport] | None = None
+    android_signing_reports: List[AndroidSigningReport] | None = None
     android_debug_signing_report: AndroidSigningReport | None = None
