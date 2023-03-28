@@ -1434,6 +1434,9 @@ class GoogleRoot(RootCmd):
         constants = constants.replace("WS_URL", env.hasura.HASURA_GRAPHQL_URL_ROOT.replace("https", "ws"))
         with open("lib/common/constants.dart", "w") as f:
             f.write(constants)
+        cmd_str = "npm install -g firebase-tools"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
         cmd_str = f"dart pub global activate flutterfire_cli"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
