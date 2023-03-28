@@ -20,6 +20,7 @@ dependencies:
   firebase_auth: ^4.2.10
   graphql_flutter: ^5.1.2
   google_fonts: ^4.0.3
+  google_sign_in: ^5.2.1
   get: ^4.6.5
   phone_form_field: ^7.0.6
   tuple: ^2.0.1

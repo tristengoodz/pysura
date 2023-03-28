@@ -1365,7 +1365,7 @@ class GoogleRoot(RootCmd):
             return
         os.mkdir("frontend")
         os.chdir("frontend")
-        cmd_str = "flutter create ."
+        cmd_str = f"flutter create . "
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         os.chdir("android")
@@ -1462,11 +1462,13 @@ class GoogleRoot(RootCmd):
         env.ios_cf_bundle_url_types = IosCFBundleURLTypes(**ios_bundle)
         with open("ios/Runner/Info.plist", "wb") as f:
             plistlib.dump(ios_plist, f)
-        cmd_str = f"firebase apps:android:update {env.project.name.split('/')[-1]} " \
-                  f"--sha1 {env.android_debug_signing_report.sha1} " \
-                  f"--sha256 {env.android_debug_signing_report.sha256}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
+        self.log(f"SHA1:\n{env.android_debug_signing_report.sha1}", level=logging.DEBUG)
+        self.log(f"SHA256:\n{env.android_debug_signing_report.sha256}", level=logging.DEBUG)
+        self.log(f"Please visit:\nhttps://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/"
+                 f"settings/general/android\nAdd the SHA1 and SHA256 to the list of fingerprints", level=logging.DEBUG)
+        ready = self.collect("Are you ready to continue? (y/n): ")
+        while ready != "y":
+            ready = self.collect("Are you ready to continue? (y/n): ")
         cmd_str = "flutter doctor"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)

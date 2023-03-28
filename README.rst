@@ -15,7 +15,7 @@ To deploy Hasura with Pysura with baked in Auth and a templated Flutter Frontend
 * gcloud CLI
 * gcloud beta CLI
 * A billing account with Google Cloud
-* Docker (Make sure it's running in the background or your deploy will fail!)
+* Docker (Make sure it's running in the background or your deployment will fail!)
 * Python 3.9+
 * Firebase CLI
 * npm
@@ -63,6 +63,14 @@ So that it doesn't matter what you are building, you can build it on Pysura. It'
 have better mobile support. Let's bring python to mobile. Let's bring python to the web. Let's bring python to the edge.
 Let's bring python everywhere. And let's skin it with Flutter and feed it all the data it wants with GraphQL and Hasura.
 
+What is a Pysura Microservice?
+
+It's a wrapper around a FastAPI app that holds a collection of actions, events, and chron-jobs related to it's function.
+I.e. A payment microservice might have all code related to payment processing. It bakes in Auth with an extra decorator
+which gives you easy access to the calling user each time a method is called. This works by using opaque tokens that
+pass through the headers into the microservice. It's a very simple way to do auth, and it's very secure. It gives full
+RBAC at a column level, and you can design rather complex auth rules using Hasura's permission system.
+
 Do I need to deploy Hasura with Pysura to use it?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -75,7 +83,7 @@ Pysura does *not* use the Hasura CLI, and instead manages the metadata directly 
 
 It's important to note that Pysura will add the local machine of its installer's IP to the allow-list for the database.
 This is to allow pysura to connect via pscopg2 for things like table management. You'll need to de-authorize the network
-if you want to remove the machine from the allow-list once setup is complete.
+if you want to remove the machine from the allow-list once setup is complete. TODO: Make a deauthorize command.
 
 Limitations:
 ^^^^^^^^^^^^
@@ -90,7 +98,7 @@ Neat! But it doesn't support my cloud provider, when will you be adding AWS/Azur
 I won't. You can. I built this because I needed it. If our stack changes providers, or potentially if someone was
 willing to pay for it, I'd be willing to add support for other providers. But as of now, the best bet would be to open a
 PR and add support for your provider of choice. I tried to design it to be pretty modular. The gcloud --format=json flag
-is what changed the game when I found it.
+is what changed the game when I found it. Maybe try ChatGPT to translate the gcloud commands to AWS/Azure/Etc. commands.
 
 FAQ:
 ^^^^
@@ -111,4 +119,42 @@ Q: Is this affiliated with Hasura, Google, or Firebase?
 
 A: No, this has no affiliation with Hasura, Google, or Firebase. In no way should this be considered an official product
 of any of these companies. Although this makes heavy use of tools and API's provided it is in no way an official product
-of any company or tool used. 
+of any company or tool used.
+
+TODOS:
+^^^^^^
+
+DONE:
+
+
+* [x] Add support for Google Cloud
+* [x] Add support for Firebase Auth
+* [x] Add ios/android wizard
+* [x] Add support for Flutter
+* [x] Hasura Autodeployer
+
+HIGH PRIORITY:
+
+
+* [ ] Add table manager @Tristen
+* [ ] Add microservice manager @Tristen
+* [ ] Add action wizard @Tristen
+* [ ] Add event wizard @Tristen
+* [ ] Add cron wizard @Tristen
+* [ ] Add support for other auth providers (Auth0, etc) @Unclaimed
+
+  * [ ] Auth0
+  * [ ] ???
+
+* [ ] Flutter SSR bindings for Web @Unclaimed
+* [ ] Caching Wizard @Tristen
+* [ ] Update the pysura/pysura_types/root_cmd.py to make better use of prompt_toolkit. It would be nice to have multiple
+  tabs for different level of logs. @Unclaimed
+* [ ] Built in API Version Control @Tristen
+
+LOW PRIORITY:
+
+
+* [ ] Add support for AWS/Azure/Etc.
+* [ ] Add support for other databases (Postgres, MySQL, BigQuery, etc)
+* [ ] Add support for other frontends (React, Vue, etc)

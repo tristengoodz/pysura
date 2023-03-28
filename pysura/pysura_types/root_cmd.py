@@ -31,6 +31,7 @@ class RootCmd(Cmd):
     def __init__(self, *args, logger=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.prompt = "root> "
+        # Auto build a command completer by inspecting the methods attached to self, and stripping the "do_" prefix
         self.completer = WordCompleter([
             *[i[0][3:] for i in inspect.getmembers(self, predicate=inspect.isfunction) if
               i[0].startswith("do_")],
