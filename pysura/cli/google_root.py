@@ -1361,10 +1361,10 @@ class GoogleRoot(RootCmd):
             self.log("Please setup Hasura first", level=logging.ERROR)
             return
         if os.path.isdir("frontend"):
-            self.log("frontend directory already exists", level=logging.ERROR)
-            return
-        os.mkdir("frontend")
-        os.chdir("frontend")
+            os.chdir("frontend")
+        else:
+            os.mkdir("frontend")
+            os.chdir("frontend")
         cmd_str = f"flutter create . "
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)

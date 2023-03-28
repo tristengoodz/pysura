@@ -133,6 +133,8 @@ HIGH PRIORITY:
 - [ ] Update the pysura/pysura_types/root_cmd.py to make better use of prompt_toolkit. It would be nice to have multiple
   tabs for different level of logs. @Unclaimed
 - [ ] Built in API Version Control @Tristen
+- [ ] Tighten up the command loops. (Ex. Test the deployer and input values that will fail, and make sure it can recover
+  more gracefully) @Unclaimed
 
 LOW PRIORITY:
 
