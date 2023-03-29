@@ -1441,6 +1441,17 @@ class GoogleRoot(RootCmd):
         cmd_str = 'export PATH="$PATH":"$HOME/.pub-cache/bin"'
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        cmd_str = "echo $0"
+        self.log(cmd_str, level=logging.DEBUG)
+        response = os.popen(cmd_str).read()
+        if "zsh" in response:
+            cmd_str = "source ~/.zshrc"
+        elif "bash" in response:
+            cmd_str = "source ~/.bashrc"
+        else:
+            cmd_str = "source ~/.profile"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
         cmd_str = f"flutterfire configure " \
                   f"--platforms=android,ios,macos,web,linux,windows"
         self.log(cmd_str, level=logging.DEBUG)

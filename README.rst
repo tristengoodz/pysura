@@ -45,7 +45,8 @@ Mac - Yes, I developed it on a Mac!
 
 Linux - It should work on Linux, it is untested. Let me know!
 
-Windows - I think so, but please let me know!
+Windows - With minor updates it should work. I think the majority of the deployer works, but it might run into issues on
+the Firebase and Flutterfire CLI's.
 
 What is Pysura?
 ===============
@@ -63,13 +64,20 @@ So that it doesn't matter what you are building, you can build it on Pysura. It'
 have better mobile support. Let's bring python to mobile. Let's bring python to the web. Let's bring python to the edge.
 Let's bring python everywhere. And let's skin it with Flutter and feed it all the data it wants with GraphQL and Hasura.
 
+Do I have to use Flutter for the frontend? No way! Pysura places firebase in front of your Hasura instance, so if your
+frontend of choice supports Firebase Auth integrations or libraries, you can use it, or even better open a PR and add a
+template for your provider.
+
 What is a Pysura Microservice?
 
-It's a wrapper around a FastAPI app that holds a collection of actions, events, and chron-jobs related to it's function.
+It's a wrapper around a FastAPI app that holds a collection of actions, events, and chron-jobs related to its function.
 I.e. A payment microservice might have all code related to payment processing. It bakes in Auth with an extra decorator
 which gives you easy access to the calling user each time a method is called. This works by using opaque tokens that
 pass through the headers into the microservice. It's a very simple way to do auth, and it's very secure. It gives full
-RBAC at a column level, and you can design rather complex auth rules using Hasura's permission system.
+RBAC at a column level, and you can design rather complex auth rules using Hasura's permission system. Each action,
+event, and chron-job is placed in a separate file with routing already handled and the calling users information passed
+in the calling context. It makes it very easy to build your business logic in a clean, consistent way that is easy to
+test and maintain, and also easy to hand off to other developers.
 
 Do I need to deploy Hasura with Pysura to use it?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -120,6 +128,15 @@ Q: Is this affiliated with Hasura, Google, or Firebase?
 A: No, this has no affiliation with Hasura, Google, or Firebase. In no way should this be considered an official product
 of any of these companies. Although this makes heavy use of tools and API's provided it is in no way an official product
 of any company or tool used.
+
+Q: I'm not sure what to enter for one of the command line prompts, what should I do?
+
+A: If you aren't sure what to enter, most of the time the provided example should work.
+
+Q: One of the choices in the list of options for a prompt doesn't make sense, or there is something missing!
+
+A: Please open an issue or a feature request. I'm sure I missed some things. Stitching this together required a bit of
+everything, including working outside my area of expertise.
 
 TODOS:
 ^^^^^^
