@@ -1,5 +1,3 @@
-import sys
-
 from pysura.pysura_types.root_cmd import RootCmd
 from pysura.pysura_types.google_pysura_env import *
 import json
