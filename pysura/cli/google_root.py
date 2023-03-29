@@ -1358,11 +1358,11 @@ class GoogleRoot(RootCmd):
         if env.hasura is None:
             self.log("Please setup Hasura first", level=logging.ERROR)
             return
-        if os.path.isdir("frontend"):
-            os.chdir("frontend")
+        if os.path.isdir("flutter_frontend"):
+            os.chdir("flutter_frontend")
         else:
-            os.mkdir("frontend")
-            os.chdir("frontend")
+            os.mkdir("flutter_frontend")
+            os.chdir("flutter_frontend")
         cmd_str = f"flutter create . "
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)

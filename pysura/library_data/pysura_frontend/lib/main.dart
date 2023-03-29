@@ -14,6 +14,7 @@ import 'common/styles.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/graphql_controller.dart';
 import 'widgets/graphql_provider_widget.dart';
+import 'firebase_options.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +28,9 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final Future<FirebaseApp> _initApp = Firebase.initializeApp();
+  final Future<FirebaseApp> _initApp = Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   MyApp({super.key});
 

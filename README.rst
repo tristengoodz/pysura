@@ -177,4 +177,6 @@ LOW PRIORITY:
 * [ ] Add support for AWS/Azure/Etc.
 * [ ] Add support for other databases (Postgres, MySQL, BigQuery, etc)
 * [ ] Add support for other frontends (React, Vue, etc)
-* [ ] Rewrite the CLI tool in a more modular way, with command plug-ins. 
+* [ ] Rewrite the CLI tool in a more modular way, with command plug-ins.
+* [ ] It should be possible to introspect the entirety of the gcloud CLI by parsing the output of ``gcloud help``. And
+  walking the CLI tool This would allow for a more dynamic CLI tool that could be used for other projects.
