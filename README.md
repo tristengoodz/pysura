@@ -158,3 +158,4 @@ LOW PRIORITY:
 - [ ] Add support for AWS/Azure/Etc.
 - [ ] Add support for other databases (Postgres, MySQL, BigQuery, etc)
 - [ ] Add support for other frontends (React, Vue, etc)
+- [ ] Rewrite the CLI tool in a more modular way, with command plug-ins. 
