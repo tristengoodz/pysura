@@ -21,6 +21,15 @@ HASURA_GRAPHQL_URL_ROOT = get_secret_by_id("HASURA_GRAPHQL_URL_ROOT")
 HASURA_GRAPHQL_ADMIN_SECRET = get_secret_by_id("HASURA_GRAPHQL_ADMIN_SECRET")
 
 
+class GQL:
+    CREATE_USER = """mutation CreateUser($user_id: String = "", $user_phone: String = "") {
+  insert_user_one(object: {user_id: $user_id, user_phone: $user_phone}) {
+    user_id
+  }
+}
+"""
+
+
 def get_client():
     return GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
 
@@ -51,7 +60,18 @@ def execute(gql, variables):
 def on_user_create(data, context):
     print(data)
     print(context)
-    return "Hello, World!"
+    try:
+        user_uid = data["uid"]
+        user_phone = data["phoneNumber"]
+        variables = {"user_id": user_uid, "user_phone": user_phone}
+        response = execute(GQL.CREATE_USER, variables)
+        if response.get("errors", None) is not None:
+            print(response)
+            return response
+    except Exception as e:
+        print(e)
+        return 500, "ERROR"
+    return 200, "OK"
 
 
 def on_user_delete(data, context):

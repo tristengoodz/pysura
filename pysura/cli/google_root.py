@@ -1002,11 +1002,14 @@ class GoogleRoot(RootCmd):
         metadata_url = env.hasura_service_url + "/v1/metadata"
         with open("hasura_metadata.json", "r") as f:
             json_data = json.load(f)
+        hasura_metadata = HasuraMetadata(**json_data)
         json_data = json.dumps(json_data)
         cmd_str = f"""curl -d'{{"type": "replace_metadata", "args": {json_data}}}' {metadata_url} -H """ + \
                   f'''"X-Hasura-Admin-Secret: {env.hasura_admin_secret}"'''
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        env.hasura_metadata = hasura_metadata
+        self.set_env(env)
 
     def do_gcloud_interactive(self, _):
         """
@@ -1073,18 +1076,48 @@ class GoogleRoot(RootCmd):
             password=env.database_credential.password
         )
 
-        db_string = """create table if not exists "user"
-        (
-            user_id    text                     default gen_random_uuid() not null,
-            user_phone text                                               not null,
-            role       text                     default 'user'::text      not null,
-            created_at timestamp with time zone default now(),
-            updated_at timestamp with time zone default now(),
-            primary key (user_id),
-            unique (user_phone)
-        );"""
+        db_string = """create table "ENUM_ROLE"
+(
+    value   text not null,
+    comment text,
+    primary key (value)
+);
+
+alter table "ENUM_ROLE"
+    owner to postgres;
+
+create table "user"
+(
+    user_id    text                     default gen_random_uuid() not null,
+    user_phone text                                               not null,
+    role       text                     default 'user'::text      not null,
+    created_at timestamp with time zone default now(),
+    updated_at timestamp with time zone default now(),
+    primary key (user_id),
+    unique (user_phone),
+    foreign key (role) references "ENUM_ROLE"
+        on update cascade on delete cascade
+);
+
+alter table "user"
+    owner to postgres;
+
+create table public_user
+(
+    user_id text                                  not null,
+    message text    default 'Pysura Rocks!'::text not null,
+    number  integer default 0                     not null,
+    primary key (user_id),
+    foreign key (user_id) references "user"
+        on update cascade on delete cascade
+);
+
+alter table public_user
+    owner to postgres;"""
         cursor = conn.cursor()
         cursor.execute(db_string)
+        cursor.execute("insert into \"ENUM_ROLE\" (value) values ('admin')")
+        cursor.execute("insert into \"ENUM_ROLE\" (value) values ('user')")
         conn.commit()
         conn.close()
         self.do_import_hasura_metadata(None)
@@ -1093,9 +1126,151 @@ class GoogleRoot(RootCmd):
         metadata["sources"][0]["tables"] = [
             {
                 "table": {
+                    "name": "ENUM_ROLE",
+                    "schema": "public"
+                },
+                "is_enum": True,
+                "select_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "columns": [
+                                "comment",
+                                "value"
+                            ],
+                            "filter": {}
+                        }
+                    }
+                ]
+            },
+            {
+                "table": {
+                    "name": "public_user",
+                    "schema": "public"
+                },
+                "insert_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "check": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            },
+                            "columns": [
+                                "number",
+                                "message",
+                                "user_id"
+                            ]
+                        }
+                    }
+                ],
+                "select_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "columns": [
+                                "user_id",
+                                "message",
+                                "number"
+                            ],
+                            "filter": {}
+                        }
+                    }
+                ],
+                "update_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "columns": [
+                                "number",
+                                "message",
+                                "user_id"
+                            ],
+                            "filter": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            },
+                            "check": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "delete_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "filter": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "table": {
                     "name": "user",
                     "schema": "public"
-                }
+                },
+                "select_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "columns": [
+                                "user_id",
+                                "user_phone",
+                                "role",
+                                "created_at",
+                                "updated_at"
+                            ],
+                            "filter": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "update_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "columns": [
+                                "created_at",
+                                "updated_at",
+                                "user_phone"
+                            ],
+                            "filter": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            },
+                            "check": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "delete_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "filter": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            }
+                        }
+                    }
+                ]
             }
         ]
         with open("hasura_metadata.json", "w") as f:

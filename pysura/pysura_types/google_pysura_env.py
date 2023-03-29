@@ -441,6 +441,143 @@ class GoogleCloudFunction(DictModel):
     versionId: str | None = None
 
 
+class HasuraMetadataTable(BaseModel):
+    name: str | None = None
+    schema: str | None = None
+
+
+class HasuraMetadataUserId(BaseModel):
+    _eq: str | None = None
+
+
+class HasuraMetadataUserIdFilter(BaseModel):
+    user_id: HasuraMetadataUserId | None = None
+
+
+class HasuraMetadataPermission(BaseModel):
+    columns: List[str] | None = None
+    filter: HasuraMetadataUserIdFilter | None = None
+
+
+class HasuraMetadataSelectPermission(BaseModel):
+    role: str | None = None
+    permission: HasuraMetadataPermission | None = None
+
+
+class HasuraMetadataInsertPermission(BaseModel):
+    role: str | None = None
+    permission: HasuraMetadataPermission | None = None
+
+
+class HasuraMetadataUpdatePermission(BaseModel):
+    columns: List[str] | None = None
+    filter: HasuraMetadataUserIdFilter | None = None
+    check: HasuraMetadataUserIdFilter | None = None
+
+
+class HasuraMetadataUpdatePermissions(BaseModel):
+    role: str | None = None
+    permission: HasuraMetadataUpdatePermission | None = None
+
+
+class HasuraMetadataDeletePermission(BaseModel):
+    filter: HasuraMetadataUserIdFilter | None = None
+
+
+class HasuraMetadataDeletePermissions(BaseModel):
+    role: str | None = None
+    permission: HasuraMetadataDeletePermission | None = None
+
+
+class HasuraMetadataPermissionsTable(BaseModel):
+    table: HasuraMetadataTable | None = None
+    is_enum: bool | None = None
+    select_permissions: List[HasuraMetadataSelectPermission] | None = None
+    insert_permissions: List[HasuraMetadataInsertPermission] | None = None
+    update_permissions: List[HasuraMetadataUpdatePermissions] | None = None
+    delete_permissions: List[HasuraMetadataDeletePermissions] | None = None
+
+
+class HasuraMetadataDatabaseUrl(BaseModel):
+    from_env: str | None = None
+
+
+class HasuraMetadataPoolSettings(BaseModel):
+    connection_lifetime: int | None = None
+    idle_timeout: int | None = None
+    max_connections: int | None = None
+    retries: int | None = None
+
+
+class HasuraMetadataConnectionInfo(BaseModel):
+    database_url: HasuraMetadataDatabaseUrl | None = None
+    isolation_level: str | None = None
+    pool_settings: HasuraMetadataPoolSettings | None = None
+    use_prepared_statements: bool | None = None
+
+
+class HasuraMetadataConfiguration(BaseModel):
+    connection_info: HasuraMetadataConnectionInfo | None = None
+
+
+class HasuraMetadataSource(BaseModel):
+    name: str | None = None
+    kind: str | None = None
+    tables: List[HasuraMetadataPermissionsTable] | None = None
+    configuration: HasuraMetadataConfiguration | None = None
+
+
+class HasuraMetadataField(BaseModel):
+    name: str | None = None
+    type: str | None = None
+
+
+class HasuraMetadataRequestTransform(BaseModel):
+    method: str | None = None
+    query_params: Dict[str, Any] | None = None
+    template_engine: str | None = None
+    url: str | None = None
+    version: int | None = None
+
+
+class HasuraMetadataDefinition(BaseModel):
+    handler: str | None = None
+    output_type: str | None = None
+    arguments: List[HasuraMetadataField] | None = None
+    request_transform: HasuraMetadataRequestTransform | None = None
+    type: str | None = None
+    kind: str | None = None
+    timeout: int | None = None
+
+
+class HasuraMetadataActionPermission(BaseModel):
+    role: str | None = None
+
+
+class HasuraMetadataAction(BaseModel):
+    name: str | None = None
+    definition: HasuraMetadataDefinition | None = None
+    comment: str | None = None
+    permissions: List[HasuraMetadataActionPermission] | None = None
+
+
+class HasuraMetadataObject(BaseModel):
+    name: str | None = None
+    fields: List[HasuraMetadataField] | None = None
+
+
+class HasuraMetadataCustomTypes(BaseModel):
+    input_objects: List[HasuraMetadataObject] | None = None
+    objects: List[HasuraMetadataObject] | None = None
+
+
+class HasuraMetadata(BaseModel):
+    version: int | None = None
+    sources: List[HasuraMetadataSource] | None = None
+    actions: List[HasuraMetadataAction] | None = None
+    custom_types: HasuraMetadataCustomTypes | None = None
+
+
 class GooglePysuraEnv(DictModel):
     gcloud_cli_installed: bool = False
     gcloud_alpha_cli_installed: bool = False
@@ -482,3 +619,4 @@ class GooglePysuraEnv(DictModel):
     ios_cf_bundle_url_types: IosCFBundleURLTypes | None = None
     android_signing_reports: List[AndroidSigningReport] | None = None
     android_debug_signing_report: AndroidSigningReport | None = None
+    hasura_metadata: HasuraMetadata | None = None
