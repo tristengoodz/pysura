@@ -29,6 +29,12 @@ class GQL:
 }
 """
 
+    DELETE_USER = """mutation DeleteUser($user_id: String = "") {
+  delete_user_by_pk(user_id: $user_id) {
+    user_id
+  }
+}"""
+
 
 def get_client():
     return GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
@@ -77,7 +83,17 @@ def on_user_create(data, context):
 def on_user_delete(data, context):
     print(data)
     print(context)
-    return
+    try:
+        user_uid = data["uid"]
+        variables = {"user_id": user_uid}
+        response = execute(GQL.DELETE_USER, variables)
+        if response.get("errors", None) is not None:
+            print(response)
+            return response
+    except Exception as e:
+        print(e)
+        return 500, "ERROR"
+    return 200, "OK"
 
 
 @functions_framework.http

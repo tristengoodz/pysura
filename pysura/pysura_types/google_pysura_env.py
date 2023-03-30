@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import List, Dict, Any
 
 
@@ -402,7 +402,7 @@ class GoogleServiceAccount(DictModel):
     key_file: Any | None = None
 
 
-class GoogleCloudFunctionHttpsTrigger(BaseModel):
+class GoogleCloudFunctionHttpsTrigger(DictModel):
     securityLevel: str | None = None
     url: str | None = None
 
@@ -441,56 +441,51 @@ class GoogleCloudFunction(DictModel):
     versionId: str | None = None
 
 
-class HasuraMetadataTable(BaseModel):
-    name: str | None = None
-    schema_name: str | None = Field(..., alias="schema")
-
-
-class HasuraMetadataUserId(BaseModel):
+class HasuraMetadataUserId(DictModel):
     _eq: str | None = None
 
 
-class HasuraMetadataUserIdFilter(BaseModel):
+class HasuraMetadataUserIdFilter(DictModel):
     user_id: HasuraMetadataUserId | None = None
 
 
-class HasuraMetadataPermission(BaseModel):
+class HasuraMetadataPermission(DictModel):
     columns: List[str] | None = None
     filter: HasuraMetadataUserIdFilter | None = None
 
 
-class HasuraMetadataSelectPermission(BaseModel):
+class HasuraMetadataSelectPermission(DictModel):
     role: str | None = None
     permission: HasuraMetadataPermission | None = None
 
 
-class HasuraMetadataInsertPermission(BaseModel):
+class HasuraMetadataInsertPermission(DictModel):
     role: str | None = None
     permission: HasuraMetadataPermission | None = None
 
 
-class HasuraMetadataUpdatePermission(BaseModel):
+class HasuraMetadataUpdatePermission(DictModel):
     columns: List[str] | None = None
     filter: HasuraMetadataUserIdFilter | None = None
     check: HasuraMetadataUserIdFilter | None = None
 
 
-class HasuraMetadataUpdatePermissions(BaseModel):
+class HasuraMetadataUpdatePermissions(DictModel):
     role: str | None = None
     permission: HasuraMetadataUpdatePermission | None = None
 
 
-class HasuraMetadataDeletePermission(BaseModel):
+class HasuraMetadataDeletePermission(DictModel):
     filter: HasuraMetadataUserIdFilter | None = None
 
 
-class HasuraMetadataDeletePermissions(BaseModel):
+class HasuraMetadataDeletePermissions(DictModel):
     role: str | None = None
     permission: HasuraMetadataDeletePermission | None = None
 
 
-class HasuraMetadataPermissionsTable(BaseModel):
-    table: HasuraMetadataTable | None = None
+class HasuraMetadataPermissionsTable(DictModel):
+    table: Dict[str, Any] | None = None
     is_enum: bool | None = None
     select_permissions: List[HasuraMetadataSelectPermission] | None = None
     insert_permissions: List[HasuraMetadataInsertPermission] | None = None
@@ -498,41 +493,41 @@ class HasuraMetadataPermissionsTable(BaseModel):
     delete_permissions: List[HasuraMetadataDeletePermissions] | None = None
 
 
-class HasuraMetadataDatabaseUrl(BaseModel):
+class HasuraMetadataDatabaseUrl(DictModel):
     from_env: str | None = None
 
 
-class HasuraMetadataPoolSettings(BaseModel):
+class HasuraMetadataPoolSettings(DictModel):
     connection_lifetime: int | None = None
     idle_timeout: int | None = None
     max_connections: int | None = None
     retries: int | None = None
 
 
-class HasuraMetadataConnectionInfo(BaseModel):
+class HasuraMetadataConnectionInfo(DictModel):
     database_url: HasuraMetadataDatabaseUrl | None = None
     isolation_level: str | None = None
     pool_settings: HasuraMetadataPoolSettings | None = None
     use_prepared_statements: bool | None = None
 
 
-class HasuraMetadataConfiguration(BaseModel):
+class HasuraMetadataConfiguration(DictModel):
     connection_info: HasuraMetadataConnectionInfo | None = None
 
 
-class HasuraMetadataSource(BaseModel):
+class HasuraMetadataSource(DictModel):
     name: str | None = None
     kind: str | None = None
     tables: List[HasuraMetadataPermissionsTable] | None = None
     configuration: HasuraMetadataConfiguration | None = None
 
 
-class HasuraMetadataField(BaseModel):
+class HasuraMetadataField(DictModel):
     name: str | None = None
     type: str | None = None
 
 
-class HasuraMetadataRequestTransform(BaseModel):
+class HasuraMetadataRequestTransform(DictModel):
     method: str | None = None
     query_params: Dict[str, Any] | None = None
     template_engine: str | None = None
@@ -540,7 +535,7 @@ class HasuraMetadataRequestTransform(BaseModel):
     version: int | None = None
 
 
-class HasuraMetadataDefinition(BaseModel):
+class HasuraMetadataDefinition(DictModel):
     handler: str | None = None
     output_type: str | None = None
     arguments: List[HasuraMetadataField] | None = None
@@ -550,28 +545,28 @@ class HasuraMetadataDefinition(BaseModel):
     timeout: int | None = None
 
 
-class HasuraMetadataActionPermission(BaseModel):
+class HasuraMetadataActionPermission(DictModel):
     role: str | None = None
 
 
-class HasuraMetadataAction(BaseModel):
+class HasuraMetadataAction(DictModel):
     name: str | None = None
     definition: HasuraMetadataDefinition | None = None
     comment: str | None = None
     permissions: List[HasuraMetadataActionPermission] | None = None
 
 
-class HasuraMetadataObject(BaseModel):
+class HasuraMetadataObject(DictModel):
     name: str | None = None
     fields: List[HasuraMetadataField] | None = None
 
 
-class HasuraMetadataCustomTypes(BaseModel):
+class HasuraMetadataCustomTypes(DictModel):
     input_objects: List[HasuraMetadataObject] | None = None
     objects: List[HasuraMetadataObject] | None = None
 
 
-class HasuraMetadata(BaseModel):
+class HasuraMetadata(DictModel):
     version: int | None = None
     sources: List[HasuraMetadataSource] | None = None
     actions: List[HasuraMetadataAction] | None = None
