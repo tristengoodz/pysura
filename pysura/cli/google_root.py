@@ -1987,14 +1987,7 @@ alter table public_user
             metadata = json.load(f)
         url_wrapper = "{{DEFAULT_SERVICE_URL}}"
         self.router_generator(metadata, url_wrapper)
-        event_secret = self.password(64)
-        env = self.get_env()
-        env.hasura.HASURA_EVENT_SECRET = event_secret
-        self.set_env(env)
-        cmd_log_str = f"gcloud run deploy default --source ."
-        logging.log(logging.INFO, cmd_log_str)
-        os.system(cmd_log_str)
-        # DO THE NEXT STEP!
+        self.log("TODO: Finish the microservice deployer...", level=logging.INFO)
         os.chdir("../..")
 
     def do_setup_pysura(self, _):
@@ -2034,4 +2027,3 @@ alter table public_user
             self.do_enable_database_local(database_id=env.database.name.split("/")[-1])
             self.do_create_default_user_table(None)
             self.do_attach_firebase(None)
-            self.do_deploy_default_microservice(None)
