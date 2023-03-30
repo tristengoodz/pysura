@@ -219,6 +219,9 @@ class GoogleRoot(RootCmd):
         cmd_str = f"gcloud services enable cloudbuild.googleapis.com --project={project_id}"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        cmd_str = f"gcloud services enable artifactregistry.googleapis.com --project={project_id}"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
         cmd_str = f"gcloud services list --project={project_id} --format=json"
         self.log(cmd_str, level=logging.DEBUG)
         response = os.popen(cmd_str).read()
@@ -826,22 +829,19 @@ class GoogleRoot(RootCmd):
         env.service_accounts = service_accounts
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
-                       f"--role=roles/cloudbuild.builds.builder "
-                       f"--format=json"
+                       f"--role=roles/cloudbuild.builds.builder"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         os.system(cmd_log_str)
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
-                       f"--role=roles/run.admin "
-                       f"--format=json"
+                       f"--role=roles/run.admin"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         os.system(cmd_log_str)
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
-                       f"--role=roles/secretmanager.secretAccessor "
-                       f"--format=json"
+                       f"--role=roles/secretmanager.secretAccessor"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         os.system(cmd_log_str)
@@ -2071,7 +2071,6 @@ async def action_base_generator_mutation(_: Request,
                     env.default_microservice = service_data
                     env.default_microservice_url = service_data.status.url
                     env.hasura.HASURA_MICROSERVICE_URL = f"{service_data.status.url}"
-                    self.do_gcloud_set_secret("HASURA_MICROSERVICE_URL", env.hasura.HASURA_MICROSERVICE_URL)
                 else:
                     microservice_url = MicroserviceUrl(
                         url=service_data.status.url,
@@ -2093,9 +2092,7 @@ async def action_base_generator_mutation(_: Request,
         with open("hasura_metadata.json", "r") as f:
             metadata = json.load(f)
 
-        new_metadata = {
-
-        }
+        new_metadata = {}
         new_actions = []
         new_objects = []
         new_input_objects = []
