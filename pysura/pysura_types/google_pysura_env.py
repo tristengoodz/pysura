@@ -231,6 +231,7 @@ class Hasura(DictModel):
     HASURA_GRAPHQL_METADATA_DATABASE_URL: str | None = None
     HASURA_GRAPHQL_JWT_SECRET: str | None = None
     HASURA_GRAPHQL_URL_ROOT: str | None = None
+    HASURA_EVENT_SECRET: str | None = None
     vpc_connector: str | None = None
     timeout: str | None = None
     project_id: str | None = None

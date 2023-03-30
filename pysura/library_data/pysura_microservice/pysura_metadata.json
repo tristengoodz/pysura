@@ -1,0 +1,271 @@
+{
+  "actions": [
+    {
+      "name": "action_mutation_pong",
+      "definition": {
+        "handler": "{{DEFAULT_SERVICE_URL}}",
+        "output_type": "ActionMutationPongOutput",
+        "forward_client_headers": true,
+        "arguments": [
+          {
+            "name": "action_mutation_pong_input",
+            "type": "ActionMutationPongInput"
+          }
+        ],
+        "request_transform": {
+          "method": "POST",
+          "query_params": {},
+          "template_engine": "Kriti",
+          "url": "{{$base_url}}/action_mutation_pong/",
+          "version": 2
+        },
+        "type": "mutation",
+        "kind": "synchronous"
+      },
+      "comment": "/action_mutation_pong/",
+      "permissions": [
+        {
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "name": "action_query_ping",
+      "definition": {
+        "handler": "{{DEFAULT_SERVICE_URL}}",
+        "output_type": "ActionQueryPingOutput",
+        "forward_client_headers": true,
+        "arguments": [
+          {
+            "name": "action_query_ping_input",
+            "type": "ActionQueryPingInput"
+          }
+        ],
+        "request_transform": {
+          "method": "POST",
+          "query_params": {},
+          "template_engine": "Kriti",
+          "url": "{{$base_url}}/action_query_ping/",
+          "version": 2
+        },
+        "type": "query"
+      },
+      "comment": "/action_query_ping/",
+      "permissions": [
+        {
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "name": "action_mutation_pong1",
+      "definition": {
+        "handler": "{{DEFAULT_SERVICE_URL1}}",
+        "output_type": "ActionMutationPongOutput1",
+        "forward_client_headers": true,
+        "arguments": [
+          {
+            "name": "action_mutation_pong_input1",
+            "type": "ActionMutationPongInput1"
+          }
+        ],
+        "request_transform": {
+          "method": "POST",
+          "query_params": {},
+          "template_engine": "Kriti",
+          "url": "{{$base_url}}/action_mutation_pong1/",
+          "version": 2
+        },
+        "type": "mutation",
+        "kind": "synchronous"
+      },
+      "comment": "/action_mutation_pong1/",
+      "permissions": [
+        {
+          "role": "user"
+        }
+      ]
+    }
+  ],
+  "custom_types": {
+    "input_objects": [
+      {
+        "name": "ActionMutationPongInput",
+        "fields": [
+          {
+            "name": "message",
+            "type": "String!"
+          },
+          {
+            "name": "number",
+            "type": "Int!"
+          }
+        ]
+      },
+      {
+        "name": "ActionMutationPongInput1",
+        "fields": [
+          {
+            "name": "message",
+            "type": "String!"
+          },
+          {
+            "name": "number",
+            "type": "Int!"
+          }
+        ]
+      },
+      {
+        "name": "ActionQueryPingInput",
+        "fields": [
+          {
+            "name": "message",
+            "type": "String"
+          },
+          {
+            "name": "number",
+            "type": "Int"
+          }
+        ]
+      }
+    ],
+    "objects": [
+            {
+        "name": "ActionMutationPongOutput1",
+        "fields": [
+          {
+            "name": "data",
+            "type": "ActionMutationPongOutputData1"
+          },
+          {
+            "name": "nodes",
+            "type": "[IdLink]"
+          },
+          {
+            "name": "response_name",
+            "type": "String!"
+          },
+          {
+            "name": "response_value",
+            "type": "Int!"
+          },
+          {
+            "name": "errors",
+            "type": "[Error]"
+          }
+        ]
+      },
+      {
+        "name": "ActionMutationPongOutputData1",
+        "fields": [
+          {
+            "name": "message",
+            "type": "String!"
+          },
+          {
+            "name": "number",
+            "type": "Int!"
+          }
+        ]
+      },
+      {
+        "name": "ActionMutationPongOutput",
+        "fields": [
+          {
+            "name": "data",
+            "type": "ActionMutationPongOutputData"
+          },
+          {
+            "name": "nodes",
+            "type": "[IdLink]"
+          },
+          {
+            "name": "response_name",
+            "type": "String!"
+          },
+          {
+            "name": "response_value",
+            "type": "Int!"
+          },
+          {
+            "name": "errors",
+            "type": "[Error]"
+          }
+        ]
+      },
+      {
+        "name": "ActionMutationPongOutputData",
+        "fields": [
+          {
+            "name": "message",
+            "type": "String!"
+          },
+          {
+            "name": "number",
+            "type": "Int!"
+          }
+        ]
+      },
+      {
+        "name": "IdLink",
+        "fields": [
+          {
+            "name": "link",
+            "type": "String!"
+          },
+          {
+            "name": "table",
+            "type": "String!"
+          }
+        ]
+      },
+      {
+        "name": "Error",
+        "fields": [
+          {
+            "name": "message",
+            "type": "String"
+          }
+        ]
+      },
+      {
+        "name": "ActionQueryPingOutput",
+        "fields": [
+          {
+            "name": "data",
+            "type": "ActionQueryPingOutputData"
+          },
+          {
+            "name": "nodes",
+            "type": "[IdLink]"
+          },
+          {
+            "name": "response_name",
+            "type": "String!"
+          },
+          {
+            "name": "response_value",
+            "type": "Int!"
+          },
+          {
+            "name": "errors",
+            "type": "[Error]"
+          }
+        ]
+      },
+      {
+        "name": "ActionQueryPingOutputData",
+        "fields": [
+          {
+            "name": "message",
+            "type": "String!"
+          },
+          {
+            "name": "number",
+            "type": "Int!"
+          }
+        ]
+      }
+    ]
+  }
+}

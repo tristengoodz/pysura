@@ -1443,7 +1443,6 @@ alter table public_user
         cmd_str = f"gcloud auth activate-service-account --key-file=admin.json {env.auth_service_account.email}"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        os.remove("admin.json")
         cmd_str = "gcloud auth print-access-token"
         self.log(cmd_str, level=logging.DEBUG)
         access_token = os.popen(cmd_str).read().strip()
@@ -1648,6 +1647,372 @@ alter table public_user
         os.chdir("..")
         self.set_env(env)
 
+    @staticmethod
+    def router_generator(hasura_metadata, service_url="{{DEFAULT_SERVICE_URL}}"):
+        """Generates a router for the current microservice"""
+
+        def collect_types(object_data, custom_type="object"):
+            root_type = {}
+            custom_name = object_data.get("name")
+            root_type[custom_name] = {
+                "name": custom_name,
+                "fields": {},
+                "required_objects": set(),
+                "custom_type": custom_type
+            }
+            default_types = ["String", "Int", "Float", "Boolean", "ID"]
+            for field in object_data.get("fields", []):
+                is_list = False
+                is_object = False
+                is_optional = True
+                field_collect_type = field.get("type", {})
+                if field_collect_type[0] == "[" and field_collect_type[-1] == "]":
+                    field_collect_type = field_collect_type[1:-1]
+                    is_list = True
+                if field_collect_type[-1] == "!":
+                    field_collect_type = field_collect_type[:-1]
+                    is_optional = False
+                if field_collect_type not in default_types:
+                    is_object = True
+
+                root_type[custom_name]["fields"][field.get("name")] = {
+                    "type": field_collect_type,
+                    "is_list": is_list,
+                    "is_object": is_object,
+                    "is_optional": is_optional,
+                }
+                if is_object:
+                    root_type[custom_name]["required_objects"].add(field_collect_type)
+            return root_type
+
+        included_types = []
+        excluded_types = []
+        actions = {}
+        for action in hasura_metadata.get("actions", []):
+            action_name = action.get("name")
+            action_handler = action.get("definition", {}).get("handler", None)
+            output_type = action.get("definition", {}).get("output_type", None)
+            input_type = action.get("definition", {}).get("arguments", [{'type': None}])[0].get("type", None)
+            if action_handler == service_url:
+                included_types.append(output_type)
+                included_types.append(input_type)
+            else:
+                excluded_types.append(output_type)
+                excluded_types.append(input_type)
+            actions[action_name] = {
+                "name": action_name,
+                "handler": action_handler,
+                "output_type": output_type,
+                "input_type": input_type
+            }
+
+        unordered_custom_objects = []
+        for custom_object in hasura_metadata.get("custom_types", {}).get("objects", []):
+            types = collect_types(custom_object)
+            unordered_custom_objects.append(types)
+
+        unordered_custom_input_objects = []
+        for custom_input_object in hasura_metadata.get("custom_types", {}).get("input_objects", []):
+            types = collect_types(custom_input_object)
+            unordered_custom_input_objects.append(types)
+
+        excluded = []
+        included = []
+        for co in unordered_custom_objects:
+            co_key = list(co.keys())[0]
+            required_objects = co[co_key]["required_objects"]
+            if co_key in excluded_types:
+                excluded.extend([co_key, *required_objects])
+            elif co_key in included_types:
+                included.extend([co_key, *required_objects])
+
+        for co in unordered_custom_input_objects:
+            co_key = list(co.keys())[0]
+            required_objects = co[co_key]["required_objects"]
+            if co_key in excluded_types:
+                excluded.extend([co_key, *required_objects])
+            elif co_key in included_types:
+                included.extend([co_key, *required_objects])
+
+        included_set = set(included)
+        new_unordered_custom_objects = []
+        for co in unordered_custom_objects:
+            co_key = list(co.keys())[0]
+            if co_key in included_set:
+                new_unordered_custom_objects.append(co)
+        unordered_custom_objects = new_unordered_custom_objects
+
+        new_unordered_custom_input_objects = []
+        for co in unordered_custom_input_objects:
+            co_key = list(co.keys())[0]
+            if co_key in included_set:
+                new_unordered_custom_input_objects.append(co)
+        unordered_custom_input_objects = new_unordered_custom_input_objects
+
+        ordered_objects_handled = set()
+        ordered_custom_objects = []
+        loop_count = 0
+        # At most, we will have to loop through the list of custom objects as many times as there are custom objects
+        # This would be worst case if every object was nested in another object
+        while len(unordered_custom_objects) != len(ordered_custom_objects) and loop_count < len(
+                unordered_custom_objects) + 1:
+            loop_count += 1
+            for custom_object in unordered_custom_objects:
+                assert len(custom_object) == 1
+                custom_object_name = list(custom_object.keys())[0]
+                if custom_object_name in ordered_objects_handled:
+                    continue
+                else:
+                    required_objects = custom_object[custom_object_name]["required_objects"]
+                    if required_objects.issubset(ordered_objects_handled):
+                        ordered_custom_objects.append(custom_object)
+                        ordered_objects_handled.add(custom_object_name)
+                    else:
+                        continue
+
+        ordered_input_objects_handled = set()
+        ordered_custom_input_objects = []
+        loop_count = 0
+        # At most, we will have to loop through the list of custom objects as many times as there are custom objects
+        # This would be worst case if every object was nested in another object
+        while len(unordered_custom_input_objects) != len(ordered_custom_input_objects) and loop_count < len(
+                unordered_custom_input_objects) + 1:
+            loop_count += 1
+            for custom_input_object in unordered_custom_input_objects:
+                assert len(custom_input_object) == 1
+                custom_input_object_name = list(custom_input_object.keys())[0]
+                if custom_input_object_name in ordered_input_objects_handled:
+                    continue
+                else:
+                    required_objects = custom_input_object[custom_input_object_name]["required_objects"]
+                    if required_objects.issubset(ordered_input_objects_handled):
+                        ordered_custom_input_objects.append(custom_input_object)
+                        ordered_input_objects_handled.add(custom_input_object_name)
+                    else:
+                        continue
+
+        base_models_template = """from typing import List
+    from pydantic import BaseModel
+
+        """
+
+        object_template = """\nclass {name}(BaseModel):\n    {fields}{config}\n"""
+        field_template = "{}: {}"
+        config_template = '\n\n    class Config:\n        schema_extra = {extra}'
+        config_extra_start = '{"example": {'
+        config_extra_middle_piece = '{field_pieces}'
+        config_extra_end = "}}"
+        config_field_template = '"{field_name}": {field_default}'
+        field_type_map = {
+            "String": "str",
+            "Int": "int",
+            "Float": "float",
+            "Boolean": "bool",
+            "ID": "str"
+        }
+        default_field_types = {
+            "str": '"string"',
+            "int": "0",
+            "float": "0.0",
+            "bool": "True"
+        }
+        for custom_object in ordered_custom_objects:
+            assert len(custom_object) == 1
+            custom_object_name = list(custom_object.keys())[0]
+            custom_object_data = custom_object[custom_object_name]
+            fields = []
+            config_fields = []
+            for field_name, field_data in custom_object_data["fields"].items():
+                field_type = field_data["type"]
+                if field_type in field_type_map:
+                    field_type = field_type_map[field_type]
+                if field_data["is_list"]:
+                    field_type = f"List[{field_type}]"
+                if field_data["is_optional"]:
+                    field_type = f"{field_type} | None = None"
+                if field_data["is_optional"]:
+                    config_fields.append(config_field_template.format(field_name=field_name, field_default="None"))
+                elif field_data["is_list"]:
+                    config_fields.append(config_field_template.format(field_name=field_name, field_default="[]"))
+                else:
+                    config_fields.append(
+                        config_field_template.format(field_name=field_name,
+                                                     field_default=default_field_types[field_type]))
+                fields.append(field_template.format(field_name, field_type))
+            if len(config_fields) > 0:
+                config_extra = config_extra_start + \
+                               config_extra_middle_piece.format(field_pieces=", ".join(config_fields)) + \
+                               config_extra_end
+                base_models_template += object_template.format(name=custom_object_name,
+                                                               fields="\n    ".join(fields),
+                                                               config=config_template.format(extra=config_extra) if len(
+                                                                   config_fields) > 0 else "")
+            else:
+                base_models_template += object_template.format(name=custom_object_name,
+                                                               fields="\n    ".join(fields),
+                                                               config="")
+            base_models_template += "\n"
+
+        for custom_input_object in ordered_custom_input_objects:
+            assert len(custom_input_object) == 1
+            custom_input_object_name = list(custom_input_object.keys())[0]
+            custom_input_object_data = custom_input_object[custom_input_object_name]
+            fields = []
+            config_fields = []
+            for field_name, field_data in custom_input_object_data["fields"].items():
+                field_type = field_data["type"]
+                if field_type in field_type_map:
+                    field_type = field_type_map[field_type]
+                if field_data["is_list"]:
+                    field_type = f"List[{field_type}]"
+                if field_data["is_optional"]:
+                    field_type = f"{field_type} | None = None"
+                if field_data["is_optional"]:
+                    config_fields.append(config_field_template.format(field_name=field_name, field_default="None"))
+                elif field_data["is_list"]:
+                    config_fields.append(config_field_template.format(field_name=field_name, field_default="[]"))
+                else:
+                    config_fields.append(
+                        config_field_template.format(field_name=field_name,
+                                                     field_default=default_field_types[field_type]))
+                fields.append(field_template.format(field_name, field_type))
+            if len(config_fields) > 0:
+                config_extra = config_extra_start + \
+                               config_extra_middle_piece.format(field_pieces=", ".join(config_fields)) + \
+                               config_extra_end
+                base_models_template += object_template.format(name=custom_input_object_name,
+                                                               fields="\n    ".join(fields),
+                                                               config=config_template.format(extra=config_extra) if len(
+                                                                   config_fields) > 0 else "")
+            else:
+                base_models_template += object_template.format(name=custom_input_object_name,
+                                                               fields="\n    ".join(fields),
+                                                               config="")
+            base_models_template += "\n"
+
+        base_models_template = base_models_template.rstrip("\n")
+        base_models_template += "\n"
+        with open("generated_types.py", "w") as f:
+            f.write(base_models_template)
+
+        action_template = """import logging
+
+    from fastapi import APIRouter, Depends, Request
+    from pysura.faster_api.security import backend_auth, UserIdentity, identity, firebase_jwt_auth, IDENTITY_PROVIDER
+    from pysura.faster_api.enums import ApiResponse, ClientRole
+    from generated_types import *
+
+    ROUTE = "/SNAKE/"
+    ALLOWED_ROLES = [
+        # ALLOWED ROLES HERE
+    ]
+    action_SNAKE_router = APIRouter(
+        tags=["SNAKE"]
+    )
+
+
+    @action_SNAKE_router.post(ROUTE,
+                              dependencies=[Depends(firebase_jwt_auth), Depends(backend_auth)])
+    @identity(allowed_roles=ALLOWED_ROLES,
+              identity_provider=IDENTITY_PROVIDER,
+              function_input=CAMELInput)
+    async def action_base_generator_mutation(_: Request,
+                                             base_generator_mutation_input: CAMELInput | None = None,
+                                             injected_user_identity: UserIdentity | None = None
+                                             ):
+        # (AUTH-LOCK-START) - DO NOT DELETE THIS LINE!
+        if injected_user_identity is None or injected_user_identity.user_id is None:
+            return {
+                "response_name": ApiResponse.UNAUTHORIZED.name,
+                "response_value": ApiResponse.UNAUTHORIZED.value
+            }
+        logging.log(logging.INFO, f"User {injected_user_identity.user_id} is authorized to access {ROUTE}")
+        # (AUTH-LOCK-END) - DO NOT DELETE THIS LINE!
+
+        # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
+        print(base_generator_mutation_input)
+        response = CAMELOutput(
+            data=None,
+            nodes=None,
+            response_name=ApiResponse.SUCCESS.name,
+            response_value=ApiResponse.SUCCESS.value
+        ).dict()
+        return response
+        # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
+
+    """
+        for action in hasura_metadata.get("actions", []):
+            action_handler = action.get("definition", {}).get("handler", None)
+            if action_handler == service_url:
+                snake_replace = action["name"]
+                camel_replace = snake_replace.replace("_", " ").title().replace(" ", "")
+                action_template = action_template.replace("SNAKE", snake_replace).replace("CAMEL", camel_replace)
+                collect_perms = []
+                for permission in action["permissions"]:
+                    collect_perms.append(permission["role"])
+                else:
+                    collect_perms.append("admin")
+                collect_perms = [f"ClientRole.{i}.name" for i in sorted(list(set(collect_perms)))]
+                action_template = action_template.replace("# ALLOWED ROLES HERE", ", ".join(collect_perms))
+                with open(f"actions/action_{snake_replace}.py", "w") as f:
+                    f.write(action_template)
+
+    def do_deploy_default_microservice(self, _):
+        if os.path.isdir("microservices"):
+            self.log("microservices directory already exists", level=logging.ERROR)
+            return
+        os.mkdir("microservices")
+        os.chdir("microservices")
+        os.mkdir("default")
+        os.chdir("default")
+        os.mkdir("actions")
+        os.mkdir("crons")
+        os.mkdir("events")
+        path = self.get_site_packages_path(submodule="pysura_microservice")
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
+                    continue
+                if f == "requirements.txt":
+                    shutil.copy(os.path.join(root, f), ".")
+                elif f == "app.py":
+                    shutil.copy(os.path.join(root, f), ".")
+                elif f == "Dockerfile":
+                    shutil.copy(os.path.join(root, f), ".")
+                elif f == "__init__.py":
+                    shutil.copy(os.path.join(root, f), ".")
+                elif f == "pysura_metadata.json":
+                    shutil.copy(os.path.join(root, f), ".")
+                else:
+                    if "actions" in root:
+                        dir_path = os.path.join(os.getcwd(), "actions")
+                        if not os.path.isdir(dir_path):
+                            os.mkdir(dir_path)
+                        shutil.copy(os.path.join(root, f), dir_path)
+                    elif "crons" in root:
+                        dir_path = os.path.join(os.getcwd(), "crons")
+                        if not os.path.isdir(dir_path):
+                            os.mkdir(dir_path)
+                        shutil.copy(os.path.join(root, f), dir_path)
+                    elif "events" in root:
+                        dir_path = os.path.join(os.getcwd(), "events")
+                        if not os.path.isdir(dir_path):
+                            os.mkdir(dir_path)
+                        shutil.copy(os.path.join(root, f), dir_path)
+        with open("pysura_metadata.json", "r") as f:
+            metadata = json.load(f)
+        url_wrapper = "{{DEFAULT_SERVICE_URL}}"
+        self.router_generator(metadata, url_wrapper)
+        event_secret = self.password(64)
+        env = self.get_env()
+        env.hasura.HASURA_EVENT_SECRET = event_secret
+        self.set_env(env)
+        cmd_log_str = f"gcloud run deploy default --source ."
+        logging.log(logging.INFO, cmd_log_str)
+        os.system(cmd_log_str)
+        # DO THE NEXT STEP!
+        os.chdir("../..")
+
     def do_setup_pysura(self, _):
         """
         Setups up a Pysura project
@@ -1685,3 +2050,4 @@ alter table public_user
             self.do_enable_database_local(database_id=env.database.name.split("/")[-1])
             self.do_create_default_user_table(None)
             self.do_attach_firebase(None)
+            self.do_deploy_default_microservice(None)

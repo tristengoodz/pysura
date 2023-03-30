@@ -33,7 +33,17 @@ setup(
             "library_data/pysura_frontend/lib/widgets/graphql_provider_widget.dart",
             "library_data/pysura_frontend/lib/widgets/phone_number_field.dart",
             "library_data/pysura_frontend/lib/widgets/primary_button.dart",
-            "library_data/pysura_frontend/lib/widgets/secondary_button.dart"
+            "library_data/pysura_frontend/lib/widgets/secondary_button.dart",
+            "library_data/pysura_microservice/actions/__init__.py",
+            "library_data/pysura_microservice/actions/action_template.py",
+            "library_data/pysura_microservice/crons/__init__.py",
+            "library_data/pysura_microservice/events/__init__.py",
+            "library_data/pysura_microservice/Dockerfile",
+            "library_data/pysura_microservice/app.py",
+            "library_data/pysura_microservice/requirements.txt",
+            "library_data/pysura_microservice/README.md",
+            "library_data/pysura_microservice/app_secrets.py",
+            "library_data/pysura_microservice/pysura_metadata.json"
         ],
     },
     include_package_data=True,
@@ -56,6 +66,13 @@ setup(
         "psycopg2",
         "pydantic",
         "prompt_toolkit",
-        "python-graphql-client"
+        "python-graphql-client",
+        "fastapi",
+        "google-cloud-logging",
+        "google-cloud-secret-manager",
+        "firebase-admin",
+        "uvicorn",
+        "requests",
+        "gunicorn"
     ]
 )
