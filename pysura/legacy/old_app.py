@@ -199,8 +199,7 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 COPY . .
 
 # Run app.py when the container launches
-CMD exec gunicorn --timeout 600 --bind :$PORT --workers 1 """ + \
-                  """--worker-class uvicorn.workers.UvicornWorker  --threads 2 app:app"""
+CMD exec gunicorn --timeout 600 --bind :$PORT --workers 1 --worker-class uvicorn.workers.UvicornWorker  --threads 2 app:app"""
 
     APP_SECRETS = """import os
 from google.cloud import secretmanager
