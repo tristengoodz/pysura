@@ -36,7 +36,7 @@ def backend_auth(token_value: Optional[str] = Depends(event_secret)) -> None:
     if token_value is None or token_value != HASURA_EVENT_SECRET:
         logging.log(logging.WARNING, "HASURA_EVENT_SECRET invalid")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-    logging.log(logging.DEBUG, "FASTAPI_EVENT_SECRET verified successfully.")
+    logging.log(logging.DEBUG, "HASURA_EVENT_SECRET verified successfully.")
 
 
 class UserIdentity(BaseModel):

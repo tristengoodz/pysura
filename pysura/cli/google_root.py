@@ -1644,14 +1644,14 @@ alter table public_user
     def router_generator(hasura_metadata, service_url="{{HASURA_MICROSERVICE_URL}}"):
         """Generates a router for the current microservice"""
 
-        def collect_types(object_data, custom_type="object"):
+        def collect_types(object_data, custom_object_type="object"):
             root_type = {}
             custom_name = object_data.get("name")
             root_type[custom_name] = {
                 "name": custom_name,
                 "fields": {},
                 "required_objects": set(),
-                "custom_type": custom_type
+                "custom_type": custom_object_type
             }
             default_types = ["String", "Int", "Float", "Boolean", "ID"]
             for field in object_data.get("fields", []):
@@ -1912,8 +1912,8 @@ SNAKE_router = APIRouter(
           identity_provider=IDENTITY_PROVIDER,
           function_input=CAMELInput
           )
-async def action_base_generator_mutation(_: Request,
-                                         base_generator_mutation_input: CAMELInput | None = None,
+async def SNAKE(_: Request,
+                                         SNAKE_input: CAMELInput | None = None,
                                          injected_user_identity: UserIdentity | None = None
                                          ):
     # (AUTH-LOCK-START) - DO NOT DELETE THIS LINE!
@@ -1942,16 +1942,16 @@ async def action_base_generator_mutation(_: Request,
             if action_handler == service_url:
                 snake_replace = action["name"]
                 camel_replace = snake_replace.replace("_", " ").title().replace(" ", "")
-                action_template = action_template.replace("SNAKE", snake_replace).replace("CAMEL", camel_replace)
+                new_action_template = action_template.replace("SNAKE", snake_replace).replace("CAMEL", camel_replace)
                 collect_perms = []
                 for permission in action["permissions"]:
                     collect_perms.append(permission["role"])
                 else:
                     collect_perms.append("admin")
                 collect_perms = [f"ClientRole.{i}.name" for i in sorted(list(set(collect_perms)))]
-                action_template = action_template.replace("# ALLOWED ROLES HERE", ", ".join(collect_perms))
-                with open(f"actions/action_{snake_replace}.py", "w") as f:
-                    f.write(action_template)
+                new_action_template = new_action_template.replace("# ALLOWED ROLES HERE", ", ".join(collect_perms))
+                with open(f"actions/{snake_replace}.py", "w") as f:
+                    f.write(new_action_template)
 
         new_hasura_metadata = {
             "actions": [],
@@ -1961,9 +1961,22 @@ async def action_base_generator_mutation(_: Request,
             }
         }
 
-        for action in hasura_metadata.get("actions", []):
-            if action.get("name") in included_actions:
-                new_hasura_metadata["actions"].append(action)
+        action_names = []
+        for action_data in hasura_metadata.get("actions", []):
+            if action_data.get("name") in included_actions:
+                new_hasura_metadata["actions"].append(action_data)
+                action_names.append(action_data.get("name"))
+
+        init_str = ""
+        for action_name in action_names:
+            init_str += f"from {action_name} import {action_name}_router\n"
+
+        init_str += "\n = [\n"
+        for action_name in action_names:
+            init_str += f"    {action_name}_router,\n"
+        init_str += "]\n"
+        with open("actions/__init__.py", "w") as f:
+            f.write(init_str)
 
         for custom_type in hasura_metadata.get("custom_types", {}).get("objects", []):
             if custom_type.get("name") in included_set:
@@ -1997,41 +2010,43 @@ async def action_base_generator_mutation(_: Request,
             for f in files:
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
                     continue
-                if f == "requirements.txt":
-                    shutil.copy(os.path.join(root, f), ".")
-                elif f == "app.py":
-                    shutil.copy(os.path.join(root, f), ".")
-                elif f == "Dockerfile":
-                    shutil.copy(os.path.join(root, f), ".")
-                elif f == "__init__.py":
+                if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
                     shutil.copy(os.path.join(root, f), ".")
                 elif f == "pysura_metadata.json" and microservice_name == "default":
                     shutil.copy(os.path.join(root, f), ".")
                 else:
                     if "actions" in root:
-                        dir_path = os.path.join(os.getcwd(), "actions")
-                        if not os.path.isdir(dir_path):
-                            os.mkdir(dir_path)
-                        shutil.copy(os.path.join(root, f), dir_path)
+                        if f != "action_template.py":
+                            dir_path = os.path.join(os.getcwd(), "actions")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            shutil.copy(os.path.join(root, f), dir_path)
                     elif "crons" in root:
-                        dir_path = os.path.join(os.getcwd(), "crons")
-                        if not os.path.isdir(dir_path):
-                            os.mkdir(dir_path)
-                        shutil.copy(os.path.join(root, f), dir_path)
+                        if f != "cron_template.py":
+                            dir_path = os.path.join(os.getcwd(), "crons")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            shutil.copy(os.path.join(root, f), dir_path)
                     elif "events" in root:
-                        dir_path = os.path.join(os.getcwd(), "events")
-                        if not os.path.isdir(dir_path):
-                            os.mkdir(dir_path)
-                        shutil.copy(os.path.join(root, f), dir_path)
+                        if f != "event_template.py":
+                            dir_path = os.path.join(os.getcwd(), "events")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            shutil.copy(os.path.join(root, f), dir_path)
         if microservice_name == "default":
             with open("pysura_metadata.json", "r") as f:
                 metadata = json.load(f)
         else:
             os.chdir("../..")
-            with open("pysura_metadata.json", "r") as f:
+            with open("hasura_metadata.json", "r") as f:
                 metadata = json.load(f)
             os.chdir("microservices")
             os.chdir(microservice_name)
+        with open("app_secrets.py", "r") as f:
+            app_secrets_py = f.read()
+        app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
+        with open("app_secrets.py", "w") as f:
+            f.write(app_secrets_py)
         url_wrapper = "{{HASURA_MICROSERVICE_URL}}"
         if microservice_name != "default":
             url_wrapper = "{{" + f"HASURA_{microservice_name}_URL" + "}}"
