@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Dict, Any
 
 
@@ -443,7 +443,7 @@ class GoogleCloudFunction(DictModel):
 
 class HasuraMetadataTable(BaseModel):
     name: str | None = None
-    schema: str | None = None
+    schema_name: str | None = Field(..., alias="schema")
 
 
 class HasuraMetadataUserId(BaseModel):
