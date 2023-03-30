@@ -1,4 +1,4 @@
-from app_secrets import *  # noqa: F401, F403
+import app_secrets  # noqa: F401
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
