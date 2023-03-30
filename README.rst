@@ -5,6 +5,14 @@ Pysura - BETA
 Hasura + Python = Pysura. An open source solution.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Because everyone should be a code wizard.
+
+
+.. image:: images/code_wizard.png
+   :target: images/code_wizard.png
+   :alt: img_1.png
+
+
 Requirements:
 -------------
 
@@ -37,6 +45,12 @@ To deploy Hasura with Pysura with baked in Auth and a templated Flutter Frontend
 Note: The installer is doing a lot of things. Some of them take a long time, like creating databases, firewalls, and VPC
 networks. Sometimes it might look frozen, but give it some time to do its thing. It's automagically building an entire
 application for you. I promise doing this by hand takes longer. ;)
+
+
+.. image:: images/pysura_deployed.png
+   :target: images/pysura_deployed.png
+   :alt: img.png
+
 
 Is this multi-platform compatible?
 ----------------------------------

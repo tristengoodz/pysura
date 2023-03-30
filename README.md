@@ -1,6 +1,10 @@
 # Pysura - BETA
-
 ### Hasura + Python = Pysura. An open source solution.
+
+Because everyone should be a code wizard.
+
+![img_1.png](images/code_wizard.png)
+
 
 ## Requirements:
 
@@ -31,6 +35,8 @@ Please choose a provider: [google,]: google
 Note: The installer is doing a lot of things. Some of them take a long time, like creating databases, firewalls, and VPC
 networks. Sometimes it might look frozen, but give it some time to do its thing. It's automagically building an entire
 application for you. I promise doing this by hand takes longer. ;)
+
+![img.png](images/pysura_deployed.png)
 
 ## Is this multi-platform compatible?
 

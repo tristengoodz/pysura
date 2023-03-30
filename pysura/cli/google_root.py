@@ -1389,22 +1389,6 @@ alter table public_user
                   f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        cmd_str = f'gcloud functions deploy logout_user ' \
-                  f'--runtime=python39 ' \
-                  f'--trigger-http ' \
-                  f'--allow-unauthenticated ' \
-                  f'--min-instances=1 ' \
-                  f'--format=json'
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f'gcloud functions deploy refresh_user_claims ' \
-                  f'--runtime=python39 ' \
-                  f'--trigger-http ' \
-                  f'--allow-unauthenticated ' \
-                  f'--min-instances=1 ' \
-                  f'--format=json'
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
         os.chdir("..")
         cmd_str = f"gcloud functions list " \
                   f"--project={env.project.name.split('/')[-1]} " \

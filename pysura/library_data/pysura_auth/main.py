@@ -94,23 +94,3 @@ def on_user_delete(data, context):
         print(e)
         return 500, "ERROR"
     return 200, "OK"
-
-
-@functions_framework.http
-def logout_user(request: Request):
-    print(request)
-    print(request.headers)
-    print(request.method)
-    if request.is_json:
-        print(request.json)
-    return "Hello, World!"
-
-
-@functions_framework.http
-def refresh_user_claims(request: Request):
-    print(request)
-    print(request.headers)
-    print(request.method)
-    if request.is_json:
-        print(request.json)
-    return "Hello, World!"
