@@ -870,6 +870,7 @@ class GoogleRoot(RootCmd):
             timeout = self.collect("Timeout (Ex. 600s): ", ["60s", "300s", "600s", "900s", "1200s", "3600s"])
             memory = self.collect("Memory (Ex. 2Gi): ", ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
             max_instances = self.collect("Max instances (Ex. 10): ")
+            hasura_event_secret = self.password()
             hasura = Hasura(
                 HASURA_GRAPHQL_CORS_DOMAIN="*",
                 HASURA_GRAPHQL_ENABLED_CORS="true",
@@ -877,6 +878,7 @@ class GoogleRoot(RootCmd):
                 HASURA_GRAPHQL_ADMIN_SECRET=hasura_secret,
                 HASURA_GRAPHQL_DATABASE_URL=env.database_credential.connect_url,
                 HASURA_GRAPHQL_METADATA_DATABASE_URL=env.database_credential.connect_url,
+                HASURA_EVENT_SECRET=hasura_event_secret,
                 vpc_connector=env.connector.name.split('/')[-1],
                 timeout=timeout,
                 project_id=env.project.name.split('/')[-1],
@@ -899,6 +901,11 @@ class GoogleRoot(RootCmd):
                 env_dict[
                     f"HASURA_SECONDARY_URLS_{database_credential.database_id.split('/')[-1]}"
                 ] = database_credential.connect_url
+        if env.hasura is not None:
+            if isinstance(env.hasura.microservice_urls, list):
+                for micro_url in env.hasura.microservice_urls:
+                    env_dict[micro_url.url_wrapper] = micro_url.url
+
         secret_text = " --update-secrets="
         for k, v in env_dict.items():
             if k.startswith("HASURA_") and v is not None:
@@ -1423,6 +1430,8 @@ alter table public_user
             env = self.get_env()
         with open("admin.json", "w") as f:
             json.dump(env.auth_service_account.key_file, f)
+        admin_json = json.dumps(env.auth_service_account.key_file)
+        self.do_gcloud_set_secret("HASURA_FIREBASE_SERVICE_ACCOUNT", admin_json)
         self.do_attach_flutter(None)
         cmd_str = f"gcloud auth activate-service-account --key-file=admin.json {env.auth_service_account.email}"
         self.log(cmd_str, level=logging.DEBUG)
@@ -1632,7 +1641,7 @@ alter table public_user
         self.set_env(env)
 
     @staticmethod
-    def router_generator(hasura_metadata, service_url="{{DEFAULT_SERVICE_URL}}"):
+    def router_generator(hasura_metadata, service_url="{{HASURA_MICROSERVICE_URL}}"):
         """Generates a router for the current microservice"""
 
         def collect_types(object_data, custom_type="object"):
@@ -1672,6 +1681,7 @@ alter table public_user
         included_types = []
         excluded_types = []
         actions = {}
+        included_actions = set()
         for action in hasura_metadata.get("actions", []):
             action_name = action.get("name")
             action_handler = action.get("definition", {}).get("handler", None)
@@ -1680,6 +1690,7 @@ alter table public_user
             if action_handler == service_url:
                 included_types.append(output_type)
                 included_types.append(input_type)
+                included_actions.add(action_name)
             else:
                 excluded_types.append(output_type)
                 excluded_types.append(input_type)
@@ -1881,48 +1892,49 @@ alter table public_user
 
         action_template = """import logging
 
-    from fastapi import APIRouter, Depends, Request
-    from pysura.faster_api.security import backend_auth, UserIdentity, identity, firebase_jwt_auth, IDENTITY_PROVIDER
-    from pysura.faster_api.enums import ApiResponse, ClientRole
-    from generated_types import *
+from fastapi import APIRouter, Depends, Request
+from pysura.faster_api.security import backend_auth, UserIdentity, identity, IDENTITY_PROVIDER
+from pysura.faster_api.enums import ApiResponse, ClientRole
+from generated_types import *
 
-    ROUTE = "/SNAKE/"
-    ALLOWED_ROLES = [
-        # ALLOWED ROLES HERE
-    ]
-    action_SNAKE_router = APIRouter(
-        tags=["SNAKE"]
-    )
+ROUTE = "/SNAKE/"
+ALLOWED_ROLES = [  # The roles allowed to call this action
+    # ALLOWED ROLES HERE
+]
+SNAKE_router = APIRouter(
+    tags=["SNAKE"]
+)
 
 
-    @action_SNAKE_router.post(ROUTE,
-                              dependencies=[Depends(firebase_jwt_auth), Depends(backend_auth)])
-    @identity(allowed_roles=ALLOWED_ROLES,
-              identity_provider=IDENTITY_PROVIDER,
-              function_input=CAMELInput)
-    async def action_base_generator_mutation(_: Request,
-                                             base_generator_mutation_input: CAMELInput | None = None,
-                                             injected_user_identity: UserIdentity | None = None
-                                             ):
-        # (AUTH-LOCK-START) - DO NOT DELETE THIS LINE!
-        if injected_user_identity is None or injected_user_identity.user_id is None:
-            return {
-                "response_name": ApiResponse.UNAUTHORIZED.name,
-                "response_value": ApiResponse.UNAUTHORIZED.value
-            }
-        logging.log(logging.INFO, f"User {injected_user_identity.user_id} is authorized to access {ROUTE}")
-        # (AUTH-LOCK-END) - DO NOT DELETE THIS LINE!
+@SNAKE_router.post(ROUTE,
+                   dependencies=[Depends(backend_auth)])
+@identity(allowed_roles=ALLOWED_ROLES,
+          identity_provider=IDENTITY_PROVIDER,
+          function_input=CAMELInput
+          )
+async def action_base_generator_mutation(_: Request,
+                                         base_generator_mutation_input: CAMELInput | None = None,
+                                         injected_user_identity: UserIdentity | None = None
+                                         ):
+    # (AUTH-LOCK-START) - DO NOT DELETE THIS LINE!
+    if injected_user_identity is None or injected_user_identity.user_id is None:
+        return {
+            "response_name": ApiResponse.UNAUTHORIZED.name,
+            "response_value": ApiResponse.UNAUTHORIZED.value
+        }
+    logging.log(logging.INFO, f"User {injected_user_identity.user_id} is authorized to access {ROUTE}")
+    # (AUTH-LOCK-END) - DO NOT DELETE THIS LINE!
 
-        # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
-        print(base_generator_mutation_input)
-        response = CAMELOutput(
-            data=None,
-            nodes=None,
-            response_name=ApiResponse.SUCCESS.name,
-            response_value=ApiResponse.SUCCESS.value
-        ).dict()
-        return response
-        # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
+    # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
+    print(base_generator_mutation_input)
+    response = CAMELOutput(
+        data=None,
+        nodes=None,
+        response_name=ApiResponse.SUCCESS.name,
+        response_value=ApiResponse.SUCCESS.value
+    ).dict()
+    return response
+    # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
 
     """
         for action in hasura_metadata.get("actions", []):
@@ -1941,14 +1953,42 @@ alter table public_user
                 with open(f"actions/action_{snake_replace}.py", "w") as f:
                     f.write(action_template)
 
-    def do_deploy_default_microservice(self, _):
-        if os.path.isdir("microservices"):
-            self.log("microservices directory already exists", level=logging.ERROR)
+        new_hasura_metadata = {
+            "actions": [],
+            "custom_types": {
+                "objects": [],
+                "input_objects": []
+            }
+        }
+
+        for action in hasura_metadata.get("actions", []):
+            if action.get("name") in included_actions:
+                new_hasura_metadata["actions"].append(action)
+
+        for custom_type in hasura_metadata.get("custom_types", {}).get("objects", []):
+            if custom_type.get("name") in included_set:
+                new_hasura_metadata["custom_types"]["objects"].append(custom_type)
+
+        for custom_type in hasura_metadata.get("custom_types", {}).get("input_objects", []):
+            if custom_type.get("name") in included_set:
+                new_hasura_metadata["custom_types"]["input_objects"].append(custom_type)
+
+        return new_hasura_metadata
+
+    def do_deploy_microservice(self, microservice_name="default"):
+        if microservice_name == "" or len(microservice_name.strip()) == 0:
+            self.log("Microservice name cannot be empty", level=logging.ERROR)
             return
-        os.mkdir("microservices")
+        env = self.get_env()
+        if env.auth_service_account is None or env.auth_service_account.key_file is None:
+            self.log("No auth service account specified", level=logging.ERROR)
+            return
+        if not os.path.isdir("microservices"):
+            os.mkdir("microservices")
         os.chdir("microservices")
-        os.mkdir("default")
-        os.chdir("default")
+        if not os.path.isdir(microservice_name):
+            os.mkdir(microservice_name)
+        os.chdir(microservice_name)
         os.mkdir("actions")
         os.mkdir("crons")
         os.mkdir("events")
@@ -1965,7 +2005,7 @@ alter table public_user
                     shutil.copy(os.path.join(root, f), ".")
                 elif f == "__init__.py":
                     shutil.copy(os.path.join(root, f), ".")
-                elif f == "pysura_metadata.json":
+                elif f == "pysura_metadata.json" and microservice_name == "default":
                     shutil.copy(os.path.join(root, f), ".")
                 else:
                     if "actions" in root:
@@ -1983,12 +2023,112 @@ alter table public_user
                         if not os.path.isdir(dir_path):
                             os.mkdir(dir_path)
                         shutil.copy(os.path.join(root, f), dir_path)
-        with open("pysura_metadata.json", "r") as f:
-            metadata = json.load(f)
-        url_wrapper = "{{DEFAULT_SERVICE_URL}}"
-        self.router_generator(metadata, url_wrapper)
-        self.log("TODO: Finish the microservice deployer...", level=logging.INFO)
+        if microservice_name == "default":
+            with open("pysura_metadata.json", "r") as f:
+                metadata = json.load(f)
+        else:
+            os.chdir("../..")
+            with open("pysura_metadata.json", "r") as f:
+                metadata = json.load(f)
+            os.chdir("microservices")
+            os.chdir(microservice_name)
+        url_wrapper = "{{HASURA_MICROSERVICE_URL}}"
+        if microservice_name != "default":
+            url_wrapper = "{{" + f"HASURA_{microservice_name}_URL" + "}}"
+        new_hasura_metadata = self.router_generator(metadata, url_wrapper)
+        input_objects_set = set(
+            [i.get("name", None) for i in new_hasura_metadata.get("custom_types", {}).get("input_objects", [])]
+        )
+        objects_set = set(
+            [i.get("name", None) for i in new_hasura_metadata.get("custom_types", {}).get("objects", [])]
+        )
+
+        timeout = self.collect("Microservice Timeout (Ex. 600s): ", ["60s", "300s", "600s", "900s", "1200s", "3600s"])
+        memory = self.collect("Microservice Memory (Ex. 2Gi): ",
+                              ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
+        max_instances = self.collect("Max instances (Ex. 10): ")
+        cmd_str = f"gcloud run deploy {microservice_name} --source . " \
+                  f"--min-instances=1 " \
+                  f"--max-instances={max_instances} " \
+                  f"--cpu=1 " \
+                  f"--memory={memory} " \
+                  f"--timeout={timeout} " \
+                  f"--allow-unauthenticated " \
+                  f"--no-cpu-throttling "
+        self.log(cmd_str, level=logging.INFO)
+        os.system(cmd_str)
+        services = json.loads(os.popen(f"gcloud run services list "
+                                       f"--project={env.project.name.split('/')[-1]} "
+                                       f"--format=json").read())
+        new_services = []
+        if env.hasura.microservice_urls is None:
+            env.hasura.microservice_urls = []
+        for service in services:
+            service_data = GoogleService(**service)
+            if service_data.metadata.name == microservice_name:
+                if microservice_name == "default":
+                    env.default_microservice = service_data
+                    env.default_microservice_url = service_data.status.url
+                    env.hasura.HASURA_MICROSERVICE_URL = f"{service_data.status.url}"
+                    self.do_gcloud_set_secret("HASURA_MICROSERVICE_URL", env.hasura.HASURA_MICROSERVICE_URL)
+                else:
+                    microservice_url = MicroserviceUrl(
+                        url=service_data.status.url,
+                        name=microservice_name,
+                        url_wrapper=f"HASURA_{microservice_name}_URL"
+                    )
+                    env.hasura.microservice_urls.append(microservice_url)
+            new_services.append(service_data)
+        env.services = new_services
         os.chdir("../..")
+        self.set_env(env)
+        self.do_gcloud_deploy_hasura(None)
+        with open("hasura_metadata.json", "r") as f:
+            metadata = json.load(f)
+
+        new_metadata = {
+
+        }
+        new_actions = []
+        new_objects = []
+        new_input_objects = []
+        for key, value in metadata.items():
+            if key == "actions":
+                for action in value:
+                    if action["handler"] == url_wrapper:
+                        continue
+                    new_actions.append(action)
+            elif key == "custom_types":
+                objects = value.get("objects", [])
+                for obj in objects:
+                    if obj["name"] in objects_set:
+                        continue
+                    new_objects.append(obj)
+                input_objects = value.get("input_objects", [])
+                for obj in input_objects:
+                    if obj["name"] in input_objects_set:
+                        continue
+                    new_input_objects.append(obj)
+            else:
+                new_metadata[key] = value
+
+        for action in new_metadata.get("actions", []):
+            new_actions.append(action)
+
+        for obj in new_metadata.get("custom_types", {}).get("objects", []):
+            new_objects.append(obj)
+
+        for obj in new_metadata.get("custom_types", {}).get("input_objects", []):
+            new_input_objects.append(obj)
+
+        new_metadata["actions"] = new_actions
+        new_metadata["custom_types"] = {
+            "objects": new_objects,
+            "input_objects": new_input_objects
+        }
+        with open("hasura_metadata.json", "w") as f:
+            json.dump(new_metadata, f, indent=4)
+        self.do_export_hasura_metadata(None)
 
     def do_setup_pysura(self, _):
         """
@@ -2027,3 +2167,4 @@ alter table public_user
             self.do_enable_database_local(database_id=env.database.name.split("/")[-1])
             self.do_create_default_user_table(None)
             self.do_attach_firebase(None)
+            self.do_deploy_microservice(microservice_name="default")

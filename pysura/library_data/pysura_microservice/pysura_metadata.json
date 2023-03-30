@@ -3,7 +3,7 @@
     {
       "name": "action_mutation_pong",
       "definition": {
-        "handler": "{{DEFAULT_SERVICE_URL}}",
+        "handler": "{{HASURA_MICROSERVICE_URL}}",
         "output_type": "ActionMutationPongOutput",
         "forward_client_headers": true,
         "arguments": [
@@ -32,7 +32,7 @@
     {
       "name": "action_query_ping",
       "definition": {
-        "handler": "{{DEFAULT_SERVICE_URL}}",
+        "handler": "{{HASURA_MICROSERVICE_URL}}",
         "output_type": "ActionQueryPingOutput",
         "forward_client_headers": true,
         "arguments": [

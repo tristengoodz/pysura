@@ -222,6 +222,12 @@ class GoogleFirewall(DictModel):
     sourceRanges: List[str] | None = None
 
 
+class MicroserviceUrl(DictModel):
+    url: str | None = None
+    name: str | None = None
+    url_wrapper: str | None = None
+
+
 class Hasura(DictModel):
     HASURA_GRAPHQL_CORS_DOMAIN: str | None = "*"
     HASURA_GRAPHQL_ENABLED_CORS: str | None = "true"
@@ -232,6 +238,9 @@ class Hasura(DictModel):
     HASURA_GRAPHQL_JWT_SECRET: str | None = None
     HASURA_GRAPHQL_URL_ROOT: str | None = None
     HASURA_EVENT_SECRET: str | None = None
+    HASURA_MICROSERVICE_URL: str | None = None
+    HASURA_FIREBASE_SERVICE_ACCOUNT: str | None = None
+    microservice_urls: List[MicroserviceUrl] | None = None
     vpc_connector: str | None = None
     timeout: str | None = None
     project_id: str | None = None
@@ -616,3 +625,5 @@ class GooglePysuraEnv(DictModel):
     android_signing_reports: List[AndroidSigningReport] | None = None
     android_debug_signing_report: AndroidSigningReport | None = None
     hasura_metadata: HasuraMetadata | None = None
+    default_microservice: GoogleService | None = None
+    default_microservice_url: str | None = None

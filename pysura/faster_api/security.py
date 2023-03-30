@@ -14,11 +14,11 @@ import functools
 from enums import IdentityProvider
 import os
 
-BACKEND_FIREBASE_SERVICE_ACCOUNT = os.environ.get("BACKEND_FIREBASE_SERVICE_ACCOUNT", None)
+HASURA_FIREBASE_SERVICE_ACCOUNT = os.environ.get("HASURA_FIREBASE_SERVICE_ACCOUNT", None)
 HASURA_EVENT_SECRET = os.environ.get("HASURA_EVENT_SECRET", None)
 
 
-cred_dict = json.loads(BACKEND_FIREBASE_SERVICE_ACCOUNT)
+cred_dict = json.loads(HASURA_FIREBASE_SERVICE_ACCOUNT)
 try:
     firestore_app = firebase_admin.get_app()
 except ValueError:

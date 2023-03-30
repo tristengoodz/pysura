@@ -1,12 +1,12 @@
 import logging
 
 from fastapi import APIRouter, Depends, Request
-from pysura.faster_api.security import backend_auth, UserIdentity, identity, firebase_jwt_auth, IDENTITY_PROVIDER
+from pysura.faster_api.security import backend_auth, UserIdentity, identity, IDENTITY_PROVIDER
 from pysura.faster_api.enums import ApiResponse, ClientRole
 from generated_types import *
 
 ROUTE = "/SNAKE/"
-ALLOWED_ROLES = [
+ALLOWED_ROLES = [  # The roles allowed to call this action
     # ALLOWED ROLES HERE
 ]
 SNAKE_router = APIRouter(
@@ -14,11 +14,12 @@ SNAKE_router = APIRouter(
 )
 
 
-@action_SNAKE_router.post(ROUTE,
-                          dependencies=[Depends(backend_auth)])
+@SNAKE_router.post(ROUTE,
+                   dependencies=[Depends(backend_auth)])
 @identity(allowed_roles=ALLOWED_ROLES,
           identity_provider=IDENTITY_PROVIDER,
-          function_input=CAMELInput)
+          function_input=CAMELInput
+          )
 async def action_base_generator_mutation(_: Request,
                                          base_generator_mutation_input: CAMELInput | None = None,
                                          injected_user_identity: UserIdentity | None = None
