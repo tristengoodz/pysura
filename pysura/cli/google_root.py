@@ -2054,7 +2054,8 @@ async def action_base_generator_mutation(_: Request,
                   f"--memory={memory} " \
                   f"--timeout={timeout} " \
                   f"--allow-unauthenticated " \
-                  f"--no-cpu-throttling "
+                  f"--no-cpu-throttling " \
+                  f"--project={env.project.name.split('/')[-1]}"
         self.log(cmd_str, level=logging.INFO)
         os.system(cmd_str)
         services = json.loads(os.popen(f"gcloud run services list "
@@ -2077,7 +2078,13 @@ async def action_base_generator_mutation(_: Request,
                         name=microservice_name,
                         url_wrapper=f"HASURA_{microservice_name}_URL"
                     )
-                    env.hasura.microservice_urls.append(microservice_url)
+                    append_flag = True
+                    for url in env.hasura.microservice_urls:
+                        if url.name == microservice_name:
+                            append_flag = False
+                            break
+                    if append_flag:
+                        env.hasura.microservice_urls.append(microservice_url)
             new_services.append(service_data)
         env.services = new_services
         os.chdir("../..")
