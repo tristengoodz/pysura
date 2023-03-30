@@ -138,7 +138,7 @@ class GoogleRoot(RootCmd):
         self.log("Exiting...")
         exit(0)
 
-    def do_gcloud_login(self, check_logged_in=False):
+    def do_gcloud_login(self, check_logged_in=False, auto_advance=True):
         """
         Logs into gcloud.
         Usage: gcloud_login
@@ -155,13 +155,18 @@ class GoogleRoot(RootCmd):
         cmd_str = "gcloud auth login"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        login_success = self.collect("Did you successfully login? (y/n) ")
-        if login_success.strip().lower() == "y":
+        if not auto_advance:
+            login_success = self.collect("Did you successfully login? (y/n) ")
+            if login_success.strip().lower() == "y":
+                env = self.get_env()
+                env.gcloud_logged_in = True
+                self.set_env(env)
+            else:
+                self.user_input_no_loop(self.do_gcloud_login)
+        else:
             env = self.get_env()
             env.gcloud_logged_in = True
             self.set_env(env)
-        else:
-            self.user_input_no_loop(self.do_gcloud_login)
 
     def do_gcloud_link_billing_account(self, project_id=None):
         """
@@ -569,7 +574,14 @@ class GoogleRoot(RootCmd):
         else:
             self.user_input_no_loop(self.do_gcloud_create_firewall)
 
-    def do_gcloud_create_database(self, database_id=""):
+    def do_gcloud_create_database(self,
+                                  database_id="",
+                                  cpu_default="2",
+                                  memory_default="8192",
+                                  db_version_default="POSTGRES_14",
+                                  zone_default="us-central1-b",
+                                  availability_type_default="regional",
+                                  auto_advance=True):
         env = self.get_env()
         if env.project is None:
             self.log("No project selected.")
@@ -586,37 +598,53 @@ class GoogleRoot(RootCmd):
         if arg_len == 0 and not self.confirm_loop(db_name):
             self.user_input_no_loop(self.do_gcloud_create_database)
             return
-        cpu_number = self.collect("Enter the number of CPU's for the database number (Ex. 2): ")
-        memory_amount = self.collect("Enter the amount of memory for the database (MiB) (Ex. 8192): ", ["2048",
-                                                                                                        "4096",
-                                                                                                        "8192",
-                                                                                                        "16384",
-                                                                                                        "24576",
-                                                                                                        "32768"])
-        db_version = self.collect("Enter the database version (Supports POSTGRES_14, ): ", ["POSTGRES_14"])
+        if len(cpu_default.strip()) == 0:
+            cpu_number = self.collect("Enter the number of CPU's for the database number (Ex. 2): ")
+        else:
+            cpu_number = cpu_default
+        if len(memory_default.strip()) == 0:
+            memory_amount = self.collect("Enter the amount of memory for the database (MiB) (Ex. 8192): ", ["2048",
+                                                                                                            "4096",
+                                                                                                            "8192",
+                                                                                                            "16384",
+                                                                                                            "24576",
+                                                                                                            "32768"])
+        else:
+            memory_amount = memory_default
+        if len(db_version_default.strip()) == 0:
+            db_version = self.collect("Enter the database version (Supports POSTGRES_14, ): ", ["POSTGRES_14"])
+        else:
+            db_version = db_version_default
         cpu_number = str(int(cpu_number.strip()))
         memory_amount = f"{str(int(memory_amount.strip()))}MiB"
-        zone = self.gcloud_list_typed_choice(f"gcloud compute zones list "
-                                             f"--project={env.project.name.split('/')[-1]} "
-                                             f"--format=json", "Enter a zone (Ex. us-central1-b): ", "name")
+        if len(zone_default.strip()) == 0:
+            zone = self.gcloud_list_typed_choice(f"gcloud compute zones list "
+                                                 f"--project={env.project.name.split('/')[-1]} "
+                                                 f"--format=json", "Enter a zone (Ex. us-central1-b): ", "name")
+        else:
+            zone = zone_default
         if zone is None:
             self.log("No zone selected.")
             return
-        availability_types = ["regional", "zonal"]
-        availability_type = self.collect("Enter the availability type (regional/zonal): ", availability_types)
-        if availability_type not in availability_types:
-            self.log("Invalid availability type.")
-            return
+        if len(availability_type_default.strip()) == 0:
+            availability_types = ["regional", "zonal"]
+            availability_type = self.collect("Enter the availability type (regional/zonal): ", availability_types)
+            if availability_type not in availability_types:
+                self.log("Invalid availability type.")
+                return
+        else:
+            availability_type = availability_type_default
         db_password = self.password()
         self.log(f"You are preparing to create a database with the following parameters: "
                  f"Name: {db_name}, CPU's: {cpu_number}, Memory: {memory_amount}, "
                  f"Version: {db_version}, Zone: {zone}, "
                  f"Network: {env.network.name.split('/')[-1]}, Project: {env.project.name.split('/')[-1]}, "
                  f"DatabasePassword: {db_password}")
-        continue_flag = self.collect("Continue? (y/n): ", ["y", "n"])
-        if continue_flag.strip().lower() != "y":
-            self.log("Aborting...")
-            return
+        if not auto_advance:
+            continue_flag = self.collect("Continue? (y/n): ", ["y", "n"])
+            if continue_flag.strip().lower() != "y":
+                self.log("Aborting...")
+                return
         cmd_str = (
             f"gcloud beta sql instances create {db_name} "
             f"--project={env.project.name.split('/')[-1]} "
@@ -671,7 +699,9 @@ class GoogleRoot(RootCmd):
             env.database_credentials.append(db_creds)
         self.set_env(env)
 
-    def do_gcloud_create_serverless_connector(self, connector_id=""):
+    def do_gcloud_create_serverless_connector(self,
+                                              connector_id="",
+                                              range_default="10.8.0.0/28"):
         """
         Creates a serverless connector.
         Usage: create_serverless_connector
@@ -687,8 +717,12 @@ class GoogleRoot(RootCmd):
             self.log("No database selected.")
             return
 
-        range_choice = self.collect("Select a range (Ex. 10.8.0.0/28): ", [f"10.{i}.0.0/28" for i in range(8, 100)])
-        arg_len = len(connector_id.split())
+        if len(range_default.strip()) == 0:
+            range_choice = self.collect("Select a range (Ex. 10.8.0.0/28): ", [f"10.{i}.0.0/28" for i in range(8, 100)])
+            arg_len = len(connector_id.split())
+        else:
+            range_choice = range_default
+            arg_len = len(connector_id.split())
         if arg_len == 0:
             connector_name = self.collect("Enter a connector name: ")
         else:
@@ -829,22 +863,25 @@ class GoogleRoot(RootCmd):
         env.service_accounts = service_accounts
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
-                       f"--role=roles/cloudbuild.builds.builder"
+                       f"--role=roles/cloudbuild.builds.builder "
+                       f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
-        os.system(cmd_log_str)
+        os.popen(cmd_log_str).read()
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
-                       f"--role=roles/run.admin"
+                       f"--role=roles/run.admin "
+                       f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
-        os.system(cmd_log_str)
+        os.popen(cmd_log_str).read()
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
-                       f"--role=roles/secretmanager.secretAccessor"
+                       f"--role=roles/secretmanager.secretAccessor "
+                       f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
-        os.system(cmd_log_str)
+        os.popen(cmd_log_str).read()
 
     def do_gcloud_deploy_hasura(self, _):
         env = self.get_env()
@@ -1319,19 +1356,19 @@ alter table public_user
                   f"--role=roles/firebase.admin " \
                   f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
+        os.popen(cmd_str).read()
         cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
                   f"--member=serviceAccount:{env.auth_service_account.email} " \
                   f"--role=roles/cloudbuild.builds.builder " \
                   f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
+        os.popen(cmd_str).read()
         cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
                   f"--member=serviceAccount:{env.auth_service_account.email} " \
                   f"--role=roles/firebaseauth.admin " \
                   f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
+        os.popen(cmd_str).read()
         cmd_str = f"gcloud iam service-accounts keys create admin.json " \
                   f"--iam-account={env.auth_service_account.email} " \
                   f"--format=json"
@@ -1379,7 +1416,7 @@ alter table public_user
                        f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
-        os.system(cmd_log_str)
+        os.popen(cmd_log_str).read()
         cmd_str = f'gcloud functions deploy on_user_create ' \
                   f'--runtime=python39 ' \
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.create ' \
@@ -1387,7 +1424,7 @@ alter table public_user
                   f'--min-instances=1 ' \
                   f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
+        os.popen(cmd_str).read()
         cmd_str = f'gcloud functions deploy on_user_delete ' \
                   f'--runtime=python39 ' \
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.delete ' \
@@ -1395,7 +1432,7 @@ alter table public_user
                   f'--min-instances=1 ' \
                   f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
+        os.popen(cmd_str).read()
         os.chdir("..")
         cmd_str = f"gcloud functions list " \
                   f"--project={env.project.name.split('/')[-1]} " \
@@ -1443,12 +1480,12 @@ alter table public_user
                   f"'https://identitytoolkit.googleapis.com/v2/projects" \
                   f"/{env.project.name.split('/')[-1]}/identityPlatform:initializeAuth'"
         self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
+        os.popen(cmd_str).read()
         cmd_str = f"curl -H 'Authorization:Bearer {access_token}' -H 'Content-Type:application/json' " \
                   f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
                   f"/{env.project.name.split('/')[-1]}/config'"
         self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
+        os.popen(cmd_str).read()
         body_data = {
             "authorizedDomains": [
                 "localhost",
@@ -1484,7 +1521,7 @@ alter table public_user
                   f"Config.signIn.allowDuplicateEmails' " \
                   f"-d '{json.dumps(body_data)}'"
         self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
+        os.popen(cmd_str).read()
         cmd_str = "gcloud auth login"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
@@ -1588,10 +1625,7 @@ alter table public_user
                         if not os.path.isdir(path):
                             os.mkdir(path)
                     shutil.copy(file_path, dir_path)
-        app_name = self.collect("What will your public facing App name be? (iOS store/Google Playstore): ")
-        while not self.confirm_loop(app_name):
-            app_name = self.collect("What will your public facing App name be? (iOS store/Google Playstore): ")
-
+        app_name = env.project.name.replace("-", "_")
         with open("lib/common/constants.dart", "r") as f:
             constants = f.read()
         constants = constants.replace("APP_NAME", app_name)
@@ -1787,9 +1821,9 @@ alter table public_user
                         continue
 
         base_models_template = """from typing import List
-    from pydantic import BaseModel
+from pydantic import BaseModel
 
-        """
+"""
 
         object_template = """\nclass {name}(BaseModel):\n    {fields}{config}\n"""
         field_template = "{}: {}"
@@ -1913,9 +1947,9 @@ SNAKE_router = APIRouter(
           function_input=CAMELInput
           )
 async def SNAKE(_: Request,
-                                         SNAKE_input: CAMELInput | None = None,
-                                         injected_user_identity: UserIdentity | None = None
-                                         ):
+                SNAKE_input: CAMELInput | None = None,
+                injected_user_identity: UserIdentity | None = None
+                ):
     # (AUTH-LOCK-START) - DO NOT DELETE THIS LINE!
     if injected_user_identity is None or injected_user_identity.user_id is None:
         return {
@@ -1926,13 +1960,14 @@ async def SNAKE(_: Request,
     # (AUTH-LOCK-END) - DO NOT DELETE THIS LINE!
 
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
-    print(base_generator_mutation_input)
+    print(SNAKE_input)
     response = CAMELOutput(
         data=None,
         nodes=None,
         response_name=ApiResponse.SUCCESS.name,
         response_value=ApiResponse.SUCCESS.value
     ).dict()
+    print(response)
     return response
     # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
 
@@ -1971,7 +2006,7 @@ async def SNAKE(_: Request,
         for action_name in action_names:
             init_str += f"from {action_name} import {action_name}_router\n"
 
-        init_str += "\n = [\n"
+        init_str += f"\naction_routers = [\n"
         for action_name in action_names:
             init_str += f"    {action_name}_router,\n"
         init_str += "]\n"
@@ -2106,7 +2141,6 @@ async def SNAKE(_: Request,
         self.do_gcloud_deploy_hasura(None)
         with open("hasura_metadata.json", "r") as f:
             metadata = json.load(f)
-
         new_metadata = {}
         new_actions = []
         new_objects = []
@@ -2131,13 +2165,13 @@ async def SNAKE(_: Request,
             else:
                 new_metadata[key] = value
 
-        for action in new_metadata.get("actions", []):
+        for action in new_hasura_metadata.get("actions", []):
             new_actions.append(action)
 
-        for obj in new_metadata.get("custom_types", {}).get("objects", []):
+        for obj in new_hasura_metadata.get("custom_types", {}).get("objects", []):
             new_objects.append(obj)
 
-        for obj in new_metadata.get("custom_types", {}).get("input_objects", []):
+        for obj in new_hasura_metadata.get("custom_types", {}).get("input_objects", []):
             new_input_objects.append(obj)
 
         new_metadata["actions"] = new_actions
