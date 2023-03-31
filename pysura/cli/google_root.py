@@ -19,6 +19,7 @@ class GoogleRoot(RootCmd):
         super().__init__(*arg, **kwargs)
         self.intro = "Welcome to Pysura for Google Architectures! Type help or ? to list commands."
         self.prompt = "(pysura_cli) >>> "
+        self.setup_step = 0
 
     @staticmethod
     def get_site_packages_path(submodule="pysura_auth"):
@@ -893,7 +894,6 @@ class GoogleRoot(RootCmd):
             self.log("No connector selected.", level=logging.ERROR)
             return
         if env.hasura is None:
-            self.do_update_default_compute_engine_service_account(None)
             cmd_log_str = "docker pull --platform=linux/amd64 hasura/graphql-engine:latest"
             self.log(cmd_log_str, level=logging.DEBUG)
             os.system(cmd_log_str)
@@ -996,7 +996,6 @@ class GoogleRoot(RootCmd):
             new_services.append(service_data)
         env.services = new_services
         self.set_env(env)
-        self.do_import_hasura_metadata(None)
 
     def do_set_hasura_service_url(self, service_url):
         """
@@ -1331,7 +1330,6 @@ alter table public_user
         ]
         with open("hasura_metadata.json", "w") as f:
             json.dump(metadata, f)
-        self.do_export_hasura_metadata(None)
 
     def do_gcloud_create_auth_service_account(self, _):
         env = self.get_env()
@@ -1481,7 +1479,9 @@ alter table public_user
             json.dump(env.auth_service_account.key_file, f)
         admin_json = json.dumps(env.auth_service_account.key_file)
         self.do_gcloud_set_secret("HASURA_FIREBASE_SERVICE_ACCOUNT", admin_json)
-        self.do_attach_flutter(None)
+
+    def do_activate_firebase_auth(self, _):
+        env = self.get_env()
         cmd_str = f"gcloud auth activate-service-account --key-file=admin.json {env.auth_service_account.email}"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
@@ -1673,10 +1673,10 @@ alter table public_user
         env.ios_cf_bundle_url_types = IosCFBundleURLTypes(**ios_bundle)
         with open("ios/Runner/Info.plist", "wb") as f:
             plistlib.dump(ios_plist, f)
-        self.log(f"SHA1:\n{env.android_debug_signing_report.sha1}", level=logging.DEBUG)
-        self.log(f"SHA256:\n{env.android_debug_signing_report.sha256}", level=logging.DEBUG)
+        self.log(f"SHA1:\n{env.android_debug_signing_report.sha1}", level=logging.INFO)
+        self.log(f"SHA256:\n{env.android_debug_signing_report.sha256}", level=logging.INFO)
         self.log(f"Please visit:\nhttps://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/"
-                 f"settings/general/android\nAdd the SHA1 and SHA256 to the list of fingerprints", level=logging.DEBUG)
+                 f"settings/general/android\nAdd the SHA1 and SHA256 to the list of fingerprints", level=logging.INFO)
         ready = self.collect("Are you ready to continue? (y/n): ")
         while ready != "y":
             ready = self.collect("Are you ready to continue? (y/n): ")
@@ -1952,16 +1952,14 @@ SNAKE_router = APIRouter(
 )
 
 
-@SNAKE_router.post(ROUTE,
-                   dependencies=[Depends(backend_auth)])
+@SNAKE_router.post(ROUTE, dependencies=[Depends(backend_auth)])
 @identity(allowed_roles=ALLOWED_ROLES,
           identity_provider=IDENTITY_PROVIDER,
           function_input=CAMELInput
           )
 async def SNAKE(_: Request,
                 SNAKE_input: CAMELInput | None = None,
-                injected_user_identity: UserIdentity | None = None
-                ):
+                injected_user_identity: UserIdentity | None = None):
     # (AUTH-LOCK-START) - DO NOT DELETE THIS LINE!
     if injected_user_identity is None or injected_user_identity.user_id is None:
         return {
@@ -2206,7 +2204,6 @@ async def SNAKE(_: Request,
         }
         with open("hasura_metadata.json", "w") as f:
             json.dump(new_metadata, f, indent=4)
-        self.do_export_hasura_metadata(None)
 
     def do_setup_pysura(self, _):
         """
@@ -2214,35 +2211,66 @@ async def SNAKE(_: Request,
         """
         if not self.do_check_gcloud(None):
             return
+        self.setup_step = 1
         env = self.get_env()
         if env.gcloud_logged_in is False:
             self.do_gcloud_login()
+        self.setup_step = 2
         if env.organization is None:
             self.do_gcloud_choose_organization(None)
+        self.setup_step = 3
         hasura_project_name = self.collect("Hasura project name: ")
         if self.confirm_loop(hasura_project_name):
+            self.setup_step = 4
             if env.project is None:
                 self.do_gcloud_create_project(project_id=hasura_project_name)
+            self.setup_step = 5
             if env.billing_account is None:
                 self.do_gcloud_link_billing_account()
+            self.setup_step = 6
             if env.api_services is None:
                 self.do_gcloud_enable_api_services(None)
+            self.setup_step = 7
             if env.network is None:
                 self.do_gcloud_create_network(network_id=hasura_project_name)
+            self.setup_step = 8
             if env.address is None:
                 self.do_gcloud_create_address(address_id=hasura_project_name)
+            self.setup_step = 9
             if env.peering is None:
                 self.do_gcloud_create_vpc_peering(peering_id=hasura_project_name)
+            self.setup_step = 10
             if env.firewalls is None:
                 self.do_gcloud_create_firewall(firewall_id=hasura_project_name)
+            self.setup_step = 11
             if env.database_credential is None:
                 self.do_gcloud_create_database(database_id=hasura_project_name)
+            self.setup_step = 12
             if env.connector is None:
                 self.do_gcloud_create_serverless_connector(connector_id=hasura_project_name)
+            self.setup_step = 13
+            self.do_update_default_compute_engine_service_account(None)
+            self.setup_step = 14
             self.do_gcloud_deploy_hasura()
+            self.setup_step = 15
+            self.do_import_hasura_metadata(None)
+            self.setup_step = 16
             self.do_gcloud_create_auth_service_account(None)
+            self.setup_step = 17
             env = self.get_env()
             self.do_enable_database_local(database_id=env.database.name.split("/")[-1])
+            self.setup_step = 18
             self.do_create_default_user_table(None)
+            self.setup_step = 19
+            self.do_export_hasura_metadata(None)
+            self.setup_step = 20
             self.do_attach_firebase(None)
+            self.setup_step = 21
+            self.do_attach_flutter(None)
+            self.setup_step = 22
+            self.do_activate_firebase_auth(None)
+            self.setup_step = 23
             self.do_deploy_microservice(microservice_name="default")
+            self.setup_step = 24
+            self.do_export_hasura_metadata(None)
+            self.setup_step = 25

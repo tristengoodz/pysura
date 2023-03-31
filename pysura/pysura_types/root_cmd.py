@@ -14,6 +14,15 @@ import os
 import json
 
 
+class LogLevelFilter(logging.Filter):
+    def __init__(self, level):
+        super().__init__()
+        self.level = level
+
+    def filter(self, record):
+        return record.levelno == self.level
+
+
 class RootCmd(Cmd):
 
     def setup_logging(self):
@@ -38,6 +47,9 @@ class RootCmd(Cmd):
                 log_file_formatter = logging.Formatter(fmt="%(asctime)s %(levelname)-5s %(message)s",
                                                        datefmt="%Y-%m-%d %I:%H:%M")
                 log_file_handler.setFormatter(log_file_formatter)
+
+                level_filter = LogLevelFilter(level)
+                log_file_handler.addFilter(level_filter)
 
                 level_logger = logging.getLogger(level_name)
                 level_logger.setLevel(level)

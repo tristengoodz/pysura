@@ -11,12 +11,12 @@ import logging
 from typing import List, Optional, Type
 from pydantic import BaseModel
 import functools
-from enums import IdentityProvider
 import os
+
+from pysura.faster_api.enums import IdentityProvider
 
 HASURA_FIREBASE_SERVICE_ACCOUNT = os.environ.get("HASURA_FIREBASE_SERVICE_ACCOUNT", None)
 HASURA_EVENT_SECRET = os.environ.get("HASURA_EVENT_SECRET", None)
-
 
 cred_dict = json.loads(HASURA_FIREBASE_SERVICE_ACCOUNT)
 try:
