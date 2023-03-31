@@ -17,6 +17,9 @@ import json
 class RootCmd(Cmd):
 
     def setup_logging(self):
+        if not os.path.exists("logs"):
+            os.mkdir("logs")
+        log_path = os.path.join(os.getcwd(), "logs")
         log_levels = {
             'debug': logging.DEBUG,
             'info': logging.INFO,
@@ -30,7 +33,7 @@ class RootCmd(Cmd):
             root_logger.setLevel(logging.DEBUG)
 
             for level_name, level in log_levels.items():
-                log_file_handler = logging.FileHandler(f'{level_name}.log', mode='a')
+                log_file_handler = logging.FileHandler(f'{log_path}/{level_name}.log', mode='a')
                 log_file_handler.setLevel(level)
                 log_file_formatter = logging.Formatter(fmt="%(asctime)s %(levelname)-5s %(message)s",
                                                        datefmt="%Y-%m-%d %I:%H:%M")

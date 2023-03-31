@@ -1462,7 +1462,7 @@ alter table public_user
         }""".replace("PROJECT_ID", env.project.name.split("/")[-1])))
         env.hasura.HASURA_GRAPHQL_JWT_SECRET = jwt_config
         self.set_env(env)
-        self.do_gcloud_deploy_hasura(None)
+        self.do_gcloud_deploy_hasura()
 
     def do_attach_firebase(self, _):
         env = self.get_env()
@@ -2014,7 +2014,7 @@ async def SNAKE(_: Request,
 
         init_str = ""
         for action_name in action_names:
-            init_str += f"from {action_name} import {action_name}_router\n"
+            init_str += f"from actions.{action_name} import {action_name}_router\n"
 
         init_str += f"\naction_routers = [\n"
         for action_name in action_names:
@@ -2161,7 +2161,7 @@ async def SNAKE(_: Request,
         env.services = new_services
         os.chdir("../..")
         self.set_env(env)
-        self.do_gcloud_deploy_hasura(None)
+        self.do_gcloud_deploy_hasura()
         with open("hasura_metadata.json", "r") as f:
             metadata = json.load(f)
         new_metadata = {}
@@ -2237,7 +2237,7 @@ async def SNAKE(_: Request,
                 self.do_gcloud_create_database(database_id=hasura_project_name)
             if env.connector is None:
                 self.do_gcloud_create_serverless_connector(connector_id=hasura_project_name)
-            self.do_gcloud_deploy_hasura(None)
+            self.do_gcloud_deploy_hasura()
             self.do_gcloud_create_auth_service_account(None)
             env = self.get_env()
             self.do_enable_database_local(database_id=env.database.name.split("/")[-1])
