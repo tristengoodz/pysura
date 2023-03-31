@@ -883,7 +883,7 @@ class GoogleRoot(RootCmd):
         self.log(cmd_log_str, level=logging.DEBUG)
         os.popen(cmd_log_str).read()
 
-    def do_gcloud_deploy_hasura(self, _):
+    def do_gcloud_deploy_hasura(self, timeout_default="600s", memory_default="2Gi", max_instances_default="10"):
         env = self.get_env()
         if env.project is None:
             self.log("No project selected.")
@@ -904,9 +904,19 @@ class GoogleRoot(RootCmd):
             self.log(cmd_log_str, level=logging.DEBUG)
             os.system(cmd_log_str)
             hasura_secret = self.password()
-            timeout = self.collect("Timeout (Ex. 600s): ", ["60s", "300s", "600s", "900s", "1200s", "3600s"])
-            memory = self.collect("Memory (Ex. 2Gi): ", ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
-            max_instances = self.collect("Max instances (Ex. 10): ")
+            if len(timeout_default.strip()) == 0:
+                timeout = self.collect("Timeout (Ex. 600s): ", ["60s", "300s", "600s", "900s", "1200s", "3600s"])
+            else:
+                timeout = timeout_default
+            if len(memory_default.strip()) == 0:
+                memory = self.collect("Memory (Ex. 2Gi): ",
+                                      ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
+            else:
+                memory = memory_default
+            if len(max_instances_default.strip()) == 0:
+                max_instances = self.collect("Max instances (Ex. 10): ")
+            else:
+                max_instances = max_instances_default
             hasura_event_secret = self.password()
             hasura = Hasura(
                 HASURA_GRAPHQL_CORS_DOMAIN="*",
@@ -2023,7 +2033,11 @@ async def SNAKE(_: Request,
 
         return new_hasura_metadata
 
-    def do_deploy_microservice(self, microservice_name="default"):
+    def do_deploy_microservice(self,
+                               microservice_name="default",
+                               timeout_default="600s",
+                               memory_default="2Gi",
+                               max_instances_default="10"):
         if microservice_name == "" or len(microservice_name.strip()) == 0:
             self.log("Microservice name cannot be empty", level=logging.ERROR)
             return
@@ -2092,11 +2106,20 @@ async def SNAKE(_: Request,
         objects_set = set(
             [i.get("name", None) for i in new_hasura_metadata.get("custom_types", {}).get("objects", [])]
         )
-
-        timeout = self.collect("Microservice Timeout (Ex. 600s): ", ["60s", "300s", "600s", "900s", "1200s", "3600s"])
-        memory = self.collect("Microservice Memory (Ex. 2Gi): ",
-                              ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
-        max_instances = self.collect("Max instances (Ex. 10): ")
+        if len(timeout_default.strip()) == 0:
+            timeout = self.collect("Microservice Timeout (Ex. 600s): ",
+                                   ["60s", "300s", "600s", "900s", "1200s", "3600s"])
+        else:
+            timeout = timeout_default
+        if len(memory_default.strip()) == 0:
+            memory = self.collect("Microservice Memory (Ex. 2Gi): ",
+                                  ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
+        else:
+            memory = memory_default
+        if len(max_instances_default.strip()) == 0:
+            max_instances = self.collect("Max instances (Ex. 10): ")
+        else:
+            max_instances = max_instances_default
         cmd_str = f"gcloud run deploy {microservice_name} --source . " \
                   f"--min-instances=1 " \
                   f"--max-instances={max_instances} " \

@@ -1,6 +1,6 @@
 # INSTRUCTIONS FOR GPT4
 
-# Rewrite the CMD loop to be more succinct and use prompt_toolkit features for history
+# Make it so that there are two windows. One for the command line, and one for the output. Use prompt_toolkit
 
 from cmd import Cmd
 from prompt_toolkit import prompt
@@ -17,9 +17,26 @@ import json
 class RootCmd(Cmd):
 
     def setup_logging(self):
+        log_levels = {
+            'debug': logging.DEBUG,
+            'info': logging.INFO,
+            'warning': logging.WARNING,
+            'error': logging.ERROR,
+            'critical': logging.CRITICAL
+        }
+
         root_logger = logging.getLogger()
         if not root_logger.hasHandlers():
             root_logger.setLevel(logging.DEBUG)
+
+            for level_name, level in log_levels.items():
+                log_file_handler = logging.FileHandler(f'{level_name}.log', mode='a')
+                log_file_handler.setLevel(level)
+                log_file_formatter = logging.Formatter(fmt="%(asctime)s %(levelname)-5s %(message)s",
+                                                       datefmt="%Y-%m-%d %I:%H:%M")
+                log_file_handler.setFormatter(log_file_formatter)
+                root_logger.addHandler(log_file_handler)
+
             root_handler = logging.StreamHandler(sys.stdout)
             root_handler.setLevel(logging.DEBUG)
             root_formatter = logging.Formatter(fmt="%(asctime)s %(levelname)-5s %(message)s",
