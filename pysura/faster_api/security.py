@@ -8,7 +8,7 @@ from google.oauth2 import service_account
 from fastapi import Depends, HTTPException, status
 import google.cloud.logging
 import logging
-from typing import List, Optional, Type
+from typing import List, Type
 from pydantic import BaseModel
 import functools
 import os
@@ -32,7 +32,15 @@ logging_client.setup_logging()
 IDENTITY_PROVIDER = IdentityProvider.firebase.name
 
 
-def backend_auth(token_value: Optional[str] = Depends(event_secret)) -> None:
+def token_auth(token_value: str = Depends(user_token)) -> None:
+    token_value = token_value.replace("Bearer ", "")
+    try:
+        auth.verify_id_token(token_value, app=firestore_app)
+    except Exception as _:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+
+def backend_auth(token_value: str | None = Depends(event_secret)) -> None:
     if token_value is None or token_value != HASURA_EVENT_SECRET:
         logging.log(logging.WARNING, "HASURA_EVENT_SECRET invalid")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
@@ -40,9 +48,12 @@ def backend_auth(token_value: Optional[str] = Depends(event_secret)) -> None:
 
 
 class UserIdentity(BaseModel):
-    role: str
-    user_id: Optional[str]
-    allowed_roles: Optional[List[str]]
+    role: str | None = None
+    user_id: str | None = None
+    allowed_roles: List[str] | None = None
+
+    class Config:
+        schema_extra = {"example": {}}
 
 
 def role_verify(request: Request, allowed_roles: List[str] | None = None, identity_provider="firebase") -> UserIdentity:

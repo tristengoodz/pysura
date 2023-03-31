@@ -6,6 +6,12 @@
         "handler": "{{HASURA_MICROSERVICE_URL}}",
         "output_type": "ActionMutationPongOutput",
         "forward_client_headers": true,
+        "headers": [
+          {
+            "name": "HASURA_EVENT_SECRET",
+            "value_from_env": "HASURA_EVENT_SECRET"
+          }
+        ],
         "arguments": [
           {
             "name": "action_mutation_pong_input",
@@ -35,6 +41,12 @@
         "handler": "{{HASURA_MICROSERVICE_URL}}",
         "output_type": "ActionQueryPingOutput",
         "forward_client_headers": true,
+        "headers": [
+          {
+            "name": "HASURA_EVENT_SECRET",
+            "value_from_env": "HASURA_EVENT_SECRET"
+          }
+        ],
         "arguments": [
           {
             "name": "action_query_ping_input",
@@ -63,6 +75,12 @@
         "handler": "{{DEFAULT_SERVICE_URL1}}",
         "output_type": "ActionMutationPongOutput1",
         "forward_client_headers": true,
+        "headers": [
+          {
+            "name": "HASURA_EVENT_SECRET",
+            "value_from_env": "HASURA_EVENT_SECRET"
+          }
+        ],
         "arguments": [
           {
             "name": "action_mutation_pong_input1",
@@ -130,7 +148,7 @@
       }
     ],
     "objects": [
-            {
+      {
         "name": "ActionMutationPongOutput1",
         "fields": [
           {

@@ -1,7 +1,4 @@
-# INSTRUCTIONS FOR GPT4
-
-# Rewrite the Logger so that each log file only contains its own log level messages, but the self.root logger contains all messages
-
+# This is the command line
 from cmd import Cmd
 from prompt_toolkit import prompt
 from prompt_toolkit.history import InMemoryHistory

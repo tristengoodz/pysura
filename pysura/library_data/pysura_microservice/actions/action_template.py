@@ -1,7 +1,7 @@
 import logging
 
 from fastapi import APIRouter, Depends, Request
-from pysura.faster_api.security import backend_auth, UserIdentity, identity, IDENTITY_PROVIDER
+from pysura.faster_api.security import backend_auth, token_auth, UserIdentity, identity, IDENTITY_PROVIDER
 from pysura.faster_api.enums import ApiResponse, ClientRole
 from generated_types import *
 
@@ -15,7 +15,7 @@ SNAKE_router = APIRouter(
 
 
 @SNAKE_router.post(ROUTE,
-                   dependencies=[Depends(backend_auth)])
+                   dependencies=[Depends(backend_auth), Depends(token_auth)])
 @identity(allowed_roles=ALLOWED_ROLES,
           identity_provider=IDENTITY_PROVIDER,
           function_input=CAMELInput
