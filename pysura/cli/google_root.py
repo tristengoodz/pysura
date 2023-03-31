@@ -11,6 +11,10 @@ import site
 import shutil
 import plistlib
 import re
+import firebase_admin
+from firebase_admin import credentials, initialize_app, auth
+
+auth.create_user()
 
 
 class GoogleRoot(RootCmd):
@@ -20,6 +24,7 @@ class GoogleRoot(RootCmd):
         self.intro = "Welcome to Pysura for Google Architectures! Type help or ? to list commands."
         self.prompt = "(pysura_cli) >>> "
         self.setup_step = 0
+        self.firebase_app = None
 
     @staticmethod
     def get_site_packages_path(submodule="pysura_auth"):
@@ -1513,7 +1518,7 @@ alter table public_user
                     }
                 },
                 "email": {
-                    "enabled": False,
+                    "enabled": True,
                     "passwordRequired": False
                 },
                 "anonymous": {
@@ -2205,6 +2210,21 @@ async def SNAKE(_: Request,
         with open("hasura_metadata.json", "w") as f:
             json.dump(new_metadata, f, indent=4)
 
+    def do_load_firebase_app(self, _):
+        env = self.get_env()
+        if env.hasura is None or env.hasura.HASURA_FIREBASE_SERVICE_ACCOUNT is None:
+            self.log("No firebase service account found. Skipping firebase app setup.", level=logging.WARNING)
+            return
+        cred_dict = json.loads(env.hasura.HASURA_FIREBASE_SERVICE_ACCOUNT)
+        try:
+            firebase_app = firebase_admin.get_app()
+        except ValueError:
+            firebase_app = initialize_app(credential=credentials.Certificate(cred_dict))
+        self.firebase_app = firebase_app
+
+    def do_generate_never_expiring_token(self, role="admin"):
+        self.log(f"Generating {role} token...", level=logging.INFO)
+
     def do_setup_pysura(self, _):
         """
         Setups up a Pysura project
@@ -2274,3 +2294,43 @@ async def SNAKE(_: Request,
             self.setup_step = 24
             self.do_export_hasura_metadata(None)
             self.setup_step = 25
+            env = self.get_env()
+            assert env.hasura is not None
+            assert env.hasura_metadata is not None
+            if env.hasura.microservice_urls is not None:
+                num_services = len(env.hasura.microservice_urls)
+            else:
+                num_services = 0
+            log_str = f"""
+Pysura Project Setup Complete!
+
+Your Hasura instance can be found at:
+{env.hasura_service.status.address.url}/console
+
+Your Hasura Admin Secret is:
+{env.hasura.HASURA_GRAPHQL_ADMIN_SECRET}
+
+The default microservice can be found at:
+{env.default_microservice_url}
+
+The event secret for the all attached microservices is:
+{env.hasura.HASURA_EVENT_SECRET}
+
+You have {num_services} additional microservice(s) deployed.
+"""
+
+            if num_services > 0:
+                log_str += "\tMicroservice URLs:\n"
+                microservice_pieces = []
+                for url in env.hasura.microservice_urls:
+                    log_str += f"\t\t{url.url}\n"
+                    microservice_pieces.append(url.url_wrapper)
+                    actions = [action for action in env.hasura_metadata.actions if
+                               action.definition.handler == url.url_wrapper]
+                    log_str += f"\t\t\tThis microservice has {len(actions)} actions:\n"
+                    for action in actions:
+                        log_str += f"\t\t\t{action.name}\n"
+            self.log(log_str, level=logging.INFO)
+            self.do_load_firebase_app(None)
+            self.do_generate_never_expiring_token(role="admin")
+            self.do_generate_never_expiring_token(role="user")
