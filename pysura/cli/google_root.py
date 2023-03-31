@@ -67,17 +67,17 @@ class GoogleRoot(RootCmd):
         try:
             choice_list = [i[default] for i in gcloud_list]
         except KeyError:
-            self.log(f"Invalid default: {default}")
+            self.log(f"Invalid default: {default}", level=logging.ERROR)
             return
         try:
             if len(gcloud_list) > 0:
                 choice = self.collect(prompt_str, choice_list)
                 if choice not in choice_list:
-                    self.log("Invalid choice.")
+                    self.log("Invalid choice.", logging.ERROR)
                     return
                 return choice
             else:
-                self.log("No items found.")
+                self.log("No items found.", logging.ERROR)
         except Exception as e:
             self.log(str(e), logging.ERROR)
 
@@ -103,11 +103,12 @@ class GoogleRoot(RootCmd):
         if "--format" not in command_str:
             command_str += " --format=json"
         response = os.popen(command_str).read()
+        self.log(response, logging.DEBUG)
         gcloud_list = json.loads(response)
         choice = None
         if choice is None:
             for i, gcloud_dict in enumerate(gcloud_list):
-                self.log(f"\n{i}\t{gcloud_dict.get('name', None)}:\n{json.dumps(gcloud_dict, indent=4)}")
+                self.log(f"\n{i}\t{gcloud_dict.get('name', None)}:\n{json.dumps(gcloud_dict, indent=4)}", logging.INFO)
             choice = self.collect("Select a number from the list above: ").strip()
             choice = int(choice)
         if choice is not None:
@@ -115,7 +116,7 @@ class GoogleRoot(RootCmd):
             try:
                 env_item = model(**env_item)
             except ValidationError:
-                self.log("The selected item has inconsistent metadata.")
+                self.log("The selected item has inconsistent metadata.", logging.ERROR)
                 return self.gcloud_list_choice(command_str, model)
             env = self.get_env()
             env[env_names["selected"]] = env_item
@@ -127,7 +128,7 @@ class GoogleRoot(RootCmd):
         Exits the application.
         Usage: exit
         """
-        self.log("Exiting...")
+        self.log("Exiting...", level=logging.INFO)
         exit(0)
 
     def do_quit(self, _):
@@ -135,7 +136,7 @@ class GoogleRoot(RootCmd):
         Exits the application.
         Usage: quit
         """
-        self.log("Exiting...")
+        self.log("Exiting...", level=logging.INFO)
         exit(0)
 
     def do_gcloud_login(self, check_logged_in=False, auto_advance=True):
@@ -147,11 +148,11 @@ class GoogleRoot(RootCmd):
             check_logged_in = False
         if check_logged_in:
             env = self.get_env()
-            self.log("Checking if already logged into gcloud...")
+            self.log("Checking if already logged into gcloud...", level=logging.INFO)
             if env.gcloud_logged_in:
-                self.log("Already logged into gcloud!")
+                self.log("Already logged into gcloud!", level=logging.INFO)
                 return
-        self.log("Logging into gcloud...")
+        self.log("Logging into gcloud...", level=logging.INFO)
         cmd_str = "gcloud auth login"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
@@ -256,7 +257,7 @@ class GoogleRoot(RootCmd):
         use_org = use_organization.strip().lower() == "y"
         if use_org:
             if env.organization is None:
-                self.log("No organization selected.")
+                self.log("No organization selected.", level=logging.ERROR)
                 return
         arg_len = len(project_id.strip())
         if arg_len == 0:
@@ -315,7 +316,7 @@ class GoogleRoot(RootCmd):
         """
         env = self.get_env()
         if env.project is None:
-            self.log("No project selected.")
+            self.log("No project selected.", level=logging.ERROR)
             return
         arg_len = len(network_id.strip())
         if arg_len == 0:
@@ -375,10 +376,10 @@ class GoogleRoot(RootCmd):
         """
         env = self.get_env()
         if env.project is None:
-            self.log("No project selected.")
+            self.log("No project selected.", level=logging.ERROR)
             return
         if env.network is None:
-            self.log("No network selected.")
+            self.log("No network selected.", level=logging.ERROR)
             return
         arg_len = len(address_id.strip())
         if arg_len == 0:
@@ -408,13 +409,13 @@ class GoogleRoot(RootCmd):
                 if address.name.split('/')[-1] == address_name:
                     address_selected = address
             if address_selected is None:
-                self.log("Address not found.")
+                self.log("Address not found.", level=logging.ERROR)
                 return
             env.address = address_selected
             env.addresses = address_set
             self.set_env(env)
             if address_selected is None:
-                self.log("Address not found.")
+                self.log("Address not found.", level=logging.ERROR)
                 return
         else:
             self.user_input_no_loop(self.do_gcloud_create_address)
@@ -426,10 +427,10 @@ class GoogleRoot(RootCmd):
         """
         env = self.get_env()
         if env.project is None:
-            self.log("No project selected.")
+            self.log("No project selected.", level=logging.ERROR)
             return
         if env.network is None:
-            self.log("No network selected.")
+            self.log("No network selected.", level=logging.ERROR)
             return
         self.log("Choosing address...")
         address, addresses = self.gcloud_list_choice(f"gcloud compute addresses list "
@@ -446,13 +447,13 @@ class GoogleRoot(RootCmd):
         """
         env = self.get_env()
         if env.project is None:
-            self.log("No project selected.")
+            self.log("No project selected.", level=logging.ERROR)
             return
         if env.network is None:
-            self.log("No network selected.")
+            self.log("No network selected.", level=logging.ERROR)
             return
         if env.address is None:
-            self.log("No address selected.")
+            self.log("No address selected.", level=logging.ERROR)
             return
 
         arg_len = len(peering_id.strip())
@@ -482,7 +483,7 @@ class GoogleRoot(RootCmd):
                 if peering_name in peering_data.reservedPeeringRanges:
                     peering_selected = peering_data
             if peering_selected is None:
-                self.log("Peering not found.")
+                self.log("Peering not found.", level=logging.ERROR)
                 return
             env.peering = peering_selected
             env.peerings = peering_set
@@ -497,13 +498,13 @@ class GoogleRoot(RootCmd):
         """
         env = self.get_env()
         if env.project is None:
-            self.log("No project selected.")
+            self.log("No project selected.", level=logging.ERROR)
             return
         if env.network is None:
-            self.log("No network selected.")
+            self.log("No network selected.", level=logging.ERROR)
             return
         if env.address is None:
-            self.log("No address selected.")
+            self.log("No address selected.", level=logging.ERROR)
             return
         self.log("Choosing peering...")
         peering, peerings = self.gcloud_list_choice(
@@ -523,16 +524,16 @@ class GoogleRoot(RootCmd):
         """
         env = self.get_env()
         if env.project is None:
-            self.log("No project selected.")
+            self.log("No project selected.", level=logging.ERROR)
             return
         if env.network is None:
-            self.log("No network selected.")
+            self.log("No network selected.", level=logging.ERROR)
             return
         if env.address is None:
-            self.log("No address selected.")
+            self.log("No address selected.", level=logging.ERROR)
             return
         if env.peering is None:
-            self.log("No peering selected.")
+            self.log("No peering selected.", level=logging.ERROR)
             return
 
         arg_len = len(firewall_id.strip())
@@ -584,10 +585,10 @@ class GoogleRoot(RootCmd):
                                   auto_advance=True):
         env = self.get_env()
         if env.project is None:
-            self.log("No project selected.")
+            self.log("No project selected.", level=logging.ERROR)
             return
         if env.network is None:
-            self.log("No network selected.")
+            self.log("No network selected.", level=logging.ERROR)
             return
 
         arg_len = len(database_id.strip())
@@ -624,13 +625,13 @@ class GoogleRoot(RootCmd):
         else:
             zone = zone_default
         if zone is None:
-            self.log("No zone selected.")
+            self.log("No zone selected.", level=logging.ERROR)
             return
         if len(availability_type_default.strip()) == 0:
             availability_types = ["regional", "zonal"]
             availability_type = self.collect("Enter the availability type (regional/zonal): ", availability_types)
             if availability_type not in availability_types:
-                self.log("Invalid availability type.")
+                self.log("Invalid availability type.", level=logging.ERROR)
                 return
         else:
             availability_type = availability_type_default
@@ -674,7 +675,7 @@ class GoogleRoot(RootCmd):
                 db_selected = db_data
 
         if db_selected is None:
-            self.log("Database not found.")
+            self.log("Database not found.", level=logging.ERROR)
             return
 
         db_creds = DatabaseCredential()
@@ -708,13 +709,13 @@ class GoogleRoot(RootCmd):
         """
         env = self.get_env()
         if env.project is None:
-            self.log("No project selected.")
+            self.log("No project selected.", level=logging.ERROR)
             return
         if env.network is None:
-            self.log("No network selected.")
+            self.log("No network selected.", level=logging.ERROR)
             return
         if env.database is None:
-            self.log("No database selected.")
+            self.log("No database selected.", level=logging.ERROR)
             return
 
         if len(range_default.strip()) == 0:
@@ -752,7 +753,7 @@ class GoogleRoot(RootCmd):
                 connector_selected = connector_data
 
         if connector_selected is None:
-            self.log("Connector not found.")
+            self.log("Connector not found.", level=logging.ERROR)
             return
         env.connector = connector_selected
         env.connectors = connector_set
@@ -765,13 +766,13 @@ class GoogleRoot(RootCmd):
         """
         env = self.get_env()
         if env.project is None:
-            self.log("No project selected.")
+            self.log("No project selected.", level=logging.ERROR)
             return
         if env.network is None:
-            self.log("No network selected.")
+            self.log("No network selected.", level=logging.ERROR)
             return
         if env.database is None:
-            self.log("No database selected.")
+            self.log("No database selected.", level=logging.ERROR)
             return
 
         cmd_str = f"gcloud compute networks vpc-access connectors list " \
@@ -791,7 +792,7 @@ class GoogleRoot(RootCmd):
                 connector_selected = connector_data
 
         if connector_selected is None:
-            self.log("Connector not found.")
+            self.log("Connector not found.", level=logging.ERROR)
             return
 
         env.connector = connector_selected
@@ -841,7 +842,7 @@ class GoogleRoot(RootCmd):
             if secret_data.name.split("/")[-1] == secret_key:
                 secret_selected = secret_data
         if secret_selected is None:
-            self.log("Secret not found.")
+            self.log("Secret not found.", level=logging.ERROR)
             return
         env.secrets = secret_set
         self.set_env(env)
@@ -858,7 +859,7 @@ class GoogleRoot(RootCmd):
                 env.hasura_service_account = account_data
             service_accounts.append(account_data)
         if env.hasura_service_account is None:
-            self.log("No service account found.")
+            self.log("No service account found.", level=logging.ERROR)
             return
         env.service_accounts = service_accounts
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
@@ -867,29 +868,29 @@ class GoogleRoot(RootCmd):
                        f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
-        os.popen(cmd_log_str).read()
+        self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
                        f"--role=roles/run.admin "
                        f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
-        os.popen(cmd_log_str).read()
+        self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
         cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
                        f"--member=serviceAccount:{env.hasura_service_account.email} "
                        f"--role=roles/secretmanager.secretAccessor "
                        f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
-        os.popen(cmd_log_str).read()
+        self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
 
     def do_gcloud_deploy_hasura(self, timeout_default="600s", memory_default="2Gi", max_instances_default="10"):
         env = self.get_env()
         if env.project is None:
-            self.log("No project selected.")
+            self.log("No project selected.", level=logging.ERROR)
             return
         if env.connector is None:
-            self.log("No connector selected.")
+            self.log("No connector selected.", level=logging.ERROR)
             return
         if env.hasura is None:
             self.do_update_default_compute_engine_service_account(None)
@@ -1033,10 +1034,10 @@ class GoogleRoot(RootCmd):
         """
         env = self.get_env()
         if env.hasura_service_url is None:
-            self.log("No metadata URL set. Please set one with set_hasura_metadata_url.")
+            self.log("No metadata URL set. Please set one with set_hasura_metadata_url.", level=logging.ERROR)
             return
         if env.hasura_admin_secret is None:
-            self.log("No admin secret set. Please set one with set_hasura_admin_secret.")
+            self.log("No admin secret set. Please set one with set_hasura_admin_secret.", level=logging.ERROR)
             return
         metadata_url = env.hasura_service_url + "/v1/metadata"
         cmd_str = f"""curl -d'{{"type": "export_metadata", "args": {{}}}}' {metadata_url} -H "X-Hasura-Admin-Secret: {
@@ -1048,10 +1049,10 @@ class GoogleRoot(RootCmd):
         self.log("Exporting Hasura metadata...")
         env = self.get_env()
         if env.hasura_service_url is None:
-            self.log("No metadata URL set. Please set one with set_hasura_metadata_url.")
+            self.log("No metadata URL set. Please set one with set_hasura_metadata_url.", level=logging.ERROR)
             return
         if env.hasura_admin_secret is None:
-            self.log("No admin secret set. Please set one with set_hasura_admin_secret.")
+            self.log("No admin secret set. Please set one with set_hasura_admin_secret.", level=logging.ERROR)
             return
         metadata_url = env.hasura_service_url + "/v1/metadata"
         with open("hasura_metadata.json", "r") as f:
@@ -1096,7 +1097,7 @@ class GoogleRoot(RootCmd):
             if db_instance is not None and db_credentials is not None:
                 break
         if db_instance is None or db_credentials is None:
-            self.log("Invalid database id.")
+            self.log("Invalid database id.", level=logging.ERROR)
             return
         cmd_str = "curl ifconfig.me"
         self.log(cmd_str, level=logging.DEBUG)
@@ -1110,10 +1111,10 @@ class GoogleRoot(RootCmd):
     def do_create_default_user_table(self, _):
         env = self.get_env()
         if env.database is None:
-            self.log("No database set.")
+            self.log("No database set.", level=logging.ERROR)
             return
         if env.database_credentials is None:
-            self.log("No database credentials set.")
+            self.log("No database credentials set.", level=logging.ERROR)
             return
 
         host = None
@@ -1122,7 +1123,7 @@ class GoogleRoot(RootCmd):
                 host = ip_addr.ipAddress
 
         if host is None:
-            self.log("No primary IP address found.")
+            self.log("No primary IP address found.", level=logging.ERROR)
             return
 
         conn = self.get_database_connection(
@@ -1168,6 +1169,7 @@ create table public_user
 
 alter table public_user
     owner to postgres;"""
+        self.log(db_string, level=logging.DEBUG)
         cursor = conn.cursor()
         cursor.execute(db_string)
         cursor.execute("insert into \"ENUM_ROLE\" (value) values ('admin')")
@@ -1334,13 +1336,13 @@ alter table public_user
     def do_gcloud_create_auth_service_account(self, _):
         env = self.get_env()
         if env.auth_service_account is not None:
-            self.log(f"Service account already created: {env.auth_service_account.email}")
+            self.log(f"Service account already created: {env.auth_service_account.email}", level=logging.DEBUG)
             return
         if env.project is None:
-            self.log("No project set. Please set one with gcloud_create_project.")
+            self.log("No project set. Please set one with gcloud_create_project.", level=logging.ERROR)
             return
         if env.hasura_service is None:
-            self.log("No service account found.")
+            self.log("No service account found.", level=logging.ERROR)
             return
         cmd_log_str = f"gcloud iam service-accounts create pysura-admin " \
                       f"--project={env.project.name.split('/')[-1]} " \
@@ -1366,19 +1368,19 @@ alter table public_user
                   f"--role=roles/firebase.admin " \
                   f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
-        os.popen(cmd_str).read()
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
                   f"--member=serviceAccount:{env.auth_service_account.email} " \
                   f"--role=roles/cloudbuild.builds.builder " \
                   f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
-        os.popen(cmd_str).read()
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
                   f"--member=serviceAccount:{env.auth_service_account.email} " \
                   f"--role=roles/firebaseauth.admin " \
                   f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
-        os.popen(cmd_str).read()
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         cmd_str = f"gcloud iam service-accounts keys create admin.json " \
                   f"--iam-account={env.auth_service_account.email} " \
                   f"--format=json"
@@ -1426,7 +1428,7 @@ alter table public_user
                        f"--format=json"
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
-        os.popen(cmd_log_str).read()
+        self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
         cmd_str = f'gcloud functions deploy on_user_create ' \
                   f'--runtime=python39 ' \
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.create ' \
@@ -1434,7 +1436,7 @@ alter table public_user
                   f'--min-instances=1 ' \
                   f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
-        os.popen(cmd_str).read()
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         cmd_str = f'gcloud functions deploy on_user_delete ' \
                   f'--runtime=python39 ' \
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.delete ' \
@@ -1442,7 +1444,7 @@ alter table public_user
                   f'--min-instances=1 ' \
                   f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
-        os.popen(cmd_str).read()
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         os.chdir("..")
         cmd_str = f"gcloud functions list " \
                   f"--project={env.project.name.split('/')[-1]} " \
@@ -1490,12 +1492,12 @@ alter table public_user
                   f"'https://identitytoolkit.googleapis.com/v2/projects" \
                   f"/{env.project.name.split('/')[-1]}/identityPlatform:initializeAuth'"
         self.log(cmd_str, level=logging.DEBUG)
-        os.popen(cmd_str).read()
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         cmd_str = f"curl -H 'Authorization:Bearer {access_token}' -H 'Content-Type:application/json' " \
                   f"'https://identitytoolkit.googleapis.com/admin/v2/projects" \
                   f"/{env.project.name.split('/')[-1]}/config'"
         self.log(cmd_str, level=logging.DEBUG)
-        os.popen(cmd_str).read()
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         body_data = {
             "authorizedDomains": [
                 "localhost",
@@ -1531,7 +1533,7 @@ alter table public_user
                   f"Config.signIn.allowDuplicateEmails' " \
                   f"-d '{json.dumps(body_data)}'"
         self.log(cmd_str, level=logging.DEBUG)
-        os.popen(cmd_str).read()
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         cmd_str = "gcloud auth login"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
@@ -2129,7 +2131,7 @@ async def SNAKE(_: Request,
                   f"--allow-unauthenticated " \
                   f"--no-cpu-throttling " \
                   f"--project={env.project.name.split('/')[-1]}"
-        self.log(cmd_str, level=logging.INFO)
+        self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         services = json.loads(os.popen(f"gcloud run services list "
                                        f"--project={env.project.name.split('/')[-1]} "

@@ -1,6 +1,6 @@
 # INSTRUCTIONS FOR GPT4
 
-# Make it so that there are two windows. One for the command line, and one for the output. Use prompt_toolkit
+# Rewrite the Logger so that each log file only contains its own log level messages, but the self.root logger contains all messages
 
 from cmd import Cmd
 from prompt_toolkit import prompt
@@ -38,10 +38,16 @@ class RootCmd(Cmd):
                 log_file_formatter = logging.Formatter(fmt="%(asctime)s %(levelname)-5s %(message)s",
                                                        datefmt="%Y-%m-%d %I:%H:%M")
                 log_file_handler.setFormatter(log_file_formatter)
+
+                level_logger = logging.getLogger(level_name)
+                level_logger.setLevel(level)
+                level_logger.addHandler(log_file_handler)
+                level_logger.propagate = False
+
                 root_logger.addHandler(log_file_handler)
 
             root_handler = logging.StreamHandler(sys.stdout)
-            root_handler.setLevel(logging.DEBUG)
+            root_handler.setLevel(logging.INFO)
             root_formatter = logging.Formatter(fmt="%(asctime)s %(levelname)-5s %(message)s",
                                                datefmt="%Y-%m-%d %I:%H:%M")
             root_handler.setFormatter(root_formatter)
