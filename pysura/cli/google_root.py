@@ -14,8 +14,6 @@ import re
 import firebase_admin
 from firebase_admin import credentials, initialize_app, auth
 
-auth.create_user()
-
 
 class GoogleRoot(RootCmd):
 
