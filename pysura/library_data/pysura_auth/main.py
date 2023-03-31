@@ -1,6 +1,4 @@
-from flask.wrappers import Request
 import firebase_admin
-import functions_framework
 from google.cloud import secretmanager
 from python_graphql_client import GraphqlClient
 from requests.exceptions import ConnectionError
@@ -68,7 +66,12 @@ def on_user_create(data, context):
     print(context)
     try:
         user_uid = data["uid"]
-        user_phone = data["phoneNumber"]
+        user_phone = data.get("phoneNumber", None)
+        if user_phone is None:
+            user_phone = data.get("email", None)
+        if user_phone is None:
+            print("No phone or email")
+            return 400, "ERROR"
         variables = {"user_id": user_uid, "user_phone": user_phone}
         response = execute(GQL.CREATE_USER, variables)
         if response.get("errors", None) is not None:
