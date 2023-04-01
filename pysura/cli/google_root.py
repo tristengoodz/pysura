@@ -2467,7 +2467,7 @@ async def SNAKE(_: Request,
                     new_input_objects.append(obj)
             elif key == "sources":
                 for event_trigger in new_hasura_metadata["event_triggers"]:
-                    source_name, table_name, trigger_name = event_trigger.pop('location').split("_")
+                    source_name, table_name, trigger_name = event_trigger.pop('location').split(".")
                     for source in value:
                         if source["name"] == source_name:
                             for table in source.get("tables", []):
