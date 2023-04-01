@@ -13,6 +13,24 @@ import plistlib
 import re
 import firebase_admin
 from firebase_admin import credentials, initialize_app, auth
+from python_graphql_client import GraphqlClient
+from requests.exceptions import ConnectionError
+
+
+class Gql:
+    GET_USER_ID_BY_PHONE_GQL = """query GetUserIdByPhone($phone_number: String = "") {
+  user(where: {user_phone: {_eq: $phone_number}}, limit: 1) {
+    user_id
+  }
+}
+"""
+
+    UPDATE_USER_ROLE_GQL = """mutation UpdateUserRole($user_id: String = "", $role: ENUM_ROLE_enum = admin) {
+  update_user_by_pk(pk_columns: {user_id: $user_id}, _set: {role: $role}) {
+    user_id
+  }
+}
+"""
 
 
 class GoogleRoot(RootCmd):
@@ -23,6 +41,39 @@ class GoogleRoot(RootCmd):
         self.prompt = "(pysura_cli) >>> "
         self.setup_step = 0
         self.firebase_app = None
+        self.graphql_client = None
+
+    def get_graphql_client(self):
+        env = self.get_env()
+        if env.hasura_service_url is None:
+            self.log("Hasura service url is not set!", logging.ERROR)
+            return None
+        if env.hasura is None or env.hasura.HASURA_GRAPHQL_ADMIN_SECRET is None:
+            self.log("Hasura admin secret is not set!", logging.ERROR)
+            return None
+        graphql_url = f"{env.hasura_service_url}/v1/graphql"
+        headers = {
+            "Content-Type": "application/json",
+            "X-Hasura-Admin-Secret": env.hasura.HASURA_GRAPHQL_ADMIN_SECRET
+        }
+        self.graphql_client = GraphqlClient(endpoint=graphql_url, headers=headers)
+        return self.graphql_client
+
+    def execute_graphql(self, gql_str, variables):
+        response = None
+        client = self.graphql_client
+        if client is None:
+            client = self.get_graphql_client()
+        try:
+            response = client.execute(query=gql_str, variables=variables)
+        except ConnectionError as e:
+            self.log(str(e), logging.ERROR)
+            client = self.get_graphql_client()
+            response = client.execute(query=gql_str, variables=variables)
+        except Exception as e:
+            self.log(str(e), logging.ERROR)
+        finally:
+            return response
 
     @staticmethod
     def get_site_packages_path(submodule="pysura_auth"):
@@ -1964,7 +2015,9 @@ SNAKE_router = APIRouter(
                            require_event_secret=True,
                            allowed_roles=ALLOWED_ROLES
                        ))
-                   ])
+                   ],
+                   response_model=CAMELOutput
+                   )
 async def action_base_generator_mutation(_: Request,
                                          SNAKE_input: CAMELInput | None = None,
                                          provider: Provider | None = Depends(PysuraProvider(
@@ -2220,8 +2273,23 @@ async def action_base_generator_mutation(_: Request,
             firebase_app = initialize_app(credential=credentials.Certificate(cred_dict))
         self.firebase_app = firebase_app
 
-    def do_generate_token(self, role="admin"):
-        pass
+    def do_generate_token(self, role="admin", uid="uid"):
+        if self.firebase_app is None:
+            self.log("Firebase app not initialized. Skipping token generation.", level=logging.WARNING)
+            return
+        additional_claims = {
+            "https://hasura.io/jwt/claims": {
+                "x-hasura-default-role": role,
+                "x-hasura-allowed-roles": [
+                    role
+                ],
+                "x-hasura-user-id": uid
+            }
+        }
+        custom_token = auth.create_custom_token(uid, additional_claims)
+        log_str = f"Generated token for role {role} and uid {uid}\n{custom_token}"
+        self.log(log_str, level=logging.INFO)
+        return custom_token
 
     def do_setup_pysura(self, _):
         """
@@ -2293,6 +2361,8 @@ async def action_base_generator_mutation(_: Request,
             self.do_export_hasura_metadata(None)
             self.setup_step = 25
             env = self.get_env()
+            self.log(f"Pysura App is ready to run!, open the flutter_frontend folder in Android Studio!",
+                     level=logging.INFO)
             assert env.hasura is not None
             assert env.hasura_metadata is not None
             if env.hasura.microservice_urls is not None:
@@ -2308,9 +2378,9 @@ The default microservice can be found at:
             actions = [action for action in env.hasura_metadata.actions if
                        action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
             if len(actions) > 0:
-                log_str += f"""The default microservice has {len(actions)} actions:"""
+                log_str += f"""The default microservice has {len(actions)} actions:\n"""
                 for action in actions:
-                    log_str += f"""\n\t{action.name}\n\t"""
+                    log_str += f"""\t{action.name}\n\t"""
 
             log_str += f"""You have {num_services} additional microservice(s) deployed."""
             if num_services > 0:
@@ -2321,9 +2391,9 @@ The default microservice can be found at:
                            action.definition.handler == microservice_url.url_wrapper]
                 log_str += f"""\t{microservice_url.url}\n"""
                 if len(actions) > 0:
-                    log_str += f"""\t\t{len(actions)} action(s):"""
+                    log_str += f"""\t\t{len(actions)} action(s):\n"""
                     for action in actions:
-                        log_str += f"""\n\t\t\t{action.name} -> {None}\n\t\t\t"""
+                        log_str += f"""\t\t\t{action.name} -> {None}\n\t\t\t"""
 
             log_str += f"""
 Your Hasura instance can be found at:
@@ -2336,4 +2406,113 @@ The event secret for the all attached microservices is:
 {env.hasura.HASURA_EVENT_SECRET}"""
             self.log(log_str, level=logging.INFO)
             self.do_load_firebase_app(None)
-            self.do_generate_token("user")
+            env = self.get_env()
+            add_admin = False
+            add_user = False
+            test_phone_numbers = env.test_phone_numbers
+            if isinstance(test_phone_numbers, list):
+                for test_phone_number in env.test_phone_numbers:
+                    if test_phone_number.role == "admin":
+                        add_admin = False
+                    elif test_phone_number.role == "user":
+                        add_user = False
+            else:
+                test_phone_numbers = []
+
+            if add_admin:
+                self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
+                         level=logging.INFO)
+                self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                         f"/providers",
+                         level=logging.INFO
+                         )
+                admin_phone = self.collect("What phone number did you add?: ")
+                while not self.confirm_loop(admin_phone):
+                    self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
+                             level=logging.INFO)
+                    self.log(
+                        f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                        f"/providers",
+                        level=logging.INFO
+                    )
+                    admin_phone = self.collect("What phone number did you add?: ")
+                admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
+                while not self.confirm_loop(admin_code):
+                    admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
+
+                self.log("Please login to the app with the phone number you just added.", level=logging.INFO)
+                ready = self.collect("Are you ready to continue? (y/n): ")
+                while ready != "y":
+                    ready = self.collect("Are you ready to continue? (y/n): ")
+                user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": admin_phone})
+                if user_data.get("data", None) is None:
+                    self.log("Could not find user, please try again.", level=logging.ERROR)
+                    return
+                if len(user_data["data"]["user"]) == 0:
+                    self.log("Could not find user, please try again.", level=logging.ERROR)
+                    return
+                user_id = user_data["data"]["user"][0]["user_id"]
+                self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
+                admin_number = TestPhoneNumber(
+                    role="admin",
+                    phone_number=admin_phone,
+                    code=admin_code,
+                    uid=user_id
+                )
+                test_phone_numbers.append(admin_number)
+
+            if add_user:
+                self.log("Please add a test phone number to be granted USER access in the firebase console.",
+                         level=logging.INFO)
+                self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                         f"/providers",
+                         level=logging.INFO
+                         )
+                user_phone = self.collect("What phone number did you add?: ")
+                while not self.confirm_loop(user_phone):
+                    self.log("Please add a test phone number to be granted USER access in the firebase console.",
+                             level=logging.INFO)
+                    self.log(
+                        f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                        f"/providers",
+                        level=logging.INFO
+                    )
+                    user_phone = self.collect("What phone number did you add?: ")
+                user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
+                while not self.confirm_loop(user_code):
+                    user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
+
+                self.log("Please login to the app with the phone number you just added.", level=logging.INFO)
+                ready = self.collect("Are you ready to continue? (y/n): ")
+                while ready != "y":
+                    ready = self.collect("Are you ready to continue? (y/n): ")
+                user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": user_phone})
+                if user_data.get("data", None) is None:
+                    self.log("Could not find user, please try again.", level=logging.ERROR)
+                    return
+                if len(user_data["data"]["user"]) == 0:
+                    self.log("Could not find user, please try again.", level=logging.ERROR)
+                    return
+                user_id = user_data["data"]["user"][0]["user_id"]
+                self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
+                user_number = TestPhoneNumber(
+                    role="user",
+                    phone_number=user_phone,
+                    code=user_code,
+                    uid=user_id
+                )
+                test_phone_numbers.append(user_number)
+            if isinstance(env.test_phone_numbers, list) and len(env.test_phone_numbers) < len(test_phone_numbers):
+                env.test_phone_numbers = test_phone_numbers
+                self.set_env(env)
+            admin_number = None
+            user_number = None
+            for phone_number in env.test_phone_numbers:
+                if phone_number.role == "admin":
+                    admin_number = phone_number
+                elif phone_number.role == "user":
+                    user_number = phone_number
+            if admin_number is not None:
+                self.do_generate_token(role="admin", uid=admin_number.uid)
+            if user_number is not None:
+                self.do_generate_token(role="user", uid=user_number.uid)

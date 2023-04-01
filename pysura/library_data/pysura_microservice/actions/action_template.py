@@ -23,7 +23,9 @@ SNAKE_router = APIRouter(
                            require_event_secret=True,
                            allowed_roles=ALLOWED_ROLES
                        ))
-                   ])
+                   ],
+                   response_model=CAMELOutput
+                   )
 async def action_base_generator_mutation(_: Request,
                                          SNAKE_input: CAMELInput | None = None,
                                          provider: Provider | None = Depends(PysuraProvider(

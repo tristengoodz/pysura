@@ -583,6 +583,13 @@ class HasuraMetadata(DictModel):
     custom_types: HasuraMetadataCustomTypes | None = None
 
 
+class TestPhoneNumber(DictModel):
+    role: str | None = None
+    phone_number: str | None = None
+    code: str | None = None
+    uid: str | None = None
+
+
 class GooglePysuraEnv(DictModel):
     gcloud_cli_installed: bool = False
     gcloud_alpha_cli_installed: bool = False
@@ -615,7 +622,6 @@ class GooglePysuraEnv(DictModel):
     service_accounts: List[GoogleServiceAccount] | None = None
     hasura: Hasura | None = None
     hasura_admin_secret: str | None = None
-    hasura_backend_event_secret: str | None = None
     hasura_service: GoogleService | None = None
     hasura_service_url: str | None = None
     hasura_service_account: GoogleServiceAccount | None = None
@@ -627,3 +633,4 @@ class GooglePysuraEnv(DictModel):
     hasura_metadata: HasuraMetadata | None = None
     default_microservice: GoogleService | None = None
     default_microservice_url: str | None = None
+    test_phone_numbers: List[TestPhoneNumber] | None = None
