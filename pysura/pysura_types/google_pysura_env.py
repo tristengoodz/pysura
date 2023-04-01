@@ -239,7 +239,6 @@ class Hasura(DictModel):
     HASURA_GRAPHQL_URL_ROOT: str | None = None
     HASURA_EVENT_SECRET: str | None = None
     HASURA_MICROSERVICE_URL: str | None = None
-    HASURA_FIREBASE_SERVICE_ACCOUNT: str | None = None
     microservice_urls: List[MicroserviceUrl] | None = None
     vpc_connector: str | None = None
     timeout: str | None = None

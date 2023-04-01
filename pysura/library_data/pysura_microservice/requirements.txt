@@ -57,3 +57,4 @@ uvicorn>=0.21.1
 websockets>=10.4
 yarl>=1.8.2
 pysura>=0.99.10
+Pillow>=9.5.0

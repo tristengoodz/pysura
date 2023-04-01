@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.99.22",
+    version="0.99.23",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -73,6 +73,7 @@ setup(
         "firebase-admin",
         "uvicorn",
         "requests",
-        "gunicorn"
+        "gunicorn",
+        "Pillow"
     ]
 )

@@ -283,6 +283,9 @@ class GoogleRoot(RootCmd):
         cmd_str = f"gcloud services enable artifactregistry.googleapis.com --project={project_id}"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        cmd_str = f"gcloud services enable storage-api.googleapis.com --project={project_id}"
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
         cmd_str = f"gcloud services list --project={project_id} --format=json"
         self.log(cmd_str, level=logging.DEBUG)
         response = os.popen(cmd_str).read()
@@ -2174,7 +2177,7 @@ async def SNAKE(_: Request,
         event_routers = []
         for event_trigger in event_triggers:
             event_init += f"from events.{event_trigger['name']} import {event_trigger['name']}_router\n"
-            event_routers.append(f"    {event_trigger['name']}_router,")
+            event_routers.append(f"    {event_trigger['name']}_router")
             snake_replace = event_trigger["name"]
             new_event_template = event_trigger_template.replace("SNAKE", snake_replace)
             rewrite = False
@@ -2344,6 +2347,8 @@ async def SNAKE(_: Request,
                                 os.mkdir(dir_path)
                             if f != "__init__.py" and microservice_name == "default":
                                 default_actions.append(f.replace(".py", ""))
+                            if microservice_name != "default":
+                                continue
                             shutil.copy(os.path.join(root, f), dir_path)
                     elif "crons" in root:
                         if f != "cron_template.py":
@@ -2352,6 +2357,8 @@ async def SNAKE(_: Request,
                                 os.mkdir(dir_path)
                             if f != "__init__.py" and microservice_name == "default":
                                 default_crons.append(f.replace(".py", ""))
+                            if microservice_name != "default":
+                                continue
                             shutil.copy(os.path.join(root, f), dir_path)
                     elif "events" in root:
                         if f != "event_template.py":
@@ -2360,6 +2367,8 @@ async def SNAKE(_: Request,
                                 os.mkdir(dir_path)
                             if f != "__init__.py" and microservice_name == "default":
                                 default_events.append(f.replace(".py", ""))
+                            if microservice_name != "default":
+                                continue
                             shutil.copy(os.path.join(root, f), dir_path)
         if microservice_name == "default":
             with open("pysura_metadata.json", "r") as f:
@@ -2446,7 +2455,6 @@ async def SNAKE(_: Request,
         new_metadata = {}
         new_actions = []
         new_objects = []
-        new_cron_triggers = []
         new_input_objects = []
         for key, value in metadata.items():
             if key == "actions":
@@ -2522,10 +2530,13 @@ async def SNAKE(_: Request,
 
     def do_load_firebase_app(self, _):
         env = self.get_env()
-        if env.hasura is None or env.hasura.HASURA_FIREBASE_SERVICE_ACCOUNT is None:
+        if env.auth_service_account is None:
             self.log("No firebase service account found. Skipping firebase app setup.", level=logging.WARNING)
             return
-        cred_dict = json.loads(env.hasura.HASURA_FIREBASE_SERVICE_ACCOUNT)
+        if env.auth_service_account.key_file is None:
+            self.log("No firebase service account found. Skipping firebase app setup.", level=logging.WARNING)
+            return
+        cred_dict = env.auth_service_account.key_file
         try:
             firebase_app = firebase_admin.get_app()
         except ValueError:
@@ -2666,11 +2677,11 @@ The event secret for the all attached microservices is:
             self.log(log_str, level=logging.INFO)
             self.do_load_firebase_app(None)
             env = self.get_env()
-            add_admin = False
-            add_user = False
+            add_admin = True
+            add_user = True
             test_phone_numbers = env.test_phone_numbers
             if isinstance(test_phone_numbers, list):
-                for test_phone_number in env.test_phone_numbers:
+                for test_phone_number in test_phone_numbers:
                     if test_phone_number.role == "admin":
                         add_admin = False
                     elif test_phone_number.role == "user":
@@ -2766,11 +2777,12 @@ The event secret for the all attached microservices is:
                 self.set_env(env)
             admin_number = None
             user_number = None
-            for phone_number in env.test_phone_numbers:
-                if phone_number.role == "admin":
-                    admin_number = phone_number
-                elif phone_number.role == "user":
-                    user_number = phone_number
+            if isinstance(env.test_phone_numbers, list):
+                for phone_number in env.test_phone_numbers:
+                    if phone_number.role == "admin":
+                        admin_number = phone_number
+                    elif phone_number.role == "user":
+                        user_number = phone_number
             if admin_number is not None:
                 self.do_generate_token(role="admin", uid=admin_number.uid)
             if user_number is not None:
