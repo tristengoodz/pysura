@@ -332,5 +332,36 @@
         }
       ]
     }
+  ],
+  "cron_triggers": [
+    {
+      "name": "cron_update_app_message",
+      "webhook": "{{HASURA_MICROSERVICE_URL}}",
+      "schedule": "*/5 * * * *",
+      "include_in_metadata": true,
+      "payload": {
+        "trigger": "cron"
+      },
+      "retry_conf": {
+        "num_retries": 3,
+        "retry_interval_seconds": 600,
+        "timeout_seconds": 600,
+        "tolerance_seconds": 21600
+      },
+      "headers": [
+        {
+          "name": "HASURA_EVENT_SECRET",
+          "value_from_env": "HASURA_EVENT_SECRET"
+        }
+      ],
+      "comment": "",
+      "request_transform": {
+        "method": "POST",
+        "query_params": {},
+        "template_engine": "Kriti",
+        "url": "{{$base_url}}/cron_update_app_message/",
+        "version": 2
+      }
+    }
   ]
 }

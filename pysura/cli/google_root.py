@@ -2209,7 +2209,7 @@ async def SNAKE(_: Request,
                     else:
                         continue
                 new_event_template = "".join(new_lines)
-            with open(f"event_triggers/{snake_replace}.py", "w") as f:
+            with open(f"events/{snake_replace}.py", "w") as f:
                 f.write(new_event_template)
 
         event_init += f"\nevent_routers = [\n"
