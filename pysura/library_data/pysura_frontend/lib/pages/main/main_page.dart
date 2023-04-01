@@ -8,7 +8,6 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MainPageController controller = Get.put(MainPageController());
-
     return Scaffold(
       appBar: AppBar(
           elevation: 1,
@@ -29,6 +28,21 @@ class MainPage extends StatelessWidget {
                 },
                 icon: const Icon(Icons.logout))
           ]),
+      body: Center(
+        child: FutureBuilder<String>(
+          future: controller.token(),
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return SelectableText(
+                  'Bearer ${snapshot.data ?? 'No token available'}');
+            }
+          },
+        ),
+      ),
     );
   }
 }

@@ -451,56 +451,57 @@ class GoogleCloudFunction(DictModel):
     versionId: str | None = None
 
 
-class HasuraMetadataUserId(DictModel):
-    _eq: str | None = None
+class HasuraMetadataEventTriggerUpdate(DictModel):
+    columns: List[str] | None = None
 
 
-class HasuraMetadataUserIdFilter(DictModel):
-    user_id: HasuraMetadataUserId | None = None
+class HasuraMetadataEventTriggerDefinition(DictModel):
+    enable_manual: bool | None = None
+    update: HasuraMetadataEventTriggerUpdate | None = None
+
+
+class HasuraMetadataEventTriggerRetryConf(DictModel):
+    interval_sec: int | None = None
+    num_retries: int | None = None
+    timeout_sec: int | None = None
+
+
+class HasuraMetadataEventTriggerHeader(DictModel):
+    name: str | None = None
+    value_from_env: str | None = None
+
+
+class HasuraMetadataEventTriggerRequestTransform(DictModel):
+    method: str | None = None
+    query_params: Dict[str, Any] | None = None
+    template_engine: str | None = None
+    version: int | None = None
+
+
+class HasuraMetadataEventTrigger(DictModel):
+    location: str | None = None
+    name: str | None = None
+    definition: HasuraMetadataEventTriggerDefinition | None = None
+    retry_conf: HasuraMetadataEventTriggerRetryConf | None = None
+    webhook: str | None = None
+    headers: List[HasuraMetadataEventTriggerHeader] | None = None
+    request_transform: HasuraMetadataEventTriggerRequestTransform | None = None
 
 
 class HasuraMetadataPermission(DictModel):
     columns: List[str] | None = None
-    filter: HasuraMetadataUserIdFilter | None = None
-
-
-class HasuraMetadataSelectPermission(DictModel):
-    role: str | None = None
-    permission: HasuraMetadataPermission | None = None
-
-
-class HasuraMetadataInsertPermission(DictModel):
-    role: str | None = None
-    permission: HasuraMetadataPermission | None = None
-
-
-class HasuraMetadataUpdatePermission(DictModel):
-    columns: List[str] | None = None
-    filter: HasuraMetadataUserIdFilter | None = None
-    check: HasuraMetadataUserIdFilter | None = None
-
-
-class HasuraMetadataUpdatePermissions(DictModel):
-    role: str | None = None
-    permission: HasuraMetadataUpdatePermission | None = None
-
-
-class HasuraMetadataDeletePermission(DictModel):
-    filter: HasuraMetadataUserIdFilter | None = None
-
-
-class HasuraMetadataDeletePermissions(DictModel):
-    role: str | None = None
-    permission: HasuraMetadataDeletePermission | None = None
+    filter: Dict[str, Any] | None = None
+    check: Dict[str, Any] | None = None
 
 
 class HasuraMetadataPermissionsTable(DictModel):
     table: Dict[str, Any] | None = None
     is_enum: bool | None = None
-    select_permissions: List[HasuraMetadataSelectPermission] | None = None
-    insert_permissions: List[HasuraMetadataInsertPermission] | None = None
-    update_permissions: List[HasuraMetadataUpdatePermissions] | None = None
-    delete_permissions: List[HasuraMetadataDeletePermissions] | None = None
+    select_permissions: List[HasuraMetadataPermission] | None = None
+    insert_permissions: List[HasuraMetadataPermission] | None = None
+    update_permissions: List[HasuraMetadataPermission] | None = None
+    delete_permissions: List[HasuraMetadataPermission] | None = None
+    event_triggers: List[HasuraMetadataEventTrigger] | None = None
 
 
 class HasuraMetadataDatabaseUrl(DictModel):
@@ -576,11 +577,44 @@ class HasuraMetadataCustomTypes(DictModel):
     objects: List[HasuraMetadataObject] | None = None
 
 
+class HasuraCronRetryConf(DictModel):
+    num_retries: int
+    retry_interval_seconds: int
+    timeout_seconds: int
+    tolerance_seconds: int
+
+
+class HasuraCronHeader(DictModel):
+    name: str
+    value_from_env: str
+
+
+class HasuraCronRequestTransform(DictModel):
+    method: str
+    query_params: Dict[str, Any]
+    template_engine: str
+    url: str
+    version: int
+
+
+class HasuraCron(DictModel):
+    name: str | None = None
+    webhook: str | None = None
+    schedule: str | None = None
+    include_in_metadata: bool | None = None
+    payload: Dict | None = None
+    retry_conf: HasuraCronRetryConf | None = None
+    headers: List[HasuraCronHeader] | None = None
+    comment: str | None = None
+    request_transform: HasuraCronRequestTransform | None = None
+
+
 class HasuraMetadata(DictModel):
     version: int | None = None
     sources: List[HasuraMetadataSource] | None = None
     actions: List[HasuraMetadataAction] | None = None
     custom_types: HasuraMetadataCustomTypes | None = None
+    cron_triggers: List[HasuraCron] | None = None
 
 
 class TestPhoneNumber(DictModel):

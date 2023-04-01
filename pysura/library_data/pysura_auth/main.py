@@ -1,11 +1,12 @@
 import firebase_admin
+from firebase_admin import auth
 from google.cloud import secretmanager
 from python_graphql_client import GraphqlClient
 from requests.exceptions import ConnectionError
 import logging
 
 PROJECT_ID = "PROJECT_ID_HERE"
-firebase_admin.initialize_app()
+app = firebase_admin.initialize_app()
 
 
 def get_secret_by_id(secret_id, version_id="latest"):
@@ -61,9 +62,7 @@ def execute(gql, variables):
         return response
 
 
-def on_user_create(data, context):
-    print(data)
-    print(context)
+def on_user_create(data, _):
     try:
         user_uid = data["uid"]
         user_phone = data.get("phoneNumber", None)
@@ -77,15 +76,23 @@ def on_user_create(data, context):
         if response.get("errors", None) is not None:
             print(response)
             return response
+        auth.set_custom_user_claims(
+            user_uid,
+            {
+                "https://hasura.io/jwt/claims": {
+                    "x-hasura-allowed-roles": ["user"],
+                    "x-hasura-default-role": "user",
+                    "x-hasura-user-id": user_uid,
+                }
+            }
+        )
     except Exception as e:
         print(e)
         return 500, "ERROR"
     return 200, "OK"
 
 
-def on_user_delete(data, context):
-    print(data)
-    print(context)
+def on_user_delete(data, _):
     try:
         user_uid = data["uid"]
         variables = {"user_id": user_uid}

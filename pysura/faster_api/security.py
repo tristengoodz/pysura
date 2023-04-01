@@ -12,12 +12,17 @@ import logging
 from starlette.datastructures import Headers
 from typing import List
 from pysura.faster_api.models import UserIdentity, Provider
+from python_graphql_client import GraphqlClient
+from requests.exceptions import ConnectionError
 
 try:
-    from app_secrets import HASURA_FIREBASE_SERVICE_ACCOUNT, HASURA_EVENT_SECRET
+    from app_secrets import HASURA_FIREBASE_SERVICE_ACCOUNT, HASURA_EVENT_SECRET, HASURA_GRAPHQL_URL_ROOT, \
+        HASURA_GRAPHQL_ADMIN_SECRET
 except ImportError:
-    HASURA_FIREBASE_SERVICE_ACCOUNT = None
-    HASURA_EVENT_SECRET = None
+    HASURA_FIREBASE_SERVICE_ACCOUNT = ""
+    HASURA_EVENT_SECRET = ""
+    HASURA_GRAPHQL_URL_ROOT = ""
+    HASURA_GRAPHQL_ADMIN_SECRET = ""
 
 try:
     firebase_app = firebase_admin.get_app()
@@ -122,13 +127,65 @@ class PysuraSecurity:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid event secret")
 
 
+class PysuraClient:
+
+    def __init__(self):
+        self.client = GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
+
+    def execute(self, *args, **kwargs):
+        response = None
+        try:
+            response = self.client.execute(*args, **kwargs,
+                                           headers={
+                                               "Content-Type": "application/json",
+                                               "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
+                                           })
+        except Exception as e:
+            try:
+                logging.log(logging.ERROR, e)
+                self.client = GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
+                response = self.client.execute(*args, **kwargs,
+                                               headers={
+                                                   "Content-Type": "application/json",
+                                                   "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
+                                               })
+            except Exception as e:
+                logging.log(logging.ERROR, e)
+        finally:
+            return response
+
+    def execute_as_user(self, *args, authorization_token: str, **kwargs):
+        response = None
+        try:
+            response = self.client.execute(*args, **kwargs,
+                                           headers={
+                                               "Content-Type": "application/json",
+                                               "Authorization": f"{authorization_token}"
+                                           })
+        except Exception as e:
+            try:
+                logging.log(logging.ERROR, e)
+                self.client = GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
+                response = self.client.execute(*args, **kwargs,
+                                               headers={
+                                                   "Content-Type": "application/json",
+                                                   "Authorization": f"{authorization_token}"
+                                               })
+            except Exception as e:
+                logging.log(logging.ERROR, e)
+        finally:
+            return response
+
+
 class PysuraProvider:
 
     def __init__(self,
                  provide_identity: bool = False,
-                 provide_firebase: bool = False):
+                 provide_firebase: bool = False,
+                 provide_graphql: bool = False):
         self.provide_identity = provide_identity
         self.provide_firebase = provide_firebase
+        self.provide_graphql = provide_graphql
 
     async def __call__(self, request: Request) -> Provider:
         user_identity = None
@@ -143,8 +200,12 @@ class PysuraProvider:
         app_instance = None
         if self.provide_firebase:
             app_instance = firebase_app
+        graphql = None
+        if self.provide_graphql:
+            graphql = PysuraClient()
         provider = Provider(
             user_identity=user_identity,
-            firebase_app=app_instance
+            firebase_app=app_instance,
+            graphql=graphql
         )
         return provider

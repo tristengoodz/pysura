@@ -285,5 +285,52 @@
         ]
       }
     ]
-  }
+  },
+  "sources": [
+    {
+      "name": "default",
+      "kind": "postgres",
+      "tables": [
+        {
+          "table": {
+            "name": "user",
+            "schema": "public"
+          },
+          "event_triggers": [
+            {
+              "name": "event_update_user_role",
+              "definition": {
+                "enable_manual": false,
+                "update": {
+                  "columns": [
+                    "role",
+                    "user_id"
+                  ]
+                }
+              },
+              "retry_conf": {
+                "interval_sec": 30,
+                "num_retries": 3,
+                "timeout_sec": 60
+              },
+              "webhook": "{{HASURA_MICROSERVICE_URL}}",
+              "headers": [
+                {
+                  "name": "HASURA_EVENT_SECRET",
+                  "value_from_env": "HASURA_EVENT_SECRET"
+                }
+              ],
+              "request_transform": {
+                "method": "POST",
+                "query_params": {},
+                "template_engine": "Kriti",
+                "url": "{{$base_url}}/event_update_user_role/",
+                "version": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

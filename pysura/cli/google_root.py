@@ -2018,12 +2018,13 @@ SNAKE_router = APIRouter(
                    ],
                    response_model=CAMELOutput
                    )
-async def action_base_generator_mutation(_: Request,
-                                         SNAKE_input: CAMELInput | None = None,
-                                         provider: Provider | None = Depends(PysuraProvider(
-                                             provide_identity=True,
-                                             provide_firebase=True
-                                         ))):
+async def SNAKE(_: Request,
+                SNAKE_input: CAMELInput | None = None,
+                provider: Provider | None = Depends(PysuraProvider(
+                    provide_identity=True,
+                    provide_firebase=True,
+                    provide_graphql=True
+                ))):
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
     logging.log(logging.INFO, f"User {provider.user_identity.user_id} is authorized to access {ROUTE}")
     logging.log(logging.INFO, SNAKE_input)
@@ -2036,7 +2037,6 @@ async def action_base_generator_mutation(_: Request,
     ).dict()
     return response
     # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
-
 """
         for action in hasura_metadata.get("actions", []):
             action_handler = action.get("definition", {}).get("handler", None)
@@ -2051,6 +2051,38 @@ async def action_base_generator_mutation(_: Request,
                     collect_perms.append("admin")
                 collect_perms = [f"ClientRole.{i}.name" for i in sorted(list(set(collect_perms)))]
                 new_action_template = new_action_template.replace("# ALLOWED ROLES HERE", ", ".join(collect_perms))
+                rewrite = False
+                original_data = None
+                if os.path.isfile(f"actions/{snake_replace}.py"):
+                    rewrite = True
+                    with open(f"actions/{snake_replace}.py", "r") as f:
+                        original_data = f.readlines()
+                if rewrite:
+                    business_logic = []
+                    in_logic = False
+                    for line in original_data:
+                        if in_logic:
+                            business_logic.append(line)
+                        if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_logic = True
+                        if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_logic = False
+
+                    new_lines = []
+                    in_business_logic = False
+                    for line in new_action_template.splitlines():
+                        if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_business_logic = True
+                            new_lines.append(line + "\n")
+                            for business_line in business_logic:
+                                new_lines.append(business_line)
+                        elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_business_logic = False
+                        if not in_business_logic:
+                            new_lines.append(line + "\n")
+                        else:
+                            continue
+                    new_action_template = "".join(new_lines)
                 with open(f"actions/{snake_replace}.py", "w") as f:
                     f.write(new_action_template)
 
@@ -2059,7 +2091,9 @@ async def action_base_generator_mutation(_: Request,
             "custom_types": {
                 "objects": [],
                 "input_objects": []
-            }
+            },
+            "event_triggers": [],
+            "cron_triggers": []
         }
 
         action_names = []
@@ -2087,6 +2121,186 @@ async def action_base_generator_mutation(_: Request,
             if custom_type.get("name") in included_set:
                 new_hasura_metadata["custom_types"]["input_objects"].append(custom_type)
 
+        event_triggers = []
+        if isinstance(hasura_metadata.get("sources", None), list):
+            sources = hasura_metadata.get("sources", [])
+            for s in sources:
+                source_name = s.get("name", None)
+                tables = s.get("tables", None)
+                if isinstance(tables, list):
+                    for t in tables:
+                        table_data = t.get("table", None)
+                        table_name = table_data.get("name", None) if isinstance(table_data, dict) else None
+                        for trigger in t.get("event_triggers", []):
+                            if trigger.get("webhook", None) == service_url:
+                                trigger_name = trigger.get("name", None)
+                                event_triggers.append({
+                                    "location": f"{source_name}.{table_name}.{trigger_name}",
+                                    **trigger
+                                })
+        new_hasura_metadata["event_triggers"] = event_triggers
+
+        event_trigger_template = """import logging
+
+from fastapi import APIRouter, Depends, Request, Body, Response
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider
+from pysura.faster_api.models import Event, Provider
+
+ROUTE = "/SNAKE/"
+SNAKE_router = APIRouter(
+    tags=["SNAKE"]
+)
+
+
+# Figure out proper dependency injection
+@SNAKE_router.post(ROUTE, dependencies=[Depends(PysuraSecurity(require_jwt=False, require_event_secret=True))])
+async def SNAKE(_: Request,
+                provider: Provider | None = Depends(
+                    PysuraProvider(
+                        provide_identity=False,
+                        provide_firebase=True,
+                        provide_graphql=True
+                    )
+                ),
+                data: Event = Body(...)):
+    # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
+    logging.log(logging.INFO, f"Event {data.id} is authorized to access {ROUTE}")
+    logging.log(logging.INFO, data)
+    logging.log(logging.INFO, provider)
+    return Response(status_code=200)
+    # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
+"""
+        event_init = ""
+        event_routers = []
+        for event_trigger in event_triggers:
+            event_init += f"from events.{event_trigger['name']} import {event_trigger['name']}_router\n"
+            event_routers.append(f"    {event_trigger['name']}_router,")
+            snake_replace = event_trigger["name"]
+            new_event_template = event_trigger_template.replace("SNAKE", snake_replace)
+            rewrite = False
+            original_data = None
+            if os.path.isfile(f"events/{snake_replace}.py"):
+                rewrite = True
+                with open(f"events/{snake_replace}.py", "r") as f:
+                    original_data = f.readlines()
+            if rewrite:
+                business_logic = []
+                in_logic = False
+                for line in original_data:
+                    if in_logic:
+                        business_logic.append(line)
+                    if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_logic = True
+                    if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_logic = False
+
+                new_lines = []
+                in_business_logic = False
+                for line in new_event_template.splitlines():
+                    if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_business_logic = True
+                        new_lines.append(line + "\n")
+                        for business_line in business_logic:
+                            new_lines.append(business_line)
+                    elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_business_logic = False
+                    if not in_business_logic:
+                        new_lines.append(line + "\n")
+                    else:
+                        continue
+                new_event_template = "".join(new_lines)
+            with open(f"event_triggers/{snake_replace}.py", "w") as f:
+                f.write(new_event_template)
+
+        event_init += f"\nevent_routers = [\n"
+        for event_router in event_routers:
+            event_init += f"    {event_router},\n"
+        event_init += f"]\n"
+        with open(f"events/__init__.py", "w") as f:
+            f.write(event_init)
+
+        cron_template = """import logging
+
+from fastapi import APIRouter, Depends, Request, Body, Response
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider
+from pysura.faster_api.models import Provider
+
+ROUTE = "/SNAKE/"
+SNAKE_router = APIRouter(
+    tags=["SNAKE"]
+)
+
+
+# Figure out proper dependency injection
+@SNAKE_router.post(ROUTE, dependencies=[Depends(PysuraSecurity(require_jwt=False, require_event_secret=True))])
+async def SNAKE(_: Request,
+                provider: Provider | None = Depends(
+                    PysuraProvider(
+                        provide_identity=False,
+                        provide_firebase=True,
+                        provide_graphql=True
+                    )
+                ),
+                data=Body(...)):
+    # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
+    logging.log(logging.INFO, data)
+    logging.log(logging.INFO, provider)
+    return Response(status_code=200)
+    # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
+"""
+
+        if isinstance(hasura_metadata.get("cron_triggers", None), list):
+            cron_triggers = hasura_metadata.get("cron_triggers", [])
+            cron_triggers_init = ""
+            cron_names = []
+            for cron_trigger in cron_triggers:
+                if cron_trigger.get("webhook", None) == service_url:
+                    new_hasura_metadata["cron_triggers"].append(cron_trigger)
+                    snake_replace = cron_trigger["name"]
+                    cron_names.append(snake_replace)
+                    cron_triggers_init += f"from crons.{snake_replace} import {snake_replace}_router\n"
+                    new_cron_template = cron_template.replace("SNAKE", snake_replace)
+                    rewrite = False
+                    original_data = None
+                    if os.path.isfile(f"crons/{snake_replace}.py"):
+                        rewrite = True
+                        with open(f"crons/{snake_replace}.py", "r") as f:
+                            original_data = f.readlines()
+                    if rewrite:
+                        business_logic = []
+                        in_logic = False
+                        for line in original_data:
+                            if in_logic:
+                                business_logic.append(line)
+                            if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_logic = True
+                            if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_logic = False
+
+                        new_lines = []
+                        in_business_logic = False
+                        for line in new_cron_template.splitlines():
+                            if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_business_logic = True
+                                new_lines.append(line + "\n")
+                                for business_line in business_logic:
+                                    new_lines.append(business_line)
+                            elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_business_logic = False
+                            if not in_business_logic:
+                                new_lines.append(line + "\n")
+                            else:
+                                continue
+                        new_cron_template = "".join(new_lines)
+                    with open(f"crons/{snake_replace}.py", "w") as f:
+                        f.write(new_cron_template)
+
+            cron_triggers_init += f"\ncron_routers = [\n"
+            for cron_name in cron_names:
+                cron_triggers_init += f"    {cron_name}_router,\n"
+            cron_triggers_init += f"]\n"
+            with open(f"crons/__init__.py", "w") as f:
+                f.write(cron_triggers_init)
         return new_hasura_metadata
 
     def do_deploy_microservice(self,
@@ -2111,6 +2325,9 @@ async def action_base_generator_mutation(_: Request,
         os.mkdir("crons")
         os.mkdir("events")
         path = self.get_site_packages_path(submodule="pysura_microservice")
+        default_actions = []
+        default_events = []
+        default_crons = []
         for root, dirs, files in os.walk(path):
             for f in files:
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
@@ -2125,18 +2342,24 @@ async def action_base_generator_mutation(_: Request,
                             dir_path = os.path.join(os.getcwd(), "actions")
                             if not os.path.isdir(dir_path):
                                 os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_actions.append(f.replace(".py", ""))
                             shutil.copy(os.path.join(root, f), dir_path)
                     elif "crons" in root:
                         if f != "cron_template.py":
                             dir_path = os.path.join(os.getcwd(), "crons")
                             if not os.path.isdir(dir_path):
                                 os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_crons.append(f.replace(".py", ""))
                             shutil.copy(os.path.join(root, f), dir_path)
                     elif "events" in root:
                         if f != "event_template.py":
                             dir_path = os.path.join(os.getcwd(), "events")
                             if not os.path.isdir(dir_path):
                                 os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_events.append(f.replace(".py", ""))
                             shutil.copy(os.path.join(root, f), dir_path)
         if microservice_name == "default":
             with open("pysura_metadata.json", "r") as f:
@@ -2223,6 +2446,7 @@ async def action_base_generator_mutation(_: Request,
         new_metadata = {}
         new_actions = []
         new_objects = []
+        new_cron_triggers = []
         new_input_objects = []
         for key, value in metadata.items():
             if key == "actions":
@@ -2241,6 +2465,41 @@ async def action_base_generator_mutation(_: Request,
                     if obj["name"] in input_objects_set:
                         continue
                     new_input_objects.append(obj)
+            elif key == "sources":
+                for event_trigger in new_hasura_metadata["event_triggers"]:
+                    source_name, table_name, trigger_name = event_trigger.pop('location').split("_")
+                    for source in value:
+                        if source["name"] == source_name:
+                            for table in source.get("tables", []):
+                                table_data = table.get("table", None)
+                                tb_name = table_data.get("name", None) if isinstance(table_data, dict) else None
+                                if tb_name == table_name:
+                                    new_event_triggers = []
+                                    if isinstance(table.get("event_triggers", None), list):
+                                        trigger_found = False
+                                        for trigger in table.get("event_triggers", []):
+                                            if trigger.get("name", None) == trigger_name:
+                                                new_event_triggers.append(event_trigger)
+                                                trigger_found = True
+                                            else:
+                                                new_event_triggers.append(trigger)
+                                        if not trigger_found:
+                                            new_event_triggers.append(event_trigger)
+                                    if len(new_event_triggers) != 0:
+                                        table["event_triggers"] = new_event_triggers
+                new_metadata[key] = value
+            elif key == "cron_triggers":
+                new_cron_triggers = []
+                for cron_trigger in value:
+                    trigger_found = False
+                    for event_trigger in new_hasura_metadata["event_triggers"]:
+                        if event_trigger.get("name", None) == cron_trigger["name"]:
+                            new_cron_triggers.append(event_trigger)
+                            trigger_found = True
+                            break
+                    if not trigger_found:
+                        new_cron_triggers.append(cron_trigger)
+                new_metadata[key] = new_cron_triggers
             else:
                 new_metadata[key] = value
 

@@ -25,4 +25,12 @@ class MainPageController extends GetxController {
       ),
     );
   }
+
+  Future<String> token() async {
+    if (authController.user == null) {
+      return '';
+    }
+    final String token = await authController.user!.getIdToken();
+    return token;
+  }
 }

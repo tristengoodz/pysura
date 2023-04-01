@@ -26,12 +26,13 @@ SNAKE_router = APIRouter(
                    ],
                    response_model=CAMELOutput
                    )
-async def action_base_generator_mutation(_: Request,
-                                         SNAKE_input: CAMELInput | None = None,
-                                         provider: Provider | None = Depends(PysuraProvider(
-                                             provide_identity=True,
-                                             provide_firebase=True
-                                         ))):
+async def SNAKE(_: Request,
+                SNAKE_input: CAMELInput | None = None,
+                provider: Provider | None = Depends(PysuraProvider(
+                    provide_identity=True,
+                    provide_firebase=True,
+                    provide_graphql=True
+                ))):
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
     logging.log(logging.INFO, f"User {provider.user_identity.user_id} is authorized to access {ROUTE}")
     logging.log(logging.INFO, SNAKE_input)
