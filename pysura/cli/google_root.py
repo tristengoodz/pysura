@@ -1942,7 +1942,8 @@ from pydantic import BaseModel
         action_template = """import logging
 
 from fastapi import APIRouter, Depends, Request
-from pysura.faster_api.security import backend_auth, token_auth, UserIdentity, identity, IDENTITY_PROVIDER
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider
+from pysura.faster_api.models import Provider
 from pysura.faster_api.enums import ApiResponse, ClientRole
 from generated_types import *
 
@@ -1955,36 +1956,35 @@ SNAKE_router = APIRouter(
 )
 
 
-@SNAKE_router.post(ROUTE, dependencies=[Depends(backend_auth), Depends(token_auth)])
-@identity(allowed_roles=ALLOWED_ROLES,
-          identity_provider=IDENTITY_PROVIDER,
-          function_input=CAMELInput
-          )
-async def SNAKE(_: Request,
-                SNAKE_input: CAMELInput | None = None,
-                injected_user_identity: UserIdentity | None = None):
-    # (AUTH-LOCK-START) - DO NOT DELETE THIS LINE!
-    if injected_user_identity is None or injected_user_identity.user_id is None:
-        return {
-            "response_name": ApiResponse.UNAUTHORIZED.name,
-            "response_value": ApiResponse.UNAUTHORIZED.value
-        }
-    logging.log(logging.INFO, f"User {injected_user_identity.user_id} is authorized to access {ROUTE}")
-    # (AUTH-LOCK-END) - DO NOT DELETE THIS LINE!
-
+# Figure out proper dependency injection
+@SNAKE_router.post(ROUTE,
+                   dependencies=[
+                       Depends(PysuraSecurity(
+                           require_jwt=True,
+                           require_event_secret=True,
+                           allowed_roles=ALLOWED_ROLES
+                       ))
+                   ])
+async def action_base_generator_mutation(_: Request,
+                                         SNAKE_input: CAMELInput | None = None,
+                                         provider: Provider | None = Depends(PysuraProvider(
+                                             provide_identity=True,
+                                             provide_firebase=True
+                                         ))):
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
-    print(SNAKE_input)
+    logging.log(logging.INFO, f"User {provider.user_identity.user_id} is authorized to access {ROUTE}")
+    logging.log(logging.INFO, SNAKE_input)
+    logging.log(logging.INFO, provider)
     response = CAMELOutput(
         data=None,
         nodes=None,
         response_name=ApiResponse.SUCCESS.name,
         response_value=ApiResponse.SUCCESS.value
     ).dict()
-    print(response)
     return response
     # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
 
-    """
+"""
         for action in hasura_metadata.get("actions", []):
             action_handler = action.get("definition", {}).get("handler", None)
             if action_handler == service_url:
@@ -2302,32 +2302,43 @@ async def SNAKE(_: Request,
             log_str = f"""
 Pysura Project Setup Complete!
 
+The default microservice can be found at:
+{env.default_microservice_url}
+"""
+            actions = [action for action in env.hasura_metadata.actions if
+                       action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
+            if len(actions) > 0:
+                log_str += f"""The default microservice has {len(actions)} actions:"""
+                for action in actions:
+                    log_str += f"""\n\t{action.name}\n\t"""
+                    json_str = "\n\t".join(json.dumps(action.definition, indent=4).split("\n")).lstrip("\n\t")
+                    log_str += json_str
+
+            log_str += f"""You have {num_services} additional microservice(s) deployed."""
+            if num_services > 0:
+                log_str += "\tMicroservice URLs:\n"
+
+            for microservice_url in env.hasura.microservice_urls:
+                actions = [action for action in env.hasura_metadata.actions if
+                           action.definition.handler == microservice_url.url_wrapper]
+                log_str += f"""\t{microservice_url.url}\n"""
+                if len(actions) > 0:
+                    log_str += f"""\t\t{len(actions)} action(s):"""
+                    for action in actions:
+                        log_str += f"""\n\t\t\t{action.name} -> {None}\n\t\t\t"""
+                        json_str = "\n\t\t\t".join(json.dumps(action.definition, indent=4).split("\n")).lstrip(
+                            "\n\t\t\t")
+                        log_str += json_str
+
+            log_str += f"""
 Your Hasura instance can be found at:
 {env.hasura_service.status.address.url}/console
 
 Your Hasura Admin Secret is:
 {env.hasura.HASURA_GRAPHQL_ADMIN_SECRET}
 
-The default microservice can be found at:
-{env.default_microservice_url}
-
 The event secret for the all attached microservices is:
-{env.hasura.HASURA_EVENT_SECRET}
-
-You have {num_services} additional microservice(s) deployed.
-"""
-
-            if num_services > 0:
-                log_str += "\tMicroservice URLs:\n"
-                microservice_pieces = []
-                for url in env.hasura.microservice_urls:
-                    log_str += f"\t\t{url.url}\n"
-                    microservice_pieces.append(url.url_wrapper)
-                    actions = [action for action in env.hasura_metadata.actions if
-                               action.definition.handler == url.url_wrapper]
-                    log_str += f"\t\t\tThis microservice has {len(actions)} actions:\n"
-                    for action in actions:
-                        log_str += f"\t\t\t{action.name}\n"
+{env.hasura.HASURA_EVENT_SECRET}"""
             self.log(log_str, level=logging.INFO)
             self.do_load_firebase_app(None)
             self.do_generate_never_expiring_token(role="admin")

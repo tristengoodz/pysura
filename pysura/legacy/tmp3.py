@@ -1,34 +1,43 @@
-import firebase_admin
-from firebase_admin import credentials, initialize_app, auth
+from fastapi import FastAPI, Request, Depends, HTTPException, status
+from fastapi.security import APIKeyHeader
+from starlette.datastructures import Headers
+from firebase_admin import credentials, initialize_app, auth, get_app
 from firebase_admin.auth import InvalidIdTokenError, ExpiredIdTokenError, RevokedIdTokenError, CertificateFetchError, \
     UserDisabledError
-from fastapi.security import APIKeyHeader
-from fastapi import Request
+from pydantic import BaseModel
 import json
-from google.oauth2 import service_account
-from fastapi import Depends, HTTPException, status
-import google.cloud.logging
-import logging
-from starlette.datastructures import Headers
 from typing import List
-from pysura.faster_api.models import UserIdentity, Provider
+import logging
+from app_secrets import HASURA_EVENT_SECRET, HASURA_FIREBASE_SERVICE_ACCOUNT
 
 try:
-    from app_secrets import HASURA_FIREBASE_SERVICE_ACCOUNT, HASURA_EVENT_SECRET
-except ImportError:
-    HASURA_FIREBASE_SERVICE_ACCOUNT = None
-    HASURA_EVENT_SECRET = None
-
-try:
-    firebase_app = firebase_admin.get_app()
+    firestore_app = get_app()
 except ValueError:
     cred_dict = json.loads(HASURA_FIREBASE_SERVICE_ACCOUNT, strict=False)
-    creds = service_account.Credentials.from_service_account_info(cred_dict)
-    logging_client = google.cloud.logging.Client(credentials=creds)
-    logging_client.setup_logging()
-    firebase_app = initialize_app(credential=credentials.Certificate(cred_dict))
+    firestore_app = initialize_app(credential=credentials.Certificate(cred_dict))
+
+app = FastAPI()
 
 
+class UserIdentity(BaseModel):
+    role: str | None = None
+    user_id: str | None = None
+    allowed_roles: List[str] | None = None
+    phone_number: str | None = None
+    email: str | None = None
+    iss: str | None = None
+    aud: str | None = None
+    iat: int | None = None
+    exp: int | None = None
+    auth_time: int | None = None
+    sub: str | None = None
+
+
+class Provider(BaseModel):
+    user_identity: UserIdentity | None = None
+
+
+@app.middleware("http")
 async def security_injection_middleware(request: Request, call_next):
     request_event_secret = request.headers.get("hasura_event_secret", None)
     event_secret_valid = request_event_secret == HASURA_EVENT_SECRET
@@ -38,7 +47,7 @@ async def security_injection_middleware(request: Request, call_next):
     if isinstance(request_jwt_token, str) and "Bearer " in request_jwt_token:
         request_jwt_token = request_jwt_token.replace("Bearer ", "")
         try:
-            decoded_token = auth.verify_id_token(request_jwt_token, app=firebase_app)
+            decoded_token = auth.verify_id_token(request_jwt_token, app=firestore_app)
             jwt_token_valid = True
             claims = decoded_token.get("https://hasura.io/jwt/claims", None)
             hasura_allowed_roles = None
@@ -124,11 +133,8 @@ class PysuraSecurity:
 
 class PysuraProvider:
 
-    def __init__(self,
-                 provide_identity: bool = False,
-                 provide_firebase: bool = False):
+    def __init__(self, provide_identity: bool = True):
         self.provide_identity = provide_identity
-        self.provide_firebase = provide_firebase
 
     async def __call__(self, request: Request) -> Provider:
         user_identity = None
@@ -140,11 +146,19 @@ class PysuraProvider:
                     pass
                 except Exception as e:
                     logging.log(logging.ERROR, e)
-        app_instance = None
-        if self.provide_firebase:
-            app_instance = firebase_app
         provider = Provider(
-            user_identity=user_identity,
-            firebase_app=app_instance
+            user_identity=user_identity
         )
         return provider
+
+
+@app.get("/", dependencies=[Depends(PysuraSecurity(
+    require_jwt=True,
+    require_event_secret=True,
+    allowed_roles=["admin", "user"]
+))])
+async def root(request: Request,
+               provider: Provider | None = Depends(PysuraProvider(provide_identity=True))):
+    print(request.headers)
+    print(provider)
+    return "Hello World!"

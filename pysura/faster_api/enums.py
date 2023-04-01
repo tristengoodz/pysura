@@ -10,7 +10,3 @@ class ApiResponse(Enum):
 class ClientRole(Enum):
     user = 1
     admin = 100
-
-
-class IdentityProvider(Enum):
-    firebase = 1

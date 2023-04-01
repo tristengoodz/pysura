@@ -1,10 +1,11 @@
-import app_secrets  # noqa: F401
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from actions import action_routers
 from events import event_routers
 from crons import cron_routers
+
+from pysura.faster_api.security import security_injection_middleware, Request
 
 app = FastAPI()
 app.add_middleware(
@@ -15,6 +16,19 @@ app.add_middleware(
     allow_credentials=True
 )
 
+
+@app.middleware("http")
+async def inject_security(request: Request, call_next):
+    return await security_injection_middleware(request, call_next)
+
+
+# TODO: Add middleware background task logging/tagging -> BigQuery
+
+# TODO: Add caching middleware
+
+# TODO: Add Deeplink routers
+
+# TODO: Add Celery distributed task queue
 
 @app.get("/",
          response_class=RedirectResponse,

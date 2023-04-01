@@ -1,7 +1,8 @@
 import logging
 
 from fastapi import APIRouter, Depends, Request
-from pysura.faster_api.security import backend_auth, token_auth, UserIdentity, identity, IDENTITY_PROVIDER
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider
+from pysura.faster_api.models import Provider
 from pysura.faster_api.enums import ApiResponse, ClientRole
 from generated_types import *
 
@@ -14,27 +15,25 @@ SNAKE_router = APIRouter(
 )
 
 
+# Figure out proper dependency injection
 @SNAKE_router.post(ROUTE,
-                   dependencies=[Depends(backend_auth), Depends(token_auth)])
-@identity(allowed_roles=ALLOWED_ROLES,
-          identity_provider=IDENTITY_PROVIDER,
-          function_input=CAMELInput
-          )
+                   dependencies=[
+                       Depends(PysuraSecurity(
+                           require_jwt=True,
+                           require_event_secret=True,
+                           allowed_roles=ALLOWED_ROLES
+                       ))
+                   ])
 async def action_base_generator_mutation(_: Request,
-                                         base_generator_mutation_input: CAMELInput | None = None,
-                                         injected_user_identity: UserIdentity | None = None
-                                         ):
-    # (AUTH-LOCK-START) - DO NOT DELETE THIS LINE!
-    if injected_user_identity is None or injected_user_identity.user_id is None:
-        return {
-            "response_name": ApiResponse.UNAUTHORIZED.name,
-            "response_value": ApiResponse.UNAUTHORIZED.value
-        }
-    logging.log(logging.INFO, f"User {injected_user_identity.user_id} is authorized to access {ROUTE}")
-    # (AUTH-LOCK-END) - DO NOT DELETE THIS LINE!
-
+                                         SNAKE_input: CAMELInput | None = None,
+                                         provider: Provider | None = Depends(PysuraProvider(
+                                             provide_identity=True,
+                                             provide_firebase=True
+                                         ))):
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
-    print(base_generator_mutation_input)
+    logging.log(logging.INFO, f"User {provider.user_identity.user_id} is authorized to access {ROUTE}")
+    logging.log(logging.INFO, SNAKE_input)
+    logging.log(logging.INFO, provider)
     response = CAMELOutput(
         data=None,
         nodes=None,
