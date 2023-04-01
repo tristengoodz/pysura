@@ -2220,8 +2220,8 @@ async def action_base_generator_mutation(_: Request,
             firebase_app = initialize_app(credential=credentials.Certificate(cred_dict))
         self.firebase_app = firebase_app
 
-    def do_generate_never_expiring_token(self, role="admin"):
-        self.log(f"Generating {role} token...", level=logging.INFO)
+    def do_generate_token(self, role="admin"):
+        pass
 
     def do_setup_pysura(self, _):
         """
@@ -2311,8 +2311,6 @@ The default microservice can be found at:
                 log_str += f"""The default microservice has {len(actions)} actions:"""
                 for action in actions:
                     log_str += f"""\n\t{action.name}\n\t"""
-                    json_str = "\n\t".join(json.dumps(action.definition, indent=4).split("\n")).lstrip("\n\t")
-                    log_str += json_str
 
             log_str += f"""You have {num_services} additional microservice(s) deployed."""
             if num_services > 0:
@@ -2326,9 +2324,6 @@ The default microservice can be found at:
                     log_str += f"""\t\t{len(actions)} action(s):"""
                     for action in actions:
                         log_str += f"""\n\t\t\t{action.name} -> {None}\n\t\t\t"""
-                        json_str = "\n\t\t\t".join(json.dumps(action.definition, indent=4).split("\n")).lstrip(
-                            "\n\t\t\t")
-                        log_str += json_str
 
             log_str += f"""
 Your Hasura instance can be found at:
@@ -2341,5 +2336,4 @@ The event secret for the all attached microservices is:
 {env.hasura.HASURA_EVENT_SECRET}"""
             self.log(log_str, level=logging.INFO)
             self.do_load_firebase_app(None)
-            self.do_generate_never_expiring_token(role="admin")
-            self.do_generate_never_expiring_token(role="user")
+            self.do_generate_token("user")

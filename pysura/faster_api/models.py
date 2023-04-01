@@ -22,6 +22,7 @@ class Provider(BaseModel):
     firebase_app: App | None = None
 
     class Config:
+        arbitrary_types_allowed = True
         json_encoders = {
             App: lambda v: v if v is None else v.name
         }
