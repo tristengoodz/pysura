@@ -1996,8 +1996,7 @@ from pydantic import BaseModel
         action_template = """import logging
 
 from fastapi import APIRouter, Depends, Request
-from pysura.faster_api.security import PysuraSecurity, PysuraProvider
-from pysura.faster_api.models import Provider
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
 from pysura.faster_api.enums import ApiResponse, ClientRole
 from generated_types import *
 
@@ -2010,7 +2009,6 @@ SNAKE_router = APIRouter(
 )
 
 
-# Figure out proper dependency injection
 @SNAKE_router.post(ROUTE,
                    dependencies=[
                        Depends(PysuraSecurity(
@@ -2024,9 +2022,12 @@ SNAKE_router = APIRouter(
 async def SNAKE(_: Request,
                 SNAKE_input: CAMELInput | None = None,
                 provider: Provider | None = Depends(PysuraProvider(
+                    # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
                     provide_identity=True,
                     provide_firebase=True,
-                    provide_graphql=True
+                    provide_graphql=True,
+                    provide_storage=True
+                    # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                 ))):
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
     logging.log(logging.INFO, f"User {provider.user_identity.user_id} is authorized to access {ROUTE}")
@@ -2146,8 +2147,8 @@ async def SNAKE(_: Request,
         event_trigger_template = """import logging
 
 from fastapi import APIRouter, Depends, Request, Body, Response
-from pysura.faster_api.security import PysuraSecurity, PysuraProvider
-from pysura.faster_api.models import Event, Provider
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
+from pysura.faster_api.models import Event
 
 ROUTE = "/SNAKE/"
 SNAKE_router = APIRouter(
@@ -2155,14 +2156,16 @@ SNAKE_router = APIRouter(
 )
 
 
-# Figure out proper dependency injection
 @SNAKE_router.post(ROUTE, dependencies=[Depends(PysuraSecurity(require_jwt=False, require_event_secret=True))])
 async def SNAKE(_: Request,
                 provider: Provider | None = Depends(
                     PysuraProvider(
+                        # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
                         provide_identity=False,
                         provide_firebase=True,
-                        provide_graphql=True
+                        provide_graphql=True,
+                        provide_storage=True
+                        # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                     )
                 ),
                 data: Event = Body(...)):
@@ -2225,8 +2228,7 @@ async def SNAKE(_: Request,
         cron_template = """import logging
 
 from fastapi import APIRouter, Depends, Request, Body, Response
-from pysura.faster_api.security import PysuraSecurity, PysuraProvider
-from pysura.faster_api.models import Provider
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
 
 ROUTE = "/SNAKE/"
 SNAKE_router = APIRouter(
@@ -2234,14 +2236,16 @@ SNAKE_router = APIRouter(
 )
 
 
-# Figure out proper dependency injection
 @SNAKE_router.post(ROUTE, dependencies=[Depends(PysuraSecurity(require_jwt=False, require_event_secret=True))])
 async def SNAKE(_: Request,
                 provider: Provider | None = Depends(
                     PysuraProvider(
+                        # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
                         provide_identity=False,
                         provide_firebase=True,
-                        provide_graphql=True
+                        provide_graphql=True,
+                        provide_storage=True
+                        # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                     )
                 ),
                 data=Body(...)):
@@ -2643,7 +2647,7 @@ async def SNAKE(_: Request,
 Pysura Project Setup Complete!
 
 The default microservice can be found at:
-{env.default_microservice_url}
+{env.default_microservice_url}/docs
 """
             actions = [action for action in env.hasura_metadata.actions if
                        action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
@@ -2772,7 +2776,7 @@ The event secret for the all attached microservices is:
                     uid=user_id
                 )
                 test_phone_numbers.append(user_number)
-            if isinstance(env.test_phone_numbers, list) and len(env.test_phone_numbers) < len(test_phone_numbers):
+            if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
                 env.test_phone_numbers = test_phone_numbers
                 self.set_env(env)
             admin_number = None

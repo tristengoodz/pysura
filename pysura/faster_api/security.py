@@ -1,5 +1,5 @@
 import firebase_admin
-from firebase_admin import credentials, initialize_app, auth
+from firebase_admin import credentials, initialize_app, auth, App
 from firebase_admin.auth import InvalidIdTokenError, ExpiredIdTokenError, RevokedIdTokenError, CertificateFetchError, \
     UserDisabledError
 from fastapi.security import APIKeyHeader
@@ -9,11 +9,13 @@ from google.oauth2 import service_account
 from fastapi import Depends, HTTPException, status
 import google.cloud.logging
 import logging
+
+from pydantic import BaseModel
 from starlette.datastructures import Headers
 from typing import List
-from pysura.faster_api.models import UserIdentity, Provider
+from pysura.faster_api.models import UserIdentity
 from python_graphql_client import GraphqlClient
-from requests.exceptions import ConnectionError
+from google.cloud import storage as google_storage
 
 try:
     from app_secrets import HASURA_FIREBASE_SERVICE_ACCOUNT, HASURA_EVENT_SECRET, HASURA_GRAPHQL_URL_ROOT, \
@@ -24,14 +26,18 @@ except ImportError:
     HASURA_GRAPHQL_URL_ROOT = ""
     HASURA_GRAPHQL_ADMIN_SECRET = ""
 
+cred_dict = json.loads(HASURA_FIREBASE_SERVICE_ACCOUNT, strict=False)
+creds = service_account.Credentials.from_service_account_info(cred_dict)
 try:
     firebase_app = firebase_admin.get_app()
 except ValueError:
-    cred_dict = json.loads(HASURA_FIREBASE_SERVICE_ACCOUNT, strict=False)
-    creds = service_account.Credentials.from_service_account_info(cred_dict)
     logging_client = google.cloud.logging.Client(credentials=creds)
     logging_client.setup_logging()
     firebase_app = initialize_app(credential=credentials.Certificate(cred_dict))
+
+
+def get_storage_client():
+    return google_storage.Client(project=cred_dict['project_id'], credentials=creds)
 
 
 async def security_injection_middleware(request: Request, call_next):
@@ -127,9 +133,10 @@ class PysuraSecurity:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid event secret")
 
 
-class PysuraClient:
+class PysuraGraphql:
 
     def __init__(self):
+        self.name = "graphql_client"
         self.client = GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
 
     def execute(self, *args, **kwargs):
@@ -177,15 +184,41 @@ class PysuraClient:
             return response
 
 
+class PysuraStorage:
+
+    def __init__(self):
+        self.name = "storage_client"
+        self.storage = get_storage_client()
+
+    # TODO: Add management methods
+
+
+class Provider(BaseModel):
+    user_identity: UserIdentity | None = None
+    firebase_app: App | None = None
+    graphql: PysuraGraphql | None = None
+    storage: PysuraStorage | None = None
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {
+            App: lambda v: v if v is None else v.name,
+            PysuraGraphql: lambda v: v if v is None else v.name,
+            PysuraStorage: lambda v: v if v is None else v.name,
+        }
+
+
 class PysuraProvider:
 
     def __init__(self,
                  provide_identity: bool = False,
                  provide_firebase: bool = False,
-                 provide_graphql: bool = False):
+                 provide_graphql: bool = False,
+                 provide_storage: bool = False):
         self.provide_identity = provide_identity
         self.provide_firebase = provide_firebase
         self.provide_graphql = provide_graphql
+        self.provide_storage = provide_storage
 
     async def __call__(self, request: Request) -> Provider:
         user_identity = None
@@ -202,10 +235,14 @@ class PysuraProvider:
             app_instance = firebase_app
         graphql = None
         if self.provide_graphql:
-            graphql = PysuraClient()
+            graphql = PysuraGraphql()
+        storage = None
+        if self.provide_storage:
+            storage = PysuraStorage()
         provider = Provider(
             user_identity=user_identity,
             firebase_app=app_instance,
-            graphql=graphql
+            graphql=graphql,
+            storage=storage
         )
         return provider

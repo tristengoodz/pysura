@@ -1,8 +1,7 @@
 import logging
 
 from fastapi import APIRouter, Depends, Request, Body, Response
-from pysura.faster_api.security import PysuraSecurity, PysuraProvider
-from pysura.faster_api.models import Provider
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
 
 ROUTE = "/SNAKE/"
 SNAKE_router = APIRouter(
@@ -10,14 +9,16 @@ SNAKE_router = APIRouter(
 )
 
 
-# Figure out proper dependency injection
 @SNAKE_router.post(ROUTE, dependencies=[Depends(PysuraSecurity(require_jwt=False, require_event_secret=True))])
 async def SNAKE(_: Request,
                 provider: Provider | None = Depends(
                     PysuraProvider(
+                        # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
                         provide_identity=False,
                         provide_firebase=True,
-                        provide_graphql=True
+                        provide_graphql=True,
+                        provide_storage=True
+                        # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                     )
                 ),
                 data=Body(...)):

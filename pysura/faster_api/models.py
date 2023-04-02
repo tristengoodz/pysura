@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 from typing import List, Dict, Any
-from firebase_admin import App
-from python_graphql_client import GraphqlClient
 
 
 class UserIdentity(BaseModel):
@@ -16,19 +14,6 @@ class UserIdentity(BaseModel):
     exp: int | None = None
     auth_time: int | None = None
     sub: str | None = None
-
-
-class Provider(BaseModel):
-    user_identity: UserIdentity | None = None
-    firebase_app: App | None = None
-    graphql: GraphqlClient | None = None
-
-    class Config:
-        arbitrary_types_allowed = True
-        json_encoders = {
-            App: lambda v: v if v is None else v.name,
-            GraphqlClient: lambda v: v if v is None else v.endpoint
-        }
 
 
 class EventBodyTraceContext(BaseModel):
@@ -56,15 +41,10 @@ class EventTrigger(BaseModel):
     name: str
 
 
-class EventTable(BaseModel):
-    schema: str
-    name: str
-
-
 class Event(BaseModel):
     event: EventBody
     created_at: str
     id: str
     delivery_info: EventDeliveryInfo
     trigger: EventTrigger
-    table: EventTable
+    table: Dict[str, str] | None = None

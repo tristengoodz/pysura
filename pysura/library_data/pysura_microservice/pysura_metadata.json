@@ -36,6 +36,41 @@
       ]
     },
     {
+      "name": "action_upload_file",
+      "definition": {
+        "handler": "{{HASURA_MICROSERVICE_URL}}",
+        "output_type": "ActionUploadFileOutput",
+        "forward_client_headers": true,
+        "headers": [
+          {
+            "name": "HASURA_EVENT_SECRET",
+            "value_from_env": "HASURA_EVENT_SECRET"
+          }
+        ],
+        "arguments": [
+          {
+            "name": "action_upload_file_input",
+            "type": "ActionUploadFileInput"
+          }
+        ],
+        "request_transform": {
+          "method": "POST",
+          "query_params": {},
+          "template_engine": "Kriti",
+          "url": "{{$base_url}}/action_upload_file/",
+          "version": 2
+        },
+        "type": "mutation",
+        "kind": "asynchronous"
+      },
+      "comment": "/action_upload_file/",
+      "permissions": [
+        {
+          "role": "user"
+        }
+      ]
+    },
+    {
       "name": "action_query_ping",
       "definition": {
         "handler": "{{HASURA_MICROSERVICE_URL}}",
@@ -143,6 +178,23 @@
           {
             "name": "number",
             "type": "Int"
+          }
+        ]
+      },
+      {
+        "name": "ActionUploadFileInput",
+        "fields": [
+          {
+            "name": "file_data",
+            "type": "String!"
+          },
+          {
+            "name": "file_name",
+            "type": "String!"
+          },
+          {
+            "name": "file_type",
+            "type": "String!"
           }
         ]
       }
@@ -281,6 +333,48 @@
           {
             "name": "number",
             "type": "Int!"
+          }
+        ]
+      },
+      {
+        "name": "ActionUploadFileOutputData",
+        "fields": [
+          {
+            "name": "file_name",
+            "type": "String!"
+          },
+          {
+            "name": "file_type",
+            "type": "String!"
+          },
+          {
+            "name": "file_url",
+            "type": "String!"
+          }
+        ]
+      },
+      {
+        "name": "ActionUploadFileOutput",
+        "fields": [
+          {
+            "name": "data",
+            "type": "ActionUploadFileOutputData"
+          },
+          {
+            "name": "nodes",
+            "type": "[IdLink]"
+          },
+          {
+            "name": "response_name",
+            "type": "String!"
+          },
+          {
+            "name": "response_value",
+            "type": "Int!"
+          },
+          {
+            "name": "errors",
+            "type": "[Error]"
           }
         ]
       }

@@ -1,8 +1,7 @@
 import logging
 
 from fastapi import APIRouter, Depends, Request
-from pysura.faster_api.security import PysuraSecurity, PysuraProvider
-from pysura.faster_api.models import Provider
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
 from pysura.faster_api.enums import ApiResponse, ClientRole
 from generated_types import *
 
@@ -15,7 +14,6 @@ SNAKE_router = APIRouter(
 )
 
 
-# Figure out proper dependency injection
 @SNAKE_router.post(ROUTE,
                    dependencies=[
                        Depends(PysuraSecurity(
@@ -29,9 +27,12 @@ SNAKE_router = APIRouter(
 async def SNAKE(_: Request,
                 SNAKE_input: CAMELInput | None = None,
                 provider: Provider | None = Depends(PysuraProvider(
+                    # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
                     provide_identity=True,
                     provide_firebase=True,
-                    provide_graphql=True
+                    provide_graphql=True,
+                    provide_storage=True
+                    # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                 ))):
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
     logging.log(logging.INFO, f"User {provider.user_identity.user_id} is authorized to access {ROUTE}")

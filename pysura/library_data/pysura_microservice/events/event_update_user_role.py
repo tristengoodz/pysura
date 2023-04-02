@@ -1,8 +1,8 @@
 import logging
 
 from fastapi import APIRouter, Depends, Request, Body, Response
-from pysura.faster_api.security import PysuraSecurity, PysuraProvider
-from pysura.faster_api.models import Event, Provider
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
+from pysura.faster_api.models import Event
 from firebase_admin import auth
 
 ROUTE = "/event_update_user_role/"
@@ -11,7 +11,6 @@ event_update_user_role_router = APIRouter(
 )
 
 
-# Figure out proper dependency injection
 @event_update_user_role_router.post(ROUTE, dependencies=[
     Depends(PysuraSecurity(require_jwt=False, require_event_secret=True))])
 async def event_update_user_role(_: Request,
@@ -19,7 +18,8 @@ async def event_update_user_role(_: Request,
                                      PysuraProvider(
                                          provide_identity=False,
                                          provide_firebase=True,
-                                         provide_graphql=False
+                                         provide_graphql=False,
+                                         provide_storage=False
                                      )
                                  ),
                                  data: Event = Body(...)):
