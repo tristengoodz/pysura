@@ -1,9 +1,12 @@
+# (IMPORTS-START) - DO NOT DELETE THIS LINE!
 import logging
 
 from fastapi import APIRouter, Depends, Request
 from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
 from pysura.faster_api.enums import ApiResponse, ClientRole
 from generated_types import *
+
+# (IMPORTS-END) - DO NOT DELETE THIS LINE!
 
 ROUTE = "/action_upload_file/"
 ALLOWED_ROLES = [  # The roles allowed to call this action

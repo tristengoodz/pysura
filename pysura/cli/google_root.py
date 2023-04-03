@@ -2128,12 +2128,15 @@ from pydantic import BaseModel
         with open("generated_types.py", "w") as f:
             f.write(base_models_template)
 
-        action_template = """import logging
+        action_template = """# (IMPORTS-START) - DO NOT DELETE THIS LINE!
+import logging
 
 from fastapi import APIRouter, Depends, Request
 from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
 from pysura.faster_api.enums import ApiResponse, ClientRole
 from generated_types import *
+
+# (IMPORTS-END) - DO NOT DELETE THIS LINE!
 
 ROUTE = "/SNAKE/"
 ALLOWED_ROLES = [  # The roles allowed to call this action
@@ -2199,25 +2202,34 @@ async def SNAKE(_: Request,
                 if rewrite:
                     dependency_injection = []
                     business_logic = []
+                    import_lines = []
                     in_dependency_injection = False
-                    in_logic = False
+                    in_business_logic = False
+                    in_import_lines = False
                     for line in original_data:
-                        if in_logic:
+                        if "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_import_lines = False
+                        if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_business_logic = False
+                        if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_dependency_injection = False
+                        if in_business_logic:
                             business_logic.append(line)
                         if in_dependency_injection:
                             dependency_injection.append(line)
+                        if in_import_lines:
+                            import_lines.append(line)
+                        if "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_import_lines = True
                         if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
-                            in_logic = True
-                        if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
-                            in_logic = False
+                            in_business_logic = True
                         if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
                             in_dependency_injection = True
-                        if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
-                            in_dependency_injection = False
 
                     new_lines = []
                     in_business_logic = False
                     in_dependency_injection = False
+                    in_import_lines = False
                     for line in new_action_template.splitlines():
                         if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
                             in_business_logic = True
@@ -2229,13 +2241,19 @@ async def SNAKE(_: Request,
                             new_lines.append(line + "\n")
                             for dependency_line in dependency_injection:
                                 new_lines.append(dependency_line)
+                        elif "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_import_lines = True
+                            new_lines.append(line + "\n")
+                            for import_line in import_lines:
+                                new_lines.append(import_line)
                         elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
                             in_business_logic = False
                         elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
                             in_dependency_injection = False
-                        if (not in_business_logic) and (not in_dependency_injection):
+                        elif "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_import_lines = False
+                        if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
                             new_lines.append(line + "\n")
-                    new_action_template = "".join(new_lines)
                 with open(f"actions/{snake_replace}.py", "w") as f:
                     f.write(new_action_template)
 
@@ -2293,11 +2311,14 @@ async def SNAKE(_: Request,
                                 })
         new_hasura_metadata["event_triggers"] = event_triggers
 
-        event_trigger_template = """import logging
+        event_trigger_template = """# (IMPORTS-START) - DO NOT DELETE THIS LINE!
+import logging
 
 from fastapi import APIRouter, Depends, Request, Body, Response
 from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
 from pysura.faster_api.models import Event
+
+# (IMPORTS-END) - DO NOT DELETE THIS LINE!
 
 ROUTE = "/SNAKE/"
 SNAKE_router = APIRouter(
@@ -2341,25 +2362,34 @@ async def SNAKE(_: Request,
             if rewrite:
                 dependency_injection = []
                 business_logic = []
+                import_lines = []
                 in_dependency_injection = False
-                in_logic = False
+                in_business_logic = False
+                in_import_lines = False
                 for line in original_data:
-                    if in_logic:
+                    if "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_import_lines = False
+                    if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_business_logic = False
+                    if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_dependency_injection = False
+                    if in_business_logic:
                         business_logic.append(line)
                     if in_dependency_injection:
                         dependency_injection.append(line)
+                    if in_import_lines:
+                        import_lines.append(line)
+                    if "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_import_lines = True
                     if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
-                        in_logic = True
-                    if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
-                        in_logic = False
+                        in_business_logic = True
                     if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
                         in_dependency_injection = True
-                    if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
-                        in_dependency_injection = False
 
                 new_lines = []
                 in_business_logic = False
                 in_dependency_injection = False
+                in_import_lines = False
                 for line in new_event_template.splitlines():
                     if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
                         in_business_logic = True
@@ -2371,11 +2401,18 @@ async def SNAKE(_: Request,
                         new_lines.append(line + "\n")
                         for dependency_line in dependency_injection:
                             new_lines.append(dependency_line)
+                    elif "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_import_lines = True
+                        new_lines.append(line + "\n")
+                        for import_line in import_lines:
+                            new_lines.append(import_line)
                     elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
                         in_business_logic = False
                     elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
                         in_dependency_injection = False
-                    if (not in_business_logic) and (not in_dependency_injection):
+                    elif "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_import_lines = False
+                    if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
                         new_lines.append(line + "\n")
                 new_event_template = "".join(new_lines)
             with open(f"events/{snake_replace}.py", "w") as f:
@@ -2388,10 +2425,13 @@ async def SNAKE(_: Request,
         with open(f"events/__init__.py", "w") as f:
             f.write(event_init)
 
-        cron_template = """import logging
+        cron_template = """# (IMPORTS-START) - DO NOT DELETE THIS LINE!
+import logging
 
 from fastapi import APIRouter, Depends, Request, Body, Response
 from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
+
+# (IMPORTS-END) - DO NOT DELETE THIS LINE!
 
 ROUTE = "/SNAKE/"
 SNAKE_router = APIRouter(
@@ -2439,25 +2479,34 @@ async def SNAKE(_: Request,
                     if rewrite:
                         dependency_injection = []
                         business_logic = []
+                        import_lines = []
                         in_dependency_injection = False
-                        in_logic = False
+                        in_business_logic = False
+                        in_import_lines = False
                         for line in original_data:
-                            if in_logic:
+                            if "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_import_lines = False
+                            if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_business_logic = False
+                            if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_dependency_injection = False
+                            if in_business_logic:
                                 business_logic.append(line)
                             if in_dependency_injection:
                                 dependency_injection.append(line)
+                            if in_import_lines:
+                                import_lines.append(line)
+                            if "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_import_lines = True
                             if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
-                                in_logic = True
-                            if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
-                                in_logic = False
+                                in_business_logic = True
                             if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
                                 in_dependency_injection = True
-                            if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
-                                in_dependency_injection = False
 
                         new_lines = []
                         in_business_logic = False
                         in_dependency_injection = False
+                        in_import_lines = False
                         for line in new_cron_template.splitlines():
                             if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
                                 in_business_logic = True
@@ -2469,11 +2518,18 @@ async def SNAKE(_: Request,
                                 new_lines.append(line + "\n")
                                 for dependency_line in dependency_injection:
                                     new_lines.append(dependency_line)
+                            elif "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_import_lines = True
+                                new_lines.append(line + "\n")
+                                for import_line in import_lines:
+                                    new_lines.append(import_line)
                             elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
                                 in_business_logic = False
                             elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
                                 in_dependency_injection = False
-                            if (not in_business_logic) and (not in_dependency_injection):
+                            elif "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_import_lines = False
+                            if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
                                 new_lines.append(line + "\n")
                         new_cron_template = "".join(new_lines)
                     with open(f"crons/{snake_replace}.py", "w") as f:
@@ -2683,10 +2739,10 @@ async def SNAKE(_: Request,
             elif key == "cron_triggers":
                 new_cron_triggers = []
                 crons_added = []
-                for cron_trigger in new_hasura_metadata["cron_triggers"]:
+                for new_cron_trigger in new_hasura_metadata["cron_triggers"]:
                     trigger_found = False
                     for cron_trigger in value:
-                        if cron_trigger.get("name", None) == cron_trigger["name"]:
+                        if cron_trigger.get("name", None) == new_cron_trigger["name"]:
                             trigger_found = True
                             break
                         if cron_trigger.get("name", None) in crons_added:
@@ -2694,7 +2750,7 @@ async def SNAKE(_: Request,
                         new_cron_triggers.append(cron_trigger)
                         crons_added.append(cron_trigger.get("name", None))
                     if not trigger_found:
-                        new_cron_triggers.append(cron_trigger)
+                        new_cron_triggers.append(new_cron_trigger)
                 new_metadata[key] = new_cron_triggers
             else:
                 new_metadata[key] = value

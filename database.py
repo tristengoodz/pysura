@@ -40,4 +40,5 @@ def get_db():
         db = session_local()
         yield db
     finally:
-        db.close()
+        if db is not None:
+            db.close()
