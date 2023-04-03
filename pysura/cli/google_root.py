@@ -1295,6 +1295,39 @@ alter table app
                     "name": "file",
                     "schema": "public"
                 },
+                "event_triggers": [
+                    {
+                        "name": "event_update_user_role",
+                        "definition": {
+                            "enable_manual": False,
+                            "update": {
+                                "columns": [
+                                    "role",
+                                    "user_id"
+                                ]
+                            }
+                        },
+                        "retry_conf": {
+                            "interval_sec": 30,
+                            "num_retries": 3,
+                            "timeout_sec": 60
+                        },
+                        "webhook": "{{HASURA_MICROSERVICE_URL}}",
+                        "headers": [
+                            {
+                                "name": "HASURA_EVENT_SECRET",
+                                "value_from_env": "HASURA_EVENT_SECRET"
+                            }
+                        ],
+                        "request_transform": {
+                            "method": "POST",
+                            "query_params": {},
+                            "template_engine": "Kriti",
+                            "url": "{{$base_url}}/event_update_user_role/",
+                            "version": 2
+                        }
+                    }
+                ],
                 "insert_permissions": [
                     {
                         "role": "user",
@@ -1513,6 +1546,17 @@ alter table app
         ]
         with open("hasura_metadata.json", "w") as f:
             json.dump(metadata, f)
+        self.do_export_hasura_metadata(None)
+        db_string = """drop trigger if exists "notify_hasura_event_update_user_role_UPDATE" on "user";
+create trigger "notify_hasura_event_update_user_role_UPDATE"
+    after update
+    on "user"
+    for each row
+execute function hdb_catalog."notify_hasura_event_update_user_role_UPDATE"();"""
+        cursor = conn.cursor()
+        cursor.execute(db_string)
+        conn.commit()
+        conn.close()
 
     def do_gcloud_create_auth_service_account(self, _):
         env = self.get_env()
@@ -2789,8 +2833,6 @@ async def SNAKE(_: Request,
             self.do_enable_database_local(database_id=env.database.name.split("/")[-1])
             self.setup_step = 18
             self.do_create_default_user_table(None)
-            self.setup_step = 19
-            self.do_export_hasura_metadata(None)
             self.setup_step = 20
             self.do_attach_firebase(None)
             self.setup_step = 21
@@ -2816,17 +2858,18 @@ Pysura Project Setup Complete!
 
 The default microservice can be found at:
 {env.default_microservice_url}/docs
+
 """
             actions = [action for action in env.hasura_metadata.actions if
                        action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
             if len(actions) > 0:
                 log_str += f"""The default microservice has {len(actions)} actions:\n"""
                 for action in actions:
-                    log_str += f"""\t{action.name}\n\t"""
+                    log_str += f"""\t{action.name}\n"""
 
-            log_str += f"""You have {num_services} additional microservice(s) deployed."""
+            log_str += f"""\nYou have {num_services} additional microservice(s) deployed."""
             if num_services > 0:
-                log_str += "\tMicroservice URLs:\n"
+                log_str += "\n\tMicroservice URLs:\n"
 
             for microservice_url in env.hasura.microservice_urls:
                 actions = [action for action in env.hasura_metadata.actions if
@@ -2835,9 +2878,10 @@ The default microservice can be found at:
                 if len(actions) > 0:
                     log_str += f"""\t\t{len(actions)} action(s):\n"""
                     for action in actions:
-                        log_str += f"""\t\t\t{action.name} -> {None}\n\t\t\t"""
+                        log_str += f"""\t\t\t{action.name}\n"""
 
             log_str += f"""
+
 Your Hasura instance can be found at:
 {env.hasura_service.status.address.url}/console
 
