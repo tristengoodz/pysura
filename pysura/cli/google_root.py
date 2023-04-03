@@ -1295,39 +1295,6 @@ alter table app
                     "name": "file",
                     "schema": "public"
                 },
-                "event_triggers": [
-                    {
-                        "name": "event_update_user_role",
-                        "definition": {
-                            "enable_manual": False,
-                            "update": {
-                                "columns": [
-                                    "role",
-                                    "user_id"
-                                ]
-                            }
-                        },
-                        "retry_conf": {
-                            "interval_sec": 30,
-                            "num_retries": 3,
-                            "timeout_sec": 60
-                        },
-                        "webhook": "{{HASURA_MICROSERVICE_URL}}",
-                        "headers": [
-                            {
-                                "name": "HASURA_EVENT_SECRET",
-                                "value_from_env": "HASURA_EVENT_SECRET"
-                            }
-                        ],
-                        "request_transform": {
-                            "method": "POST",
-                            "query_params": {},
-                            "template_engine": "Kriti",
-                            "url": "{{$base_url}}/event_update_user_role/",
-                            "version": 2
-                        }
-                    }
-                ],
                 "insert_permissions": [
                     {
                         "role": "user",
@@ -1553,6 +1520,10 @@ create trigger "notify_hasura_event_update_user_role_UPDATE"
     on "user"
     for each row
 execute function hdb_catalog."notify_hasura_event_update_user_role_UPDATE"();"""
+        conn = self.get_database_connection(
+            host=host,
+            password=env.database_credential.password
+        )
         cursor = conn.cursor()
         cursor.execute(db_string)
         conn.commit()

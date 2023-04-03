@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.99.28",
+    version="0.99.29",
     packages=find_packages(),
     entry_points={
         "console_scripts": [

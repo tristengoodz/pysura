@@ -24,6 +24,7 @@ Because everyone should be a code wizard.
 - Android Studio (for Android apps) and Android Dev Tools
 - Gradle (for Android apps)
 - Postgresql (pg_config)
+- Make sure docker is configured with `gcloud auth configure-docker`
 
 ```commandline
 pip install pysura
