@@ -1514,20 +1514,6 @@ alter table app
         with open("hasura_metadata.json", "w") as f:
             json.dump(metadata, f)
         self.do_export_hasura_metadata(None)
-        db_string = """drop trigger if exists "notify_hasura_event_update_user_role_UPDATE" on "user";
-create trigger "notify_hasura_event_update_user_role_UPDATE"
-    after update
-    on "user"
-    for each row
-execute function hdb_catalog."notify_hasura_event_update_user_role_UPDATE"();"""
-        conn = self.get_database_connection(
-            host=host,
-            password=env.database_credential.password
-        )
-        cursor = conn.cursor()
-        cursor.execute(db_string)
-        conn.commit()
-        conn.close()
 
     def do_gcloud_create_auth_service_account(self, _):
         env = self.get_env()
