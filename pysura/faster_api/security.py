@@ -12,7 +12,7 @@ import logging
 
 from pydantic import BaseModel
 from starlette.datastructures import Headers
-from typing import List
+from typing import List, Any
 from pysura.faster_api.models import UserIdentity
 from python_graphql_client import GraphqlClient
 from google.cloud import storage as google_storage
@@ -60,6 +60,7 @@ async def security_injection_middleware(request: Request, call_next):
                 default_role = claims.get("x-hasura-default-role", None)
                 user_id = claims.get("x-hasura-user-id", None)
             user_identity_dict = {
+                "token": "Bearer " + request_jwt_token,
                 "role": default_role,
                 "user_id": user_id,
                 "allowed_roles": hasura_allowed_roles,
@@ -133,55 +134,92 @@ class PysuraSecurity:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid event secret")
 
 
-class PysuraGraphql:
+class PysuraGraphql(GraphqlClient):
 
     def __init__(self):
         self.name = "graphql_client"
-        self.client = GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
 
-    def execute(self, *args, **kwargs):
+        super().__init__(endpoint=HASURA_GRAPHQL_URL_ROOT)
+
+    def execute(self,
+                query: str,
+                variables: dict | None = None,
+                operation_name: str | None = None,
+                **kwargs: Any):
         response = None
         try:
-            response = self.client.execute(*args, **kwargs,
-                                           headers={
-                                               "Content-Type": "application/json",
-                                               "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
-                                           })
+            kwargs.pop("headers", None)
+            response = self.client.execute(
+                headers={
+                    "Content-Type": "application/json",
+                    "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
+                },
+                query=query,
+                variables=variables,
+                operation_name=operation_name,
+                **kwargs
+            )
         except Exception as e:
             try:
                 logging.log(logging.ERROR, e)
                 self.client = GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
-                response = self.client.execute(*args, **kwargs,
-                                               headers={
-                                                   "Content-Type": "application/json",
-                                                   "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
-                                               })
+                kwargs.pop("headers", None)
+                response = self.client.execute(
+                    headers={
+                        "Content-Type": "application/json",
+                        "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
+                    },
+                    query=query,
+                    variables=variables,
+                    operation_name=operation_name,
+                    **kwargs
+                )
             except Exception as e:
                 logging.log(logging.ERROR, e)
         finally:
             return response
 
-    def execute_as_user(self, *args, authorization_token: str, **kwargs):
+    def execute_as_user(self,
+                        token: str,
+                        query: str,
+                        variables: dict | None = None,
+                        operation_name: str | None = None,
+                        **kwargs: Any):
         response = None
         try:
-            response = self.client.execute(*args, **kwargs,
-                                           headers={
-                                               "Content-Type": "application/json",
-                                               "Authorization": f"{authorization_token}"
-                                           })
+            kwargs.pop("Authorization", None)
+            response = self.client.execute(
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"{token}"
+                },
+                query=query,
+                variables=variables,
+                operation_name=operation_name,
+                **kwargs
+            )
         except Exception as e:
             try:
                 logging.log(logging.ERROR, e)
                 self.client = GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
-                response = self.client.execute(*args, **kwargs,
-                                               headers={
-                                                   "Content-Type": "application/json",
-                                                   "Authorization": f"{authorization_token}"
-                                               })
+                kwargs.pop("Authorization", None)
+                response = self.client.execute(
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"{token}"
+                    },
+                    query=query,
+                    variables=variables,
+                    operation_name=operation_name,
+                    **kwargs
+                )
             except Exception as e:
                 logging.log(logging.ERROR, e)
         finally:
             return response
+
+    async def execute_async(self):
+        pass
 
 
 class PysuraStorage:

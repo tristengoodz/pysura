@@ -16,10 +16,12 @@ event_update_user_role_router = APIRouter(
 async def event_update_user_role(_: Request,
                                  provider: Provider | None = Depends(
                                      PysuraProvider(
+                                         # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
                                          provide_identity=False,
                                          provide_firebase=True,
                                          provide_graphql=False,
                                          provide_storage=False
+                                         # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                                      )
                                  ),
                                  data: Event = Body(...)):

@@ -8,12 +8,14 @@ class App(RootCmd):
         super().__init__(*arg, **kwargs)
         self.intro = "Welcome to Pysura! Type help or ? to list commands."
         self.prompt = "(pysura_cli) >>> "
+        self.do_choose_provider(provider="google")
 
-    def do_choose_provider(self, _):
+    def do_choose_provider(self, provider="google"):
         """
         Launches the chosen provider's CLI
         """
-        provider = self.collect("Please choose a provider: [google,]: ", ["google"])
+        if provider.strip() == "":
+            provider = self.collect("Please choose a provider: [google,]: ", ["google"])
         if provider == "google":
             GoogleRoot(logger=self.root).cmdloop()
         else:
@@ -21,4 +23,4 @@ class App(RootCmd):
 
 
 def cli():
-    App().cmdloop()
+    App()

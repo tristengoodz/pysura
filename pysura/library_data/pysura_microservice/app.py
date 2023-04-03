@@ -28,7 +28,13 @@ async def inject_security(request: Request, call_next):
 
 # TODO: Add Deeplink routers
 
-# TODO: Add Celery distributed task queue
+# TODO: ~~Add Celery distributed task queue~~ Add an event queue to Hasura using database that offloads to Bigquery
+# Could add easy eventing as action with enum of event types and a jsonb payload, with locking
+# Grab first event from table that has lock INT == 0
+# Increment the lock INT to 1
+# Get the event and check its lock..
+#   if lock == 1, process event
+#   if lock > 1,
 
 @app.get("/",
          response_class=RedirectResponse,

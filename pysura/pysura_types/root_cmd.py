@@ -144,7 +144,7 @@ class RootCmd(Cmd):
             return False
         return True
 
-    def retry_loop(self, cmd_str, name):
+    def gcloud_retry_loop(self, cmd_str, name):
         for i in range(5):
             try:
                 response = os.popen(cmd_str).read()
@@ -155,7 +155,8 @@ class RootCmd(Cmd):
                     if r["name"].split("/")[-1] == name:
                         return response
                 raise Exception(f"No {name} found.")
-            except Exception as _:
+            except Exception as e:
+                self.log(f"{e}\nName not found in response, trying network", level=logging.DEBUG)
                 try:
                     response = os.popen(cmd_str).read()
                     response = json.loads(response)

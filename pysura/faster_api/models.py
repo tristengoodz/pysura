@@ -3,6 +3,7 @@ from typing import List, Dict, Any
 
 
 class UserIdentity(BaseModel):
+    token: str | None = None
     role: str | None = None
     user_id: str | None = None
     allowed_roles: List[str] | None = None

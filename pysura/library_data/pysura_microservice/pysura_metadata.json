@@ -105,7 +105,7 @@
       ]
     },
     {
-      "name": "action_mutation_pong1",
+      "name": "test_wrong_service_url_excluded",
       "definition": {
         "handler": "{{DEFAULT_SERVICE_URL1}}",
         "output_type": "ActionMutationPongOutput1",

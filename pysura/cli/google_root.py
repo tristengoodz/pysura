@@ -390,7 +390,7 @@ class GoogleRoot(RootCmd):
             cmd_str = f"gcloud compute networks list " \
                       f"--project={env.project.name.split('/')[-1]} " \
                       f"--format=json"
-            gcloud_list = self.retry_loop(cmd_str, network_name)
+            gcloud_list = self.gcloud_retry_loop(cmd_str, network_name)
             network_selected = None
             network_set = []
             for gcloud_item in gcloud_list:
@@ -456,7 +456,7 @@ class GoogleRoot(RootCmd):
             cmd_str = f"gcloud compute addresses list " \
                       f"--project={env.project.name.split('/')[-1]} " \
                       f"--format=json"
-            gcloud_list = self.retry_loop(cmd_str, address_name)
+            gcloud_list = self.gcloud_retry_loop(cmd_str, address_name)
             address_selected = None
             address_set = []
             for gcloud_item in gcloud_list:
@@ -530,7 +530,7 @@ class GoogleRoot(RootCmd):
             cmd_str = f"gcloud services vpc-peerings list " \
                       f"--project={env.project.name.split('/')[-1]} " \
                       f"--network={env.network.name.split('/')[-1]} --format=json"
-            gcloud_list = self.retry_loop(cmd_str, peering_name)
+            gcloud_list = self.gcloud_retry_loop(cmd_str, peering_name)
             peering_selected = None
             peering_set = []
             for peering in gcloud_list:
@@ -610,7 +610,7 @@ class GoogleRoot(RootCmd):
             cmd_str = f"gcloud compute firewall-rules list " \
                       f"--project={env.project.name.split('/')[-1]} " \
                       f"--format=json"
-            self.retry_loop(cmd_str, f"{firewall_name}-allow-traffic")
+            self.gcloud_retry_loop(cmd_str, f"{firewall_name}-allow-traffic")
             cmd_str = f"gcloud compute firewall-rules create {firewall_name}-allow-ssh  " \
                       f"--network={env.network.name.split('/')[-1]} " \
                       f"--allow=tcp:22,tcp:3389,icmp " \
@@ -721,7 +721,7 @@ class GoogleRoot(RootCmd):
         cmd_str = f"gcloud sql instances list " \
                   f"--project={env.project.name.split('/')[-1]} " \
                   f"--format=json"
-        gcloud_list = self.retry_loop(cmd_str, f"{db_name}")
+        gcloud_list = self.gcloud_retry_loop(cmd_str, f"{db_name}")
         db_selected = None
         db_set = []
         for db_instance in gcloud_list:
@@ -799,7 +799,7 @@ class GoogleRoot(RootCmd):
         cmd_str = f"gcloud compute networks vpc-access connectors list " \
                   f"--project={env.project.name.split('/')[-1]} " \
                   f"--region={env.database.region} --format=json"
-        gcloud_list = self.retry_loop(cmd_str, f"{connector_name}")
+        gcloud_list = self.gcloud_retry_loop(cmd_str, f"{connector_name}")
         connector_selected = None
         connector_set = []
         for connector in gcloud_list:
@@ -888,8 +888,9 @@ class GoogleRoot(RootCmd):
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         os.remove("secret")
-        secrets = self.retry_loop(f"gcloud secrets list --project={env.project.name.split('/')[-1]} --format=json",
-                                  f"{secret_key}")
+        secrets = self.gcloud_retry_loop(f"gcloud secrets list --project={env.project.name.split('/')[-1]} "
+                                         f"--format=json",
+                                         f"{secret_key}")
         secret_selected = None
         secret_set = []
         for secret in secrets:
@@ -1224,6 +1225,34 @@ create table public_user
 );
 
 alter table public_user
+    owner to postgres;
+
+create table file
+(
+    file_id    text    default gen_random_uuid() not null,
+    user_id    text,
+    name       text                              not null,
+    type       text                              not null,
+    signed_url text                              not null,
+    public     boolean default true              not null,
+    primary key (file_id),
+    foreign key (user_id) references "user"
+        on update cascade on delete set null
+);
+
+alter table file
+    owner to postgres;
+
+create table app
+(
+    name              text not null,
+    storage_bucket    text not null,
+    version_latest    text not null,
+    version_supported text not null,
+    primary key (name)
+);
+
+alter table app
     owner to postgres;"""
         self.log(db_string, level=logging.DEBUG)
         cursor = conn.cursor()
@@ -1251,6 +1280,103 @@ alter table public_user
                                 "value"
                             ],
                             "filter": {}
+                        }
+                    }
+                ]
+            },
+            {
+                "table": {
+                    "name": "app",
+                    "schema": "public"
+                }
+            },
+            {
+                "table": {
+                    "name": "file",
+                    "schema": "public"
+                },
+                "insert_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "check": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            },
+                            "columns": [
+                                "file_id",
+                                "name",
+                                "signed_url",
+                                "type",
+                                "user_id"
+                            ]
+                        }
+                    }
+                ],
+                "select_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "columns": [
+                                "file_id",
+                                "name",
+                                "public",
+                                "signed_url",
+                                "type",
+                                "user_id"
+                            ],
+                            "filter": {
+                                "_or": [
+                                    {
+                                        "user_id": {
+                                            "_eq": "X-Hasura-User-Id"
+                                        }
+                                    },
+                                    {
+                                        "public": {
+                                            "_eq": True
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "update_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "columns": [
+                                "public",
+                                "file_id",
+                                "name",
+                                "signed_url",
+                                "type",
+                                "user_id"
+                            ],
+                            "filter": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            },
+                            "check": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "delete_permissions": [
+                    {
+                        "role": "user",
+                        "permission": {
+                            "filter": {
+                                "user_id": {
+                                    "_eq": "X-Hasura-User-Id"
+                                }
+                            }
                         }
                     }
                 ]
@@ -2062,30 +2188,44 @@ async def SNAKE(_: Request,
                     with open(f"actions/{snake_replace}.py", "r") as f:
                         original_data = f.readlines()
                 if rewrite:
+                    dependency_injection = []
                     business_logic = []
+                    in_dependency_injection = False
                     in_logic = False
                     for line in original_data:
                         if in_logic:
                             business_logic.append(line)
+                        if in_dependency_injection:
+                            dependency_injection.append(line)
                         if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
                             in_logic = True
                         if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
                             in_logic = False
+                        if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_dependency_injection = True
+                        if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_dependency_injection = False
 
                     new_lines = []
                     in_business_logic = False
+                    in_dependency_injection = False
                     for line in new_action_template.splitlines():
                         if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
                             in_business_logic = True
                             new_lines.append(line + "\n")
                             for business_line in business_logic:
                                 new_lines.append(business_line)
+                        elif "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_dependency_injection = True
+                            new_lines.append(line + "\n")
+                            for dependency_line in dependency_injection:
+                                new_lines.append(dependency_line)
                         elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
                             in_business_logic = False
-                        if not in_business_logic:
+                        elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_dependency_injection = False
+                        if (not in_business_logic) and (not in_dependency_injection):
                             new_lines.append(line + "\n")
-                        else:
-                            continue
                     new_action_template = "".join(new_lines)
                 with open(f"actions/{snake_replace}.py", "w") as f:
                     f.write(new_action_template)
@@ -2190,30 +2330,44 @@ async def SNAKE(_: Request,
                 with open(f"events/{snake_replace}.py", "r") as f:
                     original_data = f.readlines()
             if rewrite:
+                dependency_injection = []
                 business_logic = []
+                in_dependency_injection = False
                 in_logic = False
                 for line in original_data:
                     if in_logic:
                         business_logic.append(line)
+                    if in_dependency_injection:
+                        dependency_injection.append(line)
                     if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
                         in_logic = True
                     if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
                         in_logic = False
+                    if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_dependency_injection = True
+                    if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_dependency_injection = False
 
                 new_lines = []
                 in_business_logic = False
+                in_dependency_injection = False
                 for line in new_event_template.splitlines():
                     if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
                         in_business_logic = True
                         new_lines.append(line + "\n")
                         for business_line in business_logic:
                             new_lines.append(business_line)
+                    elif "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_dependency_injection = True
+                        new_lines.append(line + "\n")
+                        for dependency_line in dependency_injection:
+                            new_lines.append(dependency_line)
                     elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
                         in_business_logic = False
-                    if not in_business_logic:
+                    elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_dependency_injection = False
+                    if (not in_business_logic) and (not in_dependency_injection):
                         new_lines.append(line + "\n")
-                    else:
-                        continue
                 new_event_template = "".join(new_lines)
             with open(f"events/{snake_replace}.py", "w") as f:
                 f.write(new_event_template)
@@ -2274,30 +2428,44 @@ async def SNAKE(_: Request,
                         with open(f"crons/{snake_replace}.py", "r") as f:
                             original_data = f.readlines()
                     if rewrite:
+                        dependency_injection = []
                         business_logic = []
+                        in_dependency_injection = False
                         in_logic = False
                         for line in original_data:
                             if in_logic:
                                 business_logic.append(line)
+                            if in_dependency_injection:
+                                dependency_injection.append(line)
                             if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
                                 in_logic = True
                             if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
                                 in_logic = False
+                            if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_dependency_injection = True
+                            if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_dependency_injection = False
 
                         new_lines = []
                         in_business_logic = False
+                        in_dependency_injection = False
                         for line in new_cron_template.splitlines():
                             if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
                                 in_business_logic = True
                                 new_lines.append(line + "\n")
                                 for business_line in business_logic:
                                     new_lines.append(business_line)
+                            elif "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_dependency_injection = True
+                                new_lines.append(line + "\n")
+                                for dependency_line in dependency_injection:
+                                    new_lines.append(dependency_line)
                             elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
                                 in_business_logic = False
-                            if not in_business_logic:
+                            elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_dependency_injection = False
+                            if (not in_business_logic) and (not in_dependency_injection):
                                 new_lines.append(line + "\n")
-                            else:
-                                continue
                         new_cron_template = "".join(new_lines)
                     with open(f"crons/{snake_replace}.py", "w") as f:
                         f.write(new_cron_template)
@@ -2677,12 +2845,23 @@ Your Hasura Admin Secret is:
 {env.hasura.HASURA_GRAPHQL_ADMIN_SECRET}
 
 The event secret for the all attached microservices is:
-{env.hasura.HASURA_EVENT_SECRET}"""
+{env.hasura.HASURA_EVENT_SECRET}
+
+You can find authorization tokens for your microservice by running your flutter application and logging in.
+"""
             self.log(log_str, level=logging.INFO)
             self.do_load_firebase_app(None)
             env = self.get_env()
-            add_admin = True
-            add_user = True
+
+            phone_wizard = self.collect(
+                "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
+            )
+            if phone_wizard.strip().lower() == "y":
+                add_admin = True
+                add_user = True
+            else:
+                add_admin = False
+                add_user = False
             test_phone_numbers = env.test_phone_numbers
             if isinstance(test_phone_numbers, list):
                 for test_phone_number in test_phone_numbers:
@@ -2779,15 +2958,3 @@ The event secret for the all attached microservices is:
             if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
                 env.test_phone_numbers = test_phone_numbers
                 self.set_env(env)
-            admin_number = None
-            user_number = None
-            if isinstance(env.test_phone_numbers, list):
-                for phone_number in env.test_phone_numbers:
-                    if phone_number.role == "admin":
-                        admin_number = phone_number
-                    elif phone_number.role == "user":
-                        user_number = phone_number
-            if admin_number is not None:
-                self.do_generate_token(role="admin", uid=admin_number.uid)
-            if user_number is not None:
-                self.do_generate_token(role="user", uid=user_number.uid)
