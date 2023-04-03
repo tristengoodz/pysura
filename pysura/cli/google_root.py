@@ -1563,6 +1563,12 @@ alter table app
                   f"--format=json"
         self.log(cmd_str, level=logging.DEBUG)
         self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
+        cmd_str = f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} " \
+                  f"--member=serviceAccount:{env.auth_service_account.email} " \
+                  f"--role=roles/cloudsql.client " \
+                  f"--format=json"
+        self.log(cmd_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         cmd_str = f"gcloud iam service-accounts keys create admin.json " \
                   f"--iam-account={env.auth_service_account.email} " \
                   f"--format=json"
@@ -1651,6 +1657,8 @@ alter table app
     def do_attach_firebase(self, _):
         env = self.get_env()
         cmd_str = f"firebase projects:addfirebase  {env.project.name.split('/')[-1]}"
+        log_str = "Please login to the same account that you used to create the project with firebase!"
+        self.log(log_str, level=logging.INFO)
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = f"firebase login --interactive"
@@ -2561,7 +2569,6 @@ async def SNAKE(_: Request,
         if microservice_name != "default":
             url_wrapper = "{{" + f"HASURA_{microservice_name}_URL" + "}}"
         new_hasura_metadata = self.router_generator(metadata, url_wrapper)
-        self.log(json.dumps(new_hasura_metadata, indent=4), level=logging.DEBUG)
         input_objects_set = set(
             [i.get("name", None) for i in new_hasura_metadata.get("custom_types", {}).get("input_objects", [])]
         )
@@ -2650,9 +2657,6 @@ async def SNAKE(_: Request,
             elif key == "sources":
                 for event_trigger in new_hasura_metadata["event_triggers"]:
                     source_name, table_name, trigger_name = event_trigger.pop('location').split(".")
-                    self.log("source_name: " + source_name, level=logging.DEBUG)
-                    self.log("table_name: " + table_name, level=logging.DEBUG)
-                    self.log("trigger_name: " + trigger_name, level=logging.DEBUG)
                     for source in value:
                         self.log("source: " + str(source), level=logging.DEBUG)
                         if source["name"] == source_name:
@@ -2709,8 +2713,6 @@ async def SNAKE(_: Request,
             "objects": new_objects,
             "input_objects": new_input_objects
         }
-        with open("hasura_metadata_tmp.json", "w") as f:
-            json.dump(new_metadata, f, indent=4)
         with open("hasura_metadata.json", "w") as f:
             json.dump(new_metadata, f, indent=4)
 
@@ -2763,6 +2765,7 @@ async def SNAKE(_: Request,
         self.setup_step = 3
         hasura_project_name = self.collect("Hasura project name: ")
         if self.confirm_loop(hasura_project_name):
+            hasura_project_name = hasura_project_name.replace("_", "-").replace(" ", "-")
             self.setup_step = 4
             if env.project is None:
                 self.do_gcloud_create_project(project_id=hasura_project_name)
