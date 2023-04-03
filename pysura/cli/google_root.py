@@ -2679,18 +2679,18 @@ async def SNAKE(_: Request,
             elif key == "cron_triggers":
                 new_cron_triggers = []
                 crons_added = []
-                for event_trigger in new_hasura_metadata["event_triggers"]:
+                for cron_trigger in new_hasura_metadata["cron_triggers"]:
                     trigger_found = False
                     for cron_trigger in value:
-                        if event_trigger.get("name", None) == cron_trigger["name"]:
+                        if cron_trigger.get("name", None) == cron_trigger["name"]:
                             trigger_found = True
                             break
-                        if event_trigger.get("name", None) in crons_added:
+                        if cron_trigger.get("name", None) in crons_added:
                             continue
-                        new_cron_triggers.append(event_trigger)
-                        crons_added.append(event_trigger.get("name", None))
+                        new_cron_triggers.append(cron_trigger)
+                        crons_added.append(cron_trigger.get("name", None))
                     if not trigger_found:
-                        new_cron_triggers.append(event_trigger)
+                        new_cron_triggers.append(cron_trigger)
                 new_metadata[key] = new_cron_triggers
             else:
                 new_metadata[key] = value
