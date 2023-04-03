@@ -2561,6 +2561,7 @@ async def SNAKE(_: Request,
         if microservice_name != "default":
             url_wrapper = "{{" + f"HASURA_{microservice_name}_URL" + "}}"
         new_hasura_metadata = self.router_generator(metadata, url_wrapper)
+        self.log(json.dumps(new_hasura_metadata, indent=4), level=logging.DEBUG)
         input_objects_set = set(
             [i.get("name", None) for i in new_hasura_metadata.get("custom_types", {}).get("input_objects", [])]
         )
@@ -2649,7 +2650,11 @@ async def SNAKE(_: Request,
             elif key == "sources":
                 for event_trigger in new_hasura_metadata["event_triggers"]:
                     source_name, table_name, trigger_name = event_trigger.pop('location').split(".")
+                    self.log("source_name: " + source_name, level=logging.DEBUG)
+                    self.log("table_name: " + table_name, level=logging.DEBUG)
+                    self.log("trigger_name: " + trigger_name, level=logging.DEBUG)
                     for source in value:
+                        self.log("source: " + str(source), level=logging.DEBUG)
                         if source["name"] == source_name:
                             for table in source.get("tables", []):
                                 table_data = table.get("table", None)
@@ -2666,20 +2671,26 @@ async def SNAKE(_: Request,
                                                 new_event_triggers.append(trigger)
                                         if not trigger_found:
                                             new_event_triggers.append(event_trigger)
+                                    else:
+                                        new_event_triggers.append(event_trigger)
                                     if len(new_event_triggers) != 0:
                                         table["event_triggers"] = new_event_triggers
                 new_metadata[key] = value
             elif key == "cron_triggers":
                 new_cron_triggers = []
-                for cron_trigger in value:
+                crons_added = []
+                for event_trigger in new_hasura_metadata["event_triggers"]:
                     trigger_found = False
-                    for event_trigger in new_hasura_metadata["event_triggers"]:
+                    for cron_trigger in value:
                         if event_trigger.get("name", None) == cron_trigger["name"]:
-                            new_cron_triggers.append(event_trigger)
                             trigger_found = True
                             break
+                        if event_trigger.get("name", None) in crons_added:
+                            continue
+                        new_cron_triggers.append(event_trigger)
+                        crons_added.append(event_trigger.get("name", None))
                     if not trigger_found:
-                        new_cron_triggers.append(cron_trigger)
+                        new_cron_triggers.append(event_trigger)
                 new_metadata[key] = new_cron_triggers
             else:
                 new_metadata[key] = value
@@ -2698,6 +2709,8 @@ async def SNAKE(_: Request,
             "objects": new_objects,
             "input_objects": new_input_objects
         }
+        with open("hasura_metadata_tmp.json", "w") as f:
+            json.dump(new_metadata, f, indent=4)
         with open("hasura_metadata.json", "w") as f:
             json.dump(new_metadata, f, indent=4)
 
