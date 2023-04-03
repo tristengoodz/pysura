@@ -1,10 +1,10 @@
 # Pysura - BETA
+
 ### Hasura + Python = Pysura. An open source solution.
 
 Because everyone should be a code wizard.
 
 ![img_1.png](images/code_wizard.png)
-
 
 ## Requirements:
 
@@ -23,6 +23,7 @@ Because everyone should be a code wizard.
 - XCode (for iOS apps) and iOS Dev Tools
 - Android Studio (for Android apps) and Android Dev Tools
 - Gradle (for Android apps)
+- Postgresql (pg_config)
 
 ```commandline
 pip install pysura
