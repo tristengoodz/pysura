@@ -3146,7 +3146,7 @@ async def SNAKE(_: Request,
             return self.do_setup_pysura(recurse=recurse + 1)
         self.do_export_hasura_metadata(None)
         self.do_load_firebase_app(None)
-        self.do_deploy_frontend(None)
+        # self.do_deploy_frontend(None)
         env = self.get_env()
         phone_wizard = self.collect(
             "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
