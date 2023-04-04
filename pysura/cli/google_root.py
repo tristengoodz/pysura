@@ -2950,7 +2950,7 @@ async def SNAKE(_: Request,
         project_name = env.flutter_app_name
         if os.path.exists(f"{project_name}/web"):
             os.chdir(f"{project_name}")
-            cmd_str = "flutter build web --release"
+            cmd_str = "flutter build web"
             self.log(f"Running command: {cmd_str}", level=logging.INFO)
             os.system(cmd_str)
             os.chdir("..")
