@@ -15,6 +15,7 @@ import firebase_admin
 from firebase_admin import credentials, initialize_app, auth
 from python_graphql_client import GraphqlClient
 from requests.exceptions import ConnectionError
+import time
 
 
 class Gql:
@@ -246,7 +247,7 @@ class GoogleRoot(RootCmd):
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
 
-    def do_gcloud_enable_api_services(self, _):
+    def gcloud_enable_api_services(self):
         env = self.get_env()
         if env.project is None:
             self.log("No project selected.")
@@ -305,7 +306,7 @@ class GoogleRoot(RootCmd):
         env.organizations = orgs
         self.set_env(env)
 
-    def do_gcloud_create_project(self, project_id=""):
+    def gcloud_create_project(self, project_id=""):
         """
         Creates a gcloud project.
         Usage: gcloud_project_create
@@ -347,27 +348,9 @@ class GoogleRoot(RootCmd):
             env.projects = projects
             self.set_env(env)
         else:
-            self.user_input_no_loop(self.do_gcloud_create_project)
+            self.user_input_no_loop(self.gcloud_create_project)
 
-    def do_gcloud_choose_project(self, _):
-        """
-        Chooses a project.
-        Usage: gcloud_choose_project
-        """
-        env = self.get_env()
-        if not env.gcloud_logged_in:
-            self.do_gcloud_login()
-        self.log("Choosing project...")
-        project, projects = self.gcloud_list_choice("gcloud projects list --format=json", GoogleProject)
-        env.project = project
-        env.projects = projects
-        self.set_env(env)
-        if project is not None:
-            cmd_str = f"gcloud config set project {project.name.split('/')[-1]}"
-            self.log(cmd_str, level=logging.DEBUG)
-            os.system(cmd_str)
-
-    def do_gcloud_create_network(self, network_id=""):
+    def gcloud_create_network(self, network_id=""):
         """
         Creates a Network.
         Usage: gcloud_network_create
@@ -408,26 +391,9 @@ class GoogleRoot(RootCmd):
             env.networks = network_set
             self.set_env(env)
         else:
-            self.user_input_no_loop(self.do_gcloud_create_network)
+            self.user_input_no_loop(self.gcloud_create_network)
 
-    def do_gcloud_choose_network(self, _):
-        """
-        Chooses a Network.
-        Usage: gcloud_network_choose
-        """
-        env = self.get_env()
-        if env.project is None:
-            self.log("No project selected.")
-            return
-        self.log("Choosing network...")
-        network, networks = self.gcloud_list_choice(f"gcloud compute networks list "
-                                                    f"--project={env.project.name.split('/')[-1]} "
-                                                    f"--format=json", GoogleNetwork)
-        env.network = network
-        env.networks = networks
-        self.set_env(env)
-
-    def do_gcloud_create_address(self, address_id=""):
+    def gcloud_create_address(self, address_id=""):
         """
         Creates an address.
         Usage: gcloud_address_create
@@ -476,29 +442,9 @@ class GoogleRoot(RootCmd):
                 self.log("Address not found.", level=logging.ERROR)
                 return
         else:
-            self.user_input_no_loop(self.do_gcloud_create_address)
+            self.user_input_no_loop(self.gcloud_create_address)
 
-    def do_gcloud_choose_address(self, _):
-        """
-        Chooses an address.
-        Usage: gcloud_address_choose
-        """
-        env = self.get_env()
-        if env.project is None:
-            self.log("No project selected.", level=logging.ERROR)
-            return
-        if env.network is None:
-            self.log("No network selected.", level=logging.ERROR)
-            return
-        self.log("Choosing address...")
-        address, addresses = self.gcloud_list_choice(f"gcloud compute addresses list "
-                                                     f"--project={env.project.name.split('/')[-1]} "
-                                                     f"--format=json", GoogleAddress)
-        env.address = address
-        env.addresses = addresses
-        self.set_env(env)
-
-    def do_gcloud_create_vpc_peering(self, peering_id=""):
+    def gcloud_create_vpc_peering(self, peering_id=""):
         """
         Creates a VPC Peering.
         Usage: gcloud_vpc_peering_create
@@ -547,35 +493,9 @@ class GoogleRoot(RootCmd):
             env.peerings = peering_set
             self.set_env(env)
         else:
-            self.user_input_no_loop(self.do_gcloud_create_vpc_peering)
+            self.user_input_no_loop(self.gcloud_create_vpc_peering)
 
-    def do_gcloud_choose_vpc_peering(self, _):
-        """
-        Chooses a VPC Peering.
-        Usage: gcloud_vpc_peering_choose
-        """
-        env = self.get_env()
-        if env.project is None:
-            self.log("No project selected.", level=logging.ERROR)
-            return
-        if env.network is None:
-            self.log("No network selected.", level=logging.ERROR)
-            return
-        if env.address is None:
-            self.log("No address selected.", level=logging.ERROR)
-            return
-        self.log("Choosing peering...")
-        peering, peerings = self.gcloud_list_choice(
-            f"gcloud services vpc-peerings list "
-            f"--project={env.project.name.split('/')[-1]} "
-            f"--network={env.network.name.split('/')[-1]} --format=json",
-            GoogleVpcPeering
-        )
-        env.peering = peering
-        env.peerings = peerings
-        self.set_env(env)
-
-    def do_gcloud_create_firewall(self, firewall_id=""):
+    def gcloud_create_firewall(self, firewall_id=""):
         """
         Creates a firewall.
         Usage: gcloud_firewall_create
@@ -631,7 +551,7 @@ class GoogleRoot(RootCmd):
             env.firewalls = firewall_set
             self.set_env(env)
         else:
-            self.user_input_no_loop(self.do_gcloud_create_firewall)
+            self.user_input_no_loop(self.gcloud_create_firewall)
 
     def do_gcloud_create_database(self,
                                   database_id="",
@@ -641,6 +561,20 @@ class GoogleRoot(RootCmd):
                                   zone_default="us-central1-b",
                                   availability_type_default="regional",
                                   auto_advance=True):
+        """
+        Creates a database.
+        :param database_id: The name for the database
+        :param cpu_default: The number of CPU's for the database
+        :param memory_default: The amount of RAM for the database
+        :param db_version_default: The version of the database
+        :param zone_default: The zone to create the database in
+        :param availability_type_default:  The type of availability for the database
+        :param auto_advance: Whether to automatically advance to the creation step
+
+
+        Usage: gcloud_create_database database_id
+        Example: gcloud_create_database my-database 2 8192 POSTGRES_14 us-central1-b regional True
+        """
         env = self.get_env()
         if env.project is None:
             self.log("No project selected.", level=logging.ERROR)
@@ -758,9 +692,9 @@ class GoogleRoot(RootCmd):
             env.database_credentials.append(db_creds)
         self.set_env(env)
 
-    def do_gcloud_create_serverless_connector(self,
-                                              connector_id="",
-                                              range_default="10.8.0.0/28"):
+    def gcloud_create_serverless_connector(self,
+                                           connector_id="",
+                                           range_default="10.8.0.0/28"):
         """
         Creates a serverless connector.
         Usage: create_serverless_connector
@@ -787,7 +721,7 @@ class GoogleRoot(RootCmd):
         else:
             connector_name = connector_id
         if arg_len == 0 and not self.confirm_loop(connector_name):
-            self.user_input_no_loop(self.do_gcloud_create_serverless_connector)
+            self.user_input_no_loop(self.gcloud_create_serverless_connector)
             return
         cmd_str = f"gcloud compute networks vpc-access connectors create {connector_name} " \
                   f"--network={env.network.name.split('/')[-1]} " \
@@ -817,7 +751,7 @@ class GoogleRoot(RootCmd):
         env.connectors = connector_set
         self.set_env(env)
 
-    def do_gcloud_choose_serverless_connector(self, _):
+    def gcloud_choose_serverless_connector(self):
         """
         Chooses a serverless connector.
         Usage: choose_serverless_connector
@@ -906,7 +840,7 @@ class GoogleRoot(RootCmd):
         env.secrets = secret_set
         self.set_env(env)
 
-    def do_update_default_compute_engine_service_account(self, _):
+    def update_default_compute_engine_service_account(self):
         env = self.get_env()
         account_choices = json.loads(os.popen(f"gcloud iam service-accounts list "
                                               f"--project={env.project.name.split('/')[-1]} "
@@ -1119,11 +1053,17 @@ class GoogleRoot(RootCmd):
         cmd_str = f"""curl -d'{{"type": "replace_metadata", "args": {json_data}}}' {metadata_url} -H """ + \
                   f'''"X-Hasura-Admin-Secret: {env.hasura_admin_secret}"'''
         self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
+        response = json.loads(os.popen(cmd_str).read())
+        retry_count = 0
+        while response.get("message", None) != "success" and retry_count < 5:
+            time.sleep(3 * retry_count)
+            response = json.loads(os.popen(cmd_str).read())
+            retry_count += 1
+
         env.hasura_metadata = hasura_metadata
         self.set_env(env)
 
-    def do_gcloud_interactive(self, _):
+    def gcloud_interactive(self):
         """
         Starts an interactive gcloud shell.
         Usage: gcloud_interactive
@@ -1133,7 +1073,7 @@ class GoogleRoot(RootCmd):
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
 
-    def do_enable_database_local(self, database_id=""):
+    def enable_database_local(self, database_id=""):
         env = self.get_env()
         if env.database is None:
             self.log("No database set.")
@@ -1165,7 +1105,7 @@ class GoogleRoot(RootCmd):
         self.log(cmd_log_str, level=logging.DEBUG)
         os.system(cmd_str)
 
-    def do_create_default_user_table(self, _):
+    def create_default_user_table(self):
         env = self.get_env()
         if env.database is None:
             self.log("No database set.", level=logging.ERROR)
@@ -1515,7 +1455,7 @@ alter table app
             json.dump(metadata, f)
         self.do_export_hasura_metadata(None)
 
-    def do_gcloud_create_auth_service_account(self, _):
+    def gcloud_create_auth_service_account(self):
         env = self.get_env()
         if env.auth_service_account is not None:
             self.log(f"Service account already created: {env.auth_service_account.email}", level=logging.DEBUG)
@@ -1581,7 +1521,7 @@ alter table app
         self.set_env(env)
         os.remove("admin.json")
 
-    def do_attach_auth(self, _):
+    def attach_auth(self):
         env = self.get_env()
         if os.path.isdir("pysura_auth"):
             os.chdir("pysura_auth")
@@ -1654,7 +1594,7 @@ alter table app
         self.set_env(env)
         self.do_gcloud_deploy_hasura()
 
-    def do_attach_firebase(self, _):
+    def attach_firebase(self):
         env = self.get_env()
         cmd_str = f"firebase projects:addfirebase  {env.project.name.split('/')[-1]}"
         log_str = "Please login to the same account that you used to create the project with firebase!"
@@ -1665,14 +1605,14 @@ alter table app
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         if env.auth_service_account is None:
-            self.do_gcloud_create_auth_service_account(None)
+            self.gcloud_create_auth_service_account()
             env = self.get_env()
         with open("admin.json", "w") as f:
             json.dump(env.auth_service_account.key_file, f)
         admin_json = json.dumps(env.auth_service_account.key_file)
         self.do_gcloud_set_secret("HASURA_FIREBASE_SERVICE_ACCOUNT", admin_json)
 
-    def do_activate_firebase_auth(self, _):
+    def activate_firebase_auth(self):
         env = self.get_env()
         cmd_str = f"gcloud auth activate-service-account --key-file=admin.json {env.auth_service_account.email}"
         self.log(cmd_str, level=logging.DEBUG)
@@ -1729,7 +1669,7 @@ alter table app
         cmd_str = "gcloud auth login"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        self.do_attach_auth(None)
+        self.attach_auth()
         self.log("Please enable phone sign in in the Firebase console", level=logging.INFO)
         self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
                  f"/providers",
@@ -1740,7 +1680,7 @@ alter table app
             self.log("Please enable phone sign in in the Firebase console", level=logging.INFO)
             return
 
-    def do_check_gcloud(self, _):
+    def check_gcloud(self):
         cmd_str = "gcloud version --format=json"
         self.log(cmd_str, level=logging.DEBUG)
         try:
@@ -1761,7 +1701,7 @@ alter table app
             self.log("Please update Google Cloud SDK", level=logging.ERROR)
             return False
 
-    def do_attach_flutter(self, _):
+    def attach_flutter(self):
         env = self.get_env()
         if env.hasura is None:
             self.log("Please setup Hasura first", level=logging.ERROR)
@@ -1877,6 +1817,517 @@ alter table app
         os.system(cmd_str)
         os.chdir("..")
         self.set_env(env)
+
+    @staticmethod
+    def generate_types(ordered_custom_objects, ordered_custom_input_objects):
+        base_models_template = """from typing import List
+from pydantic import BaseModel
+
+        """
+
+        object_template = """\nclass {name}(BaseModel):\n    {fields}{config}\n"""
+        field_template = "{}: {}"
+        config_template = '\n\n    class Config:\n        schema_extra = {extra}'
+        config_extra_start = '{"example": {'
+        config_extra_middle_piece = '{field_pieces}'
+        config_extra_end = "}}"
+        config_field_template = '"{field_name}": {field_default}'
+        field_type_map = {
+            "String": "str",
+            "Int": "int",
+            "Float": "float",
+            "Boolean": "bool",
+            "ID": "str"
+        }
+        default_field_types = {
+            "str": '"string"',
+            "int": "0",
+            "float": "0.0",
+            "bool": "True"
+        }
+        for custom_object in ordered_custom_objects:
+            assert len(custom_object) == 1
+            custom_object_name = list(custom_object.keys())[0]
+            custom_object_data = custom_object[custom_object_name]
+            fields = []
+            config_fields = []
+            for field_name, field_data in custom_object_data["fields"].items():
+                field_type = field_data["type"]
+                if field_type in field_type_map:
+                    field_type = field_type_map[field_type]
+                if field_data["is_list"]:
+                    field_type = f"List[{field_type}]"
+                if field_data["is_optional"]:
+                    field_type = f"{field_type} | None = None"
+                if field_data["is_optional"]:
+                    config_fields.append(config_field_template.format(field_name=field_name, field_default="None"))
+                elif field_data["is_list"]:
+                    config_fields.append(config_field_template.format(field_name=field_name, field_default="[]"))
+                else:
+                    config_fields.append(
+                        config_field_template.format(field_name=field_name,
+                                                     field_default=default_field_types[field_type]))
+                fields.append(field_template.format(field_name, field_type))
+            if len(config_fields) > 0:
+                config_extra = config_extra_start + \
+                               config_extra_middle_piece.format(field_pieces=", ".join(config_fields)) + \
+                               config_extra_end
+                base_models_template += object_template.format(name=custom_object_name,
+                                                               fields="\n    ".join(fields),
+                                                               config=config_template.format(extra=config_extra) if len(
+                                                                   config_fields) > 0 else "")
+            else:
+                base_models_template += object_template.format(name=custom_object_name,
+                                                               fields="\n    ".join(fields),
+                                                               config="")
+            base_models_template += "\n"
+
+        for custom_input_object in ordered_custom_input_objects:
+            assert len(custom_input_object) == 1
+            custom_input_object_name = list(custom_input_object.keys())[0]
+            custom_input_object_data = custom_input_object[custom_input_object_name]
+            fields = []
+            config_fields = []
+            for field_name, field_data in custom_input_object_data["fields"].items():
+                field_type = field_data["type"]
+                if field_type in field_type_map:
+                    field_type = field_type_map[field_type]
+                if field_data["is_list"]:
+                    field_type = f"List[{field_type}]"
+                if field_data["is_optional"]:
+                    field_type = f"{field_type} | None = None"
+                if field_data["is_optional"]:
+                    config_fields.append(config_field_template.format(field_name=field_name, field_default="None"))
+                elif field_data["is_list"]:
+                    config_fields.append(config_field_template.format(field_name=field_name, field_default="[]"))
+                else:
+                    config_fields.append(
+                        config_field_template.format(field_name=field_name,
+                                                     field_default=default_field_types[field_type]))
+                fields.append(field_template.format(field_name, field_type))
+            if len(config_fields) > 0:
+                config_extra = config_extra_start + \
+                               config_extra_middle_piece.format(field_pieces=", ".join(config_fields)) + \
+                               config_extra_end
+                base_models_template += object_template.format(name=custom_input_object_name,
+                                                               fields="\n    ".join(fields),
+                                                               config=config_template.format(extra=config_extra) if len(
+                                                                   config_fields) > 0 else "")
+            else:
+                base_models_template += object_template.format(name=custom_input_object_name,
+                                                               fields="\n    ".join(fields),
+                                                               config="")
+            base_models_template += "\n"
+
+        base_models_template = base_models_template.rstrip("\n")
+        base_models_template += "\n"
+        with open("generated_types.py", "w") as f:
+            f.write(base_models_template)
+
+    @staticmethod
+    def generate_actions(hasura_metadata, service_url, included_actions, new_hasura_metadata):
+        action_template = """# (IMPORTS-START) - DO NOT DELETE THIS LINE!
+import logging
+
+from fastapi import APIRouter, Depends, Request
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
+from pysura.faster_api.enums import ApiResponse, ClientRole
+from generated_types import *
+
+# (IMPORTS-END) - DO NOT DELETE THIS LINE!
+
+ROUTE = "/SNAKE/"
+ALLOWED_ROLES = [  # The roles allowed to call this action
+    # ALLOWED ROLES HERE
+]
+SNAKE_router = APIRouter(
+    tags=["SNAKE"]
+)
+
+
+@SNAKE_router.post(ROUTE,
+                   dependencies=[
+                       Depends(PysuraSecurity(
+                           require_jwt=True,
+                           require_event_secret=True,
+                           allowed_roles=ALLOWED_ROLES
+                       ))
+                   ],
+                   response_model=CAMELOutput
+                   )
+async def SNAKE(_: Request,
+                SNAKE_input: CAMELInput | None = None,
+                provider: Provider | None = Depends(PysuraProvider(
+                    # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
+                    provide_identity=True,
+                    provide_firebase=True,
+                    provide_graphql=True,
+                    provide_storage=True
+                    # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
+                ))):
+    # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
+    logging.log(logging.INFO, f"User {provider.user_identity.user_id} is authorized to access {ROUTE}")
+    logging.log(logging.INFO, SNAKE_input)
+    logging.log(logging.INFO, provider)
+    response = CAMELOutput(
+        data=None,
+        nodes=None,
+        response_name=ApiResponse.SUCCESS.name,
+        response_value=ApiResponse.SUCCESS.value
+    ).dict()
+    return response
+    # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
+"""
+        for action in hasura_metadata.get("actions", []):
+            action_handler = action.get("definition", {}).get("handler", None)
+            if action_handler == service_url:
+                snake_replace = action["name"]
+                camel_replace = snake_replace.replace("_", " ").title().replace(" ", "")
+                new_action_template = action_template.replace("SNAKE", snake_replace).replace("CAMEL", camel_replace)
+                collect_perms = []
+                for permission in action["permissions"]:
+                    collect_perms.append(permission["role"])
+                else:
+                    collect_perms.append("admin")
+                collect_perms = [f"ClientRole.{i}.name" for i in sorted(list(set(collect_perms)))]
+                new_action_template = new_action_template.replace("# ALLOWED ROLES HERE", ", ".join(collect_perms))
+                rewrite = False
+                original_data = None
+                if os.path.isfile(f"actions/{snake_replace}.py"):
+                    rewrite = True
+                    with open(f"actions/{snake_replace}.py", "r") as f:
+                        original_data = f.readlines()
+                if rewrite:
+                    dependency_injection = []
+                    business_logic = []
+                    import_lines = []
+                    in_dependency_injection = False
+                    in_business_logic = False
+                    in_import_lines = False
+                    for line in original_data:
+                        if "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_import_lines = False
+                        if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_business_logic = False
+                        if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_dependency_injection = False
+                        if in_business_logic:
+                            business_logic.append(line)
+                        if in_dependency_injection:
+                            dependency_injection.append(line)
+                        if in_import_lines:
+                            import_lines.append(line)
+                        if "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_import_lines = True
+                        if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_business_logic = True
+                        if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_dependency_injection = True
+
+                    new_lines = []
+                    in_business_logic = False
+                    in_dependency_injection = False
+                    in_import_lines = False
+                    for line in new_action_template.splitlines():
+                        if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_business_logic = True
+                            new_lines.append(line + "\n")
+                            for business_line in business_logic:
+                                new_lines.append(business_line)
+                        elif "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_dependency_injection = True
+                            new_lines.append(line + "\n")
+                            for dependency_line in dependency_injection:
+                                new_lines.append(dependency_line)
+                        elif "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                            in_import_lines = True
+                            new_lines.append(line + "\n")
+                            for import_line in import_lines:
+                                new_lines.append(import_line)
+                        elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_business_logic = False
+                        elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_dependency_injection = False
+                        elif "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                            in_import_lines = False
+                        if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
+                            new_lines.append(line + "\n")
+                with open(f"actions/{snake_replace}.py", "w") as f:
+                    f.write(new_action_template)
+        action_names = []
+        for action_data in hasura_metadata.get("actions", []):
+            if action_data.get("name") in included_actions:
+                new_hasura_metadata["actions"].append(action_data)
+                action_names.append(action_data.get("name"))
+
+        init_str = ""
+        for action_name in action_names:
+            init_str += f"from actions.{action_name} import {action_name}_router\n"
+
+        init_str += f"\naction_routers = [\n"
+        for action_name in action_names:
+            init_str += f"    {action_name}_router,\n"
+        init_str += "]\n"
+        with open("actions/__init__.py", "w") as f:
+            f.write(init_str)
+
+        return new_hasura_metadata
+
+    @staticmethod
+    def generate_event_triggers(hasura_metadata, service_url, new_hasura_metadata):
+        event_triggers = []
+        if isinstance(hasura_metadata.get("sources", None), list):
+            sources = hasura_metadata.get("sources", [])
+            for s in sources:
+                source_name = s.get("name", None)
+                tables = s.get("tables", None)
+                if isinstance(tables, list):
+                    for t in tables:
+                        table_data = t.get("table", None)
+                        table_name = table_data.get("name", None) if isinstance(table_data, dict) else None
+                        for trigger in t.get("event_triggers", []):
+                            if trigger.get("webhook", None) == service_url:
+                                trigger_name = trigger.get("name", None)
+                                event_triggers.append({
+                                    "location": f"{source_name}.{table_name}.{trigger_name}",
+                                    **trigger
+                                })
+        new_hasura_metadata["event_triggers"] = event_triggers
+
+        event_trigger_template = """# (IMPORTS-START) - DO NOT DELETE THIS LINE!
+import logging
+
+from fastapi import APIRouter, Depends, Request, Body, Response
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
+from pysura.faster_api.models import Event
+
+# (IMPORTS-END) - DO NOT DELETE THIS LINE!
+
+ROUTE = "/SNAKE/"
+SNAKE_router = APIRouter(
+    tags=["SNAKE"]
+)
+
+
+@SNAKE_router.post(ROUTE, dependencies=[Depends(PysuraSecurity(require_jwt=False, require_event_secret=True))])
+async def SNAKE(_: Request,
+                provider: Provider | None = Depends(
+                    PysuraProvider(
+                        # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
+                        provide_identity=False,
+                        provide_firebase=True,
+                        provide_graphql=True,
+                        provide_storage=True
+                        # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
+                    )
+                ),
+                data: Event = Body(...)):
+    # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
+    logging.log(logging.INFO, f"Event {data.id} is authorized to access {ROUTE}")
+    logging.log(logging.INFO, data)
+    logging.log(logging.INFO, provider)
+    return Response(status_code=200)
+    # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
+"""
+        event_init = ""
+        event_routers = []
+        for event_trigger in event_triggers:
+            event_init += f"from events.{event_trigger['name']} import {event_trigger['name']}_router\n"
+            event_routers.append(f"    {event_trigger['name']}_router")
+            snake_replace = event_trigger["name"]
+            new_event_template = event_trigger_template.replace("SNAKE", snake_replace)
+            rewrite = False
+            original_data = None
+            if os.path.isfile(f"events/{snake_replace}.py"):
+                rewrite = True
+                with open(f"events/{snake_replace}.py", "r") as f:
+                    original_data = f.readlines()
+            if rewrite:
+                dependency_injection = []
+                business_logic = []
+                import_lines = []
+                in_dependency_injection = False
+                in_business_logic = False
+                in_import_lines = False
+                for line in original_data:
+                    if "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_import_lines = False
+                    if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_business_logic = False
+                    if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_dependency_injection = False
+                    if in_business_logic:
+                        business_logic.append(line)
+                    if in_dependency_injection:
+                        dependency_injection.append(line)
+                    if in_import_lines:
+                        import_lines.append(line)
+                    if "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_import_lines = True
+                    if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_business_logic = True
+                    if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_dependency_injection = True
+
+                new_lines = []
+                in_business_logic = False
+                in_dependency_injection = False
+                in_import_lines = False
+                for line in new_event_template.splitlines():
+                    if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_business_logic = True
+                        new_lines.append(line + "\n")
+                        for business_line in business_logic:
+                            new_lines.append(business_line)
+                    elif "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_dependency_injection = True
+                        new_lines.append(line + "\n")
+                        for dependency_line in dependency_injection:
+                            new_lines.append(dependency_line)
+                    elif "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                        in_import_lines = True
+                        new_lines.append(line + "\n")
+                        for import_line in import_lines:
+                            new_lines.append(import_line)
+                    elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_business_logic = False
+                    elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_dependency_injection = False
+                    elif "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                        in_import_lines = False
+                    if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
+                        new_lines.append(line + "\n")
+                new_event_template = "".join(new_lines)
+            with open(f"events/{snake_replace}.py", "w") as f:
+                f.write(new_event_template)
+
+        event_init += f"\nevent_routers = [\n"
+        for event_router in event_routers:
+            event_init += f"    {event_router},\n"
+        event_init += f"]\n"
+        with open(f"events/__init__.py", "w") as f:
+            f.write(event_init)
+
+        return new_hasura_metadata
+
+    @staticmethod
+    def generate_crons(hasura_metadata, service_url, new_hasura_metadata):
+        cron_template = """# (IMPORTS-START) - DO NOT DELETE THIS LINE!
+import logging
+
+from fastapi import APIRouter, Depends, Request, Body, Response
+from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
+
+# (IMPORTS-END) - DO NOT DELETE THIS LINE!
+
+ROUTE = "/SNAKE/"
+SNAKE_router = APIRouter(
+    tags=["SNAKE"]
+)
+
+
+@SNAKE_router.post(ROUTE, dependencies=[Depends(PysuraSecurity(require_jwt=False, require_event_secret=True))])
+async def SNAKE(_: Request,
+                provider: Provider | None = Depends(
+                    PysuraProvider(
+                        # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
+                        provide_identity=False,
+                        provide_firebase=True,
+                        provide_graphql=True,
+                        provide_storage=True
+                        # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
+                    )
+                ),
+                data=Body(...)):
+    # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
+    logging.log(logging.INFO, data)
+    logging.log(logging.INFO, provider)
+    return Response(status_code=200)
+    # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
+"""
+
+        if isinstance(hasura_metadata.get("cron_triggers", None), list):
+            cron_triggers = hasura_metadata.get("cron_triggers", [])
+            cron_triggers_init = ""
+            cron_names = []
+            for cron_trigger in cron_triggers:
+                if cron_trigger.get("webhook", None) == service_url:
+                    new_hasura_metadata["cron_triggers"].append(cron_trigger)
+                    snake_replace = cron_trigger["name"]
+                    cron_names.append(snake_replace)
+                    cron_triggers_init += f"from crons.{snake_replace} import {snake_replace}_router\n"
+                    new_cron_template = cron_template.replace("SNAKE", snake_replace)
+                    rewrite = False
+                    original_data = None
+                    if os.path.isfile(f"crons/{snake_replace}.py"):
+                        rewrite = True
+                        with open(f"crons/{snake_replace}.py", "r") as f:
+                            original_data = f.readlines()
+                    if rewrite:
+                        dependency_injection = []
+                        business_logic = []
+                        import_lines = []
+                        in_dependency_injection = False
+                        in_business_logic = False
+                        in_import_lines = False
+                        for line in original_data:
+                            if "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_import_lines = False
+                            if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_business_logic = False
+                            if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_dependency_injection = False
+                            if in_business_logic:
+                                business_logic.append(line)
+                            if in_dependency_injection:
+                                dependency_injection.append(line)
+                            if in_import_lines:
+                                import_lines.append(line)
+                            if "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_import_lines = True
+                            if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_business_logic = True
+                            if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_dependency_injection = True
+
+                        new_lines = []
+                        in_business_logic = False
+                        in_dependency_injection = False
+                        in_import_lines = False
+                        for line in new_cron_template.splitlines():
+                            if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_business_logic = True
+                                new_lines.append(line + "\n")
+                                for business_line in business_logic:
+                                    new_lines.append(business_line)
+                            elif "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_dependency_injection = True
+                                new_lines.append(line + "\n")
+                                for dependency_line in dependency_injection:
+                                    new_lines.append(dependency_line)
+                            elif "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
+                                in_import_lines = True
+                                new_lines.append(line + "\n")
+                                for import_line in import_lines:
+                                    new_lines.append(import_line)
+                            elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_business_logic = False
+                            elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_dependency_injection = False
+                            elif "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
+                                in_import_lines = False
+                            if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
+                                new_lines.append(line + "\n")
+                        new_cron_template = "".join(new_lines)
+                    with open(f"crons/{snake_replace}.py", "w") as f:
+                        f.write(new_cron_template)
+            cron_triggers_init += f"\ncron_routers = [\n"
+            for cron_name in cron_names:
+                cron_triggers_init += f"    {cron_name}_router,\n"
+            cron_triggers_init += f"]\n"
+            with open(f"crons/__init__.py", "w") as f:
+                f.write(cron_triggers_init)
+        return new_hasura_metadata
 
     @staticmethod
     def router_generator(hasura_metadata, service_url="{{HASURA_MICROSERVICE_URL}}"):
@@ -2024,239 +2475,8 @@ alter table app
                     else:
                         continue
 
-        base_models_template = """from typing import List
-from pydantic import BaseModel
-
-"""
-
-        object_template = """\nclass {name}(BaseModel):\n    {fields}{config}\n"""
-        field_template = "{}: {}"
-        config_template = '\n\n    class Config:\n        schema_extra = {extra}'
-        config_extra_start = '{"example": {'
-        config_extra_middle_piece = '{field_pieces}'
-        config_extra_end = "}}"
-        config_field_template = '"{field_name}": {field_default}'
-        field_type_map = {
-            "String": "str",
-            "Int": "int",
-            "Float": "float",
-            "Boolean": "bool",
-            "ID": "str"
-        }
-        default_field_types = {
-            "str": '"string"',
-            "int": "0",
-            "float": "0.0",
-            "bool": "True"
-        }
-        for custom_object in ordered_custom_objects:
-            assert len(custom_object) == 1
-            custom_object_name = list(custom_object.keys())[0]
-            custom_object_data = custom_object[custom_object_name]
-            fields = []
-            config_fields = []
-            for field_name, field_data in custom_object_data["fields"].items():
-                field_type = field_data["type"]
-                if field_type in field_type_map:
-                    field_type = field_type_map[field_type]
-                if field_data["is_list"]:
-                    field_type = f"List[{field_type}]"
-                if field_data["is_optional"]:
-                    field_type = f"{field_type} | None = None"
-                if field_data["is_optional"]:
-                    config_fields.append(config_field_template.format(field_name=field_name, field_default="None"))
-                elif field_data["is_list"]:
-                    config_fields.append(config_field_template.format(field_name=field_name, field_default="[]"))
-                else:
-                    config_fields.append(
-                        config_field_template.format(field_name=field_name,
-                                                     field_default=default_field_types[field_type]))
-                fields.append(field_template.format(field_name, field_type))
-            if len(config_fields) > 0:
-                config_extra = config_extra_start + \
-                               config_extra_middle_piece.format(field_pieces=", ".join(config_fields)) + \
-                               config_extra_end
-                base_models_template += object_template.format(name=custom_object_name,
-                                                               fields="\n    ".join(fields),
-                                                               config=config_template.format(extra=config_extra) if len(
-                                                                   config_fields) > 0 else "")
-            else:
-                base_models_template += object_template.format(name=custom_object_name,
-                                                               fields="\n    ".join(fields),
-                                                               config="")
-            base_models_template += "\n"
-
-        for custom_input_object in ordered_custom_input_objects:
-            assert len(custom_input_object) == 1
-            custom_input_object_name = list(custom_input_object.keys())[0]
-            custom_input_object_data = custom_input_object[custom_input_object_name]
-            fields = []
-            config_fields = []
-            for field_name, field_data in custom_input_object_data["fields"].items():
-                field_type = field_data["type"]
-                if field_type in field_type_map:
-                    field_type = field_type_map[field_type]
-                if field_data["is_list"]:
-                    field_type = f"List[{field_type}]"
-                if field_data["is_optional"]:
-                    field_type = f"{field_type} | None = None"
-                if field_data["is_optional"]:
-                    config_fields.append(config_field_template.format(field_name=field_name, field_default="None"))
-                elif field_data["is_list"]:
-                    config_fields.append(config_field_template.format(field_name=field_name, field_default="[]"))
-                else:
-                    config_fields.append(
-                        config_field_template.format(field_name=field_name,
-                                                     field_default=default_field_types[field_type]))
-                fields.append(field_template.format(field_name, field_type))
-            if len(config_fields) > 0:
-                config_extra = config_extra_start + \
-                               config_extra_middle_piece.format(field_pieces=", ".join(config_fields)) + \
-                               config_extra_end
-                base_models_template += object_template.format(name=custom_input_object_name,
-                                                               fields="\n    ".join(fields),
-                                                               config=config_template.format(extra=config_extra) if len(
-                                                                   config_fields) > 0 else "")
-            else:
-                base_models_template += object_template.format(name=custom_input_object_name,
-                                                               fields="\n    ".join(fields),
-                                                               config="")
-            base_models_template += "\n"
-
-        base_models_template = base_models_template.rstrip("\n")
-        base_models_template += "\n"
-        with open("generated_types.py", "w") as f:
-            f.write(base_models_template)
-
-        action_template = """# (IMPORTS-START) - DO NOT DELETE THIS LINE!
-import logging
-
-from fastapi import APIRouter, Depends, Request
-from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
-from pysura.faster_api.enums import ApiResponse, ClientRole
-from generated_types import *
-
-# (IMPORTS-END) - DO NOT DELETE THIS LINE!
-
-ROUTE = "/SNAKE/"
-ALLOWED_ROLES = [  # The roles allowed to call this action
-    # ALLOWED ROLES HERE
-]
-SNAKE_router = APIRouter(
-    tags=["SNAKE"]
-)
-
-
-@SNAKE_router.post(ROUTE,
-                   dependencies=[
-                       Depends(PysuraSecurity(
-                           require_jwt=True,
-                           require_event_secret=True,
-                           allowed_roles=ALLOWED_ROLES
-                       ))
-                   ],
-                   response_model=CAMELOutput
-                   )
-async def SNAKE(_: Request,
-                SNAKE_input: CAMELInput | None = None,
-                provider: Provider | None = Depends(PysuraProvider(
-                    # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
-                    provide_identity=True,
-                    provide_firebase=True,
-                    provide_graphql=True,
-                    provide_storage=True
-                    # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
-                ))):
-    # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
-    logging.log(logging.INFO, f"User {provider.user_identity.user_id} is authorized to access {ROUTE}")
-    logging.log(logging.INFO, SNAKE_input)
-    logging.log(logging.INFO, provider)
-    response = CAMELOutput(
-        data=None,
-        nodes=None,
-        response_name=ApiResponse.SUCCESS.name,
-        response_value=ApiResponse.SUCCESS.value
-    ).dict()
-    return response
-    # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
-"""
-        for action in hasura_metadata.get("actions", []):
-            action_handler = action.get("definition", {}).get("handler", None)
-            if action_handler == service_url:
-                snake_replace = action["name"]
-                camel_replace = snake_replace.replace("_", " ").title().replace(" ", "")
-                new_action_template = action_template.replace("SNAKE", snake_replace).replace("CAMEL", camel_replace)
-                collect_perms = []
-                for permission in action["permissions"]:
-                    collect_perms.append(permission["role"])
-                else:
-                    collect_perms.append("admin")
-                collect_perms = [f"ClientRole.{i}.name" for i in sorted(list(set(collect_perms)))]
-                new_action_template = new_action_template.replace("# ALLOWED ROLES HERE", ", ".join(collect_perms))
-                rewrite = False
-                original_data = None
-                if os.path.isfile(f"actions/{snake_replace}.py"):
-                    rewrite = True
-                    with open(f"actions/{snake_replace}.py", "r") as f:
-                        original_data = f.readlines()
-                if rewrite:
-                    dependency_injection = []
-                    business_logic = []
-                    import_lines = []
-                    in_dependency_injection = False
-                    in_business_logic = False
-                    in_import_lines = False
-                    for line in original_data:
-                        if "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
-                            in_import_lines = False
-                        if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
-                            in_business_logic = False
-                        if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
-                            in_dependency_injection = False
-                        if in_business_logic:
-                            business_logic.append(line)
-                        if in_dependency_injection:
-                            dependency_injection.append(line)
-                        if in_import_lines:
-                            import_lines.append(line)
-                        if "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
-                            in_import_lines = True
-                        if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
-                            in_business_logic = True
-                        if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
-                            in_dependency_injection = True
-
-                    new_lines = []
-                    in_business_logic = False
-                    in_dependency_injection = False
-                    in_import_lines = False
-                    for line in new_action_template.splitlines():
-                        if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
-                            in_business_logic = True
-                            new_lines.append(line + "\n")
-                            for business_line in business_logic:
-                                new_lines.append(business_line)
-                        elif "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
-                            in_dependency_injection = True
-                            new_lines.append(line + "\n")
-                            for dependency_line in dependency_injection:
-                                new_lines.append(dependency_line)
-                        elif "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
-                            in_import_lines = True
-                            new_lines.append(line + "\n")
-                            for import_line in import_lines:
-                                new_lines.append(import_line)
-                        elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
-                            in_business_logic = False
-                        elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
-                            in_dependency_injection = False
-                        elif "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
-                            in_import_lines = False
-                        if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
-                            new_lines.append(line + "\n")
-                with open(f"actions/{snake_replace}.py", "w") as f:
-                    f.write(new_action_template)
-
+        GoogleRoot.generate_types(ordered_custom_objects=ordered_custom_objects,
+                                  ordered_custom_input_objects=ordered_custom_input_objects)
         new_hasura_metadata = {
             "actions": [],
             "custom_types": {
@@ -2266,23 +2486,19 @@ async def SNAKE(_: Request,
             "event_triggers": [],
             "cron_triggers": []
         }
+        new_hasura_metadata = GoogleRoot.generate_actions(hasura_metadata=hasura_metadata,
+                                                          service_url=service_url,
+                                                          included_actions=included_actions,
+                                                          new_hasura_metadata=new_hasura_metadata)
 
-        action_names = []
-        for action_data in hasura_metadata.get("actions", []):
-            if action_data.get("name") in included_actions:
-                new_hasura_metadata["actions"].append(action_data)
-                action_names.append(action_data.get("name"))
+        new_hasura_metadata = GoogleRoot.generate_event_triggers(hasura_metadata=hasura_metadata,
+                                                                 service_url=service_url,
+                                                                 new_hasura_metadata=new_hasura_metadata
+                                                                 )
 
-        init_str = ""
-        for action_name in action_names:
-            init_str += f"from actions.{action_name} import {action_name}_router\n"
-
-        init_str += f"\naction_routers = [\n"
-        for action_name in action_names:
-            init_str += f"    {action_name}_router,\n"
-        init_str += "]\n"
-        with open("actions/__init__.py", "w") as f:
-            f.write(init_str)
+        new_hasura_metadata = GoogleRoot.generate_crons(hasura_metadata=hasura_metadata,
+                                                        service_url=service_url,
+                                                        new_hasura_metadata=new_hasura_metadata)
 
         for custom_type in hasura_metadata.get("custom_types", {}).get("objects", []):
             if custom_type.get("name") in included_set:
@@ -2292,256 +2508,81 @@ async def SNAKE(_: Request,
             if custom_type.get("name") in included_set:
                 new_hasura_metadata["custom_types"]["input_objects"].append(custom_type)
 
-        event_triggers = []
-        if isinstance(hasura_metadata.get("sources", None), list):
-            sources = hasura_metadata.get("sources", [])
-            for s in sources:
-                source_name = s.get("name", None)
-                tables = s.get("tables", None)
-                if isinstance(tables, list):
-                    for t in tables:
-                        table_data = t.get("table", None)
-                        table_name = table_data.get("name", None) if isinstance(table_data, dict) else None
-                        for trigger in t.get("event_triggers", []):
-                            if trigger.get("webhook", None) == service_url:
-                                trigger_name = trigger.get("name", None)
-                                event_triggers.append({
-                                    "location": f"{source_name}.{table_name}.{trigger_name}",
-                                    **trigger
-                                })
-        new_hasura_metadata["event_triggers"] = event_triggers
-
-        event_trigger_template = """# (IMPORTS-START) - DO NOT DELETE THIS LINE!
-import logging
-
-from fastapi import APIRouter, Depends, Request, Body, Response
-from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
-from pysura.faster_api.models import Event
-
-# (IMPORTS-END) - DO NOT DELETE THIS LINE!
-
-ROUTE = "/SNAKE/"
-SNAKE_router = APIRouter(
-    tags=["SNAKE"]
-)
-
-
-@SNAKE_router.post(ROUTE, dependencies=[Depends(PysuraSecurity(require_jwt=False, require_event_secret=True))])
-async def SNAKE(_: Request,
-                provider: Provider | None = Depends(
-                    PysuraProvider(
-                        # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
-                        provide_identity=False,
-                        provide_firebase=True,
-                        provide_graphql=True,
-                        provide_storage=True
-                        # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
-                    )
-                ),
-                data: Event = Body(...)):
-    # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
-    logging.log(logging.INFO, f"Event {data.id} is authorized to access {ROUTE}")
-    logging.log(logging.INFO, data)
-    logging.log(logging.INFO, provider)
-    return Response(status_code=200)
-    # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
-"""
-        event_init = ""
-        event_routers = []
-        for event_trigger in event_triggers:
-            event_init += f"from events.{event_trigger['name']} import {event_trigger['name']}_router\n"
-            event_routers.append(f"    {event_trigger['name']}_router")
-            snake_replace = event_trigger["name"]
-            new_event_template = event_trigger_template.replace("SNAKE", snake_replace)
-            rewrite = False
-            original_data = None
-            if os.path.isfile(f"events/{snake_replace}.py"):
-                rewrite = True
-                with open(f"events/{snake_replace}.py", "r") as f:
-                    original_data = f.readlines()
-            if rewrite:
-                dependency_injection = []
-                business_logic = []
-                import_lines = []
-                in_dependency_injection = False
-                in_business_logic = False
-                in_import_lines = False
-                for line in original_data:
-                    if "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
-                        in_import_lines = False
-                    if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
-                        in_business_logic = False
-                    if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
-                        in_dependency_injection = False
-                    if in_business_logic:
-                        business_logic.append(line)
-                    if in_dependency_injection:
-                        dependency_injection.append(line)
-                    if in_import_lines:
-                        import_lines.append(line)
-                    if "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
-                        in_import_lines = True
-                    if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
-                        in_business_logic = True
-                    if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
-                        in_dependency_injection = True
-
-                new_lines = []
-                in_business_logic = False
-                in_dependency_injection = False
-                in_import_lines = False
-                for line in new_event_template.splitlines():
-                    if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
-                        in_business_logic = True
-                        new_lines.append(line + "\n")
-                        for business_line in business_logic:
-                            new_lines.append(business_line)
-                    elif "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
-                        in_dependency_injection = True
-                        new_lines.append(line + "\n")
-                        for dependency_line in dependency_injection:
-                            new_lines.append(dependency_line)
-                    elif "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
-                        in_import_lines = True
-                        new_lines.append(line + "\n")
-                        for import_line in import_lines:
-                            new_lines.append(import_line)
-                    elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
-                        in_business_logic = False
-                    elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
-                        in_dependency_injection = False
-                    elif "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
-                        in_import_lines = False
-                    if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
-                        new_lines.append(line + "\n")
-                new_event_template = "".join(new_lines)
-            with open(f"events/{snake_replace}.py", "w") as f:
-                f.write(new_event_template)
-
-        event_init += f"\nevent_routers = [\n"
-        for event_router in event_routers:
-            event_init += f"    {event_router},\n"
-        event_init += f"]\n"
-        with open(f"events/__init__.py", "w") as f:
-            f.write(event_init)
-
-        cron_template = """# (IMPORTS-START) - DO NOT DELETE THIS LINE!
-import logging
-
-from fastapi import APIRouter, Depends, Request, Body, Response
-from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
-
-# (IMPORTS-END) - DO NOT DELETE THIS LINE!
-
-ROUTE = "/SNAKE/"
-SNAKE_router = APIRouter(
-    tags=["SNAKE"]
-)
-
-
-@SNAKE_router.post(ROUTE, dependencies=[Depends(PysuraSecurity(require_jwt=False, require_event_secret=True))])
-async def SNAKE(_: Request,
-                provider: Provider | None = Depends(
-                    PysuraProvider(
-                        # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
-                        provide_identity=False,
-                        provide_firebase=True,
-                        provide_graphql=True,
-                        provide_storage=True
-                        # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
-                    )
-                ),
-                data=Body(...)):
-    # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
-    logging.log(logging.INFO, data)
-    logging.log(logging.INFO, provider)
-    return Response(status_code=200)
-    # (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!
-"""
-
-        if isinstance(hasura_metadata.get("cron_triggers", None), list):
-            cron_triggers = hasura_metadata.get("cron_triggers", [])
-            cron_triggers_init = ""
-            cron_names = []
-            for cron_trigger in cron_triggers:
-                if cron_trigger.get("webhook", None) == service_url:
-                    new_hasura_metadata["cron_triggers"].append(cron_trigger)
-                    snake_replace = cron_trigger["name"]
-                    cron_names.append(snake_replace)
-                    cron_triggers_init += f"from crons.{snake_replace} import {snake_replace}_router\n"
-                    new_cron_template = cron_template.replace("SNAKE", snake_replace)
-                    rewrite = False
-                    original_data = None
-                    if os.path.isfile(f"crons/{snake_replace}.py"):
-                        rewrite = True
-                        with open(f"crons/{snake_replace}.py", "r") as f:
-                            original_data = f.readlines()
-                    if rewrite:
-                        dependency_injection = []
-                        business_logic = []
-                        import_lines = []
-                        in_dependency_injection = False
-                        in_business_logic = False
-                        in_import_lines = False
-                        for line in original_data:
-                            if "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
-                                in_import_lines = False
-                            if "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
-                                in_business_logic = False
-                            if "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
-                                in_dependency_injection = False
-                            if in_business_logic:
-                                business_logic.append(line)
-                            if in_dependency_injection:
-                                dependency_injection.append(line)
-                            if in_import_lines:
-                                import_lines.append(line)
-                            if "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
-                                in_import_lines = True
-                            if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
-                                in_business_logic = True
-                            if "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
-                                in_dependency_injection = True
-
-                        new_lines = []
-                        in_business_logic = False
-                        in_dependency_injection = False
-                        in_import_lines = False
-                        for line in new_cron_template.splitlines():
-                            if "# (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!" in line:
-                                in_business_logic = True
-                                new_lines.append(line + "\n")
-                                for business_line in business_logic:
-                                    new_lines.append(business_line)
-                            elif "# (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!" in line:
-                                in_dependency_injection = True
-                                new_lines.append(line + "\n")
-                                for dependency_line in dependency_injection:
-                                    new_lines.append(dependency_line)
-                            elif "# (IMPORTS-START) - DO NOT DELETE THIS LINE!" in line:
-                                in_import_lines = True
-                                new_lines.append(line + "\n")
-                                for import_line in import_lines:
-                                    new_lines.append(import_line)
-                            elif "# (BUSINESS-LOGIC-END) - DO NOT DELETE THIS LINE!" in line:
-                                in_business_logic = False
-                            elif "# (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!" in line:
-                                in_dependency_injection = False
-                            elif "# (IMPORTS-END) - DO NOT DELETE THIS LINE!" in line:
-                                in_import_lines = False
-                            if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
-                                new_lines.append(line + "\n")
-                        new_cron_template = "".join(new_lines)
-                    with open(f"crons/{snake_replace}.py", "w") as f:
-                        f.write(new_cron_template)
-
-            cron_triggers_init += f"\ncron_routers = [\n"
-            for cron_name in cron_names:
-                cron_triggers_init += f"    {cron_name}_router,\n"
-            cron_triggers_init += f"]\n"
-            with open(f"crons/__init__.py", "w") as f:
-                f.write(cron_triggers_init)
         return new_hasura_metadata
+
+    def do_generate_microservice_template(self,
+                                          hasura_metadata_path="hasura_metadata.json",
+                                          microservice_name="template",
+                                          microservice_webhook="{{HASURA_MICROSERVICE_URL}}"
+                                          ):
+        if microservice_name == "" or len(microservice_name.strip()) == 0:
+            self.log("Microservice name cannot be empty", level=logging.ERROR)
+            return
+        env = self.get_env()
+        if env.auth_service_account is None or env.auth_service_account.key_file is None:
+            self.log("No auth service account specified", level=logging.ERROR)
+            return
+        if not os.path.isdir("microservices"):
+            os.mkdir("microservices")
+        os.chdir("microservices")
+        if not os.path.isdir(microservice_name):
+            os.mkdir(microservice_name)
+        os.chdir(microservice_name)
+        os.mkdir("actions")
+        os.mkdir("crons")
+        os.mkdir("events")
+        path = self.get_site_packages_path(submodule="pysura_microservice")
+        default_actions = []
+        default_events = []
+        default_crons = []
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
+                    continue
+                if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
+                    shutil.copy(os.path.join(root, f), ".")
+                elif f == "pysura_metadata.json" and microservice_name == "default":
+                    shutil.copy(os.path.join(root, f), ".")
+                else:
+                    if "actions" in root:
+                        if f != "action_template.py":
+                            dir_path = os.path.join(os.getcwd(), "actions")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_actions.append(f.replace(".py", ""))
+                            if microservice_name != "default":
+                                continue
+                            shutil.copy(os.path.join(root, f), dir_path)
+                    elif "crons" in root:
+                        if f != "cron_template.py":
+                            dir_path = os.path.join(os.getcwd(), "crons")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_crons.append(f.replace(".py", ""))
+                            if microservice_name != "default":
+                                continue
+                            shutil.copy(os.path.join(root, f), dir_path)
+                    elif "events" in root:
+                        if f != "event_template.py":
+                            dir_path = os.path.join(os.getcwd(), "events")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_events.append(f.replace(".py", ""))
+                            if microservice_name != "default":
+                                continue
+                            shutil.copy(os.path.join(root, f), dir_path)
+        with open(hasura_metadata_path, "r") as f:
+            metadata = json.load(f)
+        with open("app_secrets.py", "r") as f:
+            app_secrets_py = f.read()
+        app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
+        with open("app_secrets.py", "w") as f:
+            f.write(app_secrets_py)
+        self.router_generator(metadata, microservice_webhook)
+        os.chdir("../..")
 
     def do_deploy_microservice(self,
                                microservice_name="default",
@@ -2561,9 +2602,12 @@ async def SNAKE(_: Request,
         if not os.path.isdir(microservice_name):
             os.mkdir(microservice_name)
         os.chdir(microservice_name)
-        os.mkdir("actions")
-        os.mkdir("crons")
-        os.mkdir("events")
+        if not os.path.isdir("actions"):
+            os.mkdir("actions")
+        if not os.path.isdir("crons"):
+            os.mkdir("crons")
+        if not os.path.isdir("events"):
+            os.mkdir("events")
         path = self.get_site_packages_path(submodule="pysura_microservice")
         default_actions = []
         default_events = []
@@ -2693,6 +2737,17 @@ async def SNAKE(_: Request,
         new_actions = []
         new_objects = []
         new_input_objects = []
+        if metadata.get("actions", None) is None:
+            metadata["actions"] = []
+        if metadata.get("custom_types", None) is None:
+            metadata["custom_types"] = {
+                "objects": [],
+                "input_objects": []
+            }
+        if metadata.get("sources", None) is None:
+            metadata["sources"] = []
+        if metadata.get("cron_triggers", None) is None:
+            metadata["cron_triggers"] = []
         for key, value in metadata.items():
             if key == "actions":
                 for action in value:
@@ -2809,107 +2864,104 @@ async def SNAKE(_: Request,
         """
         Setups up a Pysura project
         """
-        if not self.do_check_gcloud(None):
+        if not self.check_gcloud():
             return
-        self.setup_step = 1
         env = self.get_env()
         if env.gcloud_logged_in is False:
             self.do_gcloud_login()
-        self.setup_step = 2
+            env = self.get_env()
         if env.organization is None:
             self.do_gcloud_choose_organization(None)
-        self.setup_step = 3
-        hasura_project_name = self.collect("Hasura project name: ")
-        if self.confirm_loop(hasura_project_name):
-            hasura_project_name = hasura_project_name.replace("_", "-").replace(" ", "-")
-            self.setup_step = 4
-            if env.project is None:
-                self.do_gcloud_create_project(project_id=hasura_project_name)
-            self.setup_step = 5
-            if env.billing_account is None:
-                self.do_gcloud_link_billing_account()
-            self.setup_step = 6
-            if env.api_services is None:
-                self.do_gcloud_enable_api_services(None)
-            self.setup_step = 7
-            if env.network is None:
-                self.do_gcloud_create_network(network_id=hasura_project_name)
-            self.setup_step = 8
-            if env.address is None:
-                self.do_gcloud_create_address(address_id=hasura_project_name)
-            self.setup_step = 9
-            if env.peering is None:
-                self.do_gcloud_create_vpc_peering(peering_id=hasura_project_name)
-            self.setup_step = 10
-            if env.firewalls is None:
-                self.do_gcloud_create_firewall(firewall_id=hasura_project_name)
-            self.setup_step = 11
-            if env.database_credential is None:
-                self.do_gcloud_create_database(database_id=hasura_project_name)
-            self.setup_step = 12
-            if env.connector is None:
-                self.do_gcloud_create_serverless_connector(connector_id=hasura_project_name)
-            self.setup_step = 13
-            self.do_update_default_compute_engine_service_account(None)
-            self.setup_step = 14
+            env = self.get_env()
+        if env.project is None:
+            hasura_project_name = self.collect("Hasura project name: ")
+            if not self.confirm_loop(hasura_project_name):
+                self.log("Aborting project setup.", level=logging.WARNING)
+                return
+        else:
+            hasura_project_name = env.project.name.split("/")[-1]
+        hasura_project_name = hasura_project_name.replace("_", "-").replace(" ", "-")
+        if env.project is None:
+            self.gcloud_create_project(project_id=hasura_project_name)
+            env = self.get_env()
+        if env.billing_account is None:
+            self.do_gcloud_link_billing_account()
+            env = self.get_env()
+        if env.api_services is None:
+            self.gcloud_enable_api_services()
+            env = self.get_env()
+        if env.network is None:
+            self.gcloud_create_network(network_id=hasura_project_name)
+            env = self.get_env()
+        if env.address is None:
+            self.gcloud_create_address(address_id=hasura_project_name)
+            env = self.get_env()
+        if env.peering is None:
+            self.gcloud_create_vpc_peering(peering_id=hasura_project_name)
+            env = self.get_env()
+        if env.firewalls is None:
+            self.gcloud_create_firewall(firewall_id=hasura_project_name)
+            env = self.get_env()
+        if env.database_credential is None:
+            self.do_gcloud_create_database(database_id=hasura_project_name)
+            env = self.get_env()
+        if env.connector is None:
+            self.gcloud_create_serverless_connector(connector_id=hasura_project_name)
+            env = self.get_env()
+        if env.hasura_service_account is None:
+            self.update_default_compute_engine_service_account()
+            env = self.get_env()
+        if env.hasura is None:
             self.do_gcloud_deploy_hasura()
-            self.setup_step = 15
-            self.do_import_hasura_metadata(None)
-            self.setup_step = 16
-            self.do_gcloud_create_auth_service_account(None)
-            self.setup_step = 17
             env = self.get_env()
-            self.do_enable_database_local(database_id=env.database.name.split("/")[-1])
-            self.setup_step = 18
-            self.do_create_default_user_table(None)
-            self.setup_step = 20
-            self.do_attach_firebase(None)
-            self.setup_step = 21
-            self.do_attach_flutter(None)
-            self.setup_step = 22
-            self.do_activate_firebase_auth(None)
-            self.setup_step = 23
-            self.do_deploy_microservice(microservice_name="default")
-            self.setup_step = 24
-            self.do_export_hasura_metadata(None)
-            self.setup_step = 25
-            env = self.get_env()
-            self.log(f"Pysura App is ready to run!, open the flutter_frontend folder in Android Studio!",
-                     level=logging.INFO)
-            assert env.hasura is not None
-            assert env.hasura_metadata is not None
-            if env.hasura.microservice_urls is not None:
-                num_services = len(env.hasura.microservice_urls)
-            else:
-                num_services = 0
-            log_str = f"""
+        self.do_import_hasura_metadata(None)
+        if env.auth_service_account is None:
+            self.gcloud_create_auth_service_account()
+        env = self.get_env()
+        self.enable_database_local(database_id=env.database.name.split("/")[-1])
+        self.create_default_user_table()
+        self.attach_firebase()
+        self.attach_flutter()
+        self.activate_firebase_auth()
+        self.do_deploy_microservice(microservice_name="default")
+        self.do_export_hasura_metadata(None)
+        env = self.get_env()
+        self.log(f"Pysura App is ready to run!, open the flutter_frontend folder in Android Studio!",
+                 level=logging.INFO)
+        assert env.hasura is not None
+        assert env.hasura_metadata is not None
+        if env.hasura.microservice_urls is not None:
+            num_services = len(env.hasura.microservice_urls)
+        else:
+            num_services = 0
+        log_str = f"""
 Pysura Project Setup Complete!
 
 The default microservice can be found at:
 {env.default_microservice_url}/docs
 
 """
+        actions = [action for action in env.hasura_metadata.actions if
+                   action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
+        if len(actions) > 0:
+            log_str += f"""The default microservice has {len(actions)} actions:\n"""
+            for action in actions:
+                log_str += f"""\t{action.name}\n"""
+
+        log_str += f"""\nYou have {num_services} additional microservice(s) deployed."""
+        if num_services > 0:
+            log_str += "\n\tMicroservice URLs:\n"
+
+        for microservice_url in env.hasura.microservice_urls:
             actions = [action for action in env.hasura_metadata.actions if
-                       action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
+                       action.definition.handler == microservice_url.url_wrapper]
+            log_str += f"""\t{microservice_url.url}\n"""
             if len(actions) > 0:
-                log_str += f"""The default microservice has {len(actions)} actions:\n"""
+                log_str += f"""\t\t{len(actions)} action(s):\n"""
                 for action in actions:
-                    log_str += f"""\t{action.name}\n"""
+                    log_str += f"""\t\t\t{action.name}\n"""
 
-            log_str += f"""\nYou have {num_services} additional microservice(s) deployed."""
-            if num_services > 0:
-                log_str += "\n\tMicroservice URLs:\n"
-
-            for microservice_url in env.hasura.microservice_urls:
-                actions = [action for action in env.hasura_metadata.actions if
-                           action.definition.handler == microservice_url.url_wrapper]
-                log_str += f"""\t{microservice_url.url}\n"""
-                if len(actions) > 0:
-                    log_str += f"""\t\t{len(actions)} action(s):\n"""
-                    for action in actions:
-                        log_str += f"""\t\t\t{action.name}\n"""
-
-            log_str += f"""
+        log_str += f"""
 
 Your Hasura instance can be found at:
 {env.hasura_service.status.address.url}/console
@@ -2922,112 +2974,112 @@ The event secret for the all attached microservices is:
 
 You can find authorization tokens for your microservice by running your flutter application and logging in.
 """
-            self.log(log_str, level=logging.INFO)
-            self.do_load_firebase_app(None)
-            env = self.get_env()
+        self.log(log_str, level=logging.INFO)
+        self.do_load_firebase_app(None)
+        env = self.get_env()
 
-            phone_wizard = self.collect(
-                "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
-            )
-            if phone_wizard.strip().lower() == "y":
-                add_admin = True
-                add_user = True
-            else:
-                add_admin = False
-                add_user = False
-            test_phone_numbers = env.test_phone_numbers
-            if isinstance(test_phone_numbers, list):
-                for test_phone_number in test_phone_numbers:
-                    if test_phone_number.role == "admin":
-                        add_admin = False
-                    elif test_phone_number.role == "user":
-                        add_user = False
-            else:
-                test_phone_numbers = []
+        phone_wizard = self.collect(
+            "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
+        )
+        if phone_wizard.strip().lower() == "y":
+            add_admin = True
+            add_user = True
+        else:
+            add_admin = False
+            add_user = False
+        test_phone_numbers = env.test_phone_numbers
+        if isinstance(test_phone_numbers, list):
+            for test_phone_number in test_phone_numbers:
+                if test_phone_number.role == "admin":
+                    add_admin = False
+                elif test_phone_number.role == "user":
+                    add_user = False
+        else:
+            test_phone_numbers = []
 
-            if add_admin:
+        if add_admin:
+            self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
+                     level=logging.INFO)
+            self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                     f"/providers",
+                     level=logging.INFO
+                     )
+            admin_phone = self.collect("What phone number did you add?: ")
+            while not self.confirm_loop(admin_phone):
                 self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
                          level=logging.INFO)
-                self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                         f"/providers",
-                         level=logging.INFO
-                         )
-                admin_phone = self.collect("What phone number did you add?: ")
-                while not self.confirm_loop(admin_phone):
-                    self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
-                             level=logging.INFO)
-                    self.log(
-                        f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                        f"/providers",
-                        level=logging.INFO
-                    )
-                    admin_phone = self.collect("What phone number did you add?: ")
-                admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
-                while not self.confirm_loop(admin_code):
-                    admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
-
-                self.log("Please login to the app with the phone number you just added.", level=logging.INFO)
-                ready = self.collect("Are you ready to continue? (y/n): ")
-                while ready != "y":
-                    ready = self.collect("Are you ready to continue? (y/n): ")
-                user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": admin_phone})
-                if user_data.get("data", None) is None:
-                    self.log("Could not find user, please try again.", level=logging.ERROR)
-                    return
-                if len(user_data["data"]["user"]) == 0:
-                    self.log("Could not find user, please try again.", level=logging.ERROR)
-                    return
-                user_id = user_data["data"]["user"][0]["user_id"]
-                self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
-                admin_number = TestPhoneNumber(
-                    role="admin",
-                    phone_number=admin_phone,
-                    code=admin_code,
-                    uid=user_id
+                self.log(
+                    f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                    f"/providers",
+                    level=logging.INFO
                 )
-                test_phone_numbers.append(admin_number)
+                admin_phone = self.collect("What phone number did you add?: ")
+            admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
+            while not self.confirm_loop(admin_code):
+                admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
 
-            if add_user:
+            self.log("Please login to the app with the phone number you just added.", level=logging.INFO)
+            ready = self.collect("Are you ready to continue? (y/n): ")
+            while ready != "y":
+                ready = self.collect("Are you ready to continue? (y/n): ")
+            user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": admin_phone})
+            if user_data.get("data", None) is None:
+                self.log("Could not find user, please try again.", level=logging.ERROR)
+                return
+            if len(user_data["data"]["user"]) == 0:
+                self.log("Could not find user, please try again.", level=logging.ERROR)
+                return
+            user_id = user_data["data"]["user"][0]["user_id"]
+            self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
+            admin_number = TestPhoneNumber(
+                role="admin",
+                phone_number=admin_phone,
+                code=admin_code,
+                uid=user_id
+            )
+            test_phone_numbers.append(admin_number)
+
+        if add_user:
+            self.log("Please add a test phone number to be granted USER access in the firebase console.",
+                     level=logging.INFO)
+            self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                     f"/providers",
+                     level=logging.INFO
+                     )
+            user_phone = self.collect("What phone number did you add?: ")
+            while not self.confirm_loop(user_phone):
                 self.log("Please add a test phone number to be granted USER access in the firebase console.",
                          level=logging.INFO)
-                self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                         f"/providers",
-                         level=logging.INFO
-                         )
-                user_phone = self.collect("What phone number did you add?: ")
-                while not self.confirm_loop(user_phone):
-                    self.log("Please add a test phone number to be granted USER access in the firebase console.",
-                             level=logging.INFO)
-                    self.log(
-                        f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                        f"/providers",
-                        level=logging.INFO
-                    )
-                    user_phone = self.collect("What phone number did you add?: ")
-                user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
-                while not self.confirm_loop(user_code):
-                    user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
-
-                self.log("Please login to the app with the phone number you just added.", level=logging.INFO)
-                ready = self.collect("Are you ready to continue? (y/n): ")
-                while ready != "y":
-                    ready = self.collect("Are you ready to continue? (y/n): ")
-                user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": user_phone})
-                if user_data.get("data", None) is None:
-                    self.log("Could not find user, please try again.", level=logging.ERROR)
-                    return
-                if len(user_data["data"]["user"]) == 0:
-                    self.log("Could not find user, please try again.", level=logging.ERROR)
-                    return
-                user_id = user_data["data"]["user"][0]["user_id"]
-                self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
-                user_number = TestPhoneNumber(
-                    role="user",
-                    phone_number=user_phone,
-                    code=user_code,
-                    uid=user_id
+                self.log(
+                    f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                    f"/providers",
+                    level=logging.INFO
                 )
-                test_phone_numbers.append(user_number)
-            if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
-                env.test_phone_numbers = test_phone_numbers
-                self.set_env(env)
+                user_phone = self.collect("What phone number did you add?: ")
+            user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
+            while not self.confirm_loop(user_code):
+                user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
+
+            self.log("Please login to the app with the phone number you just added.", level=logging.INFO)
+            ready = self.collect("Are you ready to continue? (y/n): ")
+            while ready != "y":
+                ready = self.collect("Are you ready to continue? (y/n): ")
+            user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": user_phone})
+            if user_data.get("data", None) is None:
+                self.log("Could not find user, please try again.", level=logging.ERROR)
+                return
+            if len(user_data["data"]["user"]) == 0:
+                self.log("Could not find user, please try again.", level=logging.ERROR)
+                return
+            user_id = user_data["data"]["user"][0]["user_id"]
+            self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
+            user_number = TestPhoneNumber(
+                role="user",
+                phone_number=user_phone,
+                code=user_code,
+                uid=user_id
+            )
+            test_phone_numbers.append(user_number)
+        if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
+            env.test_phone_numbers = test_phone_numbers
+            self.set_env(env)
