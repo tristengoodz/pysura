@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.99.43",
+    version="0.99.44",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -44,7 +44,9 @@ setup(
             "library_data/pysura_microservice/requirements.txt",
             "library_data/pysura_microservice/README.md",
             "library_data/pysura_microservice/app_secrets.py",
-            "library_data/pysura_microservice/pysura_metadata.json"
+            "library_data/pysura_microservice/pysura_metadata.json",
+            "library_data/pysura_ssr/Dockerfile",
+            "library_data/pysura_ssr/nginx.conf"
         ],
     },
     include_package_data=True,

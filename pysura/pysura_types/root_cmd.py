@@ -15,6 +15,7 @@ NUM_STEPS = 4
 
 class LogLevelFilter(logging.Filter):
     """This is a logging filter that filters out all messages that are not of a certain level."""
+
     def __init__(self, level):
         super().__init__()
         self.level = level
@@ -87,20 +88,6 @@ class RootCmd(Cmd):
             self.root = logger
         self.history = InMemoryHistory()
         self.setup_step = 0
-
-    def inc_step(self):
-        self.setup_step += 1
-
-    def do_command1(self, arg):
-        self.log("Command 1", level=logging.INFO)
-        self.setup_step += 1
-        os.system("npm -v")
-        self.setup_step += 1
-        response = os.popen("npm -v").read()
-        self.setup_step += 1
-        self.log(f"Response: {response}", level=logging.INFO)
-        self.setup_step += 1
-        self.log("Setup is complete!")
 
     def cmdloop(self, intro=None):
         self.preloop()

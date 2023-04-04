@@ -1862,6 +1862,7 @@ alter table app
             os.chdir("..")
         os.chdir("..")
         env.flutter_attached = True
+        env.flutter_app_name = project_name
         self.set_env(env)
 
     @staticmethod
@@ -2941,6 +2942,65 @@ async def SNAKE(_: Request,
         self.log(log_str, level=logging.INFO)
         return custom_token
 
+    def do_deploy_frontend(self, _):
+        env = self.get_env()
+        if env.flutter_app_name is None:
+            self.log("No flutter app name found. Skipping flutter app deployment.", level=logging.WARNING)
+            return
+        project_name = env.flutter_app_name
+        if os.path.exists(f"{project_name}/web"):
+            os.chdir(f"{project_name}")
+            cmd_str = "flutter build web"
+            self.log(f"Running command: {cmd_str}", level=logging.INFO)
+            os.system(cmd_str)
+            os.chdir("..")
+        if not os.path.exists("microservices"):
+            os.mkdir("microservices")
+        if not os.path.exists(f"microservices/{project_name}_web"):
+            os.mkdir(f"{project_name}_web")
+        path = self.get_site_packages_path(submodule="pysura_ssr")
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
+                    continue
+                if f in ["Dockerfile", "nginx.conf"]:
+                    shutil.copy(os.path.join(root, f), ".")
+        if not os.path.isdir(f"microservices/{project_name}_web/build"):
+            os.mkdir(f"microservices/{project_name}_web/build")
+        else:
+            shutil.rmtree(f"microservices/{project_name}_web/build")
+            os.mkdir(f"microservices/{project_name}_web/build")
+
+        src_dir = f"{project_name}/build/web"
+        dst_dir = f"microservices/{project_name}_web/build/web"
+        shutil.copytree(src_dir, dst_dir)
+        os.chdir(f"microservices/{project_name}_web")
+        service_name = f"{project_name}_web"
+        deploy_command = (f"gcloud run deploy . "
+                          f"--min-instances=1 "
+                          f"--max-instances=10 "
+                          f"--cpu=1 "
+                          f"--memory=2Gi "
+                          f"--timeout=600s "
+                          f"--platform=managed "
+                          f"--allow-unauthenticated "
+                          f"--no-cpu-throttling "
+                          f"--project={env.project.name.split('/')[-1]}")
+        self.log(deploy_command, level=logging.DEBUG)
+        os.system(deploy_command)
+        os.chdir("../..")
+        services = json.loads(os.popen(f"gcloud run services list "
+                                       f"--project={env.project.name.split('/')[-1]} "
+                                       f"--format=json").read())
+        new_services = []
+        for service in services:
+            service_data = GoogleService(**service)
+            if service_data.metadata.name == service_name:
+                env.frontend_ssr_service = service_data
+            new_services.append(service_data)
+        env.services = new_services
+        self.set_env(env)
+
     def do_setup_pysura(self, recurse=0):
         """
         Setups up a Pysura project
@@ -3066,7 +3126,120 @@ async def SNAKE(_: Request,
         if env.default_microservice is None:
             return self.do_setup_pysura(recurse=recurse + 1)
         self.do_export_hasura_metadata(None)
+        self.do_load_firebase_app(None)
+        self.do_deploy_frontend(None)
         env = self.get_env()
+        phone_wizard = self.collect(
+            "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
+        )
+        if phone_wizard.strip().lower() == "y":
+            add_admin = True
+            add_user = True
+        else:
+            add_admin = False
+            add_user = False
+        test_phone_numbers = env.test_phone_numbers
+        if isinstance(test_phone_numbers, list):
+            for test_phone_number in test_phone_numbers:
+                if test_phone_number.role == "admin":
+                    add_admin = False
+                elif test_phone_number.role == "user":
+                    add_user = False
+        else:
+            test_phone_numbers = []
+
+        if add_admin:
+            self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
+                     level=logging.INFO)
+            self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                     f"/providers",
+                     level=logging.INFO
+                     )
+            admin_phone = self.collect("What phone number did you add?: ")
+            while not self.confirm_loop(admin_phone):
+                self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
+                         level=logging.INFO)
+                self.log(
+                    f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                    f"/providers",
+                    level=logging.INFO
+                )
+                admin_phone = self.collect("What phone number did you add?: ")
+            admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
+            while not self.confirm_loop(admin_code):
+                admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
+            if env.frontend_ssr_service is not None:
+                self.log(f"Please login to your app with the phone number you just added!"
+                         f"{env.frontend_ssr_service.status.address.url}", level=logging.INFO)
+            else:
+                self.log(f"Please run your app and login with the phone number you just added!", level=logging.INFO)
+            ready = self.collect("Are you ready to continue? (y/n): ")
+            while ready != "y":
+                ready = self.collect("Are you ready to continue? (y/n): ")
+            user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": admin_phone})
+            if user_data.get("data", None) is None:
+                self.log("Could not find user, please try again.", level=logging.ERROR)
+                return
+            if len(user_data["data"]["user"]) == 0:
+                self.log("Could not find user, please try again.", level=logging.ERROR)
+                return
+            user_id = user_data["data"]["user"][0]["user_id"]
+            self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
+            admin_number = TestPhoneNumber(
+                role="admin",
+                phone_number=admin_phone,
+                code=admin_code,
+                uid=user_id
+            )
+            test_phone_numbers.append(admin_number)
+
+        if add_user:
+            self.log("Please add a test phone number to be granted USER access in the firebase console.",
+                     level=logging.INFO)
+            self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                     f"/providers",
+                     level=logging.INFO
+                     )
+            user_phone = self.collect("What phone number did you add?: ")
+            while not self.confirm_loop(user_phone):
+                self.log("Please add a test phone number to be granted USER access in the firebase console.",
+                         level=logging.INFO)
+                self.log(
+                    f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                    f"/providers",
+                    level=logging.INFO
+                )
+                user_phone = self.collect("What phone number did you add?: ")
+            user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
+            while not self.confirm_loop(user_code):
+                user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
+            if env.frontend_ssr_service is not None:
+                self.log(f"Please login to your app with the phone number you just added!"
+                         f"{env.frontend_ssr_service.status.address.url}", level=logging.INFO)
+            else:
+                self.log(f"Please run your app and login with the phone number you just added!", level=logging.INFO)
+            ready = self.collect("Are you ready to continue? (y/n): ")
+            while ready != "y":
+                ready = self.collect("Are you ready to continue? (y/n): ")
+            user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": user_phone})
+            if user_data.get("data", None) is None:
+                self.log("Could not find user, please try again.", level=logging.ERROR)
+                return
+            if len(user_data["data"]["user"]) == 0:
+                self.log("Could not find user, please try again.", level=logging.ERROR)
+                return
+            user_id = user_data["data"]["user"][0]["user_id"]
+            self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
+            user_number = TestPhoneNumber(
+                role="user",
+                phone_number=user_phone,
+                code=user_code,
+                uid=user_id
+            )
+            test_phone_numbers.append(user_number)
+        if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
+            env.test_phone_numbers = test_phone_numbers
+            self.set_env(env)
         self.log(f"Pysura App is ready to run!, open the flutter_frontend folder in Android Studio!",
                  level=logging.INFO)
         assert env.hasura is not None
@@ -3114,113 +3287,8 @@ The event secret for the all attached microservices is:
 {env.hasura.HASURA_EVENT_SECRET}
 
 You can find authorization tokens for your microservice by running your flutter application and logging in.
+
 """
+        if env.frontend_ssr_service is not None:
+            log_str += f"You can login to your web application here: {env.frontend_ssr_service.status.address.url}"
         self.log(log_str, level=logging.INFO)
-        self.do_load_firebase_app(None)
-        env = self.get_env()
-
-        phone_wizard = self.collect(
-            "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
-        )
-        if phone_wizard.strip().lower() == "y":
-            add_admin = True
-            add_user = True
-        else:
-            add_admin = False
-            add_user = False
-        test_phone_numbers = env.test_phone_numbers
-        if isinstance(test_phone_numbers, list):
-            for test_phone_number in test_phone_numbers:
-                if test_phone_number.role == "admin":
-                    add_admin = False
-                elif test_phone_number.role == "user":
-                    add_user = False
-        else:
-            test_phone_numbers = []
-
-        if add_admin:
-            self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
-                     level=logging.INFO)
-            self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                     f"/providers",
-                     level=logging.INFO
-                     )
-            admin_phone = self.collect("What phone number did you add?: ")
-            while not self.confirm_loop(admin_phone):
-                self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
-                         level=logging.INFO)
-                self.log(
-                    f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                    f"/providers",
-                    level=logging.INFO
-                )
-                admin_phone = self.collect("What phone number did you add?: ")
-            admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
-            while not self.confirm_loop(admin_code):
-                admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
-
-            self.log("Please login to the app with the phone number you just added.", level=logging.INFO)
-            ready = self.collect("Are you ready to continue? (y/n): ")
-            while ready != "y":
-                ready = self.collect("Are you ready to continue? (y/n): ")
-            user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": admin_phone})
-            if user_data.get("data", None) is None:
-                self.log("Could not find user, please try again.", level=logging.ERROR)
-                return
-            if len(user_data["data"]["user"]) == 0:
-                self.log("Could not find user, please try again.", level=logging.ERROR)
-                return
-            user_id = user_data["data"]["user"][0]["user_id"]
-            self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
-            admin_number = TestPhoneNumber(
-                role="admin",
-                phone_number=admin_phone,
-                code=admin_code,
-                uid=user_id
-            )
-            test_phone_numbers.append(admin_number)
-
-        if add_user:
-            self.log("Please add a test phone number to be granted USER access in the firebase console.",
-                     level=logging.INFO)
-            self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                     f"/providers",
-                     level=logging.INFO
-                     )
-            user_phone = self.collect("What phone number did you add?: ")
-            while not self.confirm_loop(user_phone):
-                self.log("Please add a test phone number to be granted USER access in the firebase console.",
-                         level=logging.INFO)
-                self.log(
-                    f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                    f"/providers",
-                    level=logging.INFO
-                )
-                user_phone = self.collect("What phone number did you add?: ")
-            user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
-            while not self.confirm_loop(user_code):
-                user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
-
-            self.log("Please login to the app with the phone number you just added.", level=logging.INFO)
-            ready = self.collect("Are you ready to continue? (y/n): ")
-            while ready != "y":
-                ready = self.collect("Are you ready to continue? (y/n): ")
-            user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": user_phone})
-            if user_data.get("data", None) is None:
-                self.log("Could not find user, please try again.", level=logging.ERROR)
-                return
-            if len(user_data["data"]["user"]) == 0:
-                self.log("Could not find user, please try again.", level=logging.ERROR)
-                return
-            user_id = user_data["data"]["user"][0]["user_id"]
-            self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
-            user_number = TestPhoneNumber(
-                role="user",
-                phone_number=user_phone,
-                code=user_code,
-                uid=user_id
-            )
-            test_phone_numbers.append(user_number)
-        if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
-            env.test_phone_numbers = test_phone_numbers
-            self.set_env(env)

@@ -671,4 +671,6 @@ class GooglePysuraEnv(DictModel):
     default_user_table_created: bool = False
     firebase_attached: bool = False
     flutter_attached: bool = False
+    flutter_app_name: str | None = None
     firebase_auth_activated: bool = False
+    frontend_ssr_service: GoogleService | None = None
