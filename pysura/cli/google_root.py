@@ -1722,11 +1722,16 @@ alter table app
         else:
             os.mkdir(project_name)
             os.chdir(project_name)
-        os.mkdir("lib")
+        cmd_str = f"flutter create . "
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
         os.mkdir("lib/common")
         os.mkdir("lib/controllers")
         os.mkdir("lib/pages")
         os.mkdir("lib/widgets")
+        os.remove("lib/main.dart")
+        os.remove("pubspec.yaml")
+        os.remove("test/widget_test.dart")
         path = self.get_site_packages_path(submodule="pysura_frontend")
         for root, dirs, files in os.walk(path):
             for f in files:
