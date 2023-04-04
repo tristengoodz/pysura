@@ -667,3 +667,8 @@ class GooglePysuraEnv(DictModel):
     default_microservice: GoogleService | None = None
     default_microservice_url: str | None = None
     test_phone_numbers: List[TestPhoneNumber] | None = None
+    local_database_enabled: bool = False
+    default_user_table_created: bool = False
+    firebase_attached: bool = False
+    flutter_attached: bool = False
+    firebase_auth_activated: bool = False

@@ -1104,6 +1104,8 @@ class GoogleRoot(RootCmd):
                                  f"--authorized-networks={ip_address}")
         self.log(cmd_log_str, level=logging.DEBUG)
         os.system(cmd_str)
+        env.local_database_enabled = True
+        self.set_env(env)
 
     def create_default_user_table(self):
         env = self.get_env()
@@ -1454,6 +1456,8 @@ alter table app
         with open("hasura_metadata.json", "w") as f:
             json.dump(metadata, f)
         self.do_export_hasura_metadata(None)
+        env.default_user_table_created = True
+        self.set_env(env)
 
     def gcloud_create_auth_service_account(self):
         env = self.get_env()
@@ -1611,6 +1615,8 @@ alter table app
             json.dump(env.auth_service_account.key_file, f)
         admin_json = json.dumps(env.auth_service_account.key_file)
         self.do_gcloud_set_secret("HASURA_FIREBASE_SERVICE_ACCOUNT", admin_json)
+        env.firebase_attached = True
+        self.set_env(env)
 
     def activate_firebase_auth(self):
         env = self.get_env()
@@ -1679,6 +1685,8 @@ alter table app
         if ready != "y":
             self.log("Please enable phone sign in in the Firebase console", level=logging.INFO)
             return
+        env.firebase_auth_activated = True
+        self.set_env(env)
 
     def check_gcloud(self):
         cmd_str = "gcloud version --format=json"
@@ -1706,53 +1714,18 @@ alter table app
         if env.hasura is None:
             self.log("Please setup Hasura first", level=logging.ERROR)
             return
-        if os.path.isdir("flutter_frontend"):
-            os.chdir("flutter_frontend")
+
+        project_name = env.project.name.split('/')[-1].replace("-", "_")
+        if os.path.isdir(project_name):
+            os.chdir(project_name)
         else:
-            os.mkdir("flutter_frontend")
-            os.chdir("flutter_frontend")
-        cmd_str = f"flutter create . "
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        os.chdir("android")
-        cmd_str = "./gradlew signingReport"
-        self.log(cmd_str, level=logging.DEBUG)
-        response = os.popen(cmd_str).read()
-        variants = re.findall(r'Variant: (.+)', response)
-        configs = re.findall(r'Config: (.+)', response)
-        md5s = re.findall(r'MD5: (.+)', response)
-        sha1s = re.findall(r'SHA1: (.+)', response)
-        sha256s = re.findall(r'SHA-256: (.+)', response)
-        valid_until = re.findall(r'Valid until: (.+)', response)
-        signing_reports = []
-        for variant, config, md5, sha1, sha256, valid in zip(variants, configs, md5s, sha1s, sha256s, valid_until):
-            signing_report_data = {
-                'variant': variant,
-                'config': config,
-                'md5': md5,
-                'sha1': sha1,
-                'sha256': sha256,
-                'valid_until': valid
-            }
-            android_report = AndroidSigningReport(**signing_report_data)
-            signing_reports.append(android_report)
-            if android_report.variant == "debug":
-                env.android_debug_signing_report = android_report
-        env.android_signing_reports = signing_reports
-        os.chdir("..")
-        if not os.path.exists("pubspec.yaml"):
-            self.log("pubspec.yaml not found", level=logging.ERROR)
-            return
-        os.remove("pubspec.yaml")
-        if not os.path.exists("lib/main.dart"):
-            self.log("lib/main.dart not found", level=logging.ERROR)
-            return
-        os.remove("lib/main.dart")
+            os.mkdir(project_name)
+            os.chdir(project_name)
+        os.mkdir("lib")
         os.mkdir("lib/common")
         os.mkdir("lib/controllers")
         os.mkdir("lib/pages")
         os.mkdir("lib/widgets")
-        os.remove("test/widget_test.dart")
         path = self.get_site_packages_path(submodule="pysura_frontend")
         for root, dirs, files in os.walk(path):
             for f in files:
@@ -1790,32 +1763,11 @@ alter table app
         cmd_str = "flutter pub get"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        with open("ios/Runner/GoogleService-Info.plist", "rb") as f:
-            ios_plist = plistlib.load(f)
-        reversed_ios_client_id = ios_plist["REVERSED_CLIENT_ID"]
-        with open("ios/Runner/Info.plist", "rb") as f:
-            ios_plist = plistlib.load(f)
-        ios_bundle = {
-            "CFBundleTypeRole": "Editor",
-            "CFBundleURLSchemes": [reversed_ios_client_id]
-        }
-        ios_plist["CFBundleURLTypes"] = [
-            ios_bundle
-        ]
-        env.ios_cf_bundle_url_types = IosCFBundleURLTypes(**ios_bundle)
-        with open("ios/Runner/Info.plist", "wb") as f:
-            plistlib.dump(ios_plist, f)
-        self.log(f"SHA1:\n{env.android_debug_signing_report.sha1}", level=logging.INFO)
-        self.log(f"SHA256:\n{env.android_debug_signing_report.sha256}", level=logging.INFO)
-        self.log(f"Please visit:\nhttps://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/"
-                 f"settings/general/android\nAdd the SHA1 and SHA256 to the list of fingerprints", level=logging.INFO)
-        ready = self.collect("Are you ready to continue? (y/n): ")
-        while ready != "y":
-            ready = self.collect("Are you ready to continue? (y/n): ")
         cmd_str = "flutter doctor"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         os.chdir("..")
+        env.flutter_attached = True
         self.set_env(env)
 
     @staticmethod
@@ -2860,16 +2812,24 @@ async def SNAKE(_: Request,
         self.log(log_str, level=logging.INFO)
         return custom_token
 
-    def do_setup_pysura(self, _):
+    def do_setup_pysura(self, recurse=0):
         """
         Setups up a Pysura project
         """
+        if recurse == "":
+            recurse = 0
+        else:
+            if recurse > 10:
+                self.log("Too many attempts. Aborting project setup.", level=logging.WARNING)
+                return
         if not self.check_gcloud():
             return
         env = self.get_env()
         if env.gcloud_logged_in is False:
             self.do_gcloud_login()
             env = self.get_env()
+        if not env.gcloud_logged_in:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.organization is None:
             self.do_gcloud_choose_organization(None)
             env = self.get_env()
@@ -2884,46 +2844,98 @@ async def SNAKE(_: Request,
         if env.project is None:
             self.gcloud_create_project(project_id=hasura_project_name)
             env = self.get_env()
+        else:
+            cmd_str = f"gcloud config set project {env.project.name.split('/')[-1]}"
+            self.log(cmd_str, level=logging.DEBUG)
+            os.system(cmd_str)
+        if env.project is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.billing_account is None:
             self.do_gcloud_link_billing_account()
             env = self.get_env()
+        if env.billing_account is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.api_services is None:
             self.gcloud_enable_api_services()
             env = self.get_env()
+        if env.api_services is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.network is None:
             self.gcloud_create_network(network_id=hasura_project_name)
             env = self.get_env()
+        if env.network is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.address is None:
             self.gcloud_create_address(address_id=hasura_project_name)
             env = self.get_env()
+        if env.address is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.peering is None:
             self.gcloud_create_vpc_peering(peering_id=hasura_project_name)
             env = self.get_env()
+        if env.peering is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.firewalls is None:
             self.gcloud_create_firewall(firewall_id=hasura_project_name)
             env = self.get_env()
+        if env.firewalls is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.database_credential is None:
             self.do_gcloud_create_database(database_id=hasura_project_name)
             env = self.get_env()
+        if env.database_credential is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.connector is None:
             self.gcloud_create_serverless_connector(connector_id=hasura_project_name)
             env = self.get_env()
+        if env.connector is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.hasura_service_account is None:
             self.update_default_compute_engine_service_account()
             env = self.get_env()
+        if env.hasura_service_account is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         if env.hasura is None:
             self.do_gcloud_deploy_hasura()
             env = self.get_env()
+        if env.hasura is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         self.do_import_hasura_metadata(None)
         if env.auth_service_account is None:
             self.gcloud_create_auth_service_account()
         env = self.get_env()
-        self.enable_database_local(database_id=env.database.name.split("/")[-1])
-        self.create_default_user_table()
-        self.attach_firebase()
-        self.attach_flutter()
-        self.activate_firebase_auth()
-        self.do_deploy_microservice(microservice_name="default")
+        if env.auth_service_account is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
+        if env.local_database_enabled is False:
+            self.enable_database_local(database_id=env.database.name.split("/")[-1])
+            env = self.get_env()
+        if env.local_database_enabled is False:
+            return self.do_setup_pysura(recurse=recurse + 1)
+        if env.default_user_table_created is False:
+            self.create_default_user_table()
+            env = self.get_env()
+        if env.default_user_table_created is False:
+            return self.do_setup_pysura(recurse=recurse + 1)
+        if env.firebase_attached is False:
+            self.attach_firebase()
+            env = self.get_env()
+        if env.firebase_attached is False:
+            return self.do_setup_pysura(recurse=recurse + 1)
+        if env.flutter_attached is False:
+            self.attach_flutter()
+            env = self.get_env()
+        if env.flutter_attached is False:
+            return self.do_setup_pysura(recurse=recurse + 1)
+        if env.firebase_auth_activated is False:
+            self.activate_firebase_auth()
+            env = self.get_env()
+        if env.firebase_auth_activated is False:
+            return self.do_setup_pysura(recurse=recurse + 1)
+        if env.default_microservice is None:
+            self.do_deploy_microservice(microservice_name="default")
+            env = self.get_env()
+        if env.default_microservice is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         self.do_export_hasura_metadata(None)
         env = self.get_env()
         self.log(f"Pysura App is ready to run!, open the flutter_frontend folder in Android Studio!",
