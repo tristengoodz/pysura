@@ -131,6 +131,8 @@ everything, including working outside my area of expertise.
 
 ### TODOS:
 
+# Remove pyscopg2 dependency to drop postgres req
+
 DONE:
 
 - [x] Add support for Google Cloud
@@ -151,11 +153,7 @@ HIGH PRIORITY:
     - [ ] ???
 - [ ] Flutter SSR bindings for Web @Unclaimed
 - [ ] Caching Wizard @Tristen
-- [ ] Update the pysura/pysura_types/root_cmd.py to make better use of prompt_toolkit. It would be nice to have multiple
-  tabs for different level of logs. @Unclaimed
 - [ ] Built in API Version Control @Tristen
-- [ ] Tighten up the command loops. (Ex. Test the deployer and input values that will fail, and make sure it can recover
-  more gracefully) @Unclaimed
 
 LOW PRIORITY:
 

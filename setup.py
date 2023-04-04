@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.99.50",
+    version="0.99.51",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -57,10 +57,10 @@ setup(
             "library_data/pysura_frontend/lib/pages/main/settings/settings_page.dart",
             "library_data/pysura_frontend/lib/pages/main/settings/settings_page_controller.dart",
 
-            "library_data/pysura_frontend/lib/pages/main/misc/error_page.dart",
-            "library_data/pysura_frontend/lib/pages/main/misc/loading_page.dart",
-            "library_data/pysura_frontend/lib/pages/main/misc/splash/splash_page.dart",
-            "library_data/pysura_frontend/lib/pages/main/misc/splash/splash_page_controller.dart",
+            "library_data/pysura_frontend/lib/pages/misc/error_page.dart",
+            "library_data/pysura_frontend/lib/pages/misc/loading_page.dart",
+            "library_data/pysura_frontend/lib/pages/misc/splash/splash_page.dart",
+            "library_data/pysura_frontend/lib/pages/misc/splash/splash_page_controller.dart",
 
             "library_data/pysura_frontend/lib/widgets/graphql_provider_widget.dart",
             "library_data/pysura_frontend/lib/widgets/phone_number_field.dart",
