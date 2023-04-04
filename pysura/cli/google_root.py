@@ -1860,6 +1860,25 @@ alter table app
                 while ready != "y":
                     ready = self.collect("Are you ready to continue? (y/n): ")
             os.chdir("..")
+        if env.hasura is not None and env.hasura.HASURA_GRAPHQL_URL_ROOT is not None and \
+                env.hasura.HASURA_GRAPHQL_ADMIN_SECRET is not None:
+            graphql_file = """{
+  "name": "GraphQL Schema",
+  "schemaPath": "schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "Default GraphQL Endpoint": {
+        "url": "HASURA_GRAPHQL_URL_ROOT",
+        "headers": {
+          "x-hasura-admin-secret": "HASURA_GRAPHQL_ADMIN_SECRET"
+        },
+        "introspect": false
+      }
+    }
+  }
+}""".replace("HASURA_GRAPHQL_URL_ROOT", env.hasura.HASURA_GRAPHQL_URL_ROOT).replace("HASURA_GRAPHQL_ADMIN_SECRET", env.hasura.HASURA_GRAPHQL_ADMIN_SECRET)
+            with open("lib/graphql/.graphql", "w") as f:
+                f.write(graphql_file)
         os.chdir("..")
         env.flutter_attached = True
         env.flutter_app_name = project_name
