@@ -2976,7 +2976,7 @@ async def SNAKE(_: Request,
         shutil.copytree(src_dir, dst_dir)
         os.chdir(f"microservices/{project_name}_web")
         service_name = f"{project_name}_web"
-        deploy_command = (f"gcloud run deploy . "
+        deploy_command = (f"gcloud run deploy {project_name}_web --source . "
                           f"--min-instances=1 "
                           f"--max-instances=10 "
                           f"--cpu=1 "
