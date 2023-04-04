@@ -876,6 +876,7 @@ class GoogleRoot(RootCmd):
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
+        self.set_env(env)
 
     def do_gcloud_deploy_hasura(self, timeout_default="600s", memory_default="2Gi", max_instances_default="10"):
         env = self.get_env()
@@ -2467,6 +2468,12 @@ async def SNAKE(_: Request,
                                           microservice_name="template",
                                           microservice_webhook="{{HASURA_MICROSERVICE_URL}}"
                                           ):
+        """
+        Generate a microservice template
+        :param hasura_metadata_path: /path/to/hasura_metadata.json
+        :param microservice_name: name_of_service
+        :param microservice_webhook: {{HASURA_MICROSERVICE_URL}} -> Webhook name in schema. Env Var
+        """
         if microservice_name == "" or len(microservice_name.strip()) == 0:
             self.log("Microservice name cannot be empty", level=logging.ERROR)
             return

@@ -20,17 +20,13 @@ Because everyone should be a code wizard.
 - flutterfire_cli
 - Dart
 - Flutter
-- XCode (for iOS apps) and iOS Dev Tools
-- Android Studio (for Android apps) and Android Dev Tools
-- Gradle (for Android apps)
+- Android Studio
 - Postgresql (pg_config)
 - Make sure docker is configured with `gcloud auth configure-docker`
 
 ```commandline
 pip install pysura
 pysura
-(pysura_cli) >>> choose_provider
-Please choose a provider: [google,]: google
 (pysura_cli) >>> setup_pysura
 ```
 
