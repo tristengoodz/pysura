@@ -247,6 +247,13 @@ class GoogleRoot(RootCmd):
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
 
+    def do_gcloud_shutdown_project(self, _):
+        """
+        Shuts down the current project
+        """
+        env = self.get_env()
+        pass
+
     def gcloud_enable_api_services(self):
         env = self.get_env()
         if env.project is None:
@@ -1772,6 +1779,22 @@ alter table app
         cmd_str = "flutter doctor"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        if os.path.exists("ios/Runner/GoogleService-Info.plist") and os.path.exists("ios/Runner/Info.plist"):
+            with open("ios/Runner/GoogleService-Info.plist", "rb") as f:
+                ios_plist = plistlib.load(f)
+            reversed_ios_client_id = ios_plist["REVERSED_CLIENT_ID"]
+            with open("ios/Runner/Info.plist", "rb") as f:
+                ios_plist = plistlib.load(f)
+            ios_bundle = {
+                "CFBundleTypeRole": "Editor",
+                "CFBundleURLSchemes": [reversed_ios_client_id]
+            }
+            ios_plist["CFBundleURLTypes"] = [
+                ios_bundle
+            ]
+            env.ios_cf_bundle_url_types = IosCFBundleURLTypes(**ios_bundle)
+            with open("ios/Runner/Info.plist", "wb") as f:
+                plistlib.dump(ios_plist, f)
         os.chdir("..")
         env.flutter_attached = True
         self.set_env(env)
@@ -2775,6 +2798,14 @@ async def SNAKE(_: Request,
                 new_metadata[key] = value
 
         for action in new_hasura_metadata.get("actions", []):
+            if action.get("request_transform", None) is None:
+                action["request_transform"] = {}
+            if action["request_transform"].get("body", None) is None:
+                action["request_transform"]["body"] = {}
+            action["request_transform"]["body"] = {
+                "action": "transform",
+                "template": "{{" + f"$body?.input?.{action['action_name']}_input" + "}}"
+            }
             new_actions.append(action)
 
         for obj in new_hasura_metadata.get("custom_types", {}).get("objects", []):
