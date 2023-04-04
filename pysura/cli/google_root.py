@@ -1721,21 +1721,15 @@ alter table app
         if env.hasura is None:
             self.log("Please setup Hasura first", level=logging.ERROR)
             return
-
-        project_name = env.project.name.split('/')[-1].replace("-", "_")
-        default_choice = project_name
-        confirm_choice = self.collect(
-            f"Please enter the name of the Flutter project or press enter to use the default"
-            f"(default: {project_name}): ")
-        if confirm_choice == "":
-            confirm_choice = default_choice
-        else:
-            new_confirm_choice = confirm_choice.replace("-", "_").replace(" ", "_").replace(".", "_")
-            if new_confirm_choice != confirm_choice:
-                self.log(f"Project name converted to {new_confirm_choice}", level=logging.INFO)
-                confirm_choice = new_confirm_choice
-            if not self.confirm_loop(confirm_choice):
-                self.attach_flutter()
+        self.log(f"Your project name is: {env.project.name.split('/')[-1]}", level=logging.INFO)
+        confirm_choice = self.collect(f"Please enter a name of the Flutter project.\n"
+                                      f"This will be used to register your app.\n"
+                                      f"com.example.[projectName]\n"
+                                      f"Do not use spaces, and use _ instead of -\n"
+                                      f"Project Name: ",
+                                      [env.project.name.split('/')[-1].replace("-", "_").replace(" ", "_")])
+        if not self.confirm_loop(confirm_choice):
+            self.attach_flutter()
         project_name = confirm_choice
         if os.path.isdir(project_name):
             os.chdir(project_name)
@@ -2647,6 +2641,16 @@ async def SNAKE(_: Request,
                                timeout_default="600s",
                                memory_default="2Gi",
                                max_instances_default="10"):
+        """
+        Deploys, or redeploys a microservice. Will rebuild routers, but as long as you leave the comments alone, it
+        won't overwrite your code!
+
+        :param microservice_name: default
+        :param timeout_default: 600s
+        :param memory_default: 2Gi
+        :param max_instances_default: 10
+        Example: deploy_microservice default 600s 2Gi 10
+        """
         if microservice_name == "" or len(microservice_name.strip()) == 0:
             self.log("Microservice name cannot be empty", level=logging.ERROR)
             return
@@ -2875,7 +2879,7 @@ async def SNAKE(_: Request,
                 action["request_transform"]["body"] = {}
             action["request_transform"]["body"] = {
                 "action": "transform",
-                "template": "{{" + f"$body?.input?.{action['action_name']}_input" + "}}"
+                "template": "{{" + f"$body?.input?.{action['name']}_input" + "}}"
             }
             new_actions.append(action)
 
@@ -2894,6 +2898,11 @@ async def SNAKE(_: Request,
             json.dump(new_metadata, f, indent=4)
 
     def do_load_firebase_app(self, _):
+        """
+        Creates a local firebase admin instance
+        :param _:
+        :return:
+        """
         env = self.get_env()
         if env.auth_service_account is None:
             self.log("No firebase service account found. Skipping firebase app setup.", level=logging.WARNING)
@@ -2909,6 +2918,12 @@ async def SNAKE(_: Request,
         self.firebase_app = firebase_app
 
     def do_generate_token(self, role="admin", uid="uid"):
+        """
+        TODO: Make this work properly, it might need to call an action on the backend.
+        :param role:
+        :param uid:
+        :return:
+        """
         if self.firebase_app is None:
             self.log("Firebase app not initialized. Skipping token generation.", level=logging.WARNING)
             return

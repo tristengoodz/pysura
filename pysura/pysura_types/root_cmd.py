@@ -10,8 +10,11 @@ import time
 import os
 import json
 
+NUM_STEPS = 4
+
 
 class LogLevelFilter(logging.Filter):
+    """This is a logging filter that filters out all messages that are not of a certain level."""
     def __init__(self, level):
         super().__init__()
         self.level = level
@@ -23,6 +26,9 @@ class LogLevelFilter(logging.Filter):
 class RootCmd(Cmd):
 
     def setup_logging(self):
+        """
+        This setup_logging function is called to create the log handlers and loggers for each file.
+        """
         if not os.path.exists("logs"):
             os.mkdir("logs")
         log_path = os.path.join(os.getcwd(), "logs")
@@ -66,6 +72,7 @@ class RootCmd(Cmd):
     def __init__(self, *args, logger=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.prompt = "root> "
+        # We are overriding Cmd, so all commands with a do_ prefix will be turned into command line commands.
         # Auto build a command completer by inspecting the methods attached to self, and stripping the "do_" prefix
         self.completer = WordCompleter([
             *[i[0][3:] for i in inspect.getmembers(self, predicate=inspect.isfunction) if
@@ -79,6 +86,21 @@ class RootCmd(Cmd):
         else:
             self.root = logger
         self.history = InMemoryHistory()
+        self.setup_step = 0
+
+    def inc_step(self):
+        self.setup_step += 1
+
+    def do_command1(self, arg):
+        self.log("Command 1", level=logging.INFO)
+        self.setup_step += 1
+        os.system("npm -v")
+        self.setup_step += 1
+        response = os.popen("npm -v").read()
+        self.setup_step += 1
+        self.log(f"Response: {response}", level=logging.INFO)
+        self.setup_step += 1
+        self.log("Setup is complete!")
 
     def cmdloop(self, intro=None):
         self.preloop()
