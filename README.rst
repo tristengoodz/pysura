@@ -30,16 +30,14 @@ To deploy Hasura with Pysura with baked in Auth and a templated Flutter Frontend
 * flutterfire_cli
 * Dart
 * Flutter
-* XCode (for iOS apps) and iOS Dev Tools
-* Android Studio (for Android apps) and Android Dev Tools
-* Gradle (for Android apps)
+* Android Studio
+* Postgresql (pg_config)
+* Make sure docker is configured with ``gcloud auth configure-docker``
 
 .. code-block:: commandline
 
    pip install pysura
    pysura
-   (pysura_cli) >>> choose_provider
-   Please choose a provider: [google,]: google
    (pysura_cli) >>> setup_pysura
 
 Note: The installer is doing a lot of things. Some of them take a long time, like creating databases, firewalls, and VPC
