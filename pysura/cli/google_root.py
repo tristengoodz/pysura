@@ -2957,7 +2957,7 @@ async def SNAKE(_: Request,
         if not os.path.exists("microservices"):
             os.mkdir("microservices")
         if not os.path.exists(f"microservices/{project_name}_web"):
-            os.mkdir(f"{project_name}_web")
+            os.mkdir(f"microservices/{project_name}_web")
         path = self.get_site_packages_path(submodule="pysura_ssr")
         for root, dirs, files in os.walk(path):
             for f in files:
