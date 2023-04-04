@@ -10,12 +10,12 @@ import psycopg2
 import site
 import shutil
 import plistlib
-import re
 import firebase_admin
 from firebase_admin import credentials, initialize_app, auth
 from python_graphql_client import GraphqlClient
 from requests.exceptions import ConnectionError
 import time
+import re
 
 
 class Gql:
@@ -251,7 +251,6 @@ class GoogleRoot(RootCmd):
         """
         Shuts down the current project
         """
-        env = self.get_env()
         pass
 
     def gcloud_enable_api_services(self):
@@ -1724,6 +1723,20 @@ alter table app
             return
 
         project_name = env.project.name.split('/')[-1].replace("-", "_")
+        default_choice = project_name
+        confirm_choice = self.collect(
+            f"Please enter the name of the Flutter project or press enter to use the default"
+            f"(default: {project_name}): ")
+        if confirm_choice == "":
+            confirm_choice = default_choice
+        else:
+            new_confirm_choice = confirm_choice.replace("-", "_").replace(" ", "_").replace(".", "_")
+            if new_confirm_choice != confirm_choice:
+                self.log(f"Project name converted to {new_confirm_choice}", level=logging.INFO)
+                confirm_choice = new_confirm_choice
+            if not self.confirm_loop(confirm_choice):
+                self.attach_flutter()
+        project_name = confirm_choice
         if os.path.isdir(project_name):
             os.chdir(project_name)
         else:
@@ -1795,6 +1808,52 @@ alter table app
             env.ios_cf_bundle_url_types = IosCFBundleURLTypes(**ios_bundle)
             with open("ios/Runner/Info.plist", "wb") as f:
                 plistlib.dump(ios_plist, f)
+
+        if os.path.isdir("android"):
+            os.chdir("android")
+            cmd_str = "./gradlew signingReport"
+            self.log(cmd_str, level=logging.DEBUG)
+            response = os.popen(cmd_str).read()
+            variants = re.findall(r'Variant: (.+)', response)
+            configs = re.findall(r'Config: (.+)', response)
+            md5s = re.findall(r'MD5: (.+)', response)
+            sha1s = re.findall(r'SHA1: (.+)', response)
+            sha256s = re.findall(r'SHA-256: (.+)', response)
+            valid_until = re.findall(r'Valid until: (.+)', response)
+            if len(variants) == 0:
+                self.log("No signing report found", level=logging.WARNING)
+                cmd_str = "gradlew signingReport"
+                self.log(cmd_str, level=logging.DEBUG)
+                response = os.popen(cmd_str).read()
+                variants = re.findall(r'Variant: (.+)', response)
+                configs = re.findall(r'Config: (.+)', response)
+                md5s = re.findall(r'MD5: (.+)', response)
+                sha1s = re.findall(r'SHA1: (.+)', response)
+                sha256s = re.findall(r'SHA-256: (.+)', response)
+                valid_until = re.findall(r'Valid until: (.+)', response)
+
+            if len(variants) != 0:
+                signing_reports = []
+                for variant, config, md5, sha1, sha256, valid in zip(variants, configs, md5s, sha1s, sha256s,
+                                                                     valid_until):
+                    signing_report_data = {
+                        'variant': variant,
+                        'config': config,
+                        'md5': md5,
+                        'sha1': sha1,
+                        'sha256': sha256,
+                        'valid_until': valid
+                    }
+                    android_report = AndroidSigningReport(**signing_report_data)
+                    signing_reports.append(android_report)
+                    if android_report.variant == "debug":
+                        env.android_debug_signing_report = android_report
+
+                env.android_signing_reports = signing_reports
+            else:
+                self.log("No signing report found", level=logging.WARNING)
+                env.android_signing_reports = []
+            os.chdir("..")
         os.chdir("..")
         env.flutter_attached = True
         self.set_env(env)

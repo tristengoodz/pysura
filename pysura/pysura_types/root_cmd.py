@@ -138,7 +138,7 @@ class RootCmd(Cmd):
             func()
 
     def confirm_loop(self, confirm_str):
-        confirm = self.collect("Retype to confirm: ")
+        confirm = self.collect(f"Retype to confirm (Retype this {confirm_str}, Up key = History): ")
         if confirm.strip() != confirm_str.strip():
             self.log("Cancelled.")
             return False
