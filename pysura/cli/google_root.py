@@ -1853,6 +1853,18 @@ alter table app
             else:
                 self.log("No signing report found", level=logging.WARNING)
                 env.android_signing_reports = []
+            if env.android_debug_signing_report is not None and \
+                    env.android_debug_signing_report.sha1 is not None and \
+                    env.android_debug_signing_report.sha256 is not None:
+                self.log(f"SHA1:\n{env.android_debug_signing_report.sha1}", level=logging.INFO)
+                self.log(f"SHA256:\n{env.android_debug_signing_report.sha256}", level=logging.INFO)
+                self.log(
+                    f"Please visit:\nhttps://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/"
+                    f"settings/general/android\nAdd the SHA1 and SHA256 to the list of fingerprints",
+                    level=logging.INFO)
+                ready = self.collect("Are you ready to continue? (y/n): ")
+                while ready != "y":
+                    ready = self.collect("Are you ready to continue? (y/n): ")
             os.chdir("..")
         os.chdir("..")
         env.flutter_attached = True
