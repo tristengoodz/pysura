@@ -2950,7 +2950,7 @@ async def SNAKE(_: Request,
         project_name = env.flutter_app_name
         if os.path.exists(f"{project_name}/web"):
             os.chdir(f"{project_name}")
-            cmd_str = "flutter build web"
+            cmd_str = "flutter build web --release"
             self.log(f"Running command: {cmd_str}", level=logging.INFO)
             os.system(cmd_str)
             os.chdir("..")
@@ -2963,8 +2963,8 @@ async def SNAKE(_: Request,
             for f in files:
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
                     continue
-                if f in ["Dockerfile", "nginx.conf"]:
-                    shutil.copy(os.path.join(root, f), ".")
+                if f in ["Dockerfile"]:
+                    shutil.copy(os.path.join(root, f), f"microservices/{project_name}_web")
         if not os.path.isdir(f"microservices/{project_name}_web/build"):
             os.mkdir(f"microservices/{project_name}_web/build")
         else:

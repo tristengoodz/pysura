@@ -1,17 +1,17 @@
-# Use the official Nginx image as the base image
-FROM nginx:stable-alpine
+# Use a lightweight base image with Node.js
+FROM node:14-alpine
 
-# Remove the default Nginx configuration file
-RUN rm /etc/nginx/conf.d/default.conf
+# Set the working directory
+WORKDIR /app
 
-# Copy your custom Nginx configuration file
-COPY nginx.conf /etc/nginx/conf.d
+# Install a basic web server (e.g., serve)
+RUN npm install -g serve
 
-# Copy the Flutter web build assets to the Nginx html directory
-COPY build/web /usr/share/nginx/html
+# Copy the built web assets to the container
+COPY build/web /app
 
-# Expose the port Nginx is running on (default is 80)
-EXPOSE 80
+# Expose the port the web server will run on
+EXPOSE 8080
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start the web server
+CMD ["serve", "-s", ".", "-l", "8080"]
