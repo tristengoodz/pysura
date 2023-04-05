@@ -6,16 +6,15 @@ from pydantic.error_wrappers import ValidationError
 import logging
 import random
 from string import ascii_letters, digits
-import psycopg2
 import site
 import shutil
 import plistlib
-import firebase_admin
-from firebase_admin import credentials, initialize_app, auth
 from python_graphql_client import GraphqlClient
 from requests.exceptions import ConnectionError
 import time
 import re
+import asyncpg
+import asyncio
 
 
 class Gql:
@@ -41,7 +40,6 @@ class GoogleRoot(RootCmd):
         self.intro = "Welcome to Pysura for Google Architectures! Type help or ? to list commands."
         self.prompt = "(pysura_cli) >>> "
         self.setup_step = 0
-        self.firebase_app = None
         self.graphql_client = None
 
     def get_graphql_client(self):
@@ -81,20 +79,21 @@ class GoogleRoot(RootCmd):
         return os.path.join(site.getsitepackages()[0], "pysura", "library_data", submodule)
 
     @staticmethod
-    def get_database_connection(
-            host="secret",
-            name="postgres",
-            user="postgres",
-            password="secret",
-            port=5432):
-        conn = psycopg2.connect(
+    async def run_sql(host="secret",
+                      name="postgres",
+                      user="postgres",
+                      password="secret",
+                      port=5432,
+                      sql=""):
+        conn = await asyncpg.connect(
             host=host,
             database=name,
             user=user,
             password=password,
             port=port
         )
-        return conn
+        await conn.execute(sql)
+        await conn.close()
 
     @staticmethod
     def password(length: int = 64):
@@ -1132,11 +1131,6 @@ class GoogleRoot(RootCmd):
             self.log("No primary IP address found.", level=logging.ERROR)
             return
 
-        conn = self.get_database_connection(
-            host=host,
-            password=env.database_credential.password
-        )
-
         db_string = """create table "ENUM_ROLE"
 (
     value   text not null,
@@ -1204,12 +1198,23 @@ create table app
 alter table app
     owner to postgres;"""
         self.log(db_string, level=logging.DEBUG)
-        cursor = conn.cursor()
-        cursor.execute(db_string)
-        cursor.execute("insert into \"ENUM_ROLE\" (value) values ('admin')")
-        cursor.execute("insert into \"ENUM_ROLE\" (value) values ('user')")
-        conn.commit()
-        conn.close()
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=db_string
+        ))
+        db_string = "insert into \"ENUM_ROLE\" (value) values ('admin')"
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=db_string
+        ))
+        db_string = "insert into \"ENUM_ROLE\" (value) values ('user')"
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=db_string
+        ))
         self.do_import_hasura_metadata(None)
         with open("hasura_metadata.json", "r") as f:
             metadata = json.load(f)
@@ -1876,7 +1881,8 @@ alter table app
       }
     }
   }
-}""".replace("HASURA_GRAPHQL_URL_ROOT", env.hasura.HASURA_GRAPHQL_URL_ROOT).replace("HASURA_GRAPHQL_ADMIN_SECRET", env.hasura.HASURA_GRAPHQL_ADMIN_SECRET)
+}""".replace("HASURA_GRAPHQL_URL_ROOT", env.hasura.HASURA_GRAPHQL_URL_ROOT
+             ).replace("HASURA_GRAPHQL_ADMIN_SECRET", env.hasura.HASURA_GRAPHQL_ADMIN_SECRET)
             with open("lib/graphql/.graphql", "w") as f:
                 f.write(graphql_file)
         os.chdir("..")
@@ -2917,50 +2923,6 @@ async def SNAKE(_: Request,
         with open("hasura_metadata.json", "w") as f:
             json.dump(new_metadata, f, indent=4)
 
-    def do_load_firebase_app(self, _):
-        """
-        Creates a local firebase admin instance
-        :param _:
-        :return:
-        """
-        env = self.get_env()
-        if env.auth_service_account is None:
-            self.log("No firebase service account found. Skipping firebase app setup.", level=logging.WARNING)
-            return
-        if env.auth_service_account.key_file is None:
-            self.log("No firebase service account found. Skipping firebase app setup.", level=logging.WARNING)
-            return
-        cred_dict = env.auth_service_account.key_file
-        try:
-            firebase_app = firebase_admin.get_app()
-        except ValueError:
-            firebase_app = initialize_app(credential=credentials.Certificate(cred_dict))
-        self.firebase_app = firebase_app
-
-    def do_generate_token(self, role="admin", uid="uid"):
-        """
-        TODO: Make this work properly, it might need to call an action on the backend.
-        :param role:
-        :param uid:
-        :return:
-        """
-        if self.firebase_app is None:
-            self.log("Firebase app not initialized. Skipping token generation.", level=logging.WARNING)
-            return
-        additional_claims = {
-            "https://hasura.io/jwt/claims": {
-                "x-hasura-default-role": role,
-                "x-hasura-allowed-roles": [
-                    role
-                ],
-                "x-hasura-user-id": uid
-            }
-        }
-        custom_token = auth.create_custom_token(uid, additional_claims)
-        log_str = f"Generated token for role {role} and uid {uid}\n{custom_token}"
-        self.log(log_str, level=logging.INFO)
-        return custom_token
-
     def do_deploy_frontend(self, _):
         env = self.get_env()
         if env.flutter_app_name is None:
@@ -3145,8 +3107,12 @@ async def SNAKE(_: Request,
         if env.default_microservice is None:
             return self.do_setup_pysura(recurse=recurse + 1)
         self.do_export_hasura_metadata(None)
-        self.do_load_firebase_app(None)
-        self.do_deploy_frontend(None)
+        env = self.get_env()
+        if env.frontend_ssr_service is None:
+            self.do_deploy_frontend(None)
+            env = self.get_env()
+        if env.frontend_ssr_service is None:
+            return self.do_setup_pysura(recurse=recurse + 1)
         env = self.get_env()
         phone_wizard = self.collect(
             "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
@@ -3174,7 +3140,7 @@ async def SNAKE(_: Request,
                      f"/providers",
                      level=logging.INFO
                      )
-            admin_phone = self.collect("What phone number did you add?: ")
+            admin_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
             while not self.confirm_loop(admin_phone):
                 self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
                          level=logging.INFO)
@@ -3183,7 +3149,7 @@ async def SNAKE(_: Request,
                     f"/providers",
                     level=logging.INFO
                 )
-                admin_phone = self.collect("What phone number did you add?: ")
+                admin_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
             admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
             while not self.confirm_loop(admin_code):
                 admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
@@ -3228,7 +3194,7 @@ async def SNAKE(_: Request,
                     f"/providers",
                     level=logging.INFO
                 )
-                user_phone = self.collect("What phone number did you add?: ")
+                user_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
             user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
             while not self.confirm_loop(user_code):
                 user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
@@ -3259,7 +3225,7 @@ async def SNAKE(_: Request,
         if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
             env.test_phone_numbers = test_phone_numbers
             self.set_env(env)
-        self.log(f"Pysura App is ready to run!, open the flutter_frontend folder in Android Studio!",
+        self.log(f"Pysura App is ready to run!, open the folder named {env.flutter_app_name} in Android Studio!",
                  level=logging.INFO)
         assert env.hasura is not None
         assert env.hasura_metadata is not None
@@ -3305,9 +3271,11 @@ Your Hasura Admin Secret is:
 The event secret for the all attached microservices is:
 {env.hasura.HASURA_EVENT_SECRET}
 
-You can find authorization tokens for your microservice by running your flutter application and logging in.
+You can find authorization tokens for your microservice by running your flutter application and logging in, navigate to
+the settings tab, and click the "Copy GraphQL Token" button and a bearer token will be copied to your clipboard.
+The bearer token will have the role of the user that is logged in.
 
 """
         if env.frontend_ssr_service is not None:
-            log_str += f"You can login to your web application here: {env.frontend_ssr_service.status.address.url}"
+            log_str += f"You can login to your web application here: {env.frontend_ssr_service.status.address.url}\n"
         self.log(log_str, level=logging.INFO)

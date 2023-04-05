@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.99.53",
+    version="0.99.54",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -99,17 +99,10 @@ setup(
     keywords="hasura, graphql, postgresql, google-cloud, python, pysura, backend, backend-in-a-box",
     python_requires=">=3.9",
     install_requires=[
-        "psycopg2",
         "pydantic",
         "prompt_toolkit",
         "python-graphql-client",
-        "fastapi",
-        "google-cloud-logging",
-        "google-cloud-secret-manager",
-        "firebase-admin",
-        "uvicorn",
         "requests",
-        "gunicorn",
-        "Pillow"
+        "asyncpg"
     ]
 )
