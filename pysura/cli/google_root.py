@@ -2996,8 +2996,8 @@ async def SNAKE(_: Request,
             }
             action["definition"]["request_transform"]["method"] = "POST"
             action["definition"]["request_transform"]["url"] = "{{$base_url}}" + f"/{action['name']}/"
-            action["definition"]["request_transform"]["query_params"] = action["request_transform"].get("query_params",
-                                                                                                        {})
+            action["definition"]["request_transform"]["query_params"] = action["definition"]["request_transform"].get(
+                "query_params", {})
             action["definition"]["request_transform"]["template_engine"] = "Kriti"
             action["definition"]["request_transform"]["version"] = 2
             new_actions.append(action)
