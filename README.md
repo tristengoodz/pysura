@@ -58,9 +58,27 @@ Let's bring python everywhere. And let's skin it with Flutter and feed it all th
 
 Do I have to use Flutter for the frontend? No way! Pysura places firebase in front of your Hasura instance, so if your
 frontend of choice supports Firebase Auth integrations or libraries, you can use it, or even better open a PR and add a
-template for your provider.
+template for your provider. You *do* need Flutter for installation
 
-What is a Pysura Microservice?
+### What does the Pysura installer do?
+
+- Authenticates you with gcloud
+- Creates a new project in Google Cloud
+- Sets up a VPC network inside the project
+- Creates a new Cloud SQL instance running Postgres 14
+- Stores all Env variables in secret manager to be loaded from containers
+- Creates a new Hasura instance in Cloud Run with scaling settings always allocating memory for at least 1 instance
+- Attaches Firebase to the project
+- Deploys firebase functions triggering on user.create/delete managing Hasura user data each with min instances set to 1
+- Adds JWT authentication via Firebase to Hasura with phone sign in
+- Creates a new Flutter app with Firebase Auth using flutterfire
+- Configures Android signing keys (COMING SOON: Auto app icon configuration)
+- Configures iOS URL schemes (COMING SOON: Auto app icon configuration)
+- Updates the default flutter template to use the Pysura template for Flutter 
+- ...
+- Deploys a default microservice on Cloud Run using Pysura! Includes default event that handles JWT claim changes
+
+### What is a Pysura Microservice?
 
 It's a wrapper around a FastAPI app that holds a collection of actions, events, and chron-jobs related to its function.
 I.e. A payment microservice might have all code related to payment processing. It bakes in Auth with an extra decorator
@@ -70,6 +88,27 @@ RBAC at a column level, and you can design rather complex auth rules using Hasur
 event, and chron-job is placed in a separate file with routing already handled and the calling users information passed
 in the calling context. It makes it very easy to build your business logic in a clean, consistent way that is easy to
 test and maintain, and also easy to hand off to other developers.
+
+Pysura uses middleware to handle the auth, and provide you access to app resources like the database, and the caller.
+It wraps FastAPI, and uses a router for each action, event, or chron-job. Separating the business logic into collections
+of microservices each containing folders of actions, events, and chron-jobs each delegated to their own file which 
+makes it easy to scale and maintain.
+
+Front-end clients should utilize the Hasura GraphQL API to access and mutate the data in the database. This is the 
+recommended way to access the data. It is important to make sure you set up proper roles and permissions in Hasura to
+ensure that only the correct users can access the data meant for them. By default, Pysura includes a user and admin role
+
+
+
+
+What does a Pysura Action look like?
+
+TODO: Examples from base app
+
+```python3
+
+
+```
 
 ### Do I need to deploy Hasura with Pysura to use it?
 

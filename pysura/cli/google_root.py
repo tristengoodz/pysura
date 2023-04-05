@@ -3026,12 +3026,6 @@ async def SNAKE(_: Request,
             self.log("No flutter app name found. Skipping flutter app deployment.", level=logging.WARNING)
             return
         project_name = env.flutter_app_name
-        if os.path.exists(f"{project_name}/web"):
-            os.chdir(f"{project_name}")
-            cmd_str = "flutter build web"
-            self.log(f"Running command: {cmd_str}", level=logging.INFO)
-            os.system(cmd_str)
-            os.chdir("..")
         if not os.path.exists("microservices"):
             os.mkdir("microservices")
         if not os.path.exists(f"microservices/{project_name}_web"):
@@ -3041,7 +3035,7 @@ async def SNAKE(_: Request,
             for f in files:
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
                     continue
-                if f in ["Dockerfile"]:
+                if f in [".firebaserc", "firebase.json"]:
                     shutil.copy(os.path.join(root, f), f"microservices/{project_name}_web")
         if not os.path.isdir(f"microservices/{project_name}_web/build"):
             os.mkdir(f"microservices/{project_name}_web/build")
@@ -3049,34 +3043,27 @@ async def SNAKE(_: Request,
             shutil.rmtree(f"microservices/{project_name}_web/build")
             os.mkdir(f"microservices/{project_name}_web/build")
 
+        if os.path.exists(f"{project_name}/web"):
+            os.chdir(f"{project_name}")
+            cmd_str = "flutter build web --release"
+            self.log(f"Running command: {cmd_str}", level=logging.INFO)
+            os.system(cmd_str)
+            os.chdir("..")
+
         src_dir = f"{project_name}/build/web"
         dst_dir = f"microservices/{project_name}_web/build/web"
         shutil.copytree(src_dir, dst_dir)
         os.chdir(f"microservices/{project_name}_web")
+        with open(".firebaserc") as f:
+            data = json.load(f)
+        data["projects"]["default"] = env.project.name.split('/')[-1]
+        with open(".firebaserc", "w") as f:
+            json.dump(data, f, indent=4)
         service_name = f"{project_name}_web".replace("_", "-").replace(" ", "")
-        deploy_command = (f"gcloud run deploy {service_name} --source . "
-                          f"--min-instances=1 "
-                          f"--max-instances=10 "
-                          f"--cpu=1 "
-                          f"--memory=2Gi "
-                          f"--timeout=600s "
-                          f"--platform=managed "
-                          f"--allow-unauthenticated "
-                          f"--no-cpu-throttling "
-                          f"--project={env.project.name.split('/')[-1]}")
+        deploy_command = f"firebase deploy --only hosting"
         self.log(deploy_command, level=logging.DEBUG)
         os.system(deploy_command)
         os.chdir("../..")
-        services = json.loads(os.popen(f"gcloud run services list "
-                                       f"--project={env.project.name.split('/')[-1]} "
-                                       f"--format=json").read())
-        new_services = []
-        for service in services:
-            service_data = GoogleService(**service)
-            if service_data.metadata.name == service_name:
-                env.frontend_ssr_service = service_data
-            new_services.append(service_data)
-        env.services = new_services
         self.set_env(env)
 
     def do_setup_pysura(self, recurse=0):
@@ -3105,7 +3092,7 @@ async def SNAKE(_: Request,
             env = self.get_env()
         if not env.gcloud_logged_in:
             return self.do_setup_pysura(recurse=recurse + 1)
-        cmd_str = "gcloud auth configure-docker"
+        cmd_str = "gcloud auth configure-docker gcr.io"
         self.log(f"Running command: {cmd_str}", level=logging.INFO)
         os.system(cmd_str)
         if env.organization is None:
@@ -3216,11 +3203,7 @@ async def SNAKE(_: Request,
             return self.do_setup_pysura(recurse=recurse + 1)
         self.do_export_hasura_metadata(None)
         env = self.get_env()
-        if env.frontend_ssr_service is None:
-            self.do_deploy_frontend(None)
-            env = self.get_env()
-        if env.frontend_ssr_service is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
+        self.do_deploy_frontend(None)
         env = self.get_env()
         phone_wizard = self.collect(
             "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
