@@ -1764,10 +1764,9 @@ alter table app
         try:
             result = os.popen('docker info')
             output = result.read()
-            version_regex = re.compile(r'^Server\s+Version', re.MULTILINE)
-            match = version_regex.search(output)
-            if match is None:
-                self.log("Please install docker", level=logging.ERROR)
+            not_running = "Is the docker daemon running?"
+            if not_running in output:
+                self.log("Please start the docker daemon!", level=logging.ERROR)
                 raise Exception("docker daemon not running")
             return True
         except Exception as e:
