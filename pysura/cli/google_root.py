@@ -2918,6 +2918,8 @@ async def SNAKE(_: Request,
         for key, value in metadata.items():
             if key == "actions":
                 for action in value:
+                    if action.get("definition", None).get("handler", None) == url_wrapper:
+                        continue
                     if action.get("request_transform", None) is None:
                         action["request_transform"] = {}
                     if action["request_transform"].get("body", None) is None:
@@ -2926,13 +2928,6 @@ async def SNAKE(_: Request,
                         "action": "transform",
                         "template": "{{" + f"$body?.input?.{action['name']}_input" + "}}"
                     }
-                    action["request_transform"]["method"] = "POST"
-                    action["request_transform"]["url"] = "{{$base_url}}" + f"/{action['name']}/"
-                    action["request_transform"]["query_params"] = action["request_transform"].get("query_params", {})
-                    action["request_transform"]["template_engine"] = "Kriti"
-                    action["request_transform"]["version"] = 2
-                    if action.get("definition", None).get("handler", None) == url_wrapper:
-                        continue
                     new_actions.append(action)
             elif key == "custom_types":
                 objects = value.get("objects", [])
