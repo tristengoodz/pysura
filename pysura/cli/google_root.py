@@ -2918,8 +2918,6 @@ async def SNAKE(_: Request,
         for key, value in metadata.items():
             if key == "actions":
                 for action in value:
-                    if action["handler"] == url_wrapper:
-                        continue
                     if action.get("request_transform", None) is None:
                         action["request_transform"] = {}
                     if action["request_transform"].get("body", None) is None:
@@ -2933,6 +2931,8 @@ async def SNAKE(_: Request,
                     action["request_transform"]["query_params"] = action["request_transform"].get("query_params", {})
                     action["request_transform"]["template_engine"] = "Kriti"
                     action["request_transform"]["version"] = 2
+                    if action.get("definition", None).get("handler", None) == url_wrapper:
+                        continue
                     new_actions.append(action)
             elif key == "custom_types":
                 objects = value.get("objects", [])
@@ -3059,7 +3059,6 @@ async def SNAKE(_: Request,
         data["projects"]["default"] = env.project.name.split('/')[-1]
         with open(".firebaserc", "w") as f:
             json.dump(data, f, indent=4)
-        service_name = f"{project_name}_web".replace("_", "-").replace(" ", "")
         deploy_command = f"firebase deploy --only hosting"
         self.log(deploy_command, level=logging.DEBUG)
         os.system(deploy_command)
@@ -3202,7 +3201,6 @@ async def SNAKE(_: Request,
         if env.default_microservice is None:
             return self.do_setup_pysura(recurse=recurse + 1)
         self.do_export_hasura_metadata(None)
-        env = self.get_env()
         self.do_deploy_frontend(None)
         env = self.get_env()
         phone_wizard = self.collect(
@@ -3244,11 +3242,8 @@ async def SNAKE(_: Request,
             admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
             while not self.confirm_loop(admin_code):
                 admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
-            if env.frontend_ssr_service is not None:
-                self.log(f"Please login to your app with the phone number you just added!\n"
-                         f"{env.frontend_ssr_service.status.address.url}", level=logging.INFO)
-            else:
-                self.log(f"Please run your app and login with the phone number you just added!", level=logging.INFO)
+            self.log(f"Please login to your app with the phone number you just added!\n"
+                     f"https://{env.project.name.split('/')[-1]}.web.app/", level=logging.INFO)
             ready = self.collect("Are you ready to continue? (y/n): ")
             while ready != "y":
                 ready = self.collect("Are you ready to continue? (y/n): ")
@@ -3289,11 +3284,8 @@ async def SNAKE(_: Request,
             user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
             while not self.confirm_loop(user_code):
                 user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
-            if env.frontend_ssr_service is not None:
-                self.log(f"Please login to your app with the phone number you just added!\n"
-                         f"{env.frontend_ssr_service.status.address.url}", level=logging.INFO)
-            else:
-                self.log(f"Please run your app and login with the phone number you just added!", level=logging.INFO)
+            self.log(f"Please login to your app with the phone number you just added!\n"
+                     f"https://{env.project.name.split('/')[-1]}.web.app/", level=logging.INFO)
             ready = self.collect("Are you ready to continue? (y/n): ")
             while ready != "y":
                 ready = self.collect("Are you ready to continue? (y/n): ")
@@ -3365,7 +3357,10 @@ You can find authorization tokens for your microservice by running your flutter 
 the settings tab, and click the "Copy GraphQL Token" button and a bearer token will be copied to your clipboard.
 The bearer token will have the role of the user that is logged in.
 
+You can find your web application here:
+https://{env.project.name.split('/')[-1]}.web.app/
+
+
 """
-        if env.frontend_ssr_service is not None:
-            log_str += f"You can login to your web application here: {env.frontend_ssr_service.status.address.url}\n"
+
         self.log(log_str, level=logging.INFO)

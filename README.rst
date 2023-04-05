@@ -29,7 +29,6 @@ To deploy Hasura with Pysura with baked in Auth and a templated Flutter Frontend
 * npm
 * Dart
 * Flutter
-* Make sure docker is configured with ``gcloud auth configure-docker``
 
 .. code-block:: commandline
 
@@ -75,9 +74,30 @@ Let's bring python everywhere. And let's skin it with Flutter and feed it all th
 
 Do I have to use Flutter for the frontend? No way! Pysura places firebase in front of your Hasura instance, so if your
 frontend of choice supports Firebase Auth integrations or libraries, you can use it, or even better open a PR and add a
-template for your provider.
+template for your provider. You *do* need Flutter for installation
+
+What does the Pysura installer do?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+* Authenticates you with gcloud
+* Creates a new project in Google Cloud
+* Sets up a VPC network inside the project
+* Creates a new Cloud SQL instance running Postgres 14
+* Stores all Env variables in secret manager to be loaded from containers
+* Creates a new Hasura instance in Cloud Run with scaling settings always allocating memory for at least 1 instance
+* Attaches Firebase to the project
+* Deploys firebase functions triggering on user.create/delete managing Hasura user data each with min instances set to 1
+* Adds JWT authentication via Firebase to Hasura with phone sign in
+* Creates a new Flutter app with Firebase Auth using flutterfire
+* Configures Android signing keys (COMING SOON: Auto app icon configuration)
+* Configures iOS URL schemes (COMING SOON: Auto app icon configuration)
+* Updates the default flutter template to use the Pysura template for Flutter 
+* Deploys the flutter template to Firebase hosting for the web. (COMING SOON: Auto app icon configuration)
+* Deploys a default microservice on Cloud Run using Pysura! Includes default event that handles JWT claim changes
 
 What is a Pysura Microservice?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It's a wrapper around a FastAPI app that holds a collection of actions, events, and chron-jobs related to its function.
 I.e. A payment microservice might have all code related to payment processing. It bakes in Auth with an extra decorator
@@ -87,6 +107,41 @@ RBAC at a column level, and you can design rather complex auth rules using Hasur
 event, and chron-job is placed in a separate file with routing already handled and the calling users information passed
 in the calling context. It makes it very easy to build your business logic in a clean, consistent way that is easy to
 test and maintain, and also easy to hand off to other developers.
+
+Pysura uses middleware to handle the auth, and provide you access to app resources like the database, and the caller.
+It wraps FastAPI, and uses a router for each action, event, or chron-job. Separating the business logic into collections
+of microservices each containing folders of actions, events, and chron-jobs each delegated to their own file which 
+makes it easy to scale and maintain.
+
+Front-end clients should utilize the Hasura GraphQL API to access and mutate the data in the database. This is the 
+recommended way to access the data. It is important to make sure you set up proper roles and permissions in Hasura to
+ensure that only the correct users can access the data meant for them. By default, Pysura includes a user and admin role
+
+Actions are used to allow the front-end client a way to perform custom business logic, or do a task that requires
+calling third party APIs or services. Actions are called via the Hasura GraphQL API, and are executed on the 
+microservice instance.
+
+Events are used to trigger custom business logic when something occurs in the database. For example, when a user is
+created, you might want to send them a welcome email. Events are triggered by Hasura (via the Database),
+and are executed on the microservice instance.
+
+Crons are used to trigger custom business logic on a schedule. For example, you might want to send a report to the
+admin every day at 8am. Crons are triggered by Hasura (via the Database), and are executed on the microservice instance.
+
+By default, the application is configured with an event secret that must be passed to all microservices in the header
+from Hasura. This ensures that all traffic is coming from Hasura, and not from a malicious source. This makes things
+SUPER secure, with JWT auth, and event secrets. It's a very secure way to build an application.
+
+What does a Pysura Microservice look like?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+What does a Pysura Action look like?
+
+TODO: Examples from base app
+
+.. code-block:: python3
+
+
 
 Do I need to deploy Hasura with Pysura to use it?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

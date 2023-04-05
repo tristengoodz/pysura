@@ -75,7 +75,7 @@ template for your provider. You *do* need Flutter for installation
 - Configures Android signing keys (COMING SOON: Auto app icon configuration)
 - Configures iOS URL schemes (COMING SOON: Auto app icon configuration)
 - Updates the default flutter template to use the Pysura template for Flutter 
-- ...
+- Deploys the flutter template to Firebase hosting for the web. (COMING SOON: Auto app icon configuration)
 - Deploys a default microservice on Cloud Run using Pysura! Includes default event that handles JWT claim changes
 
 ### What is a Pysura Microservice?
@@ -97,6 +97,24 @@ makes it easy to scale and maintain.
 Front-end clients should utilize the Hasura GraphQL API to access and mutate the data in the database. This is the 
 recommended way to access the data. It is important to make sure you set up proper roles and permissions in Hasura to
 ensure that only the correct users can access the data meant for them. By default, Pysura includes a user and admin role
+
+Actions are used to allow the front-end client a way to perform custom business logic, or do a task that requires
+calling third party APIs or services. Actions are called via the Hasura GraphQL API, and are executed on the 
+microservice instance.
+
+Events are used to trigger custom business logic when something occurs in the database. For example, when a user is
+created, you might want to send them a welcome email. Events are triggered by Hasura (via the Database),
+and are executed on the microservice instance.
+
+Crons are used to trigger custom business logic on a schedule. For example, you might want to send a report to the
+admin every day at 8am. Crons are triggered by Hasura (via the Database), and are executed on the microservice instance.
+
+By default, the application is configured with an event secret that must be passed to all microservices in the header
+from Hasura. This ensures that all traffic is coming from Hasura, and not from a malicious source. This makes things
+SUPER secure, with JWT auth, and event secrets. It's a very secure way to build an application.
+
+### What does a Pysura Microservice look like?
+
 
 
 
