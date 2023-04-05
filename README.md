@@ -19,7 +19,6 @@ Because everyone should be a code wizard.
 - npm
 - Dart
 - Flutter
-- Make sure docker is configured with `gcloud auth configure-docker`
 
 ```commandline
 pip install pysura

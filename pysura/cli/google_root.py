@@ -1709,9 +1709,6 @@ alter table app
             # ensure that Google Cloud SDK is at least 411.0.0
             if gcloud_version["Google Cloud SDK"] < "411.0.0":
                 raise Exception("Google Cloud SDK is not up to date")
-            # ensure that alpha is at least 2022.12.05
-            if gcloud_version["alpha"] < "2022.12.05":
-                raise Exception("Google Cloud SDK alpha is not up to date")
             # ensure that beta is at least 2022.12.05
             if gcloud_version["beta"] < "2022.12.05":
                 raise Exception("Google Cloud SDK beta is not up to date")
@@ -1719,6 +1716,62 @@ alter table app
         except Exception as e:
             self.log(str(e), level=logging.ERROR)
             self.log("Please update Google Cloud SDK", level=logging.ERROR)
+            return False
+
+    def check_npm(self):
+        try:
+            result = os.popen('npm -v')
+            output = result.read()
+            version_regex = re.compile(r'^(\d+\.\d+\.\d+)$', re.MULTILINE)
+            match = version_regex.search(output)
+            if match is None:
+                self.log("Please install npm", level=logging.ERROR)
+                raise Exception("npm not installed")
+            return True
+        except Exception as e:
+            self.log(str(e), level=logging.ERROR)
+            return False
+
+    def check_flutter(self):
+        try:
+            result = os.popen('flutter --version')
+            output = result.read()
+            version_regex = re.compile(r'^Flutter\s+(\d+\.\d+\.\d+)', re.MULTILINE)
+            match = version_regex.search(output)
+            if match is None:
+                self.log("Please install flutter", level=logging.ERROR)
+                raise Exception("flutter not installed")
+            return True
+        except Exception as e:
+            self.log(str(e), level=logging.ERROR)
+            return False
+
+    def check_firebase(self):
+        try:
+            result = os.popen('firebase --version')
+            output = result.read()
+            version_regex = re.compile(r'^(\d+\.\d+\.\d+)$', re.MULTILINE)
+            match = version_regex.search(output)
+            if match is None:
+                self.log("Please install firebase", level=logging.ERROR)
+                raise Exception("firebase not installed")
+            return True
+        except Exception as e:
+            self.log(str(e), level=logging.ERROR)
+            return False
+
+    def check_docker(self):
+        try:
+            result = os.popen('docker info')
+            output = result.read()
+            version_regex = re.compile(r'^Server\s+Version', re.MULTILINE)
+            match = version_regex.search(output)
+            if match is None:
+                self.log("Please install docker", level=logging.ERROR)
+                raise Exception("docker daemon not running")
+            return True
+        except Exception as e:
+            self.log(str(e), level=logging.ERROR)
             return False
 
     def attach_flutter(self):
@@ -3039,12 +3092,23 @@ async def SNAKE(_: Request,
                 return
         if not self.check_gcloud():
             return
+        if not self.check_npm():
+            return
+        if not self.check_flutter():
+            return
+        if not self.check_firebase():
+            return
+        if not self.check_docker():
+            return
         env = self.get_env()
         if env.gcloud_logged_in is False:
             self.do_gcloud_login()
             env = self.get_env()
         if not env.gcloud_logged_in:
             return self.do_setup_pysura(recurse=recurse + 1)
+        cmd_str = "gcloud auth configure-docker"
+        self.log(f"Running command: {cmd_str}", level=logging.INFO)
+        os.system(cmd_str)
         if env.organization is None:
             self.do_gcloud_choose_organization(None)
             env = self.get_env()
