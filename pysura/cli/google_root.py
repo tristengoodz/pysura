@@ -3146,7 +3146,7 @@ async def SNAKE(_: Request,
             return self.do_setup_pysura(recurse=recurse + 1)
         self.do_export_hasura_metadata(None)
         self.do_load_firebase_app(None)
-        # self.do_deploy_frontend(None)
+        self.do_deploy_frontend(None)
         env = self.get_env()
         phone_wizard = self.collect(
             "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
@@ -3188,7 +3188,7 @@ async def SNAKE(_: Request,
             while not self.confirm_loop(admin_code):
                 admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
             if env.frontend_ssr_service is not None:
-                self.log(f"Please login to your app with the phone number you just added!"
+                self.log(f"Please login to your app with the phone number you just added!\n"
                          f"{env.frontend_ssr_service.status.address.url}", level=logging.INFO)
             else:
                 self.log(f"Please run your app and login with the phone number you just added!", level=logging.INFO)
@@ -3233,7 +3233,7 @@ async def SNAKE(_: Request,
             while not self.confirm_loop(user_code):
                 user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
             if env.frontend_ssr_service is not None:
-                self.log(f"Please login to your app with the phone number you just added!"
+                self.log(f"Please login to your app with the phone number you just added!\n"
                          f"{env.frontend_ssr_service.status.address.url}", level=logging.INFO)
             else:
                 self.log(f"Please run your app and login with the phone number you just added!", level=logging.INFO)

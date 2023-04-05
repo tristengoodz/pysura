@@ -1,0 +1,29 @@
+# get public user
+query GetPublicUserById($id: String!) {
+  public_user_by_pk(user_id: $id) {
+      user_id
+      message
+      number
+  }
+}
+
+# update public user
+mutation UpdatePublicUserById($id: String!, $message: String, $number: Int) {
+    insert_public_user_one(
+        object: {user_id: $id, message: $message, number: $number},
+        on_conflict: {constraint: public_user_pkey, update_columns: [message, number]}
+    ) {
+        user_id
+        message
+        number
+    }
+}
+
+# listen to public user
+subscription ListenToPublicUserById($id: String!) {
+  public_user_by_pk(user_id: $id) {
+      user_id
+      message
+      number
+  }
+}

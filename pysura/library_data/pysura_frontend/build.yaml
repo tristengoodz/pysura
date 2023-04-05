@@ -1,0 +1,24 @@
+targets:
+  $default:
+    builders:
+      graphql_codegen:
+        options:
+          # folder of graphql and schema files
+          assetsPath: lib/graphql/**.graphql
+          # need this to avoid subscription error
+          addTypenameExcludedPaths:
+            - subscription
+            - subscription.*
+          # clients to generate graphql class codes
+          clients:
+            - graphql
+            - graphql_flutter
+          # custom scalars to dart classes
+          scalars:
+            float8:
+              type: double
+            timestamptz:
+              type: String
+
+# In terminal run the following command to generate graphql classes
+# dart run build_runner build
