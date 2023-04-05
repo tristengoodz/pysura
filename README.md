@@ -1,12 +1,12 @@
 # Pysura - BETA
 
-### Hasura + Python = Pysura. An open source solution.
+## Hasura + Python = Pysura. An open source solution.
 
 Because everyone should be a code wizard.
 
 ![img_1.png](images/code_wizard.png)
 
-## Requirements:
+### Requirements:
 
 ### To deploy Hasura with Pysura with baked in Auth and a templated Flutter Frontend:
 
@@ -41,7 +41,7 @@ Linux - It should work on Linux, it is untested. Let me know!
 Windows - With minor updates it should work. I think the majority of the deployer works, but it might run into issues on
 the Firebase and Flutterfire CLI's.
 
-# What is Pysura?
+## What is Pysura?
 
 Pysura is a CLI tool that's designed to make building and deploying multi-tenant enterprise grade applications as easy
 as a freshman year algorithms class. It's a highly opinionated way because it's the right way.
@@ -112,21 +112,6 @@ admin every day at 8am. Crons are triggered by Hasura (via the Database), and ar
 By default, the application is configured with an event secret that must be passed to all microservices in the header
 from Hasura. This ensures that all traffic is coming from Hasura, and not from a malicious source. This makes things
 SUPER secure, with JWT auth, and event secrets. It's a very secure way to build an application.
-
-### What does a Pysura Microservice look like?
-
-
-
-
-
-What does a Pysura Action look like?
-
-TODO: Examples from base app
-
-```python3
-
-
-```
 
 ### Do I need to deploy Hasura with Pysura to use it?
 
