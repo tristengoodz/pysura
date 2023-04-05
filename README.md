@@ -10,18 +10,15 @@ Because everyone should be a code wizard.
 
 ### To deploy Hasura with Pysura with baked in Auth and a templated Flutter Frontend:
 
+- Python 3.9+
 - gcloud CLI
 - gcloud beta CLI
 - A billing account with Google Cloud
 - Docker (Make sure it's running in the background or your deployment will fail!)
-- Python 3.9+
 - Firebase CLI
 - npm
-- flutterfire_cli
 - Dart
 - Flutter
-- Android Studio
-- Postgresql (pg_config)
 - Make sure docker is configured with `gcloud auth configure-docker`
 
 ```commandline

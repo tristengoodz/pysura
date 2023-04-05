@@ -2585,13 +2585,37 @@ async def SNAKE(_: Request,
     def do_generate_microservice_template(self,
                                           hasura_metadata_path="hasura_metadata.json",
                                           microservice_name="template",
-                                          microservice_webhook="{{HASURA_MICROSERVICE_URL}}"
+                                          microservice_url="{{HASURA_MICROSERVICE_URL}}"
                                           ):
         """
         Generate a microservice template
         :param hasura_metadata_path: /path/to/hasura_metadata.json
         :param microservice_name: name_of_service
-        :param microservice_webhook: {{HASURA_MICROSERVICE_URL}} -> Webhook name in schema. Env Var
+        :param microservice_url: {{HASURA_MICROSERVICE_URL}} -> Webhook name in schema
+
+        Microservice URL is used to parse the hasura metadata to determine which actions, events, and crons to use.
+
+        Parsed from action
+        {
+          "name": "action_query_ping",
+          "definition": {
+            "handler": "{{HASURA_MICROSERVICE_URL}}"
+          }
+        }
+
+        Parsed from cron
+        {
+          "name": "cron_update_app_message",
+          "webhook": "{{HASURA_MICROSERVICE_URL}}"
+        }
+
+        Parsed from event
+        {
+          "name": "event_update_user_role",
+          "webhook": "{{HASURA_MICROSERVICE_URL}}"
+        }
+
+
         """
         if microservice_name == "" or len(microservice_name.strip()) == 0:
             self.log("Microservice name cannot be empty", level=logging.ERROR)
@@ -2659,11 +2683,12 @@ async def SNAKE(_: Request,
         app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
         with open("app_secrets.py", "w") as f:
             f.write(app_secrets_py)
-        self.router_generator(metadata, microservice_webhook)
+        self.router_generator(metadata, microservice_url)
         os.chdir("../..")
 
     def do_deploy_microservice(self,
                                microservice_name="default",
+                               url_wrapper="{{HASURA_MICROSERVICE_URL}}",
                                timeout_default="600s",
                                memory_default="2Gi",
                                max_instances_default="10",
@@ -2673,6 +2698,7 @@ async def SNAKE(_: Request,
         won't overwrite your code!
 
         :param microservice_name: default
+        :param url_wrapper: {{HASURA_MICROSERVICE_URL}}
         :param timeout_default: 600s
         :param memory_default: 2Gi
         :param max_instances_default: 10
@@ -2757,9 +2783,6 @@ async def SNAKE(_: Request,
         app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
         with open("app_secrets.py", "w") as f:
             f.write(app_secrets_py)
-        url_wrapper = "{{HASURA_MICROSERVICE_URL}}"
-        if microservice_name != "default":
-            url_wrapper = "{{" + f"HASURA_{microservice_name}_URL" + "}}"
         new_hasura_metadata = self.router_generator(metadata, url_wrapper)
         input_objects_set = set(
             [i.get("name", None) for i in new_hasura_metadata.get("custom_types", {}).get("input_objects", [])]
@@ -2809,7 +2832,7 @@ async def SNAKE(_: Request,
                     microservice_url = MicroserviceUrl(
                         url=service_data.status.url,
                         name=microservice_name,
-                        url_wrapper=f"HASURA_{microservice_name}_URL"
+                        url_wrapper=url_wrapper
                     )
                     append_flag = True
                     for url in env.hasura.microservice_urls:

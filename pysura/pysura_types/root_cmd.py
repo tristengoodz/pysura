@@ -10,8 +10,6 @@ import time
 import os
 import json
 
-NUM_STEPS = 4
-
 
 class LogLevelFilter(logging.Filter):
     """This is a logging filter that filters out all messages that are not of a certain level."""

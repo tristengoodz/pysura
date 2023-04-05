@@ -20,18 +20,15 @@ To deploy Hasura with Pysura with baked in Auth and a templated Flutter Frontend
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
+* Python 3.9+
 * gcloud CLI
 * gcloud beta CLI
 * A billing account with Google Cloud
 * Docker (Make sure it's running in the background or your deployment will fail!)
-* Python 3.9+
 * Firebase CLI
 * npm
-* flutterfire_cli
 * Dart
 * Flutter
-* Android Studio
-* Postgresql (pg_config)
 * Make sure docker is configured with ``gcloud auth configure-docker``
 
 .. code-block:: commandline
@@ -153,6 +150,9 @@ everything, including working outside my area of expertise.
 TODOS:
 ^^^^^^
 
+Remove pyscopg2 dependency to drop postgres req
+===============================================
+
 DONE:
 
 
@@ -177,11 +177,7 @@ HIGH PRIORITY:
 
 * [ ] Flutter SSR bindings for Web @Unclaimed
 * [ ] Caching Wizard @Tristen
-* [ ] Update the pysura/pysura_types/root_cmd.py to make better use of prompt_toolkit. It would be nice to have multiple
-  tabs for different level of logs. @Unclaimed
 * [ ] Built in API Version Control @Tristen
-* [ ] Tighten up the command loops. (Ex. Test the deployer and input values that will fail, and make sure it can recover
-  more gracefully) @Unclaimed
 
 LOW PRIORITY:
 
