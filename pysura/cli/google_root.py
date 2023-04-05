@@ -2666,7 +2666,8 @@ async def SNAKE(_: Request,
                                microservice_name="default",
                                timeout_default="600s",
                                memory_default="2Gi",
-                               max_instances_default="10"):
+                               max_instances_default="10",
+                               default_init: bool | str = ""):
         """
         Deploys, or redeploys a microservice. Will rebuild routers, but as long as you leave the comments alone, it
         won't overwrite your code!
@@ -2675,8 +2676,11 @@ async def SNAKE(_: Request,
         :param timeout_default: 600s
         :param memory_default: 2Gi
         :param max_instances_default: 10
+        :param default_init: Internal! Do not use!
         Example: deploy_microservice default 600s 2Gi 10
         """
+        if isinstance(default_init, str) and default_init.strip() == "":
+            default_init = False
         if microservice_name == "" or len(microservice_name.strip()) == 0:
             self.log("Microservice name cannot be empty", level=logging.ERROR)
             return
@@ -2739,7 +2743,7 @@ async def SNAKE(_: Request,
                             if microservice_name != "default":
                                 continue
                             shutil.copy(os.path.join(root, f), dir_path)
-        if microservice_name == "default":
+        if microservice_name == "default" and default_init:
             with open("pysura_metadata.json", "r") as f:
                 metadata = json.load(f)
         else:
@@ -2841,6 +2845,19 @@ async def SNAKE(_: Request,
                 for action in value:
                     if action["handler"] == url_wrapper:
                         continue
+                    if action.get("request_transform", None) is None:
+                        action["request_transform"] = {}
+                    if action["request_transform"].get("body", None) is None:
+                        action["request_transform"]["body"] = {}
+                    action["request_transform"]["body"] = {
+                        "action": "transform",
+                        "template": "{{" + f"$body?.input?.{action['name']}_input" + "}}"
+                    }
+                    action["request_transform"]["method"] = "POST"
+                    action["request_transform"]["url"] = "{{$base_url}}" + f"/{action['name']}/"
+                    action["request_transform"]["query_params"] = action["request_transform"].get("query_params", {})
+                    action["request_transform"]["template_engine"] = "Kriti"
+                    action["request_transform"]["version"] = 2
                     new_actions.append(action)
             elif key == "custom_types":
                 objects = value.get("objects", [])
@@ -2907,6 +2924,11 @@ async def SNAKE(_: Request,
                 "action": "transform",
                 "template": "{{" + f"$body?.input?.{action['name']}_input" + "}}"
             }
+            action["request_transform"]["method"] = "POST"
+            action["request_transform"]["url"] = "{{$base_url}}" + f"/{action['name']}/"
+            action["request_transform"]["query_params"] = action["request_transform"].get("query_params", {})
+            action["request_transform"]["template_engine"] = "Kriti"
+            action["request_transform"]["version"] = 2
             new_actions.append(action)
 
         for obj in new_hasura_metadata.get("custom_types", {}).get("objects", []):
@@ -3102,7 +3124,7 @@ async def SNAKE(_: Request,
         if env.firebase_auth_activated is False:
             return self.do_setup_pysura(recurse=recurse + 1)
         if env.default_microservice is None:
-            self.do_deploy_microservice(microservice_name="default")
+            self.do_deploy_microservice(microservice_name="default", default_init=True)
             env = self.get_env()
         if env.default_microservice is None:
             return self.do_setup_pysura(recurse=recurse + 1)
@@ -3214,7 +3236,6 @@ async def SNAKE(_: Request,
                 self.log("Could not find user, please try again.", level=logging.ERROR)
                 return
             user_id = user_data["data"]["user"][0]["user_id"]
-            self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
             user_number = TestPhoneNumber(
                 role="user",
                 phone_number=user_phone,
