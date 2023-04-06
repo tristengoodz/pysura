@@ -2801,6 +2801,7 @@ async def SNAKE(_: Request,
         default_crons = []
         for root, dirs, files in os.walk(path):
             for f in files:
+                self.log(f"Copying {f} to {microservice_name} microservice", level=logging.INFO)
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
                     continue
                 if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
@@ -2809,15 +2810,19 @@ async def SNAKE(_: Request,
                     shutil.copy(os.path.join(root, f), ".")
                 else:
                     if "actions" in root:
+                        self.log(f"Copying {f} to actions directory", level=logging.INFO)
                         if f != "action_template.py":
                             dir_path = os.path.join(os.getcwd(), "actions")
                             if not os.path.isdir(dir_path):
                                 os.mkdir(dir_path)
                             if f != "__init__.py" and microservice_name == "default":
                                 default_actions.append(f.replace(".py", ""))
+                            if f in ["action_upload_file.py"]:
+                                shutil.copy(os.path.join(root, f), dir_path)
                             if microservice_name != "default":
                                 continue
                             shutil.copy(os.path.join(root, f), dir_path)
+                        self.collect("Continue?")
                     elif "crons" in root:
                         if f != "cron_template.py":
                             dir_path = os.path.join(os.getcwd(), "crons")

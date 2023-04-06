@@ -69,8 +69,7 @@ async def action_upload_file(_: Request,
         response = provider.storage.upload_file(file_data=action_upload_file_input.file_data,
                                                 file_name=action_upload_file_input.file_name,
                                                 file_type=action_upload_file_input.file_type,
-                                                user_id=provider.user_identity.user_id,
-                                                public=action_upload_file_input.public)
+                                                user_id=provider.user_identity.user_id)
         provider.graphql.execute(
             query="""mutation UploadFile($name: String = "", $signed_url: String = "", $public: Boolean = true, $type: String = "", $user_id: String = "") {
   insert_file_one(object: {name: $name, public: $public, signed_url: $signed_url, type: $type, user_id: $user_id}) {
@@ -86,7 +85,7 @@ async def action_upload_file(_: Request,
             variables={
                 "name": action_upload_file_input.file_name,
                 "signed_url": response["signed_url"],
-                "public": response["public"],
+                "public": action_upload_file_input.public,
                 "type": action_upload_file_input.file_type,
                 "user_id": provider.user_identity.user_id
             }
