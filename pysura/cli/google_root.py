@@ -1,3 +1,4 @@
+# BEWARE OF DRAGONS 🐉
 from pysura.pysura_types.root_cmd import RootCmd
 from pysura.pysura_types.google_pysura_env import *
 import json
@@ -930,7 +931,7 @@ class GoogleRoot(RootCmd):
         service_accounts = []
         for i, account in enumerate(account_choices):
             account_data = GoogleServiceAccount(**account)
-            if account_data.displayName == "Compute Engine default service account":
+            if account_data.displayName == "Default compute service account":
                 env.hasura_service_account = account_data
             service_accounts.append(account_data)
         if env.hasura_service_account is None:
@@ -1558,7 +1559,7 @@ alter table app
         service_accounts = []
         for i, account in enumerate(account_choices):
             account_data = GoogleServiceAccount(**account)
-            if account_data.displayName == "pysuraadmin":
+            if account_data.displayName == "pysura-admin":
                 env.auth_service_account = account_data
             service_accounts.append(account_data)
         if env.auth_service_account is None:
