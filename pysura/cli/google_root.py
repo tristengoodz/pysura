@@ -252,46 +252,53 @@ class GoogleRoot(RootCmd):
         """
         pass
 
+    async def async_gcloud_enable_api_services(self):
+        env = self.get_env()
+        project_id = env.project.name.split("/")[-1]
+        services_to_enable = [
+            "servicenetworking.googleapis.com",
+            "compute.googleapis.com",
+            "sqladmin.googleapis.com",
+            "vpcaccess.googleapis.com",
+            "identitytoolkit.googleapis.com",
+            "run.googleapis.com",
+            "secretmanager.googleapis.com",
+            "cloudfunctions.googleapis.com",
+            "cloudbuild.googleapis.com",
+            "artifactregistry.googleapis.com",
+            "storage-api.googleapis.com",
+        ]
+        await self.enable_services(services_to_enable, project_id)
+
+    async def enable_services(self, services: List[str], project_id: str):
+        tasks = [self.enable_service(service, project_id) for service in services]
+        await asyncio.gather(*tasks)
+
+    async def enable_service(self, service: str, project_id: str):
+        cmd_str = f"gcloud services enable {service} --project={project_id}"
+        self.log(cmd_str, level=logging.DEBUG)
+        await self.run_async_cmd(cmd_str)
+
+    async def run_async_cmd(self, cmd: str) -> str:
+        proc = await asyncio.create_subprocess_shell(
+            cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+        )
+
+        stdout, stderr = await proc.communicate()
+
+        if proc.returncode != 0:
+            self.log(f"Command '{cmd}' failed with return code {proc.returncode}", level=logging.ERROR)
+            self.log(f"Error output: {stderr.decode()}", level=logging.ERROR)
+        return stdout.decode()
+
     def gcloud_enable_api_services(self):
         env = self.get_env()
         if env.project is None:
             self.log("No project selected.")
             return
         self.log("Enabling services...")
+        asyncio.run(self.async_gcloud_enable_api_services())
         project_id = env.project.name.split("/")[-1]
-        cmd_str = f"gcloud services enable servicenetworking.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"gcloud services enable compute.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"gcloud services enable sqladmin.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"gcloud services enable vpcaccess.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"gcloud services enable identitytoolkit.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"gcloud services enable run.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"gcloud services enable secretmanager.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"gcloud services enable cloudfunctions.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"gcloud services enable cloudbuild.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"gcloud services enable artifactregistry.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
-        cmd_str = f"gcloud services enable storage-api.googleapis.com --project={project_id}"
-        self.log(cmd_str, level=logging.DEBUG)
-        os.system(cmd_str)
         cmd_str = f"gcloud services list --project={project_id} --format=json"
         self.log(cmd_str, level=logging.DEBUG)
         response = os.popen(cmd_str).read()
@@ -511,6 +518,60 @@ class GoogleRoot(RootCmd):
         else:
             self.user_input_no_loop(self.gcloud_create_vpc_peering)
 
+    async def async_gcloud_create_firewall(self, firewall_id=""):
+        env = self.get_env()
+        project_id = env.project.name.split("/")[-1]
+
+        if env.network is None:
+            self.log("No network selected.", level=logging.ERROR)
+            return
+
+        firewall_name = firewall_id.strip() or self.collect("Enter a firewall name: ")
+
+        if len(firewall_id) > 0 or self.confirm_loop(firewall_name):
+            firewall_rules = [
+                {
+                    "name": f"{firewall_name}-allow-traffic",
+                    "allow": "tcp,udp,icmp",
+                    "source_ranges": "0.0.0.0/0",
+                },
+                {
+                    "name": f"{firewall_name}-allow-ssh",
+                    "allow": "tcp:22,tcp:3389,icmp",
+                },
+            ]
+            await self.create_firewall_rules(firewall_rules, project_id, env.network.name.split('/')[-1])
+
+            cmd_str = f"gcloud compute firewall-rules list --project={project_id} --format=json"
+            self.log(cmd_str, level=logging.DEBUG)
+            gcloud_list = json.loads(await self.run_async_cmd(cmd_str))
+            firewall_set = []
+            for firewall in gcloud_list:
+                firewall_data = GoogleFirewall(
+                    **firewall
+                )
+                firewall_set.append(firewall_data)
+            env.firewalls = firewall_set
+            self.set_env(env)
+        else:
+            self.user_input_no_loop(self.async_gcloud_create_firewall)
+
+    async def create_firewall_rules(self, firewall_rules: List[dict], project_id: str, network_name: str):
+        tasks = [self.create_firewall_rule(rule, project_id, network_name) for rule in firewall_rules]
+        await asyncio.gather(*tasks)
+
+    async def create_firewall_rule(self, rule: dict, project_id: str, network_name: str):
+        cmd_str = (
+            f"gcloud compute firewall-rules create {rule['name']} "
+            f"--network={network_name} "
+            f"--allow={rule['allow']} "
+        )
+        if "source_ranges" in rule:
+            cmd_str += f"--source-ranges={rule['source_ranges']} "
+        cmd_str += f"--project={project_id}"
+        self.log(cmd_str, level=logging.DEBUG)
+        await self.run_async_cmd(cmd_str)
+
     def gcloud_create_firewall(self, firewall_id=""):
         """
         Creates a firewall.
@@ -536,23 +597,7 @@ class GoogleRoot(RootCmd):
         else:
             firewall_name = firewall_id
         if arg_len > 0 or self.confirm_loop(firewall_name):
-            cmd_str = f"gcloud compute firewall-rules create {firewall_name}-allow-traffic  " \
-                      f"--network={env.network.name.split('/')[-1]} " \
-                      f"--allow=tcp,udp,icmp " \
-                      f"--source-ranges=0.0.0.0/0 " \
-                      f"--project={env.project.name.split('/')[-1]}"
-            self.log(cmd_str, level=logging.DEBUG)
-            os.system(cmd_str)
-            cmd_str = f"gcloud compute firewall-rules list " \
-                      f"--project={env.project.name.split('/')[-1]} " \
-                      f"--format=json"
-            self.gcloud_retry_loop(cmd_str, f"{firewall_name}-allow-traffic")
-            cmd_str = f"gcloud compute firewall-rules create {firewall_name}-allow-ssh  " \
-                      f"--network={env.network.name.split('/')[-1]} " \
-                      f"--allow=tcp:22,tcp:3389,icmp " \
-                      f"--project={env.project.name.split('/')[-1]}"
-            self.log(cmd_str, level=logging.DEBUG)
-            os.system(cmd_str)
+            asyncio.run(self.async_gcloud_create_firewall(firewall_name))
             cmd_str = f"gcloud compute firewall-rules list " \
                       f"--project={env.project.name.split('/')[-1]} " \
                       f"--format=json"
