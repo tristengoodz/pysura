@@ -345,6 +345,17 @@ class GoogleRoot(RootCmd):
                 if project_data.name.split("/")[-1] == project_name:
                     project = GoogleProject(**p)
                     break
+            if project is None:
+                time.sleep(1)
+                cmd_str = f"gcloud projects list --format=json"
+                self.log(cmd_str, level=logging.DEBUG)
+                response = os.popen(cmd_str).read()
+                projects = json.loads(response)
+                for p in projects:
+                    project_data = GoogleProject(**p)
+                    if project_data.name.split("/")[-1] == project_name:
+                        project = GoogleProject(**p)
+                        break
             assert project is not None
             cmd_str = f"gcloud config set project {project.name.split('/')[-1]}"
             self.log(cmd_str, level=logging.DEBUG)
@@ -918,7 +929,7 @@ class GoogleRoot(RootCmd):
                 max_instances = max_instances_default
             hasura_event_secret = self.password()
             hasura_storage_bucket = f"{env.project.name.split('/')[-1]}-hasura-storage-{int(time.time())}"
-            cmd_str = f"gcloud storage buckets create {hasura_storage_bucket} " \
+            cmd_str = f"gcloud storage buckets create gs://{hasura_storage_bucket} " \
                       f"--project={env.project.name.split('/')[-1]}"
             self.log(cmd_str, level=logging.DEBUG)
             os.system(cmd_str)
