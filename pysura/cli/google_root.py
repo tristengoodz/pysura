@@ -2844,50 +2844,6 @@ async def SNAKE(_: Request,
         default_actions = []
         default_events = []
         default_crons = []
-        for root, dirs, files in os.walk(path):
-            for f in files:
-                self.log(f"Copying {f} to {microservice_name} microservice", level=logging.INFO)
-                if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
-                    continue
-                if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
-                    shutil.copy(os.path.join(root, f), ".")
-                elif f == "pysura_metadata.json" and microservice_name == "default":
-                    shutil.copy(os.path.join(root, f), ".")
-                else:
-                    if "actions" in root:
-                        self.log(f"Copying {f} to actions directory", level=logging.INFO)
-                        if f != "action_template.py":
-                            dir_path = os.path.join(os.getcwd(), "actions")
-                            if not os.path.isdir(dir_path):
-                                os.mkdir(dir_path)
-                            if f != "__init__.py" and microservice_name == "default":
-                                default_actions.append(f.replace(".py", ""))
-                            if f in ["action_upload_file.py"]:
-                                shutil.copy(os.path.join(root, f), dir_path)
-                            if microservice_name != "default":
-                                continue
-                            shutil.copy(os.path.join(root, f), dir_path)
-                        self.collect("Continue?")
-                    elif "crons" in root:
-                        if f != "cron_template.py":
-                            dir_path = os.path.join(os.getcwd(), "crons")
-                            if not os.path.isdir(dir_path):
-                                os.mkdir(dir_path)
-                            if f != "__init__.py" and microservice_name == "default":
-                                default_crons.append(f.replace(".py", ""))
-                            if microservice_name != "default":
-                                continue
-                            shutil.copy(os.path.join(root, f), dir_path)
-                    elif "events" in root:
-                        if f != "event_template.py":
-                            dir_path = os.path.join(os.getcwd(), "events")
-                            if not os.path.isdir(dir_path):
-                                os.mkdir(dir_path)
-                            if f != "__init__.py" and microservice_name == "default":
-                                default_events.append(f.replace(".py", ""))
-                            if microservice_name != "default":
-                                continue
-                            shutil.copy(os.path.join(root, f), dir_path)
         if microservice_name == "default" and default_init:
             with open("pysura_metadata.json", "r") as f:
                 metadata = json.load(f)
@@ -2897,11 +2853,6 @@ async def SNAKE(_: Request,
                 metadata = json.load(f)
             os.chdir("microservices")
             os.chdir(microservice_name)
-        with open("app_secrets.py", "r") as f:
-            app_secrets_py = f.read()
-        app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
-        with open("app_secrets.py", "w") as f:
-            f.write(app_secrets_py)
         new_hasura_metadata = self.router_generator(metadata, url_wrapper)
         input_objects_set = set(
             [i.get("name", None) for i in new_hasura_metadata.get("custom_types", {}).get("input_objects", [])]
@@ -2923,6 +2874,52 @@ async def SNAKE(_: Request,
             max_instances = self.collect("Max instances (Ex. 10): ")
         else:
             max_instances = max_instances_default
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
+                    continue
+                if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
+                    shutil.copy(os.path.join(root, f), ".")
+                elif f == "pysura_metadata.json" and microservice_name == "default":
+                    shutil.copy(os.path.join(root, f), ".")
+                else:
+                    if "actions" in root:
+                        if f != "action_template.py":
+                            dir_path = os.path.join(os.getcwd(), "actions")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_actions.append(f.replace(".py", ""))
+                            if f in ["action_upload_file.py"]:
+                                shutil.copy(os.path.join(root, f), dir_path)
+                            if microservice_name != "default":
+                                continue
+                            shutil.copy(os.path.join(root, f), dir_path)
+                    elif "crons" in root:
+                        if f != "cron_template.py":
+                            dir_path = os.path.join(os.getcwd(), "crons")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_crons.append(f.replace(".py", ""))
+                            if microservice_name != "default":
+                                continue
+                            shutil.copy(os.path.join(root, f), dir_path)
+                    elif "events" in root:
+                        if f != "event_template.py":
+                            dir_path = os.path.join(os.getcwd(), "events")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_events.append(f.replace(".py", ""))
+                            if microservice_name != "default":
+                                continue
+                            shutil.copy(os.path.join(root, f), dir_path)
+        with open("app_secrets.py", "r") as f:
+            app_secrets_py = f.read()
+        app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
+        with open("app_secrets.py", "w") as f:
+            f.write(app_secrets_py)
         cmd_str = f"gcloud run deploy {microservice_name} --source . " \
                   f"--min-instances=1 " \
                   f"--max-instances={max_instances} " \
