@@ -907,12 +907,24 @@ class GoogleRoot(RootCmd):
         account_choices = json.loads(os.popen(f"gcloud iam service-accounts list "
                                               f"--project={env.project.name.split('/')[-1]} "
                                               f"--format=json").read())
+        self.log(account_choices, level=logging.DEBUG)
         service_accounts = []
         for i, account in enumerate(account_choices):
             account_data = GoogleServiceAccount(**account)
-            if account_data.displayName == "Default compute service account":
+            if account_data.displayName == "Compute Engine default service account":
                 env.hasura_service_account = account_data
             service_accounts.append(account_data)
+        if env.hasura_service_account is None:
+            account_choices = json.loads(os.popen(f"gcloud iam service-accounts list "
+                                                  f"--project={env.project.name.split('/')[-1]} "
+                                                  f"--format=json").read())
+            self.log(account_choices, level=logging.DEBUG)
+            service_accounts = []
+            for i, account in enumerate(account_choices):
+                account_data = GoogleServiceAccount(**account)
+                if account_data.displayName == "Compute Engine default service account":
+                    env.hasura_service_account = account_data
+                service_accounts.append(account_data)
         if env.hasura_service_account is None:
             self.log("No service account found.", level=logging.ERROR)
             return
