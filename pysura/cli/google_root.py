@@ -902,27 +902,6 @@ class GoogleRoot(RootCmd):
         env.secrets = secret_set
         self.set_env(env)
 
-    async def async_update_default_compute_engine_service_account(self):
-        env = self.get_env()
-        project_id = env.project.name.split('/')[-1]
-        roles = [
-            "roles/cloudbuild.builds.builder",
-            "roles/run.admin",
-            "roles/secretmanager.secretAccessor",
-        ]
-        await self.add_service_account_roles(project_id, env.hasura_service_account.email, roles)
-
-    async def add_service_account_roles(self, project_id: str, email: str, roles: List[str]):
-        tasks = [self.add_service_account_role(project_id, email, role) for role in roles]
-        await asyncio.gather(*tasks)
-
-    async def add_service_account_role(self, project_id: str, email: str, role: str):
-        cmd_str = (f"gcloud projects add-iam-policy-binding {project_id} "
-                   f"--member=serviceAccount:{email} "
-                   f"--role={role} "
-                   f"--format=json")
-        await self.run_async_cmd(cmd_str)
-
     def update_default_compute_engine_service_account(self):
         env = self.get_env()
         account_choices = json.loads(os.popen(f"gcloud iam service-accounts list "
@@ -931,15 +910,35 @@ class GoogleRoot(RootCmd):
         service_accounts = []
         for i, account in enumerate(account_choices):
             account_data = GoogleServiceAccount(**account)
-            if account_data.displayName == "Default compute service account":
+            if account_data.displayName == "Compute Engine default service account":
                 env.hasura_service_account = account_data
             service_accounts.append(account_data)
         if env.hasura_service_account is None:
             self.log("No service account found.", level=logging.ERROR)
             return
-        self.log(f"Service account {env.hasura_service_account.email} selected.", level=logging.INFO)
+        env.service_accounts = service_accounts
+        cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
+                       f"--member=serviceAccount:{env.hasura_service_account.email} "
+                       f"--role=roles/cloudbuild.builds.builder "
+                       f"--format=json"
+                       )
+        self.log(cmd_log_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
+        cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
+                       f"--member=serviceAccount:{env.hasura_service_account.email} "
+                       f"--role=roles/run.admin "
+                       f"--format=json"
+                       )
+        self.log(cmd_log_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
+        cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
+                       f"--member=serviceAccount:{env.hasura_service_account.email} "
+                       f"--role=roles/secretmanager.secretAccessor "
+                       f"--format=json"
+                       )
+        self.log(cmd_log_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
         self.set_env(env)
-        asyncio.run(self.async_update_default_compute_engine_service_account())
 
     def do_gcloud_deploy_hasura(self, timeout_default="600s", memory_default="2Gi", max_instances_default="10"):
         env = self.get_env()
@@ -1559,7 +1558,7 @@ alter table app
         service_accounts = []
         for i, account in enumerate(account_choices):
             account_data = GoogleServiceAccount(**account)
-            if account_data.displayName == "pysura-admin":
+            if account_data.displayName == "pysuraadmin":
                 env.auth_service_account = account_data
             service_accounts.append(account_data)
         if env.auth_service_account is None:
@@ -1601,41 +1600,6 @@ alter table app
         self.set_env(env)
         os.remove("admin.json")
 
-    async def async_deploy_functions(self):
-        env = self.get_env()
-        project_id = env.project.name.split("/")[-1]
-        functions_to_deploy = [
-            {
-                "name": "on_user_create",
-                "runtime": "python39",
-                "trigger_event": "providers/firebase.auth/eventTypes/user.create",
-                "min_instances": 1,
-                "format": "json"
-            },
-            {
-                "name": "on_user_delete",
-                "runtime": "python39",
-                "trigger_event": "providers/firebase.auth/eventTypes/user.delete",
-                "min_instances": 1,
-                "format": "json"
-            }
-        ]
-        await self.deploy_functions(functions_to_deploy, project_id)
-
-    async def deploy_functions(self, functions: List[dict], project_id: str):
-        tasks = [self.deploy_function(function, project_id) for function in functions]
-        await asyncio.gather(*tasks)
-
-    async def deploy_function(self, function: dict, project_id: str):
-        cmd_str = (f"gcloud functions deploy {function['name']} "
-                   f"--runtime={function['runtime']} "
-                   f"--trigger-event={function['trigger_event']} "
-                   f"--trigger-resource={project_id} "
-                   f"--min-instances={function['min_instances']} "
-                   f"--format={function['format']}")
-        self.log(cmd_str, level=logging.DEBUG)
-        await self.run_async_cmd(cmd_str)
-
     def attach_auth(self):
         env = self.get_env()
         if os.path.isdir("pysura_auth"):
@@ -1672,8 +1636,22 @@ alter table app
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
-        self.log("Deploying functions... this may take up to 2 minutes.", level=logging.INFO)
-        asyncio.run(self.async_deploy_functions())
+        cmd_str = f'gcloud functions deploy on_user_create ' \
+                  f'--runtime=python39 ' \
+                  f'--trigger-event=providers/firebase.auth/eventTypes/user.create ' \
+                  f'--trigger-resource={env.project.name.split("/")[-1]} ' \
+                  f'--min-instances=1 ' \
+                  f'--format=json'
+        self.log(cmd_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
+        cmd_str = f'gcloud functions deploy on_user_delete ' \
+                  f'--runtime=python39 ' \
+                  f'--trigger-event=providers/firebase.auth/eventTypes/user.delete ' \
+                  f'--trigger-resource={env.project.name.split("/")[-1]} ' \
+                  f'--min-instances=1 ' \
+                  f'--format=json'
+        self.log(cmd_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         os.chdir("..")
         cmd_str = f"gcloud functions list " \
                   f"--project={env.project.name.split('/')[-1]} " \
@@ -2869,6 +2847,7 @@ async def SNAKE(_: Request,
         default_crons = []
         for root, dirs, files in os.walk(path):
             for f in files:
+                self.log(f"Copying {f} to {microservice_name} microservice", level=logging.INFO)
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
                     continue
                 if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
@@ -2877,6 +2856,7 @@ async def SNAKE(_: Request,
                     shutil.copy(os.path.join(root, f), ".")
                 else:
                     if "actions" in root:
+                        self.log(f"Copying {f} to actions directory", level=logging.INFO)
                         if f != "action_template.py":
                             dir_path = os.path.join(os.getcwd(), "actions")
                             if not os.path.isdir(dir_path):
@@ -2888,6 +2868,7 @@ async def SNAKE(_: Request,
                             if microservice_name != "default":
                                 continue
                             shutil.copy(os.path.join(root, f), dir_path)
+                        self.collect("Continue?")
                     elif "crons" in root:
                         if f != "cron_template.py":
                             dir_path = os.path.join(os.getcwd(), "crons")
@@ -2917,6 +2898,11 @@ async def SNAKE(_: Request,
                 metadata = json.load(f)
             os.chdir("microservices")
             os.chdir(microservice_name)
+        with open("app_secrets.py", "r") as f:
+            app_secrets_py = f.read()
+        app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
+        with open("app_secrets.py", "w") as f:
+            f.write(app_secrets_py)
         new_hasura_metadata = self.router_generator(metadata, url_wrapper)
         input_objects_set = set(
             [i.get("name", None) for i in new_hasura_metadata.get("custom_types", {}).get("input_objects", [])]
@@ -2938,52 +2924,6 @@ async def SNAKE(_: Request,
             max_instances = self.collect("Max instances (Ex. 10): ")
         else:
             max_instances = max_instances_default
-        for root, dirs, files in os.walk(path):
-            for f in files:
-                if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
-                    continue
-                if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
-                    shutil.copy(os.path.join(root, f), ".")
-                elif f == "pysura_metadata.json" and microservice_name == "default":
-                    shutil.copy(os.path.join(root, f), ".")
-                else:
-                    if "actions" in root:
-                        if f != "action_template.py":
-                            dir_path = os.path.join(os.getcwd(), "actions")
-                            if not os.path.isdir(dir_path):
-                                os.mkdir(dir_path)
-                            if f != "__init__.py" and microservice_name == "default":
-                                default_actions.append(f.replace(".py", ""))
-                            if f in ["action_upload_file.py"]:
-                                shutil.copy(os.path.join(root, f), dir_path)
-                            if microservice_name != "default":
-                                continue
-                            shutil.copy(os.path.join(root, f), dir_path)
-                    elif "crons" in root:
-                        if f != "cron_template.py":
-                            dir_path = os.path.join(os.getcwd(), "crons")
-                            if not os.path.isdir(dir_path):
-                                os.mkdir(dir_path)
-                            if f != "__init__.py" and microservice_name == "default":
-                                default_crons.append(f.replace(".py", ""))
-                            if microservice_name != "default":
-                                continue
-                            shutil.copy(os.path.join(root, f), dir_path)
-                    elif "events" in root:
-                        if f != "event_template.py":
-                            dir_path = os.path.join(os.getcwd(), "events")
-                            if not os.path.isdir(dir_path):
-                                os.mkdir(dir_path)
-                            if f != "__init__.py" and microservice_name == "default":
-                                default_events.append(f.replace(".py", ""))
-                            if microservice_name != "default":
-                                continue
-                            shutil.copy(os.path.join(root, f), dir_path)
-        with open("app_secrets.py", "r") as f:
-            app_secrets_py = f.read()
-        app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
-        with open("app_secrets.py", "w") as f:
-            f.write(app_secrets_py)
         cmd_str = f"gcloud run deploy {microservice_name} --source . " \
                   f"--min-instances=1 " \
                   f"--max-instances={max_instances} " \
