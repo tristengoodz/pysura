@@ -910,7 +910,7 @@ class GoogleRoot(RootCmd):
         service_accounts = []
         for i, account in enumerate(account_choices):
             account_data = GoogleServiceAccount(**account)
-            if account_data.displayName == "Compute Engine default service account":
+            if account_data.displayName == "Default compute service account":
                 env.hasura_service_account = account_data
             service_accounts.append(account_data)
         if env.hasura_service_account is None:
