@@ -297,7 +297,7 @@ class GoogleRoot(RootCmd):
         if env.project is None:
             self.log("No project selected.")
             return
-        self.log("Enabling services...")
+        self.log("Enabling services... Please be patient! This may take a few minutes.")
         asyncio.run(self.async_gcloud_enable_api_services())
         project_id = env.project.name.split("/")[-1]
         cmd_str = f"gcloud services list --project={project_id} --format=json"
@@ -911,7 +911,7 @@ class GoogleRoot(RootCmd):
         service_accounts = []
         for i, account in enumerate(account_choices):
             account_data = GoogleServiceAccount(**account)
-            if "default" in account.displayName.lower() and "compute@developer" in account.email:
+            if "default" in account_data.displayName.lower() and "compute@developer" in account_data.email:
                 env.hasura_service_account = account_data
             service_accounts.append(account_data)
         if env.hasura_service_account is None:
@@ -922,7 +922,7 @@ class GoogleRoot(RootCmd):
             service_accounts = []
             for i, account in enumerate(account_choices):
                 account_data = GoogleServiceAccount(**account)
-                if "default" in account.displayName.lower() and "compute@developer" in account.email:
+                if "default" in account_data.displayName.lower() and "compute@developer" in account_data.email:
                     env.hasura_service_account = account_data
                 service_accounts.append(account_data)
         if env.hasura_service_account is None:
