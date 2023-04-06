@@ -938,8 +938,8 @@ class GoogleRoot(RootCmd):
             self.log("No service account found.", level=logging.ERROR)
             return
         self.log(f"Service account {env.hasura_service_account.email} selected.", level=logging.INFO)
-        asyncio.run(self.async_update_default_compute_engine_service_account())
         self.set_env(env)
+        asyncio.run(self.async_update_default_compute_engine_service_account())
 
     def do_gcloud_deploy_hasura(self, timeout_default="600s", memory_default="2Gi", max_instances_default="10"):
         env = self.get_env()
