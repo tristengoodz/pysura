@@ -2837,9 +2837,16 @@ async def SNAKE(_: Request,
         """
         if isinstance(default_init, str) and default_init.strip() == "":
             default_init = False
-        if microservice_name == "" or len(microservice_name.strip()) == 0:
-            self.log("Microservice name cannot be empty", level=logging.ERROR)
-            return
+        if isinstance(microservice_name, str) and len(microservice_name.strip()) == 0:
+            microservice_name = "default"
+            if isinstance(url_wrapper, str) and len(url_wrapper.strip()) == 0:
+                url_wrapper = "{{HASURA_MICROSERVICE_URL}}"
+            if isinstance(timeout_default, str) and len(timeout_default.strip()) == 0:
+                timeout_default = "600s"
+            if isinstance(memory_default, str) and len(memory_default.strip()) == 0:
+                memory_default = "2Gi"
+            if isinstance(max_instances_default, str) and len(max_instances_default.strip()) == 0:
+                max_instances_default = "10"
         env = self.get_env()
         if env.auth_service_account is None or env.auth_service_account.key_file is None:
             self.log("No auth service account specified", level=logging.ERROR)
