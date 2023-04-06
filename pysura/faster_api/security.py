@@ -223,12 +223,13 @@ class PysuraStorage(google_storage.Client):
 
     def upload_file(self, file_data: bytes | str, file_name: str, file_type: str, user_id: str):
         bucket = self.bucket(self.default_bucket)
-        blob = bucket.blob(f"{user_id}/{file_name}")
+        blob_name = f"{user_id}/{file_name}"
+        blob = bucket.blob(blob_name)
         blob.upload_from_string(file_data, content_type=file_type)
         signed_url = blob.generate_signed_url(expiration=datetime.now() + timedelta(days=5000))
         return {
-            "url": signed_url,
-            "file_name": file_name,
+            "signed_url": signed_url,
+            "file_name": blob_name,
             "file_type": file_type,
             "user_id": user_id
         }

@@ -85,7 +85,7 @@ async def action_upload_file(_: Request,
 }
 """,
             variables={
-                "name": action_upload_file_input.file_name,
+                "name": response["file_name"],
                 "signed_url": response["signed_url"],
                 "public": action_upload_file_input.public,
                 "type": action_upload_file_input.file_type,
