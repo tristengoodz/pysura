@@ -917,6 +917,11 @@ class GoogleRoot(RootCmd):
             else:
                 max_instances = max_instances_default
             hasura_event_secret = self.password()
+            hasura_storage_bucket = f"{env.project.name.split('/')[-1]}-hasura-storage-{int(time.time())}"
+            cmd_str = f"gcloud storage buckets create {hasura_storage_bucket} " \
+                      f"--project={env.project.name.split('/')[-1]}"
+            self.log(cmd_str, level=logging.DEBUG)
+            os.system(cmd_str)
             hasura = Hasura(
                 HASURA_GRAPHQL_CORS_DOMAIN="*",
                 HASURA_GRAPHQL_ENABLED_CORS="true",
@@ -925,6 +930,7 @@ class GoogleRoot(RootCmd):
                 HASURA_GRAPHQL_DATABASE_URL=env.database_credential.connect_url,
                 HASURA_GRAPHQL_METADATA_DATABASE_URL=env.database_credential.connect_url,
                 HASURA_EVENT_SECRET=hasura_event_secret,
+                HASURA_STORAGE_BUCKET=hasura_storage_bucket,
                 vpc_connector=env.connector.name.split('/')[-1],
                 timeout=timeout,
                 project_id=env.project.name.split('/')[-1],

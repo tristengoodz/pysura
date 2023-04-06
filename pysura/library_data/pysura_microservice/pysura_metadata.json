@@ -195,6 +195,10 @@
           {
             "name": "file_type",
             "type": "String!"
+          },
+          {
+            "name": "public",
+            "type": "Boolean!"
           }
         ]
       }
@@ -349,6 +353,10 @@
           },
           {
             "name": "file_url",
+            "type": "String!"
+          },
+          {
+            "name": "file_id",
             "type": "String!"
           }
         ]

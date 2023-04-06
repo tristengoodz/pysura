@@ -9,6 +9,7 @@ from google.oauth2 import service_account
 from fastapi import Depends, HTTPException, status
 import google.cloud.logging
 import logging
+from datetime import timedelta, datetime
 
 from pydantic import BaseModel
 from starlette.datastructures import Headers
@@ -19,12 +20,13 @@ from google.cloud import storage as google_storage
 
 try:
     from app_secrets import HASURA_FIREBASE_SERVICE_ACCOUNT, HASURA_EVENT_SECRET, HASURA_GRAPHQL_URL_ROOT, \
-        HASURA_GRAPHQL_ADMIN_SECRET
+        HASURA_GRAPHQL_ADMIN_SECRET, HASURA_STORAGE_BUCKET
 except ImportError:
     HASURA_FIREBASE_SERVICE_ACCOUNT = ""
     HASURA_EVENT_SECRET = ""
     HASURA_GRAPHQL_URL_ROOT = ""
     HASURA_GRAPHQL_ADMIN_SECRET = ""
+    HASURA_STORAGE_BUCKET = ""
 
 cred_dict = json.loads(HASURA_FIREBASE_SERVICE_ACCOUNT, strict=False)
 creds = service_account.Credentials.from_service_account_info(cred_dict)
@@ -34,10 +36,6 @@ except ValueError:
     logging_client = google.cloud.logging.Client(credentials=creds)
     logging_client.setup_logging()
     firebase_app = initialize_app(credential=credentials.Certificate(cred_dict))
-
-
-def get_storage_client():
-    return google_storage.Client(project=cred_dict['project_id'], credentials=creds)
 
 
 async def security_injection_middleware(request: Request, call_next):
@@ -138,7 +136,6 @@ class PysuraGraphql(GraphqlClient):
 
     def __init__(self):
         self.name = "graphql_client"
-
         super().__init__(endpoint=HASURA_GRAPHQL_URL_ROOT)
 
     def execute(self,
@@ -149,7 +146,7 @@ class PysuraGraphql(GraphqlClient):
         response = None
         try:
             kwargs.pop("headers", None)
-            response = self.client.execute(
+            response = self.execute(
                 headers={
                     "Content-Type": "application/json",
                     "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
@@ -162,9 +159,8 @@ class PysuraGraphql(GraphqlClient):
         except Exception as e:
             try:
                 logging.log(logging.ERROR, e)
-                self.client = GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
                 kwargs.pop("headers", None)
-                response = self.client.execute(
+                response = self.execute(
                     headers={
                         "Content-Type": "application/json",
                         "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
@@ -188,7 +184,7 @@ class PysuraGraphql(GraphqlClient):
         response = None
         try:
             kwargs.pop("Authorization", None)
-            response = self.client.execute(
+            response = self.execute(
                 headers={
                     "Content-Type": "application/json",
                     "Authorization": f"{token}"
@@ -201,9 +197,8 @@ class PysuraGraphql(GraphqlClient):
         except Exception as e:
             try:
                 logging.log(logging.ERROR, e)
-                self.client = GraphqlClient(endpoint=HASURA_GRAPHQL_URL_ROOT)
                 kwargs.pop("Authorization", None)
-                response = self.client.execute(
+                response = self.execute(
                     headers={
                         "Content-Type": "application/json",
                         "Authorization": f"{token}"
@@ -218,15 +213,25 @@ class PysuraGraphql(GraphqlClient):
         finally:
             return response
 
-    async def execute_async(self):
-        pass
 
+class PysuraStorage(google_storage.Client):
 
-class PysuraStorage:
-
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs, project=cred_dict['project_id'], credentials=creds)
         self.name = "storage_client"
-        self.storage = get_storage_client()
+        self.default_bucket = HASURA_STORAGE_BUCKET
+
+    def upload_file(self, file_data: bytes | str, file_name: str, file_type: str, user_id: str):
+        bucket = self.bucket(self.default_bucket)
+        blob = bucket.blob(f"{user_id}/{file_name}")
+        blob.upload_from_string(file_data, content_type=file_type)
+        signed_url = blob.generate_signed_url(expiration=datetime.now() + timedelta(days=5000))
+        return {
+            "url": signed_url,
+            "file_name": file_name,
+            "file_type": file_type,
+            "user_id": user_id
+        }
 
     # TODO: Add management methods
 
