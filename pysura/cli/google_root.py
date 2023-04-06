@@ -1054,6 +1054,8 @@ class GoogleRoot(RootCmd):
                           f"--project={env.project.name.split('/')[-1]}")
         deploy_command += secret_text
         self.log(deploy_command, level=logging.DEBUG)
+        with open("deploy.txt", "w") as f:
+            f.write(deploy_command)
         os.system(deploy_command)
         services = json.loads(os.popen(f"gcloud run services list "
                                        f"--project={env.project.name.split('/')[-1]} "
@@ -2251,6 +2253,7 @@ async def SNAKE(_: Request,
                             in_import_lines = False
                         if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
                             new_lines.append(line + "\n")
+                    new_action_template = "".join(new_lines)
                 with open(f"actions/{snake_replace}.py", "w") as f:
                     f.write(new_action_template)
         action_names = []
@@ -2868,19 +2871,15 @@ async def SNAKE(_: Request,
                     shutil.copy(os.path.join(root, f), ".")
                 else:
                     if "actions" in root:
-                        self.log(f"Copying {f} to actions directory", level=logging.INFO)
                         if f != "action_template.py":
                             dir_path = os.path.join(os.getcwd(), "actions")
                             if not os.path.isdir(dir_path):
                                 os.mkdir(dir_path)
                             if f != "__init__.py" and microservice_name == "default":
                                 default_actions.append(f.replace(".py", ""))
-                            if f in ["action_upload_file.py"]:
-                                shutil.copy(os.path.join(root, f), dir_path)
                             if microservice_name != "default":
                                 continue
                             shutil.copy(os.path.join(root, f), dir_path)
-                        self.collect("Continue?")
                     elif "crons" in root:
                         if f != "cron_template.py":
                             dir_path = os.path.join(os.getcwd(), "crons")
@@ -2946,6 +2945,8 @@ async def SNAKE(_: Request,
                   f"--no-cpu-throttling " \
                   f"--project={env.project.name.split('/')[-1]}"
         self.log(cmd_str, level=logging.DEBUG)
+        with open("deploy.txt", "w") as f:
+            f.write(cmd_str)
         os.system(cmd_str)
         services = json.loads(os.popen(f"gcloud run services list "
                                        f"--project={env.project.name.split('/')[-1]} "
@@ -3137,6 +3138,8 @@ async def SNAKE(_: Request,
             json.dump(data, f, indent=4)
         deploy_command = f"firebase deploy --only hosting"
         self.log(deploy_command, level=logging.DEBUG)
+        with open("deploy.txt", "w") as f:
+            f.write(deploy_command)
         os.system(deploy_command)
         os.chdir("../..")
         self.set_env(env)
