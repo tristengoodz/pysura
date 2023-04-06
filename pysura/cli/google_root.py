@@ -2866,6 +2866,47 @@ async def SNAKE(_: Request,
         default_actions = []
         default_events = []
         default_crons = []
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
+                    continue
+                if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
+                    shutil.copy(os.path.join(root, f), ".")
+                elif f == "pysura_metadata.json" and microservice_name == "default":
+                    shutil.copy(os.path.join(root, f), ".")
+                else:
+                    if "actions" in root:
+                        if f != "action_template.py":
+                            dir_path = os.path.join(os.getcwd(), "actions")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_actions.append(f.replace(".py", ""))
+                            if f in ["action_upload_file.py"]:
+                                shutil.copy(os.path.join(root, f), dir_path)
+                            if microservice_name != "default":
+                                continue
+                            shutil.copy(os.path.join(root, f), dir_path)
+                    elif "crons" in root:
+                        if f != "cron_template.py":
+                            dir_path = os.path.join(os.getcwd(), "crons")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_crons.append(f.replace(".py", ""))
+                            if microservice_name != "default":
+                                continue
+                            shutil.copy(os.path.join(root, f), dir_path)
+                    elif "events" in root:
+                        if f != "event_template.py":
+                            dir_path = os.path.join(os.getcwd(), "events")
+                            if not os.path.isdir(dir_path):
+                                os.mkdir(dir_path)
+                            if f != "__init__.py" and microservice_name == "default":
+                                default_events.append(f.replace(".py", ""))
+                            if microservice_name != "default":
+                                continue
+                            shutil.copy(os.path.join(root, f), dir_path)
         if microservice_name == "default" and default_init:
             with open("pysura_metadata.json", "r") as f:
                 metadata = json.load(f)
