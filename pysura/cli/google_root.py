@@ -100,9 +100,8 @@ class GoogleRoot(RootCmd):
             password=password,
             port=port
         )
-        response = await conn.execute(sql)
+        await conn.execute(sql)
         await conn.close()
-        return response
 
     @staticmethod
     def password(length: int = 64):
@@ -3174,7 +3173,7 @@ async def SNAKE(_: Request,
                                         sql=db_string
                                     ))
                             except Exception as e:
-                                self.log(e, level=logging.DEBUG)
+                                self.log(str(e), level=logging.DEBUG)
         self.do_export_hasura_metadata(None)
 
     def do_deploy_frontend(self, _):
