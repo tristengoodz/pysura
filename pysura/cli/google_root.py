@@ -3150,7 +3150,7 @@ async def SNAKE(_: Request,
                 if table.get("is_enum", None) is True:
                     table_name = table.get("table", {}).get("name", None)
                     if table_name is not None:
-                        db_string = f"insert into \"{table.get('name')}\" (value) values ('default')"
+                        db_string = f"insert into \"{table_name}\" (value) values ('default')"
                         asyncio.run(self.run_sql(
                             host=host,
                             password=env.database_credential.password,
