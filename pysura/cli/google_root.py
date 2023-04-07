@@ -3148,7 +3148,7 @@ async def SNAKE(_: Request,
         for source in metadata.get("sources", []):
             for table in source.get("tables", []):
                 if table.get("is_enum", None) is True:
-                    db_string = f'insert into "{table.get("name")}" (value) values (\'default\')"'
+                    db_string = f"insert into \"{table.get('name')}\" (value) values ('default')"
                     asyncio.run(self.run_sql(
                         host=host,
                         password=env.database_credential.password,
