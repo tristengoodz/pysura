@@ -3114,25 +3114,12 @@ async def SNAKE(_: Request,
             self.log("No primary IP address found.", level=logging.ERROR)
             return
 
-        db_string = "SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
-        tables = asyncio.run(self.run_sql(
+        db_string = "drop schema public cascade; create schema public;"
+        asyncio.run(self.run_sql(
             host=host,
             password=env.database_credential.password,
             sql=db_string
         ))
-        print(tables)
-        if len(tables) > 0:
-            self.log("Database is not empty. Dropping all tables...", level=logging.WARNING)
-            for table in tables:
-                print(table)
-                # table_name = table[0]
-                # db_string = f"drop table if exists public.\"{table_name}\" cascade"
-                # self.log(db_string, level=logging.INFO)
-                # asyncio.run(self.run_sql(
-                #     host=host,
-                #     password=env.database_credential.password,
-                #     sql=db_string
-                # ))
         self.log(create_sql, level=logging.DEBUG)
         asyncio.run(self.run_sql(
             host=host,
