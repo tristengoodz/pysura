@@ -94,8 +94,9 @@ class GoogleRoot(RootCmd):
             password=password,
             port=port
         )
-        await conn.execute(sql)
+        response = await conn.execute(sql)
         await conn.close()
+        return response
 
     @staticmethod
     def password(length: int = 64):
