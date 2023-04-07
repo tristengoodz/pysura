@@ -147,7 +147,7 @@ class PysuraGraphql(GraphqlClient):
         response = None
         try:
             kwargs.pop("headers", None)
-            response = self.execute(
+            response = super().execute(
                 headers={
                     "Content-Type": "application/json",
                     "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
@@ -161,7 +161,7 @@ class PysuraGraphql(GraphqlClient):
             try:
                 logging.log(logging.ERROR, e)
                 kwargs.pop("headers", None)
-                response = self.execute(
+                response = super().execute(
                     headers={
                         "Content-Type": "application/json",
                         "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
@@ -185,7 +185,7 @@ class PysuraGraphql(GraphqlClient):
         response = None
         try:
             kwargs.pop("Authorization", None)
-            response = self.execute(
+            response = super().execute(
                 headers={
                     "Content-Type": "application/json",
                     "Authorization": f"{token}"
@@ -199,7 +199,7 @@ class PysuraGraphql(GraphqlClient):
             try:
                 logging.log(logging.ERROR, e)
                 kwargs.pop("Authorization", None)
-                response = self.execute(
+                response = super().execute(
                     headers={
                         "Content-Type": "application/json",
                         "Authorization": f"{token}"
