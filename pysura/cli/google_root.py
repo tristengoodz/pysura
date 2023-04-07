@@ -3164,14 +3164,17 @@ async def SNAKE(_: Request,
                     if table_name is not None:
                         values = client.execute(Gql.GET_ENUM.replace("ENUM", table_name), headers=headers)
                         if values is not None:
-                            for value in values.get("data", {}).get("enum_values", [{}]):
-                                val = value.get("value", None)
-                                db_string = f"insert into \"{table_name}\" (value) values ('{val}')"
-                                asyncio.run(self.run_sql(
-                                    host=host,
-                                    password=env.database_credential.password,
-                                    sql=db_string
-                                ))
+                            try:
+                                for value in values.get("data", {}).get("enum_values", [{}]):
+                                    val = value.get("value", None)
+                                    db_string = f"insert into \"{table_name}\" (value) values ('{val}')"
+                                    asyncio.run(self.run_sql(
+                                        host=host,
+                                        password=env.database_credential.password,
+                                        sql=db_string
+                                    ))
+                            except Exception as e:
+                                self.log(e, level=logging.DEBUG)
         self.do_export_hasura_metadata(None)
 
     def do_deploy_frontend(self, _):
