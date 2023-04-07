@@ -101,8 +101,12 @@ class GoogleRoot(RootCmd):
             password=password,
             port=port
         )
-        await conn.execute(sql)
+        if "SELECT" in sql:
+            result = await conn.fetch(sql)
+        else:
+            result = await conn.execute(sql)
         await conn.close()
+        return result
 
     @staticmethod
     def password(length: int = 64):
@@ -3120,12 +3124,18 @@ async def SNAKE(_: Request,
             self.log("No primary IP address found.", level=logging.ERROR)
             return
 
-        db_string = "drop schema public cascade; create schema public;"
-        asyncio.run(self.run_sql(
+        tables = asyncio.run(self.run_sql(
             host=host,
             password=env.database_credential.password,
-            sql=db_string
+            sql="SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
         ))
+        for table in tables:
+            table_name = table['tablename']
+            await self.run_sql(
+                host=host,
+                password=env.database_credential.password,
+                sql=f'DROP TABLE IF EXISTS public."{table_name}" CASCADE'
+            )
         self.log(create_sql, level=logging.DEBUG)
         asyncio.run(self.run_sql(
             host=host,
