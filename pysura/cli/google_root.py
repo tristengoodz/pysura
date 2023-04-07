@@ -3094,7 +3094,8 @@ async def SNAKE(_: Request,
         }
         response = requests.post(path, headers=headers, json=data)
         create_sql = response.text
-
+        with open("create.sql", "w") as f:
+            f.write(create_sql)
         env = self.get_env()
         if env.database is None:
             self.log("No database set.", level=logging.ERROR)
