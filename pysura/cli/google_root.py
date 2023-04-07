@@ -3098,7 +3098,7 @@ async def SNAKE(_: Request,
         }
 
         data = {
-            "opts": ["-O", "-x", "--schema-only", "--schema=public", "--create", "--if-exists"],
+            "opts": ["-O", "-x", "--schema-only", "--schema=public", "--create", "--if-exists", "--clean"],
             "clean_output": True,
             "source": "default"
         }
