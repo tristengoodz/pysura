@@ -2176,7 +2176,7 @@ async def SNAKE(_: Request,
                 camel_replace = snake_replace.replace("_", " ").title().replace(" ", "")
                 new_action_template = action_template.replace("SNAKE", snake_replace).replace("CAMEL", camel_replace)
                 collect_perms = []
-                for permission in action["permissions"]:
+                for permission in action.get("permissions", []):
                     collect_perms.append(permission["role"])
                 else:
                     collect_perms.append("admin")
