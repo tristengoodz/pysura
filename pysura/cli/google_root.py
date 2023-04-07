@@ -3131,14 +3131,10 @@ async def SNAKE(_: Request,
         ))
         metadata_url = base_path + "/v1/metadata"
         cmd_str = f"""curl -d'{{"type": "export_metadata", "args": {{}}}}' {metadata_url} -H "X-Hasura-Admin-Secret: {
-        admin_secret}" -o new_hasura_metadata.json"""
+        admin_secret}" -o hasura_metadata.json"""
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        with open("new_hasura_metadata.json", "r") as f:
-            new_metadata = json.load(f)
-
-        with open("hasura_metadata.json", "r") as f:
-            old_metadata = json.load(f)
+        self.do_export_hasura_metadata(None)
 
     def do_deploy_frontend(self, _):
         env = self.get_env()
