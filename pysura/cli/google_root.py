@@ -3098,7 +3098,7 @@ async def SNAKE(_: Request,
         }
 
         data = {
-            "opts": ["-O", "-x", "--schema-only", "--schema=public"],
+            "opts": ["-O", "-x", "--schema-only", "--schema=public", "--create", "--if-exists"],
             "clean_output": True,
             "source": "default"
         }
@@ -3123,6 +3123,21 @@ async def SNAKE(_: Request,
         if host is None:
             self.log("No primary IP address found.", level=logging.ERROR)
             return
+        tables = asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql="SELECT proname FROM pg_proc WHERE"
+                " pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')"
+        ))
+
+        # Drop all functions in the public schema
+        for table in tables:
+            table_name = table['proname']
+            asyncio.run(self.run_sql(
+                host=host,
+                password=env.database_credential.password,
+                sql=f'DROP FUNCTION IF EXISTS public.{table_name}() CASCADE'
+            ))
 
         tables = asyncio.run(self.run_sql(
             host=host,
