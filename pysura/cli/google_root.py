@@ -3148,12 +3148,14 @@ async def SNAKE(_: Request,
         for source in metadata.get("sources", []):
             for table in source.get("tables", []):
                 if table.get("is_enum", None) is True:
-                    db_string = f"insert into \"{table.get('name')}\" (value) values ('default')"
-                    asyncio.run(self.run_sql(
-                        host=host,
-                        password=env.database_credential.password,
-                        sql=db_string
-                    ))
+                    table_name = table.get("table", {}).get("name", None)
+                    if table_name is not None:
+                        db_string = f"insert into \"{table.get('name')}\" (value) values ('default')"
+                        asyncio.run(self.run_sql(
+                            host=host,
+                            password=env.database_credential.password,
+                            sql=db_string
+                        ))
         self.collect(f"Please go to your Hasura instance and set up all enums! Continue? (y/n)")
         self.do_export_hasura_metadata(None)
 
