@@ -3123,7 +3123,7 @@ async def SNAKE(_: Request,
         if len(tables) > 0:
             self.log("Database is not empty. Dropping all tables...", level=logging.WARNING)
             for table in tables:
-                table_name = table["tablename"]
+                table_name = table[0]
                 db_string = f"drop table if exists public.\"{table_name}\" cascade"
                 self.log(db_string, level=logging.INFO)
                 asyncio.run(self.run_sql(
