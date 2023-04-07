@@ -3112,6 +3112,41 @@ async def SNAKE(_: Request,
         if host is None:
             self.log("No primary IP address found.", level=logging.ERROR)
             return
+        db_string = "drop table if exists \"ENUM_ROLE\" cascade"
+        self.log(db_string, level=logging.INFO)
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=db_string
+        ))
+        db_string = "drop table if exists \"user\" cascade"
+        self.log(db_string, level=logging.INFO)
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=db_string
+        ))
+        db_string = "drop table if exists \"public_user\" cascade"
+        self.log(db_string, level=logging.INFO)
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=db_string
+        ))
+        db_string = "drop table if exists \"file\" cascade"
+        self.log(db_string, level=logging.INFO)
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=db_string
+        ))
+        db_string = "drop table if exists \"app\" cascade"
+        self.log(db_string, level=logging.INFO)
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=db_string
+        ))
         self.log(create_sql, level=logging.DEBUG)
         asyncio.run(self.run_sql(
             host=host,
@@ -3135,6 +3170,7 @@ async def SNAKE(_: Request,
         admin_secret}" -o hasura_metadata.json"""
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        response = self.collect(f"Please go to your Hasura instance and set up all enums! Continue?")
         self.do_export_hasura_metadata(None)
 
     def do_deploy_frontend(self, _):
