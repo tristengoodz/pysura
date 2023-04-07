@@ -16,6 +16,7 @@ import time
 import re
 import asyncpg
 import asyncio
+import requests
 
 
 class Gql:
@@ -1910,8 +1911,24 @@ alter table app
         cmd_str = f"dart pub global activate flutterfire_cli"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        ios_bundle_id = self.collect("Please enter a bundle id for your iOS app. (com.example.MyApp): ")
+        if not self.confirm_loop(ios_bundle_id):
+            self.attach_flutter()
+        android_package_name = self.collect("Please enter a package name for your Android app. (com.example.myapp): ")
+        if not self.confirm_loop(android_package_name):
+            self.attach_flutter()
+        with open(".firebaserc", "w") as f:
+            f.write("""{
+  "projects": {
+    "default": "PROJECT_ID"
+  }
+}
+""".replace("PROJECT_ID", env.project.name.split("/")[-1]))
         cmd_str = f"dart pub global run flutterfire_cli:flutterfire configure " \
-                  f"--platforms=android,ios,macos,web,linux,windows"
+                  f"--platforms=android,ios,web " \
+                  f"--ios-bundle-id={ios_bundle_id} " \
+                  f"--android-package-name={android_package_name} " \
+                  f"--apply-gradle-plugin"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = "flutter pub get"
@@ -1937,63 +1954,6 @@ alter table app
             with open("ios/Runner/Info.plist", "wb") as f:
                 plistlib.dump(ios_plist, f)
 
-        if os.path.isdir("android"):
-            os.chdir("android")
-            cmd_str = "./gradlew signingReport"
-            self.log(cmd_str, level=logging.DEBUG)
-            response = os.popen(cmd_str).read()
-            variants = re.findall(r'Variant: (.+)', response)
-            configs = re.findall(r'Config: (.+)', response)
-            md5s = re.findall(r'MD5: (.+)', response)
-            sha1s = re.findall(r'SHA1: (.+)', response)
-            sha256s = re.findall(r'SHA-256: (.+)', response)
-            valid_until = re.findall(r'Valid until: (.+)', response)
-            if len(variants) == 0:
-                self.log("No signing report found", level=logging.WARNING)
-                cmd_str = "gradlew signingReport"
-                self.log(cmd_str, level=logging.DEBUG)
-                response = os.popen(cmd_str).read()
-                variants = re.findall(r'Variant: (.+)', response)
-                configs = re.findall(r'Config: (.+)', response)
-                md5s = re.findall(r'MD5: (.+)', response)
-                sha1s = re.findall(r'SHA1: (.+)', response)
-                sha256s = re.findall(r'SHA-256: (.+)', response)
-                valid_until = re.findall(r'Valid until: (.+)', response)
-
-            if len(variants) != 0:
-                signing_reports = []
-                for variant, config, md5, sha1, sha256, valid in zip(variants, configs, md5s, sha1s, sha256s,
-                                                                     valid_until):
-                    signing_report_data = {
-                        'variant': variant,
-                        'config': config,
-                        'md5': md5,
-                        'sha1': sha1,
-                        'sha256': sha256,
-                        'valid_until': valid
-                    }
-                    android_report = AndroidSigningReport(**signing_report_data)
-                    signing_reports.append(android_report)
-                    if android_report.variant == "debug":
-                        env.android_debug_signing_report = android_report
-
-                env.android_signing_reports = signing_reports
-            else:
-                self.log("No signing report found", level=logging.WARNING)
-                env.android_signing_reports = []
-            if env.android_debug_signing_report is not None and \
-                    env.android_debug_signing_report.sha1 is not None and \
-                    env.android_debug_signing_report.sha256 is not None:
-                self.log(f"SHA1:\n{env.android_debug_signing_report.sha1}", level=logging.INFO)
-                self.log(f"SHA256:\n{env.android_debug_signing_report.sha256}", level=logging.INFO)
-                self.log(
-                    f"Please visit:\nhttps://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/"
-                    f"settings/general/android\nAdd the SHA1 and SHA256 to the list of fingerprints",
-                    level=logging.INFO)
-                ready = self.collect("Are you ready to continue? (y/n): ")
-                while ready != "y":
-                    ready = self.collect("Are you ready to continue? (y/n): ")
-            os.chdir("..")
         if env.hasura is not None and env.hasura.HASURA_GRAPHQL_URL_ROOT is not None and \
                 env.hasura.HASURA_GRAPHQL_ADMIN_SECRET is not None:
             graphql_file = """{
@@ -3109,6 +3069,76 @@ async def SNAKE(_: Request,
         }
         with open("hasura_metadata.json", "w") as f:
             json.dump(new_metadata, f, indent=4)
+
+    def do_import_existing_hasura(self, _):
+        base_path = self.collect("Enter the base path to the existing hasura!\n"
+                                 "(Ex: https://hasura-ny5gxlz7tq-uc.a.run.app): ")
+        if not self.confirm_loop(base_path):
+            return
+        admin_secret = self.collect("Enter the admin secret for the existing hasura!\n"
+                                    "(Ex: 1234567890): ")
+        if not self.confirm_loop(admin_secret):
+            return
+        self.log("Importing existing hasura metadata...")
+        path = f"{base_path}/v1alpha1/pg_dump"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Hasura-Admin-Secret": admin_secret
+        }
+
+        data = {
+            "opts": ["-O", "-x", "--schema-only", "--schema=public", "--clean", "--if-exists"],
+            "clean_output": True,
+            "source": "default"
+        }
+        response = requests.post(path, headers=headers, json=data)
+        create_sql = response.text
+
+        env = self.get_env()
+        if env.database is None:
+            self.log("No database set.", level=logging.ERROR)
+            return
+        if env.database_credentials is None:
+            self.log("No database credentials set.", level=logging.ERROR)
+            return
+
+        host = None
+        for ip_addr in env.database.ipAddresses:
+            if ip_addr.type == "PRIMARY":
+                host = ip_addr.ipAddress
+
+        if host is None:
+            self.log("No primary IP address found.", level=logging.ERROR)
+            return
+        self.log(create_sql, level=logging.DEBUG)
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=create_sql
+        ))
+        db_string = "insert into \"ENUM_ROLE\" (value) values ('admin')"
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=db_string
+        ))
+        db_string = "insert into \"ENUM_ROLE\" (value) values ('user')"
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=db_string
+        ))
+        metadata_url = base_path + "/v1/metadata"
+        cmd_str = f"""curl -d'{{"type": "export_metadata", "args": {{}}}}' {metadata_url} -H "X-Hasura-Admin-Secret: {
+        admin_secret}" -o new_hasura_metadata.json"""
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        with open("new_hasura_metadata.json", "r") as f:
+            new_metadata = json.load(f)
+
+        with open("hasura_metadata.json", "r") as f:
+            old_metadata = json.load(f)
 
     def do_deploy_frontend(self, _):
         env = self.get_env()
