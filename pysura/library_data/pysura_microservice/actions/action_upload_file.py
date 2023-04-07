@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Request
 from pysura.faster_api.security import PysuraSecurity, PysuraProvider, Provider
 from pysura.faster_api.enums import ApiResponse, ClientRole
 from generated_types import *
+import base64
 
 # (IMPORTS-END) - DO NOT DELETE THIS LINE!
 
@@ -68,7 +69,8 @@ async def action_upload_file(_: Request,
             ]
         ).dict()
     try:
-        response = provider.storage.upload_file(file_data=action_upload_file_input.file_data,
+        file_data = base64.b64decode(action_upload_file_input.file_data)
+        response = provider.storage.upload_file(file_data=file_data,
                                                 file_name=action_upload_file_input.file_name,
                                                 file_type=action_upload_file_input.file_type,
                                                 user_id=provider.user_identity.user_id)
