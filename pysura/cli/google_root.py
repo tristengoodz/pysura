@@ -37,6 +37,7 @@ class Gql:
     GET_ENUM = """query GetEnum {
   enum_values: ENUM {
     value
+    comment
   }
 }"""
 
@@ -3166,7 +3167,12 @@ async def SNAKE(_: Request,
                             try:
                                 for value in values.get("data", {}).get("enum_values", [{}]):
                                     val = value.get("value", None)
-                                    db_string = f"insert into \"{table_name}\" (value) values ('{val}')"
+                                    comment = value.get("comment", None)
+                                    if comment is not None:
+                                        db_string = f"insert into \"{table_name}\" (value, comment) values " \
+                                                    f"('{val}', '{comment}')"
+                                    else:
+                                        db_string = f"insert into \"{table_name}\" (value) values ('{val}')"
                                     asyncio.run(self.run_sql(
                                         host=host,
                                         password=env.database_credential.password,
