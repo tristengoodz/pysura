@@ -3120,150 +3120,158 @@ async def SNAKE(_: Request,
             password=env.database_credential.password,
             sql=db_string
         ))
+        print(tables)
+        print(type(tables))
         if len(tables) > 0:
             self.log("Database is not empty. Dropping all tables...", level=logging.WARNING)
             for table in tables:
-                table_name = table[0]
-                db_string = f"drop table if exists public.\"{table_name}\" cascade"
-                self.log(db_string, level=logging.INFO)
-                asyncio.run(self.run_sql(
-                    host=host,
-                    password=env.database_credential.password,
-                    sql=db_string
+                print(table)
+                # table_name = table[0]
+                # db_string = f"drop table if exists public.\"{table_name}\" cascade"
+                # self.log(db_string, level=logging.INFO)
+                # asyncio.run(self.run_sql(
+                #     host=host,
+                #     password=env.database_credential.password,
+                #     sql=db_string
                 ))
-        self.log(create_sql, level=logging.DEBUG)
-        asyncio.run(self.run_sql(
-            host=host,
-            password=env.database_credential.password,
-            sql=create_sql
+                self.log(create_sql, level=logging.DEBUG)
+                asyncio.run(self.run_sql(
+            host = host,
+            password = env.database_credential.password,
+            sql = create_sql
         ))
         db_string = "insert into \"ENUM_ROLE\" (value) values ('admin')"
         asyncio.run(self.run_sql(
-            host=host,
-            password=env.database_credential.password,
-            sql=db_string
-        ))
-        db_string = "insert into \"ENUM_ROLE\" (value) values ('user')"
-        asyncio.run(self.run_sql(
-            host=host,
-            password=env.database_credential.password,
-            sql=db_string
-        ))
-        metadata_url = base_path + "/v1/metadata"
-        cmd_str = f"""curl -d'{{"type": "export_metadata", "args": {{}}}}' {metadata_url} -H "X-Hasura-Admin-Secret: {
-        admin_secret}" -o hasura_metadata.json"""
-        self.log(cmd_str, level=logging.DEBUG)
+        host = host,
+        password = env.database_credential.password,
+        sql = db_string
+
+    ))
+    db_string = "insert into \"ENUM_ROLE\" (value) values ('user')"
+    asyncio.run(self.run_sql(
+    host = host,
+    password = env.database_credential.password,
+    sql = db_string
+
+))
+metadata_url = base_path + "/v1/metadata"
+cmd_str = f"""curl -d'{{"type": "export_metadata", "args": {{}}}}' {metadata_url} -H "X-Hasura-Admin-Secret: {
+admin_secret}" -o hasura_metadata.json"""
+self.log(cmd_str, level=logging.DEBUG)
+os.system(cmd_str)
+with open("hasura_metadata.json", "r") as f:
+    metadata = json.load(f)
+for source in metadata.get("sources", []):
+    for
+table in source.get("tables", []):
+if table.get("is_enum", None) is True:
+    db_string = f'insert into "{table.get("name")}" (value) values (\'default\')"'
+asyncio.run(self.run_sql(
+host = host,
+password = env.database_credential.password,
+sql = db_string
+))
+self.collect(f"Please go to your Hasura instance and set up all enums! Continue? (y/n)")
+self.do_export_hasura_metadata(None)
+
+
+def do_deploy_frontend(self, _):
+    env = self.get_env()
+    if env.flutter_app_name is None:
+        self.log("No flutter app name found. Skipping flutter app deployment.", level=logging.WARNING)
+        return
+    project_name = env.flutter_app_name
+    if not os.path.exists("microservices"):
+        os.mkdir("microservices")
+    if not os.path.exists(f"microservices/{project_name}_web"):
+        os.mkdir(f"microservices/{project_name}_web")
+    path = self.get_site_packages_path(submodule="pysura_ssr")
+    for root, dirs, files in os.walk(path):
+        for f in files:
+            if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
+                continue
+            if f in [".firebaserc", "firebase.json"]:
+                shutil.copy(os.path.join(root, f), f"microservices/{project_name}_web")
+    if not os.path.isdir(f"microservices/{project_name}_web/build"):
+        os.mkdir(f"microservices/{project_name}_web/build")
+    else:
+        shutil.rmtree(f"microservices/{project_name}_web/build")
+        os.mkdir(f"microservices/{project_name}_web/build")
+
+    if os.path.exists(f"{project_name}/web"):
+        os.chdir(f"{project_name}")
+        cmd_str = "flutter build web --release"
+        self.log(f"Running command: {cmd_str}", level=logging.INFO)
         os.system(cmd_str)
-        with open("hasura_metadata.json", "r") as f:
-            metadata = json.load(f)
-        for source in metadata.get("sources", []):
-            for table in source.get("tables", []):
-                if table.get("is_enum", None) is True:
-                    db_string = f'insert into "{table.get("name")}" (value) values (\'default\')"'
-                    asyncio.run(self.run_sql(
-                        host=host,
-                        password=env.database_credential.password,
-                        sql=db_string
-                    ))
-        self.collect(f"Please go to your Hasura instance and set up all enums! Continue? (y/n)")
-        self.do_export_hasura_metadata(None)
+        os.chdir("..")
 
-    def do_deploy_frontend(self, _):
-        env = self.get_env()
-        if env.flutter_app_name is None:
-            self.log("No flutter app name found. Skipping flutter app deployment.", level=logging.WARNING)
-            return
-        project_name = env.flutter_app_name
-        if not os.path.exists("microservices"):
-            os.mkdir("microservices")
-        if not os.path.exists(f"microservices/{project_name}_web"):
-            os.mkdir(f"microservices/{project_name}_web")
-        path = self.get_site_packages_path(submodule="pysura_ssr")
-        for root, dirs, files in os.walk(path):
-            for f in files:
-                if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
-                    continue
-                if f in [".firebaserc", "firebase.json"]:
-                    shutil.copy(os.path.join(root, f), f"microservices/{project_name}_web")
-        if not os.path.isdir(f"microservices/{project_name}_web/build"):
-            os.mkdir(f"microservices/{project_name}_web/build")
-        else:
-            shutil.rmtree(f"microservices/{project_name}_web/build")
-            os.mkdir(f"microservices/{project_name}_web/build")
+    src_dir = f"{project_name}/build/web"
+    dst_dir = f"microservices/{project_name}_web/build/web"
+    shutil.copytree(src_dir, dst_dir)
+    os.chdir(f"microservices/{project_name}_web")
+    with open(".firebaserc") as f:
+        data = json.load(f)
+    data["projects"]["default"] = env.project.name.split('/')[-1]
+    with open(".firebaserc", "w") as f:
+        json.dump(data, f, indent=4)
+    deploy_command = f"firebase deploy --only hosting"
+    self.log(deploy_command, level=logging.DEBUG)
+    with open("deploy.txt", "w") as f:
+        f.write(deploy_command)
+    os.system(deploy_command)
+    os.chdir("../..")
+    self.set_env(env)
 
-        if os.path.exists(f"{project_name}/web"):
-            os.chdir(f"{project_name}")
-            cmd_str = "flutter build web --release"
-            self.log(f"Running command: {cmd_str}", level=logging.INFO)
-            os.system(cmd_str)
-            os.chdir("..")
 
-        src_dir = f"{project_name}/build/web"
-        dst_dir = f"microservices/{project_name}_web/build/web"
-        shutil.copytree(src_dir, dst_dir)
-        os.chdir(f"microservices/{project_name}_web")
-        with open(".firebaserc") as f:
-            data = json.load(f)
-        data["projects"]["default"] = env.project.name.split('/')[-1]
-        with open(".firebaserc", "w") as f:
-            json.dump(data, f, indent=4)
-        deploy_command = f"firebase deploy --only hosting"
-        self.log(deploy_command, level=logging.DEBUG)
-        with open("deploy.txt", "w") as f:
-            f.write(deploy_command)
-        os.system(deploy_command)
-        os.chdir("../..")
-        self.set_env(env)
-
-    def do_print_pysura(self, _):
-        env = self.get_env()
-        self.log(f"Pysura App is ready to run!, open the folder named {env.flutter_app_name} in Android Studio!",
-                 level=logging.INFO)
-        assert env.hasura is not None
-        assert env.hasura_metadata is not None
-        if env.hasura.microservice_urls is not None:
-            num_services = len(env.hasura.microservice_urls)
-        else:
-            num_services = 0
-        log_str = f"""
+def do_print_pysura(self, _):
+    env = self.get_env()
+    self.log(f"Pysura App is ready to run!, open the folder named {env.flutter_app_name} in Android Studio!",
+             level=logging.INFO)
+    assert env.hasura is not None
+    assert env.hasura_metadata is not None
+    if env.hasura.microservice_urls is not None:
+        num_services = len(env.hasura.microservice_urls)
+    else:
+        num_services = 0
+    log_str = f"""
 Pysura Project Setup Complete!
 
 The default microservice can be found at:
 {env.default_microservice_url}/docs
 
 """
+    actions = [action for action in env.hasura_metadata.actions if
+               action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
+    if len(actions) > 0:
+        log_str += f"""The default microservice has {len(actions)} actions:\n"""
+        for action in actions:
+            log_str += f"""\t{action.name}\n"""
+
+    log_str += f"""\nYou have {num_services} additional microservice(s) deployed."""
+    if num_services > 0:
+        log_str += "\n\tMicroservice URLs:\n"
+
+    for microservice_url in env.hasura.microservice_urls:
         actions = [action for action in env.hasura_metadata.actions if
-                   action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
+                   action.definition.handler == microservice_url.url_wrapper]
+        log_str += f"""\t{microservice_url.url}\n"""
         if len(actions) > 0:
-            log_str += f"""The default microservice has {len(actions)} actions:\n"""
+            log_str += f"""\t\t{len(actions)} action(s):\n"""
             for action in actions:
-                log_str += f"""\t{action.name}\n"""
+                log_str += f"""\t\t\t{action.name}\n"""
 
-        log_str += f"""\nYou have {num_services} additional microservice(s) deployed."""
-        if num_services > 0:
-            log_str += "\n\tMicroservice URLs:\n"
+    if env.database_credential is not None:
+        public_ip = None
+        private_ip = None
+        db_password = env.database_credential.password
+        db_connect_string = env.database_credential.connect_url
+        for ip_addr in env.database.ipAddresses:
+            if ip_addr.type == "PRIMARY":
+                public_ip = ip_addr.ipAddress
+            elif ip_addr.type == "PRIVATE":
+                private_ip = ip_addr.ipAddress
 
-        for microservice_url in env.hasura.microservice_urls:
-            actions = [action for action in env.hasura_metadata.actions if
-                       action.definition.handler == microservice_url.url_wrapper]
-            log_str += f"""\t{microservice_url.url}\n"""
-            if len(actions) > 0:
-                log_str += f"""\t\t{len(actions)} action(s):\n"""
-                for action in actions:
-                    log_str += f"""\t\t\t{action.name}\n"""
-
-        if env.database_credential is not None:
-            public_ip = None
-            private_ip = None
-            db_password = env.database_credential.password
-            db_connect_string = env.database_credential.connect_url
-            for ip_addr in env.database.ipAddresses:
-                if ip_addr.type == "PRIMARY":
-                    public_ip = ip_addr.ipAddress
-                elif ip_addr.type == "PRIVATE":
-                    private_ip = ip_addr.ipAddress
-
-            log_str += f"""
+        log_str += f"""
 You can connect to your database using the following credentials, which IP you use depends on if you are connecting 
 from a serverless connector, or your local machine. If you are connecting from a serverless connector, you will need to
 use the private IP address, if you are connecting from your local machine, you will need to use the public IP address.
@@ -3275,7 +3283,7 @@ Default Private Connect String used for Hasura: {db_connect_string}
 
 """
 
-        log_str += f"""
+    log_str += f"""
 
 Your Hasura instance can be found at:
 {env.hasura_service.status.address.url}/console
@@ -3296,260 +3304,261 @@ https://{env.project.name.split('/')[-1]}.web.app/
 
 """
 
-        test_phone_numbers = env.test_phone_numbers
-        if isinstance(test_phone_numbers, list):
-            for test_phone_number in test_phone_numbers:
-                if test_phone_number.role == "admin":
-                    log_str += f"\nAdmin Phone Number: {test_phone_number.phone_number}\t" \
-                               f"Code: {test_phone_number.code}\n"
-                elif test_phone_number.role == "user":
-                    log_str += f"\nUser Phone Number: {test_phone_number.phone_number}\t" \
-                               f"Code: {test_phone_number.code}\n"
+    test_phone_numbers = env.test_phone_numbers
+    if isinstance(test_phone_numbers, list):
+        for test_phone_number in test_phone_numbers:
+            if test_phone_number.role == "admin":
+                log_str += f"\nAdmin Phone Number: {test_phone_number.phone_number}\t" \
+                           f"Code: {test_phone_number.code}\n"
+            elif test_phone_number.role == "user":
+                log_str += f"\nUser Phone Number: {test_phone_number.phone_number}\t" \
+                           f"Code: {test_phone_number.code}\n"
 
-        log_str += "\n\nTo see these credentials again, run print_pysura\n"
-        self.log(log_str, level=logging.INFO)
+    log_str += "\n\nTo see these credentials again, run print_pysura\n"
+    self.log(log_str, level=logging.INFO)
 
-    def do_setup_pysura(self, recurse=0):
-        """
-        Setups up a Pysura project
-        """
-        if recurse == "":
-            recurse = 0
-        else:
-            if recurse > 10:
-                self.log("Too many attempts. Aborting project setup.", level=logging.WARNING)
-                return
-        if not self.check_gcloud():
+
+def do_setup_pysura(self, recurse=0):
+    """
+    Setups up a Pysura project
+    """
+    if recurse == "":
+        recurse = 0
+    else:
+        if recurse > 10:
+            self.log("Too many attempts. Aborting project setup.", level=logging.WARNING)
             return
-        if not self.check_npm():
-            return
-        if not self.check_flutter():
-            return
-        if not self.check_firebase():
-            return
-        if not self.check_docker():
-            return
+    if not self.check_gcloud():
+        return
+    if not self.check_npm():
+        return
+    if not self.check_flutter():
+        return
+    if not self.check_firebase():
+        return
+    if not self.check_docker():
+        return
+    env = self.get_env()
+    if env.gcloud_logged_in is False:
+        self.do_gcloud_login()
         env = self.get_env()
-        if env.gcloud_logged_in is False:
-            self.do_gcloud_login()
-            env = self.get_env()
-        if not env.gcloud_logged_in:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        cmd_str = "gcloud auth configure-docker gcr.io"
-        self.log(f"Running command: {cmd_str}", level=logging.INFO)
+    if not env.gcloud_logged_in:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    cmd_str = "gcloud auth configure-docker gcr.io"
+    self.log(f"Running command: {cmd_str}", level=logging.INFO)
+    os.system(cmd_str)
+    if env.organization is None:
+        self.do_gcloud_choose_organization(None)
+        env = self.get_env()
+    if env.project is None:
+        hasura_project_name = self.collect("Hasura project name: ")
+        if not self.confirm_loop(hasura_project_name):
+            self.log("Aborting project setup.", level=logging.WARNING)
+            return
+    else:
+        hasura_project_name = env.project.name.split("/")[-1]
+    hasura_project_name = hasura_project_name.replace("_", "-").replace(" ", "-")
+    if env.project is None:
+        self.gcloud_create_project(project_id=hasura_project_name)
+        env = self.get_env()
+    else:
+        cmd_str = f"gcloud config set project {env.project.name.split('/')[-1]}"
+        self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        if env.organization is None:
-            self.do_gcloud_choose_organization(None)
-            env = self.get_env()
-        if env.project is None:
-            hasura_project_name = self.collect("Hasura project name: ")
-            if not self.confirm_loop(hasura_project_name):
-                self.log("Aborting project setup.", level=logging.WARNING)
-                return
-        else:
-            hasura_project_name = env.project.name.split("/")[-1]
-        hasura_project_name = hasura_project_name.replace("_", "-").replace(" ", "-")
-        if env.project is None:
-            self.gcloud_create_project(project_id=hasura_project_name)
-            env = self.get_env()
-        else:
-            cmd_str = f"gcloud config set project {env.project.name.split('/')[-1]}"
-            self.log(cmd_str, level=logging.DEBUG)
-            os.system(cmd_str)
-        if env.project is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.billing_account is None:
-            self.do_gcloud_link_billing_account()
-            env = self.get_env()
-        if env.billing_account is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.api_services is None:
-            self.gcloud_enable_api_services()
-            env = self.get_env()
-        if env.api_services is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.network is None:
-            self.gcloud_create_network(network_id=hasura_project_name)
-            env = self.get_env()
-        if env.network is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.address is None:
-            self.gcloud_create_address(address_id=hasura_project_name)
-            env = self.get_env()
-        if env.address is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.peering is None:
-            self.gcloud_create_vpc_peering(peering_id=hasura_project_name)
-            env = self.get_env()
-        if env.peering is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.firewalls is None:
-            self.gcloud_create_firewall(firewall_id=hasura_project_name)
-            env = self.get_env()
-        if env.firewalls is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.database_credential is None:
-            self.do_gcloud_create_database(database_id=hasura_project_name)
-            env = self.get_env()
-        if env.database_credential is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.connector is None:
-            self.gcloud_create_serverless_connector(connector_id=hasura_project_name)
-            env = self.get_env()
-        if env.connector is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.hasura_service_account is None:
-            self.update_default_compute_engine_service_account()
-            env = self.get_env()
-        if env.hasura_service_account is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.hasura is None:
-            self.do_gcloud_deploy_hasura()
-            env = self.get_env()
-        if env.hasura is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        self.do_import_hasura_metadata(None)
-        if env.auth_service_account is None:
-            self.gcloud_create_auth_service_account()
+    if env.project is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.billing_account is None:
+        self.do_gcloud_link_billing_account()
         env = self.get_env()
-        if env.auth_service_account is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.local_database_enabled is False:
-            self.enable_database_local(database_id=env.database.name.split("/")[-1])
-            env = self.get_env()
-        if env.local_database_enabled is False:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.default_user_table_created is False:
-            self.create_default_user_table()
-            env = self.get_env()
-        if env.default_user_table_created is False:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.firebase_attached is False:
-            self.attach_firebase()
-            env = self.get_env()
-        if env.firebase_attached is False:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.flutter_attached is False:
-            self.attach_flutter()
-            env = self.get_env()
-        if env.flutter_attached is False:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.firebase_auth_activated is False:
-            self.activate_firebase_auth()
-            env = self.get_env()
-        if env.firebase_auth_activated is False:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        if env.default_microservice is None:
-            self.do_deploy_microservice(microservice_name="default", default_init=True)
-            env = self.get_env()
-        if env.default_microservice is None:
-            return self.do_setup_pysura(recurse=recurse + 1)
-        self.do_export_hasura_metadata(None)
-        self.do_deploy_frontend(None)
+    if env.billing_account is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.api_services is None:
+        self.gcloud_enable_api_services()
         env = self.get_env()
-        phone_wizard = self.collect(
-            "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
-        )
-        if phone_wizard.strip().lower() == "y":
-            add_admin = True
-            add_user = True
-        else:
-            add_admin = False
-            add_user = False
-        test_phone_numbers = env.test_phone_numbers
-        if isinstance(test_phone_numbers, list):
-            for test_phone_number in test_phone_numbers:
-                if test_phone_number.role == "admin":
-                    add_admin = False
-                elif test_phone_number.role == "user":
-                    add_user = False
-        else:
-            test_phone_numbers = []
+    if env.api_services is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.network is None:
+        self.gcloud_create_network(network_id=hasura_project_name)
+        env = self.get_env()
+    if env.network is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.address is None:
+        self.gcloud_create_address(address_id=hasura_project_name)
+        env = self.get_env()
+    if env.address is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.peering is None:
+        self.gcloud_create_vpc_peering(peering_id=hasura_project_name)
+        env = self.get_env()
+    if env.peering is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.firewalls is None:
+        self.gcloud_create_firewall(firewall_id=hasura_project_name)
+        env = self.get_env()
+    if env.firewalls is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.database_credential is None:
+        self.do_gcloud_create_database(database_id=hasura_project_name)
+        env = self.get_env()
+    if env.database_credential is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.connector is None:
+        self.gcloud_create_serverless_connector(connector_id=hasura_project_name)
+        env = self.get_env()
+    if env.connector is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.hasura_service_account is None:
+        self.update_default_compute_engine_service_account()
+        env = self.get_env()
+    if env.hasura_service_account is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.hasura is None:
+        self.do_gcloud_deploy_hasura()
+        env = self.get_env()
+    if env.hasura is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    self.do_import_hasura_metadata(None)
+    if env.auth_service_account is None:
+        self.gcloud_create_auth_service_account()
+    env = self.get_env()
+    if env.auth_service_account is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.local_database_enabled is False:
+        self.enable_database_local(database_id=env.database.name.split("/")[-1])
+        env = self.get_env()
+    if env.local_database_enabled is False:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.default_user_table_created is False:
+        self.create_default_user_table()
+        env = self.get_env()
+    if env.default_user_table_created is False:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.firebase_attached is False:
+        self.attach_firebase()
+        env = self.get_env()
+    if env.firebase_attached is False:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.flutter_attached is False:
+        self.attach_flutter()
+        env = self.get_env()
+    if env.flutter_attached is False:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.firebase_auth_activated is False:
+        self.activate_firebase_auth()
+        env = self.get_env()
+    if env.firebase_auth_activated is False:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    if env.default_microservice is None:
+        self.do_deploy_microservice(microservice_name="default", default_init=True)
+        env = self.get_env()
+    if env.default_microservice is None:
+        return self.do_setup_pysura(recurse=recurse + 1)
+    self.do_export_hasura_metadata(None)
+    self.do_deploy_frontend(None)
+    env = self.get_env()
+    phone_wizard = self.collect(
+        "Would you like to add test phone numbers to your firebase project using the setup wizard? (y/n): "
+    )
+    if phone_wizard.strip().lower() == "y":
+        add_admin = True
+        add_user = True
+    else:
+        add_admin = False
+        add_user = False
+    test_phone_numbers = env.test_phone_numbers
+    if isinstance(test_phone_numbers, list):
+        for test_phone_number in test_phone_numbers:
+            if test_phone_number.role == "admin":
+                add_admin = False
+            elif test_phone_number.role == "user":
+                add_user = False
+    else:
+        test_phone_numbers = []
 
-        if add_admin:
+    if add_admin:
+        self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
+                 level=logging.INFO)
+        self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                 f"/providers",
+                 level=logging.INFO
+                 )
+        admin_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
+        while not self.confirm_loop(admin_phone):
             self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
                      level=logging.INFO)
-            self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                     f"/providers",
-                     level=logging.INFO
-                     )
-            admin_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
-            while not self.confirm_loop(admin_phone):
-                self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
-                         level=logging.INFO)
-                self.log(
-                    f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                    f"/providers",
-                    level=logging.INFO
-                )
-                admin_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
-            admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
-            while not self.confirm_loop(admin_code):
-                admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
-            self.log(f"Please login to your app with the phone number you just added!\n"
-                     f"https://{env.project.name.split('/')[-1]}.web.app/", level=logging.INFO)
-            ready = self.collect("Are you ready to continue? (y/n): ")
-            while ready != "y":
-                ready = self.collect("Are you ready to continue? (y/n): ")
-            user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": admin_phone})
-            if user_data.get("data", None) is None:
-                self.log("Could not find user, please try again.", level=logging.ERROR)
-                return
-            if len(user_data["data"]["user"]) == 0:
-                self.log("Could not find user, please try again.", level=logging.ERROR)
-                return
-            user_id = user_data["data"]["user"][0]["user_id"]
-            self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
-            admin_number = TestPhoneNumber(
-                role="admin",
-                phone_number=admin_phone,
-                code=admin_code,
-                uid=user_id
+            self.log(
+                f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                f"/providers",
+                level=logging.INFO
             )
-            test_phone_numbers.append(admin_number)
+            admin_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
+        admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
+        while not self.confirm_loop(admin_code):
+            admin_code = self.collect(f"What is the verification code for {admin_phone} number?: ")
+        self.log(f"Please login to your app with the phone number you just added!\n"
+                 f"https://{env.project.name.split('/')[-1]}.web.app/", level=logging.INFO)
+        ready = self.collect("Are you ready to continue? (y/n): ")
+        while ready != "y":
+            ready = self.collect("Are you ready to continue? (y/n): ")
+        user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": admin_phone})
+        if user_data.get("data", None) is None:
+            self.log("Could not find user, please try again.", level=logging.ERROR)
+            return
+        if len(user_data["data"]["user"]) == 0:
+            self.log("Could not find user, please try again.", level=logging.ERROR)
+            return
+        user_id = user_data["data"]["user"][0]["user_id"]
+        self.execute_graphql(Gql.UPDATE_USER_ROLE_GQL, {"user_id": user_id, "role": "admin"})
+        admin_number = TestPhoneNumber(
+            role="admin",
+            phone_number=admin_phone,
+            code=admin_code,
+            uid=user_id
+        )
+        test_phone_numbers.append(admin_number)
 
-        if add_user:
+    if add_user:
+        self.log("Please add a test phone number to be granted USER access in the firebase console.",
+                 level=logging.INFO)
+        self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                 f"/providers",
+                 level=logging.INFO
+                 )
+        user_phone = self.collect("What phone number did you add?: ")
+        while not self.confirm_loop(user_phone):
             self.log("Please add a test phone number to be granted USER access in the firebase console.",
                      level=logging.INFO)
-            self.log(f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                     f"/providers",
-                     level=logging.INFO
-                     )
-            user_phone = self.collect("What phone number did you add?: ")
-            while not self.confirm_loop(user_phone):
-                self.log("Please add a test phone number to be granted USER access in the firebase console.",
-                         level=logging.INFO)
-                self.log(
-                    f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
-                    f"/providers",
-                    level=logging.INFO
-                )
-                user_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
-            user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
-            while not self.confirm_loop(user_code):
-                user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
-            self.log(f"Please login to your app with the phone number you just added!\n"
-                     f"https://{env.project.name.split('/')[-1]}.web.app/", level=logging.INFO)
-            ready = self.collect("Are you ready to continue? (y/n): ")
-            while ready != "y":
-                ready = self.collect("Are you ready to continue? (y/n): ")
-            user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": user_phone})
-            if user_data.get("data", None) is None:
-                self.log("Could not find user, please try again.", level=logging.ERROR)
-                return
-            if len(user_data["data"]["user"]) == 0:
-                self.log("Could not find user, please try again.", level=logging.ERROR)
-                return
-            user_id = user_data["data"]["user"][0]["user_id"]
-            user_number = TestPhoneNumber(
-                role="user",
-                phone_number=user_phone,
-                code=user_code,
-                uid=user_id
+            self.log(
+                f"https://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/authentication"
+                f"/providers",
+                level=logging.INFO
             )
-            test_phone_numbers.append(user_number)
-        if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
-            env.test_phone_numbers = test_phone_numbers
-            self.set_env(env)
+            user_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
+        user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
+        while not self.confirm_loop(user_code):
+            user_code = self.collect(f"What is the verification code for {user_phone} number?: ")
+        self.log(f"Please login to your app with the phone number you just added!\n"
+                 f"https://{env.project.name.split('/')[-1]}.web.app/", level=logging.INFO)
+        ready = self.collect("Are you ready to continue? (y/n): ")
+        while ready != "y":
+            ready = self.collect("Are you ready to continue? (y/n): ")
+        user_data = self.execute_graphql(Gql.GET_USER_ID_BY_PHONE_GQL, {"phone_number": user_phone})
+        if user_data.get("data", None) is None:
+            self.log("Could not find user, please try again.", level=logging.ERROR)
+            return
+        if len(user_data["data"]["user"]) == 0:
+            self.log("Could not find user, please try again.", level=logging.ERROR)
+            return
+        user_id = user_data["data"]["user"][0]["user_id"]
+        user_number = TestPhoneNumber(
+            role="user",
+            phone_number=user_phone,
+            code=user_code,
+            uid=user_id
+        )
+        test_phone_numbers.append(user_number)
+    if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
+        env.test_phone_numbers = test_phone_numbers
+        self.set_env(env)
 
-        self.do_print_pysura(None)
+    self.do_print_pysura(None)
