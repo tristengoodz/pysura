@@ -3131,11 +3131,11 @@ async def SNAKE(_: Request,
         ))
         for table in tables:
             table_name = table['tablename']
-            await self.run_sql(
+            asyncio.run(self.run_sql(
                 host=host,
                 password=env.database_credential.password,
                 sql=f'DROP TABLE IF EXISTS public."{table_name}" CASCADE'
-            )
+            ))
         self.log(create_sql, level=logging.DEBUG)
         asyncio.run(self.run_sql(
             host=host,
