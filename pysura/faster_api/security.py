@@ -17,6 +17,7 @@ from typing import List, Any
 from pysura.faster_api.models import UserIdentity
 from python_graphql_client import GraphqlClient
 from google.cloud import storage as google_storage
+import time
 
 try:
     from app_secrets import HASURA_FIREBASE_SERVICE_ACCOUNT, HASURA_EVENT_SECRET, HASURA_GRAPHQL_URL_ROOT, \
@@ -223,7 +224,7 @@ class PysuraStorage(google_storage.Client):
 
     def upload_file(self, file_data: bytes | str, file_name: str, file_type: str, user_id: str):
         bucket = self.bucket(self.default_bucket)
-        blob_name = f"{user_id}/{file_name}"
+        blob_name = f"{user_id}/{int(time.time())}/{file_name}"
         blob = bucket.blob(blob_name)
         blob.upload_from_string(file_data, content_type=file_type)
         signed_url = blob.generate_signed_url(expiration=datetime.now() + timedelta(days=5000))
