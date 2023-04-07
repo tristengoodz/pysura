@@ -3094,6 +3094,18 @@ async def SNAKE(_: Request,
         }
         response = requests.post(path, headers=headers, json=data)
         create_sql = response.text
+
+        def add_cascade_to_statements(match):
+            statement = match.group(0)
+            if "DROP CONSTRAINT" in statement:
+                return re.sub(";", " CASCADE;", statement)
+            else:
+                return re.sub("DROP TABLE", "DROP TABLE CASCADE", statement)
+
+        create_sql = re.sub("ALTER TABLE.*DROP CONSTRAINT.*;|DROP TABLE.*;",
+                            add_cascade_to_statements,
+                            create_sql)
+
         with open("create.sql", "w") as f:
             f.write(create_sql)
         env = self.get_env()
