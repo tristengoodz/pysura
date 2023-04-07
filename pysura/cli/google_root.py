@@ -1927,8 +1927,7 @@ alter table app
         cmd_str = f"dart pub global run flutterfire_cli:flutterfire configure " \
                   f"--platforms=android,ios,web " \
                   f"--ios-bundle-id={ios_bundle_id} " \
-                  f"--android-package-name={android_package_name} " \
-                  f"--apply-gradle-plugin"
+                  f"--android-package-name={android_package_name}"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = "flutter pub get"
@@ -3088,26 +3087,15 @@ async def SNAKE(_: Request,
         }
 
         data = {
-            "opts": ["-O", "-x", "--schema-only", "--schema=public", "--clean", "--if-exists"],
+            "opts": ["-O", "-x", "--schema-only", "--schema=public"],
             "clean_output": True,
             "source": "default"
         }
         response = requests.post(path, headers=headers, json=data)
         create_sql = response.text
-
-        def add_cascade_to_statements(match):
-            statement = match.group(0)
-            if "DROP CONSTRAINT" in statement:
-                return re.sub(";", " CASCADE;", statement)
-            else:
-                return re.sub("DROP TABLE", "DROP TABLE CASCADE", statement)
-
-        create_sql = re.sub("ALTER TABLE.*DROP CONSTRAINT.*;|DROP TABLE.*;",
-                            add_cascade_to_statements,
-                            create_sql)
-
         with open("create.sql", "w") as f:
             f.write(create_sql)
+
         env = self.get_env()
         if env.database is None:
             self.log("No database set.", level=logging.ERROR)
