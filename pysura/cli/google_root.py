@@ -2833,7 +2833,6 @@ async def SNAKE(_: Request,
         :param memory_default: 2Gi
         :param max_instances_default: 10
         :param default_init: Internal! Do not use!
-        Example: deploy_microservice default 600s 2Gi 10
         """
         if isinstance(default_init, str) and default_init.strip() == "":
             default_init = False

@@ -72,8 +72,11 @@ async def action_upload_file(_: Request,
                                                 file_name=action_upload_file_input.file_name,
                                                 file_type=action_upload_file_input.file_type,
                                                 user_id=provider.user_identity.user_id)
-        provider.graphql.execute(
-            query="""mutation UploadFile($name: String = "", $signed_url: String = "", $public: Boolean = true, $type: String = "", $user_id: String = "") {
+        file_response = provider.graphql.execute(
+            query="""
+mutation UploadFile(
+$name: String = "", $signed_url: String = "", $public: Boolean = true, $type: String = "", $user_id: String = ""
+) {
   insert_file_one(object: {name: $name, public: $public, signed_url: $signed_url, type: $type, user_id: $user_id}) {
     file_id
     name
@@ -92,11 +95,37 @@ async def action_upload_file(_: Request,
                 "user_id": provider.user_identity.user_id
             }
         )
+        if file_response.get("data", None) is None or file_response["data"].get("insert_file_one", None) is None:
+            return ActionUploadFileOutput(
+                data=None,
+                nodes=None,
+                response_name=ApiResponse.FAILURE.name,
+                response_value=ApiResponse.FAILURE.value,
+                errors=[
+                    {
+                        "message": "Failed to upload file",
+                    }
+                ]
+            ).dict()
+        file_data = file_response["data"]["insert_file_one"]
+        file_id = file_data.get("file_id", None)
+        if file_id is None:
+            return ActionUploadFileOutput(
+                data=None,
+                nodes=None,
+                response_name=ApiResponse.FAILURE.name,
+                response_value=ApiResponse.FAILURE.value,
+                errors=[
+                    {
+                        "message": "Failed to upload file",
+                    }
+                ]
+            ).dict()
         final_response = ActionUploadFileOutput(
             data=ActionUploadFileOutputData(
-                file_id=response["file_id"],
+                file_id=file_id,
                 file_type=action_upload_file_input.file_type,
-                file_name=action_upload_file_input.file_name,
+                file_name=response["file_name"],
                 file_url=response["signed_url"],
             ),
             nodes=None,
