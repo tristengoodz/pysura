@@ -3112,41 +3112,24 @@ async def SNAKE(_: Request,
         if host is None:
             self.log("No primary IP address found.", level=logging.ERROR)
             return
-        db_string = "drop table if exists \"ENUM_ROLE\" cascade"
-        self.log(db_string, level=logging.INFO)
-        asyncio.run(self.run_sql(
+
+        db_string = "SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
+        tables = asyncio.run(self.run_sql(
             host=host,
             password=env.database_credential.password,
             sql=db_string
         ))
-        db_string = "drop table if exists \"user\" cascade"
-        self.log(db_string, level=logging.INFO)
-        asyncio.run(self.run_sql(
-            host=host,
-            password=env.database_credential.password,
-            sql=db_string
-        ))
-        db_string = "drop table if exists \"public_user\" cascade"
-        self.log(db_string, level=logging.INFO)
-        asyncio.run(self.run_sql(
-            host=host,
-            password=env.database_credential.password,
-            sql=db_string
-        ))
-        db_string = "drop table if exists \"file\" cascade"
-        self.log(db_string, level=logging.INFO)
-        asyncio.run(self.run_sql(
-            host=host,
-            password=env.database_credential.password,
-            sql=db_string
-        ))
-        db_string = "drop table if exists \"app\" cascade"
-        self.log(db_string, level=logging.INFO)
-        asyncio.run(self.run_sql(
-            host=host,
-            password=env.database_credential.password,
-            sql=db_string
-        ))
+        if len(tables) > 0:
+            self.log("Database is not empty. Dropping all tables...", level=logging.WARNING)
+            for table in tables:
+                table_name = table["tablename"]
+                db_string = f"drop table if exists public.\"{table_name}\" cascade"
+                self.log(db_string, level=logging.INFO)
+                asyncio.run(self.run_sql(
+                    host=host,
+                    password=env.database_credential.password,
+                    sql=db_string
+                ))
         self.log(create_sql, level=logging.DEBUG)
         asyncio.run(self.run_sql(
             host=host,
@@ -3170,7 +3153,18 @@ async def SNAKE(_: Request,
         admin_secret}" -o hasura_metadata.json"""
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        response = self.collect(f"Please go to your Hasura instance and set up all enums! Continue?")
+        with open("hasura_metadata.json", "r") as f:
+            metadata = json.load(f)
+        for source in metadata.get("sources", []):
+            for table in source.get("tables", []):
+                if table.get("is_enum", None) is True:
+                    db_string = f'insert into "{table.get("name")}" (value) values (\'default\')"'
+                    asyncio.run(self.run_sql(
+                        host=host,
+                        password=env.database_credential.password,
+                        sql=db_string
+                    ))
+        self.collect(f"Please go to your Hasura instance and set up all enums! Continue? (y/n)")
         self.do_export_hasura_metadata(None)
 
     def do_deploy_frontend(self, _):
