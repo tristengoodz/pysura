@@ -3179,18 +3179,6 @@ async def SNAKE(_: Request,
             password=env.database_credential.password,
             sql=create_sql
         ))
-        db_string = "insert into \"ENUM_ROLE\" (value) values ('admin')"
-        asyncio.run(self.run_sql(
-            host=host,
-            password=env.database_credential.password,
-            sql=db_string
-        ))
-        db_string = "insert into \"ENUM_ROLE\" (value) values ('user')"
-        asyncio.run(self.run_sql(
-            host=host,
-            password=env.database_credential.password,
-            sql=db_string
-        ))
         metadata_url = base_path + "/v1/metadata"
         cmd_str = f"""curl -d'{{"type": "export_metadata", "args": {{}}}}' {metadata_url} -H "X-Hasura-Admin-Secret: {
         admin_secret}" -o hasura_metadata.json"""
