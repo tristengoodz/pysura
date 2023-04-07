@@ -34,6 +34,12 @@ class Gql:
 }
 """
 
+    GET_ENUM = """query GetEnum {
+  enum_values: ENUM {
+    value
+  }
+}"""
+
 
 class GoogleRoot(RootCmd):
 
@@ -3145,18 +3151,27 @@ async def SNAKE(_: Request,
         os.system(cmd_str)
         with open("hasura_metadata.json", "r") as f:
             metadata = json.load(f)
+
+        client = GraphqlClient(endpoint=base_path + "/v1/graphql")
+        headers = {
+            "X-Hasura-Admin-Secret": admin_secret,
+            "Content-Type": "application/json"
+        }
         for source in metadata.get("sources", []):
             for table in source.get("tables", []):
                 if table.get("is_enum", None) is True:
                     table_name = table.get("table", {}).get("name", None)
                     if table_name is not None:
-                        db_string = f"insert into \"{table_name}\" (value) values ('default')"
-                        asyncio.run(self.run_sql(
-                            host=host,
-                            password=env.database_credential.password,
-                            sql=db_string
-                        ))
-        self.collect(f"Please go to your Hasura instance and set up all enums! Continue? (y/n)")
+                        values = client.execute(Gql.GET_ENUM.replace("ENUM", table_name), headers=headers)
+                        if values is not None:
+                            for value in values.get("data", {}).get("enum_values", [{}]):
+                                val = value.get("value", None)
+                                db_string = f"insert into \"{table_name}\" (value) values ('{val}')"
+                                asyncio.run(self.run_sql(
+                                    host=host,
+                                    password=env.database_credential.password,
+                                    sql=db_string
+                                ))
         self.do_export_hasura_metadata(None)
 
     def do_deploy_frontend(self, _):
