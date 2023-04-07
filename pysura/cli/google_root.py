@@ -3157,6 +3157,77 @@ async def SNAKE(_: Request,
         os.chdir("../..")
         self.set_env(env)
 
+    def do_print_pysura(self, _):
+        env = self.get_env()
+        self.log(f"Pysura App is ready to run!, open the folder named {env.flutter_app_name} in Android Studio!",
+                 level=logging.INFO)
+        assert env.hasura is not None
+        assert env.hasura_metadata is not None
+        if env.hasura.microservice_urls is not None:
+            num_services = len(env.hasura.microservice_urls)
+        else:
+            num_services = 0
+        log_str = f"""
+        Pysura Project Setup Complete!
+
+        The default microservice can be found at:
+        {env.default_microservice_url}/docs
+
+        """
+        actions = [action for action in env.hasura_metadata.actions if
+                   action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
+        if len(actions) > 0:
+            log_str += f"""The default microservice has {len(actions)} actions:\n"""
+            for action in actions:
+                log_str += f"""\t{action.name}\n"""
+
+        log_str += f"""\nYou have {num_services} additional microservice(s) deployed."""
+        if num_services > 0:
+            log_str += "\n\tMicroservice URLs:\n"
+
+        for microservice_url in env.hasura.microservice_urls:
+            actions = [action for action in env.hasura_metadata.actions if
+                       action.definition.handler == microservice_url.url_wrapper]
+            log_str += f"""\t{microservice_url.url}\n"""
+            if len(actions) > 0:
+                log_str += f"""\t\t{len(actions)} action(s):\n"""
+                for action in actions:
+                    log_str += f"""\t\t\t{action.name}\n"""
+
+        log_str += f"""
+
+        Your Hasura instance can be found at:
+        {env.hasura_service.status.address.url}/console
+
+        Your Hasura Admin Secret is:
+        {env.hasura.HASURA_GRAPHQL_ADMIN_SECRET}
+
+        The event secret for the all attached microservices is:
+        {env.hasura.HASURA_EVENT_SECRET}
+
+        You can find authorization tokens for your microservice by running your flutter application and logging in, navigate to
+        the settings tab, and click the "Copy GraphQL Token" button and a bearer token will be copied to your clipboard.
+        The bearer token will have the role of the user that is logged in.
+
+        You can find your web application here:
+        https://{env.project.name.split('/')[-1]}.web.app/
+
+
+        """
+
+        test_phone_numbers = env.test_phone_numbers
+        if isinstance(test_phone_numbers, list):
+            for test_phone_number in test_phone_numbers:
+                if test_phone_number.role == "admin":
+                    log_str += f"\nAdmin Phone Number: {test_phone_number.phone_number}\t" \
+                               f"Code: {test_phone_number.code}\n"
+                elif test_phone_number.role == "user":
+                    log_str += f"\nUser Phone Number: {test_phone_number.phone_number}\t" \
+                               f"Code: {test_phone_number.code}\n"
+
+        log_str += "\n\nTo see these credentials again, run print_pysura\n"
+        self.log(log_str, level=logging.INFO)
+
     def do_setup_pysura(self, recurse=0):
         """
         Setups up a Pysura project
@@ -3399,60 +3470,5 @@ async def SNAKE(_: Request,
         if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
             env.test_phone_numbers = test_phone_numbers
             self.set_env(env)
-        self.log(f"Pysura App is ready to run!, open the folder named {env.flutter_app_name} in Android Studio!",
-                 level=logging.INFO)
-        assert env.hasura is not None
-        assert env.hasura_metadata is not None
-        if env.hasura.microservice_urls is not None:
-            num_services = len(env.hasura.microservice_urls)
-        else:
-            num_services = 0
-        log_str = f"""
-Pysura Project Setup Complete!
 
-The default microservice can be found at:
-{env.default_microservice_url}/docs
-
-"""
-        actions = [action for action in env.hasura_metadata.actions if
-                   action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
-        if len(actions) > 0:
-            log_str += f"""The default microservice has {len(actions)} actions:\n"""
-            for action in actions:
-                log_str += f"""\t{action.name}\n"""
-
-        log_str += f"""\nYou have {num_services} additional microservice(s) deployed."""
-        if num_services > 0:
-            log_str += "\n\tMicroservice URLs:\n"
-
-        for microservice_url in env.hasura.microservice_urls:
-            actions = [action for action in env.hasura_metadata.actions if
-                       action.definition.handler == microservice_url.url_wrapper]
-            log_str += f"""\t{microservice_url.url}\n"""
-            if len(actions) > 0:
-                log_str += f"""\t\t{len(actions)} action(s):\n"""
-                for action in actions:
-                    log_str += f"""\t\t\t{action.name}\n"""
-
-        log_str += f"""
-
-Your Hasura instance can be found at:
-{env.hasura_service.status.address.url}/console
-
-Your Hasura Admin Secret is:
-{env.hasura.HASURA_GRAPHQL_ADMIN_SECRET}
-
-The event secret for the all attached microservices is:
-{env.hasura.HASURA_EVENT_SECRET}
-
-You can find authorization tokens for your microservice by running your flutter application and logging in, navigate to
-the settings tab, and click the "Copy GraphQL Token" button and a bearer token will be copied to your clipboard.
-The bearer token will have the role of the user that is logged in.
-
-You can find your web application here:
-https://{env.project.name.split('/')[-1]}.web.app/
-
-
-"""
-
-        self.log(log_str, level=logging.INFO)
+        self.do_print_pysura(None)
