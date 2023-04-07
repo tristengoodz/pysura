@@ -87,26 +87,46 @@ class GoogleRoot(RootCmd):
     def get_site_packages_path(submodule="pysura_auth"):
         return os.path.join(site.getsitepackages()[0], "pysura", "library_data", submodule)
 
-    @staticmethod
-    async def run_sql(host="secret",
+    async def run_sql(self,
+                      host="secret",
                       name="postgres",
                       user="postgres",
                       password="secret",
                       port=5432,
                       sql=""):
-        conn = await asyncpg.connect(
-            host=host,
-            database=name,
-            user=user,
-            password=password,
-            port=port
-        )
-        if "SELECT" in sql:
-            result = await conn.fetch(sql)
-        else:
-            result = await conn.execute(sql)
-        await conn.close()
-        return result
+        result = None
+        conn = None
+        try:
+            conn = await asyncpg.connect(
+                host=host,
+                database=name,
+                user=user,
+                password=password,
+                port=port
+            )
+            if "SELECT" in sql:
+                result = await conn.fetch(sql)
+            else:
+                result = await conn.execute(sql)
+        except Exception as e:
+            self.log(str(e), logging.ERROR)
+            conn = await asyncpg.connect(
+                host=host,
+                database=name,
+                user=user,
+                password=password,
+                port=port
+            )
+            if "SELECT" in sql:
+                result = await conn.fetch(sql)
+            else:
+                result = await conn.execute(sql)
+        finally:
+            try:
+                await conn.close()
+            except Exception as e:
+                self.log(str(e), logging.ERROR)
+            return result
 
     @staticmethod
     def password(length: int = 64):
@@ -3098,15 +3118,15 @@ async def SNAKE(_: Request,
         }
 
         data = {
-            "opts": ["-O", "-x", "--schema-only", "--schema=public", "--create", "--if-exists", "--clean"],
+            "opts": ["-O", "-x", "--schema-only", "--schema=public", "--clean", "--if-exists"],
             "clean_output": True,
             "source": "default"
         }
         response = requests.post(path, headers=headers, json=data)
         create_sql = response.text
+        create_sql = create_sql.replace("DROP SCHEMA IF EXISTS public;\n", "")
         with open("create.sql", "w") as f:
             f.write(create_sql)
-
         env = self.get_env()
         if env.database is None:
             self.log("No database set.", level=logging.ERROR)
@@ -3124,6 +3144,22 @@ async def SNAKE(_: Request,
             self.log("No primary IP address found.", level=logging.ERROR)
             return
 
+        # Check if the public schema exists
+        schema_exists = asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql="SELECT EXISTS(SELECT 1 FROM information_schema.schemata WHERE schema_name = 'public')"
+        ))
+
+        # If the public schema does not exist, create it
+        if not schema_exists[0]['exists']:
+            asyncio.run(self.run_sql(
+                host=host,
+                password=env.database_credential.password,
+                sql="CREATE SCHEMA public"
+            ))
+
+        # List all tables in the public schema and drop them individually
         tables = asyncio.run(self.run_sql(
             host=host,
             password=env.database_credential.password,
@@ -3136,6 +3172,7 @@ async def SNAKE(_: Request,
                 password=env.database_credential.password,
                 sql=f'DROP TABLE IF EXISTS public."{table_name}" CASCADE'
             ))
+
         self.log(create_sql, level=logging.DEBUG)
         asyncio.run(self.run_sql(
             host=host,
@@ -3191,6 +3228,8 @@ async def SNAKE(_: Request,
                             except Exception as e:
                                 self.log(str(e), level=logging.DEBUG)
         self.do_export_hasura_metadata(None)
+        if env.default_microservice is not None:
+            self.do_deploy_microservice()
 
     def do_deploy_frontend(self, _):
         env = self.get_env()
