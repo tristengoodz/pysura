@@ -3168,12 +3168,12 @@ async def SNAKE(_: Request,
         else:
             num_services = 0
         log_str = f"""
-        Pysura Project Setup Complete!
+Pysura Project Setup Complete!
 
-        The default microservice can be found at:
-        {env.default_microservice_url}/docs
+The default microservice can be found at:
+{env.default_microservice_url}/docs
 
-        """
+"""
         actions = [action for action in env.hasura_metadata.actions if
                    action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
         if len(actions) > 0:
@@ -3194,26 +3194,49 @@ async def SNAKE(_: Request,
                 for action in actions:
                     log_str += f"""\t\t\t{action.name}\n"""
 
+        if env.database_credential is not None:
+            public_ip = None
+            private_ip = None
+            db_password = env.database_credential.password
+            db_connect_string = env.database_credential.connect_url
+            for ip_addr in env.database.ipAddresses:
+                if ip_addr.type == "PRIMARY":
+                    public_ip = ip_addr.ipAddress
+                elif ip_addr.type == "PRIVATE":
+                    private_ip = ip_addr.ipAddress
+
+            log_str += f"""
+You can connect to your database using the following credentials, which IP you use depends on if you are connecting 
+from a serverless connector, or your local machine. If you are connecting from a serverless connector, you will need to
+use the private IP address, if you are connecting from your local machine, you will need to use the public IP address.
+
+Public IP Address: {public_ip}
+Private IP Address: {private_ip}
+Database Password: {db_password}
+Default Private Connect String used for Hasura: {db_connect_string}
+
+"""
+
         log_str += f"""
 
-        Your Hasura instance can be found at:
-        {env.hasura_service.status.address.url}/console
+Your Hasura instance can be found at:
+{env.hasura_service.status.address.url}/console
 
-        Your Hasura Admin Secret is:
-        {env.hasura.HASURA_GRAPHQL_ADMIN_SECRET}
+Your Hasura Admin Secret is:
+{env.hasura.HASURA_GRAPHQL_ADMIN_SECRET}
 
-        The event secret for the all attached microservices is:
-        {env.hasura.HASURA_EVENT_SECRET}
+The event secret for the all attached microservices is:
+{env.hasura.HASURA_EVENT_SECRET}
 
-        You can find authorization tokens for your microservice by running your flutter application and logging in, navigate to
-        the settings tab, and click the "Copy GraphQL Token" button and a bearer token will be copied to your clipboard.
-        The bearer token will have the role of the user that is logged in.
+You can find authorization tokens for your microservice by running your flutter application and logging in, navigate to
+the settings tab, and click the "Copy GraphQL Token" button and a bearer token will be copied to your clipboard.
+The bearer token will have the role of the user that is logged in.
 
-        You can find your web application here:
-        https://{env.project.name.split('/')[-1]}.web.app/
+You can find your web application here:
+https://{env.project.name.split('/')[-1]}.web.app/
 
 
-        """
+"""
 
         test_phone_numbers = env.test_phone_numbers
         if isinstance(test_phone_numbers, list):
