@@ -23,7 +23,8 @@ async def event_update_user_role(_: Request,
                                          provide_identity=False,
                                          provide_firebase=True,
                                          provide_graphql=False,
-                                         provide_storage=False
+                                         provide_storage=False,
+                                         provide_sql=False
                                          # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                                      )
                                  ),

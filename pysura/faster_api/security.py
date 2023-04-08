@@ -1,4 +1,5 @@
 import firebase_admin
+import sqlalchemy
 from firebase_admin import credentials, initialize_app, auth, App
 from firebase_admin.auth import InvalidIdTokenError, ExpiredIdTokenError, RevokedIdTokenError, CertificateFetchError, \
     UserDisabledError
@@ -17,17 +18,22 @@ from typing import List, Any
 from pysura.faster_api.models import UserIdentity
 from python_graphql_client import GraphqlClient
 from google.cloud import storage as google_storage
+from google.cloud.sql.connector import Connector
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+import re
 import time
 
 try:
     from app_secrets import HASURA_FIREBASE_SERVICE_ACCOUNT, HASURA_EVENT_SECRET, HASURA_GRAPHQL_URL_ROOT, \
-        HASURA_GRAPHQL_ADMIN_SECRET, HASURA_STORAGE_BUCKET
+        HASURA_GRAPHQL_ADMIN_SECRET, HASURA_STORAGE_BUCKET, HASURA_GRAPHQL_DATABASE_URL
 except ImportError:
     HASURA_FIREBASE_SERVICE_ACCOUNT = ""
     HASURA_EVENT_SECRET = ""
     HASURA_GRAPHQL_URL_ROOT = ""
     HASURA_GRAPHQL_ADMIN_SECRET = ""
     HASURA_STORAGE_BUCKET = ""
+    HASURA_GRAPHQL_DATABASE_URL = ""
 
 cred_dict = json.loads(HASURA_FIREBASE_SERVICE_ACCOUNT, strict=False)
 creds = service_account.Credentials.from_service_account_info(cred_dict)
@@ -238,11 +244,92 @@ class PysuraStorage(google_storage.Client):
     # TODO: Add management methods
 
 
+class PysuraSQLClient:
+
+    def get_conn(self):
+        with Connector() as connector:
+            conn = connector.connect(
+                self.host,
+                self.driver,
+                user=self.user,
+                password=self.password,
+                db=self.database,
+                enable_iam_auth=True
+            )
+            return conn
+
+    def get_engine(self):
+        engine = sqlalchemy.engine.create_engine(
+            "postgresql+asyncpg://",
+            creator=self.get_conn
+        )
+        return engine
+
+    def get_db(self):
+        db = None
+        try:
+            db = self.session()
+            yield db
+        except Exception as e:
+            logging.log(logging.DEBUG, e)
+            self.refresh_engine()
+            db = self.session()
+            yield db
+        finally:
+            if db is not None:
+                try:
+                    db.close()
+                except Exception as e:
+                    logging.log(logging.ERROR, e)
+
+    def refresh_engine(self):
+        self.engine = self.get_engine()
+        self.session = sqlalchemy.orm.sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+        self.base = declarative_base()
+
+    def set_connection_url(self, connection_url: str):
+        match = re.search(r"postgres://(.*?):(.*?)@(.*?)$", connection_url)
+        user = match.group(1)
+        password = match.group(2)
+        host = match.group(3).lstrip("/")
+        database = "postgres"
+        driver = "asyncpg"
+        self.name = "pysura_sql_client"
+        self.user = user
+        self.password = password
+        self.host = host
+        self.database = database
+        self.driver = driver
+        self.engine = None
+        self.session = None
+        self.base = None
+        self.refresh_engine()
+
+    def __init__(self):
+        match = re.search(r"postgres://(.*?):(.*?)@(.*?)$", HASURA_GRAPHQL_DATABASE_URL)
+        user = match.group(1)
+        password = match.group(2)
+        host = match.group(3).lstrip("/")
+        database = "postgres"
+        driver = "asyncpg"
+        self.name = "pysura_sql_client"
+        self.user = user
+        self.password = password
+        self.host = host
+        self.database = database
+        self.driver = driver
+        self.engine = None
+        self.session = None
+        self.base = None
+        self.refresh_engine()
+
+
 class Provider(BaseModel):
     user_identity: UserIdentity | None = None
     firebase_app: App | None = None
     graphql: PysuraGraphql | None = None
     storage: PysuraStorage | None = None
+    sql: PysuraSQLClient | None = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -250,6 +337,7 @@ class Provider(BaseModel):
             App: lambda v: v if v is None else v.name,
             PysuraGraphql: lambda v: v if v is None else v.name,
             PysuraStorage: lambda v: v if v is None else v.name,
+            PysuraSQLClient: lambda v: v if v is None else v.name,
         }
 
 
@@ -259,11 +347,13 @@ class PysuraProvider:
                  provide_identity: bool = False,
                  provide_firebase: bool = False,
                  provide_graphql: bool = False,
-                 provide_storage: bool = False):
+                 provide_storage: bool = False,
+                 provide_sql: bool = False):
         self.provide_identity = provide_identity
         self.provide_firebase = provide_firebase
         self.provide_graphql = provide_graphql
         self.provide_storage = provide_storage
+        self.provide_sql = provide_sql
 
     async def __call__(self, request: Request) -> Provider:
         user_identity = None
@@ -284,10 +374,14 @@ class PysuraProvider:
         storage = None
         if self.provide_storage:
             storage = PysuraStorage()
+        sql = None
+        if self.provide_sql:
+            sql = PysuraSQLClient()
         provider = Provider(
             user_identity=user_identity,
             firebase_app=app_instance,
             graphql=graphql,
-            storage=storage
+            storage=storage,
+            sql=sql
         )
         return provider

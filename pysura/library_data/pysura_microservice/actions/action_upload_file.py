@@ -33,9 +33,10 @@ async def action_upload_file(_: Request,
                              provider: Provider | None = Depends(PysuraProvider(
                                  # (DEPENDENCY-INJECTION-START) - DO NOT DELETE THIS LINE!
                                  provide_identity=True,
-                                 provide_firebase=True,
+                                 provide_firebase=False,
                                  provide_graphql=True,
-                                 provide_storage=True
+                                 provide_storage=True,
+                                 provide_sql=False,
                                  # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                              ))):
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!

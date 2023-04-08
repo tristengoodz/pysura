@@ -2153,7 +2153,8 @@ async def SNAKE(_: Request,
                     provide_identity=True,
                     provide_firebase=True,
                     provide_graphql=True,
-                    provide_storage=True
+                    provide_storage=True,
+                    provide_sql=True
                     # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                 ))):
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
@@ -2309,7 +2310,8 @@ async def SNAKE(_: Request,
                         provide_identity=False,
                         provide_firebase=True,
                         provide_graphql=True,
-                        provide_storage=True
+                        provide_storage=True,
+                        provide_sql=True
                         # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                     )
                 ),
@@ -2426,7 +2428,8 @@ async def SNAKE(_: Request,
                         provide_identity=False,
                         provide_firebase=True,
                         provide_graphql=True,
-                        provide_storage=True
+                        provide_storage=True,
+                        provide_sql=True
                         # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                     )
                 ),

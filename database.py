@@ -11,10 +11,11 @@ def init_connection_engine() -> sqlalchemy.engine.Engine:
         instance_name = secret_url.split("/")[-1]
         user = "postgres"
         password = secret_url.replace("postgres://postgres:", "").split("@")[0]
+        driver = "asyncpg"
         with Connector() as connector:
             conn = connector.connect(
                 instance_name,
-                "pg8000",
+                driver,
                 user=user,
                 password=password,
                 db="postgres",
@@ -23,7 +24,7 @@ def init_connection_engine() -> sqlalchemy.engine.Engine:
             return conn
 
     pool = sqlalchemy.create_engine(
-        "postgresql+pg8000://",
+        f"postgresql+asyncpg://",
         creator=getconn,
     )
     return pool
