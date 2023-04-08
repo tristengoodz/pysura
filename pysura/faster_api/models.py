@@ -18,34 +18,34 @@ class UserIdentity(BaseModel):
 
 
 class EventBodyTraceContext(BaseModel):
-    trace_id: str
-    span_id: str
+    trace_id: str | None = None
+    span_id: str | None = None
 
 
 class EventBodyData(BaseModel):
-    old: Dict[str, Any]
-    new: Dict[str, Any]
+    old: Dict[str, Any] | None = None
+    new: Dict[str, Any] | None = None
 
 
 class EventBody(BaseModel):
-    op: str
-    data: EventBodyData
-    trace_context: EventBodyTraceContext
+    op: str | None = None
+    data: EventBodyData | None = None
+    trace_context: EventBodyTraceContext | None = None
 
 
 class EventDeliveryInfo(BaseModel):
-    max_retries: int
-    current_retry: int
+    max_retries: int | None = None
+    current_retry: int | None = None
 
 
 class EventTrigger(BaseModel):
-    name: str
+    name: str | None = None
 
 
 class Event(BaseModel):
-    event: EventBody
-    created_at: str
-    id: str
-    delivery_info: EventDeliveryInfo
-    trigger: EventTrigger
+    event: EventBody | None = None
+    created_at: str | None = None
+    id: str | None = None
+    delivery_info: EventDeliveryInfo | None = None
+    trigger: EventTrigger | None = None
     table: Dict[str, str] | None = None

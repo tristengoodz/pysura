@@ -3392,6 +3392,109 @@ https://{env.project.name.split('/')[-1]}.web.app/
         log_str += "\n\nTo see these credentials again, run print_pysura\n"
         self.log(log_str, level=logging.INFO)
 
+    @staticmethod
+    def setup_gitignore():
+        git_ignore_text = """# .gitignore file
+
+# Ignore .git folder and its contents
+.git/
+
+# Ignore .idea folder and its contents
+.idea/
+
+# Logs
+/logs/*.log
+
+# Compiled python files
+__pycache__/
+
+*.pyc
+*.pyo
+*.pyd
+
+# Packages
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib64/
+__pycache__/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test and coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+
+# DS_Store files
+.DS_Store
+
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+
+android/.gradle/
+android/app/build/
+android/local.properties
+
+flutter_build/
+build/
+web_plugin_registrant.dart
+*.d
+*.stamp
+*.deps
+*_web_entrypoint.dart
+
+.vscode/"""
+        with open(".gitignore", "w") as git_ignore_file:
+            git_ignore_file.write(git_ignore_text)
+
+    @staticmethod
+    def setup_readme():
+        readme_text = """# Pysura Project
+
+## IMPORTANT NOTE!!!
+
+Ensure that the env.json file is properly maintained and be careful when making modifications. If the env.json
+file is maintained, then you can run pysura and the setup step is complete and you have access to these useful
+commands.
+
+## Useful Pysura commands:
+
+- `deploy_frontend` - Rebuild and Deploy the web frontend to firebase hosting for release
+- `deploy_microservice` - Regenerate routers and re-deploy the default microservice
+- `print_pysura` - Prints important pysura details like login credentials for the project
+- `import_hasura_metadata` - Import the hasura metadata from Hasura
+- `export_hasura_metadata` - Export the hasura metadata to Hasura
+- `gcloud_deploy_hasura` - Deploy the hasura microservice to GCloud"""
+        with open("README.md", "w") as readme_file:
+            readme_file.write(readme_text)
+
     def do_setup_pysura(self, recurse=0):
         """
         Setups up a Pysura project
@@ -3432,6 +3535,8 @@ https://{env.project.name.split('/')[-1]}.web.app/
         if env.project is None:
             self.gcloud_create_project(project_id=hasura_project_name)
             env = self.get_env()
+            self.setup_gitignore()
+            self.setup_readme()
         else:
             cmd_str = f"gcloud config set project {env.project.name.split('/')[-1]}"
             self.log(cmd_str, level=logging.DEBUG)
@@ -3653,5 +3758,4 @@ https://{env.project.name.split('/')[-1]}.web.app/
         if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
             env.test_phone_numbers = test_phone_numbers
             self.set_env(env)
-
         self.do_print_pysura(None)
