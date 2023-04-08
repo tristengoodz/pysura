@@ -695,12 +695,13 @@ class GoogleRoot(RootCmd):
         else:
             cpu_number = cpu_default
         if len(memory_default.strip()) == 0:
-            memory_amount = self.collect("Enter the amount of memory for the database (MiB) (Ex. 8192): ", ["2048MiB",
-                                                                                                            "4096MiB",
-                                                                                                            "8192MiB",
-                                                                                                            "16384MiB",
-                                                                                                            "24576MiB",
-                                                                                                            "32768MiB"])
+            memory_amount = self.collect("Enter the amount of RAM for the database (MiB) (Ex. 8192MiB): ",
+                                         ["2048MiB",
+                                          "4096MiB",
+                                          "8192MiB",
+                                          "16384MiB",
+                                          "24576MiB",
+                                          "32768MiB"])
         else:
             memory_amount = memory_default
         if len(db_version_default.strip()) == 0:
@@ -726,7 +727,8 @@ class GoogleRoot(RootCmd):
             availability_type = availability_type_default
         if len(storage_size_default.strip()) == 0:
             size_types = ["1GB", "2GB", "5GB", "10GB", "20GB", "100GB", "500GB", "1000GB"]
-            storage_size = self.collect("Enter the storage size for the database (Ex. 10GB): ", size_types)
+            storage_size = self.collect("Enter the storage size for the database [Auto-increases] "
+                                        "(Ex. 10GB): ", size_types)
             if storage_size not in size_types:
                 self.log("Invalid storage size.", level=logging.ERROR)
                 return
@@ -1017,16 +1019,17 @@ class GoogleRoot(RootCmd):
             os.system(cmd_log_str)
             hasura_secret = self.password()
             if len(timeout_default.strip()) == 0:
-                timeout = self.collect("Timeout (Ex. 600s): ", ["300s", "600s", "900s", "1200s", "3600s"])
+                timeout = self.collect("Hasura Service Timeout (Ex. 600s): ",
+                                       ["300s", "600s", "900s", "1200s", "3600s"])
             else:
                 timeout = timeout_default
             if len(memory_default.strip()) == 0:
-                memory = self.collect("Memory (Ex. 2Gi): ",
+                memory = self.collect("Hasura Service Memory (Ex. 2Gi): ",
                                       ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
             else:
                 memory = memory_default
             if len(max_instances_default.strip()) == 0:
-                max_instances = self.collect("Max instances (Ex. 10): ")
+                max_instances = self.collect("Hasura Service Max instances (Ex. 10): ")
             else:
                 max_instances = max_instances_default
             hasura_event_secret = self.password()
@@ -1957,10 +1960,12 @@ alter table app
         cmd_str = f"dart pub global activate flutterfire_cli"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
-        ios_bundle_id = self.collect("Please enter a bundle id for your iOS app. (com.example.MyApp): ")
+        ios_bundle_id = self.collect("Please enter a bundle id for your iOS app. (com.example.MyApp): ",
+                                     ["com.example." + project_name + "_ios"])
         if not self.confirm_loop(ios_bundle_id):
             self.attach_flutter()
-        android_package_name = self.collect("Please enter a package name for your Android app. (com.example.myapp): ")
+        android_package_name = self.collect("Please enter a package name for your Android app. (com.example.MyApp): ",
+                                            ["com.example." + project_name + "_android"])
         if not self.confirm_loop(android_package_name):
             self.attach_flutter()
         with open(".firebaserc", "w") as f:
@@ -2827,9 +2832,9 @@ async def SNAKE(_: Request,
     def do_deploy_microservice(self,
                                microservice_name="default",
                                url_wrapper="{{HASURA_MICROSERVICE_URL}}",
-                               timeout_default="600s",
-                               memory_default="2Gi",
-                               max_instances_default="10",
+                               timeout_default="",
+                               memory_default="",
+                               max_instances_default="",
                                default_init: bool | str = ""):
         """
         Deploys, or redeploys a microservice. Will rebuild routers, but as long as you leave the comments alone, it
@@ -2952,11 +2957,11 @@ async def SNAKE(_: Request,
             timeout = timeout_default
         if len(memory_default.strip()) == 0:
             memory = self.collect("Microservice Memory (Ex. 2Gi): ",
-                                  ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
+                                  ["1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
         else:
             memory = memory_default
         if len(max_instances_default.strip()) == 0:
-            max_instances = self.collect("Max instances (Ex. 10): ")
+            max_instances = self.collect("Microservice Max instances (Ex. 10): ")
         else:
             max_instances = max_instances_default
         cmd_str = f"gcloud run deploy {microservice_name} --source . " \
@@ -3543,7 +3548,18 @@ https://{env.project.name.split('/')[-1]}.web.app/
                      f"/providers",
                      level=logging.INFO
                      )
-            admin_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
+            admin_phone = self.collect("What phone number did you add? (Ex. +15555215551): ",
+                                       [
+                                           "+15555215551",
+                                           "+15555215552",
+                                           "+15555215553",
+                                           "+15555215554",
+                                           "+15555215555",
+                                           "+15555215556",
+                                           "+15555215557",
+                                           "+15555215558",
+                                           "+15555215559"
+                                       ])
             while not self.confirm_loop(admin_phone):
                 self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
                          level=logging.INFO)
@@ -3585,7 +3601,18 @@ https://{env.project.name.split('/')[-1]}.web.app/
                      f"/providers",
                      level=logging.INFO
                      )
-            user_phone = self.collect("What phone number did you add?: ")
+            user_phone = self.collect("What phone number did you add? (Ex. +15555215551): ",
+                                      [
+                                          "+15555215551",
+                                          "+15555215552",
+                                          "+15555215553",
+                                          "+15555215554",
+                                          "+15555215555",
+                                          "+15555215556",
+                                          "+15555215557",
+                                          "+15555215558",
+                                          "+15555215559"
+                                      ])
             while not self.confirm_loop(user_phone):
                 self.log("Please add a test phone number to be granted USER access in the firebase console.",
                          level=logging.INFO)
