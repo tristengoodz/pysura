@@ -1962,12 +1962,15 @@ alter table app
         os.system(cmd_str)
         ios_bundle_id = self.collect("Please enter a bundle id for your iOS app. (com.example.MyApp): ",
                                      ["com.example." + project_name + "_ios"])
-        if not self.confirm_loop(ios_bundle_id):
-            self.attach_flutter()
+        while not self.confirm_loop(ios_bundle_id):
+            ios_bundle_id = self.collect("Please enter a bundle id for your iOS app. (com.example.MyApp): ",
+                                         ["com.example." + project_name + "_ios"])
         android_package_name = self.collect("Please enter a package name for your Android app. (com.example.MyApp): ",
                                             ["com.example." + project_name + "_android"])
-        if not self.confirm_loop(android_package_name):
-            self.attach_flutter()
+        while not self.confirm_loop(android_package_name):
+            android_package_name = self.collect(
+                "Please enter a package name for your Android app. (com.example.MyApp): ",
+                ["com.example." + project_name + "_android"])
         with open(".firebaserc", "w") as f:
             f.write("""{
   "projects": {
