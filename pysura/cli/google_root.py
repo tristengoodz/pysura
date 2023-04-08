@@ -361,8 +361,11 @@ class GoogleRoot(RootCmd):
         use_org = use_organization.strip().lower() == "y"
         if use_org:
             if env.organization is None:
-                self.log("No organization selected.", level=logging.ERROR)
-                return
+                self.do_gcloud_choose_organization(None)
+                env = self.get_env()
+        if use_org and env.organization is None:
+            self.log("No organization selected.")
+            return
         arg_len = len(project_id.strip())
         if arg_len == 0:
             project_name = self.collect("Enter a project name: ")
@@ -3408,9 +3411,6 @@ https://{env.project.name.split('/')[-1]}.web.app/
         cmd_str = "gcloud auth configure-docker gcr.io"
         self.log(f"Running command: {cmd_str}", level=logging.INFO)
         os.system(cmd_str)
-        if env.organization is None:
-            self.do_gcloud_choose_organization(None)
-            env = self.get_env()
         if env.project is None:
             hasura_project_name = self.collect("Hasura project name: ")
             if not self.confirm_loop(hasura_project_name):
