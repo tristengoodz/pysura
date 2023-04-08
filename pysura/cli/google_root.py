@@ -1965,12 +1965,14 @@ alter table app
         while not self.confirm_loop(ios_bundle_id):
             ios_bundle_id = self.collect("Please enter a bundle id for your iOS app. (com.example.MyApp): ",
                                          ["com.example." + project_name + "_ios"])
+        ios_bundle_id = ios_bundle_id.replace("_", "-").replace(" ", "-")
         android_package_name = self.collect("Please enter a package name for your Android app. (com.example.MyApp): ",
                                             ["com.example." + project_name + "_android"])
         while not self.confirm_loop(android_package_name):
             android_package_name = self.collect(
                 "Please enter a package name for your Android app. (com.example.MyApp): ",
                 ["com.example." + project_name + "_android"])
+        android_package_name = android_package_name.replace("-", "_").replace(" ", "_")
         with open(".firebaserc", "w") as f:
             f.write("""{
   "projects": {
