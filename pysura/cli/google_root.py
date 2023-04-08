@@ -649,14 +649,16 @@ class GoogleRoot(RootCmd):
 
     def do_gcloud_create_database(self,
                                   database_id="",
-                                  cpu_default="2",
-                                  memory_default="8192",
+                                  cpu_default="",
+                                  memory_default="",
+                                  storage_size_default="",
+                                  zone_default="",
+                                  availability_type_default="",
                                   db_version_default="POSTGRES_14",
-                                  zone_default="us-central1-b",
-                                  availability_type_default="regional",
                                   auto_advance=True):
         """
         Creates a database.
+        :param storage_size_default: The amount of storage for the database initially, auto-scales
         :param database_id: The name for the database
         :param cpu_default: The number of CPU's for the database
         :param memory_default: The amount of RAM for the database
@@ -690,20 +692,18 @@ class GoogleRoot(RootCmd):
         else:
             cpu_number = cpu_default
         if len(memory_default.strip()) == 0:
-            memory_amount = self.collect("Enter the amount of memory for the database (MiB) (Ex. 8192): ", ["2048",
-                                                                                                            "4096",
-                                                                                                            "8192",
-                                                                                                            "16384",
-                                                                                                            "24576",
-                                                                                                            "32768"])
+            memory_amount = self.collect("Enter the amount of memory for the database (MiB) (Ex. 8192): ", ["2048MiB",
+                                                                                                            "4096MiB",
+                                                                                                            "8192MiB",
+                                                                                                            "16384MiB",
+                                                                                                            "24576MiB",
+                                                                                                            "32768MiB"])
         else:
             memory_amount = memory_default
         if len(db_version_default.strip()) == 0:
             db_version = self.collect("Enter the database version (Supports POSTGRES_14, ): ", ["POSTGRES_14"])
         else:
             db_version = db_version_default
-        cpu_number = str(int(cpu_number.strip()))
-        memory_amount = f"{str(int(memory_amount.strip()))}MiB"
         if len(zone_default.strip()) == 0:
             zone = self.gcloud_list_typed_choice(f"gcloud compute zones list "
                                                  f"--project={env.project.name.split('/')[-1]} "
@@ -721,6 +721,14 @@ class GoogleRoot(RootCmd):
                 return
         else:
             availability_type = availability_type_default
+        if len(storage_size_default.strip()) == 0:
+            size_types = ["1GB", "2GB", "5GB", "10GB", "20GB", "100GB", "500GB", "1000GB"]
+            storage_size = self.collect("Enter the storage size for the database (Ex. 10GB): ", size_types)
+            if storage_size not in size_types:
+                self.log("Invalid storage size.", level=logging.ERROR)
+                return
+        else:
+            storage_size = storage_size_default
         db_password = self.password()
         self.log(f"You are preparing to create a database with the following parameters: "
                  f"Name: {db_name}, CPU's: {cpu_number}, Memory: {memory_amount}, "
@@ -742,6 +750,7 @@ class GoogleRoot(RootCmd):
             f"--memory={memory_amount} "
             f"--database-version={db_version} "
             f"--availability-type={availability_type} "
+            f"--storage-size={storage_size} "
             f"--enable-google-private-path"
         )
         self.log(cmd_str, level=logging.DEBUG)
@@ -984,7 +993,7 @@ class GoogleRoot(RootCmd):
         self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
         self.set_env(env)
 
-    def do_gcloud_deploy_hasura(self, timeout_default="600s", memory_default="2Gi", max_instances_default="10"):
+    def do_gcloud_deploy_hasura(self, timeout_default="", memory_default="", max_instances_default=""):
         env = self.get_env()
         if env.project is None:
             self.log("No project selected.", level=logging.ERROR)
@@ -1005,7 +1014,7 @@ class GoogleRoot(RootCmd):
             os.system(cmd_log_str)
             hasura_secret = self.password()
             if len(timeout_default.strip()) == 0:
-                timeout = self.collect("Timeout (Ex. 600s): ", ["60s", "300s", "600s", "900s", "1200s", "3600s"])
+                timeout = self.collect("Timeout (Ex. 600s): ", ["300s", "600s", "900s", "1200s", "3600s"])
             else:
                 timeout = timeout_default
             if len(memory_default.strip()) == 0:
@@ -1079,10 +1088,11 @@ class GoogleRoot(RootCmd):
                           f"--port=8080 "
                           f"--command='graphql-engine' "
                           f"--args='serve' "
-                          f"--timeout=600s "
+                          f"--timeout={hasura.timeout} "
                           f"--platform=managed "
                           f"--allow-unauthenticated "
                           f"--no-cpu-throttling "
+                          f"--region={env.database.region} "
                           f"--project={env.project.name.split('/')[-1]}")
         deploy_command += secret_text
         self.log(deploy_command, level=logging.DEBUG)
@@ -1687,6 +1697,7 @@ alter table app
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.create ' \
                   f'--trigger-resource={env.project.name.split("/")[-1]} ' \
                   f'--min-instances=1 ' \
+                  f'--region={env.database.region} ' \
                   f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
         self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
@@ -1695,6 +1706,7 @@ alter table app
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.delete ' \
                   f'--trigger-resource={env.project.name.split("/")[-1]} ' \
                   f'--min-instances=1 ' \
+                  f'--region={env.database.region} ' \
                   f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
         self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
@@ -1802,7 +1814,7 @@ alter table app
                  f"/providers",
                  level=logging.INFO
                  )
-        ready = self.collect("Have you enabled phone sign in in the Firebase console? (y/n): ")
+        ready = self.collect("\n\nHave you enabled phone sign in in the Firebase console? (y/n README! IMPORTANT.): ")
         if ready != "y":
             self.log("Please enable phone sign in in the Firebase console", level=logging.INFO)
             return
@@ -1888,7 +1900,7 @@ alter table app
             self.log("Please setup Hasura first", level=logging.ERROR)
             return
         self.log(f"Your project name is: {env.project.name.split('/')[-1]}", level=logging.INFO)
-        confirm_choice = self.collect(f"Please enter a name of the Flutter project.\n"
+        confirm_choice = self.collect(f"\nPlease enter a name of the Flutter project.\n"
                                       f"This will be used to register your app.\n"
                                       f"com.example.[projectName]\n"
                                       f"Do not use spaces, and use _ instead of -\n"
@@ -2844,6 +2856,9 @@ async def SNAKE(_: Request,
         if env.auth_service_account is None or env.auth_service_account.key_file is None:
             self.log("No auth service account specified", level=logging.ERROR)
             return
+        if env.database is None:
+            self.log("No database specified", level=logging.ERROR)
+            return
         if not os.path.isdir("microservices"):
             os.mkdir("microservices")
         os.chdir("microservices")
@@ -2949,6 +2964,7 @@ async def SNAKE(_: Request,
                   f"--timeout={timeout} " \
                   f"--allow-unauthenticated " \
                   f"--no-cpu-throttling " \
+                  f"--region={env.database.region} " \
                   f"--project={env.project.name.split('/')[-1]}"
         self.log(cmd_str, level=logging.DEBUG)
         with open("deploy.txt", "w") as f:
