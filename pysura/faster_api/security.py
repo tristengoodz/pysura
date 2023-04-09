@@ -255,7 +255,7 @@ class PysuraGraphql(GraphqlClient):
         finally:
             return response
 
-    def execute_async_as_user(self,
+    async def execute_async_as_user(self,
                               token: str,
                               query: str,
                               variables: dict = None,
