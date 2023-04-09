@@ -183,6 +183,40 @@ class PysuraGraphql(GraphqlClient):
         finally:
             return response
 
+    async def execute_async(self,
+                            query: str,
+                            variables: dict = None,
+                            operation_name: str = None,
+                            headers=None
+                            ):
+        response = None
+        try:
+            response = await super().execute_async(
+                headers={
+                    "Content-Type": "application/json",
+                    "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
+                },
+                query=query,
+                variables=variables,
+                operation_name=operation_name
+            )
+        except Exception as e:
+            try:
+                logging.log(logging.ERROR, e)
+                response = await super().execute_async(
+                    headers={
+                        "Content-Type": "application/json",
+                        "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
+                    },
+                    query=query,
+                    variables=variables,
+                    operation_name=operation_name
+                )
+            except Exception as e:
+                logging.log(logging.ERROR, e)
+        finally:
+            return response
+
     def execute_as_user(self,
                         token: str,
                         query: str,
@@ -215,6 +249,40 @@ class PysuraGraphql(GraphqlClient):
                     variables=variables,
                     operation_name=operation_name,
                     **kwargs
+                )
+            except Exception as e:
+                logging.log(logging.ERROR, e)
+        finally:
+            return response
+
+    def execute_async_as_user(self,
+                              token: str,
+                              query: str,
+                              variables: dict = None,
+                              operation_name: str = None
+                              ):
+        response = None
+        try:
+            response = await super().execute_async(
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"{token}"
+                },
+                query=query,
+                variables=variables,
+                operation_name=operation_name
+            )
+        except Exception as e:
+            try:
+                logging.log(logging.ERROR, e)
+                response = await super().execute_async(
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"{token}"
+                    },
+                    query=query,
+                    variables=variables,
+                    operation_name=operation_name
                 )
             except Exception as e:
                 logging.log(logging.ERROR, e)
