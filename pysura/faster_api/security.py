@@ -1,4 +1,5 @@
 import firebase_admin
+import sqlalchemy
 from firebase_admin import credentials, initialize_app, auth, App
 from firebase_admin.auth import InvalidIdTokenError, ExpiredIdTokenError, RevokedIdTokenError, CertificateFetchError, \
     UserDisabledError
@@ -17,16 +18,22 @@ from typing import List, Any
 from pysura.faster_api.models import UserIdentity
 from python_graphql_client import GraphqlClient
 from google.cloud import storage as google_storage
+from google.cloud.sql.connector import Connector
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+import re
+import time
 
 try:
     from app_secrets import HASURA_FIREBASE_SERVICE_ACCOUNT, HASURA_EVENT_SECRET, HASURA_GRAPHQL_URL_ROOT, \
-        HASURA_GRAPHQL_ADMIN_SECRET, HASURA_STORAGE_BUCKET
+        HASURA_GRAPHQL_ADMIN_SECRET, HASURA_STORAGE_BUCKET, HASURA_GRAPHQL_DATABASE_URL
 except ImportError:
     HASURA_FIREBASE_SERVICE_ACCOUNT = ""
     HASURA_EVENT_SECRET = ""
     HASURA_GRAPHQL_URL_ROOT = ""
     HASURA_GRAPHQL_ADMIN_SECRET = ""
     HASURA_STORAGE_BUCKET = ""
+    HASURA_GRAPHQL_DATABASE_URL = ""
 
 cred_dict = json.loads(HASURA_FIREBASE_SERVICE_ACCOUNT, strict=False)
 creds = service_account.Credentials.from_service_account_info(cred_dict)
@@ -109,6 +116,7 @@ class PysuraSecurity:
                        request: Request,
                        _: str | None = Depends(jwt_token_header),
                        __: str | None = Depends(event_secret_header)):
+        logging.log(logging.INFO, f"Security: {request.method} {request.url.path}")
         if self.require_jwt:
             if self.allowed_roles is None or len(self.allowed_roles) == 0:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Method Restricted")
@@ -146,7 +154,7 @@ class PysuraGraphql(GraphqlClient):
         response = None
         try:
             kwargs.pop("headers", None)
-            response = self.execute(
+            response = super().execute(
                 headers={
                     "Content-Type": "application/json",
                     "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
@@ -160,7 +168,7 @@ class PysuraGraphql(GraphqlClient):
             try:
                 logging.log(logging.ERROR, e)
                 kwargs.pop("headers", None)
-                response = self.execute(
+                response = super().execute(
                     headers={
                         "Content-Type": "application/json",
                         "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
@@ -169,6 +177,40 @@ class PysuraGraphql(GraphqlClient):
                     variables=variables,
                     operation_name=operation_name,
                     **kwargs
+                )
+            except Exception as e:
+                logging.log(logging.ERROR, e)
+        finally:
+            return response
+
+    async def execute_async(self,
+                            query: str,
+                            variables: dict = None,
+                            operation_name: str = None,
+                            headers=None
+                            ):
+        response = None
+        try:
+            response = await super().execute_async(
+                headers={
+                    "Content-Type": "application/json",
+                    "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
+                },
+                query=query,
+                variables=variables,
+                operation_name=operation_name
+            )
+        except Exception as e:
+            try:
+                logging.log(logging.ERROR, e)
+                response = await super().execute_async(
+                    headers={
+                        "Content-Type": "application/json",
+                        "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET
+                    },
+                    query=query,
+                    variables=variables,
+                    operation_name=operation_name
                 )
             except Exception as e:
                 logging.log(logging.ERROR, e)
@@ -184,7 +226,7 @@ class PysuraGraphql(GraphqlClient):
         response = None
         try:
             kwargs.pop("Authorization", None)
-            response = self.execute(
+            response = super().execute(
                 headers={
                     "Content-Type": "application/json",
                     "Authorization": f"{token}"
@@ -198,7 +240,7 @@ class PysuraGraphql(GraphqlClient):
             try:
                 logging.log(logging.ERROR, e)
                 kwargs.pop("Authorization", None)
-                response = self.execute(
+                response = super().execute(
                     headers={
                         "Content-Type": "application/json",
                         "Authorization": f"{token}"
@@ -207,6 +249,40 @@ class PysuraGraphql(GraphqlClient):
                     variables=variables,
                     operation_name=operation_name,
                     **kwargs
+                )
+            except Exception as e:
+                logging.log(logging.ERROR, e)
+        finally:
+            return response
+
+    async def execute_async_as_user(self,
+                                    token: str,
+                                    query: str,
+                                    variables: dict = None,
+                                    operation_name: str = None
+                                    ):
+        response = None
+        try:
+            response = await super().execute_async(
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"{token}"
+                },
+                query=query,
+                variables=variables,
+                operation_name=operation_name
+            )
+        except Exception as e:
+            try:
+                logging.log(logging.ERROR, e)
+                response = await super().execute_async(
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"{token}"
+                    },
+                    query=query,
+                    variables=variables,
+                    operation_name=operation_name
                 )
             except Exception as e:
                 logging.log(logging.ERROR, e)
@@ -223,12 +299,13 @@ class PysuraStorage(google_storage.Client):
 
     def upload_file(self, file_data: bytes | str, file_name: str, file_type: str, user_id: str):
         bucket = self.bucket(self.default_bucket)
-        blob = bucket.blob(f"{user_id}/{file_name}")
+        blob_name = f"{user_id}/{int(time.time())}/{file_name}"
+        blob = bucket.blob(blob_name)
         blob.upload_from_string(file_data, content_type=file_type)
         signed_url = blob.generate_signed_url(expiration=datetime.now() + timedelta(days=5000))
         return {
-            "url": signed_url,
-            "file_name": file_name,
+            "signed_url": signed_url,
+            "file_name": blob_name,
             "file_type": file_type,
             "user_id": user_id
         }
@@ -236,11 +313,92 @@ class PysuraStorage(google_storage.Client):
     # TODO: Add management methods
 
 
+class PysuraSQLClient:
+
+    def get_conn(self):
+        with Connector() as connector:
+            conn = connector.connect(
+                self.host,
+                self.driver,
+                user=self.user,
+                password=self.password,
+                db=self.database,
+                enable_iam_auth=True
+            )
+            return conn
+
+    def get_engine(self):
+        engine = sqlalchemy.engine.create_engine(
+            "postgresql+asyncpg://",
+            creator=self.get_conn
+        )
+        return engine
+
+    def get_db(self):
+        db = None
+        try:
+            db = self.session()
+            yield db
+        except Exception as e:
+            logging.log(logging.DEBUG, e)
+            self.refresh_engine()
+            db = self.session()
+            yield db
+        finally:
+            if db is not None:
+                try:
+                    db.close()
+                except Exception as e:
+                    logging.log(logging.ERROR, e)
+
+    def refresh_engine(self):
+        self.engine = self.get_engine()
+        self.session = sqlalchemy.orm.sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+        self.base = declarative_base()
+
+    def set_connection_url(self, connection_url: str):
+        match = re.search(r"postgres://(.*?):(.*?)@(.*?)$", connection_url)
+        user = match.group(1)
+        password = match.group(2)
+        host = match.group(3).lstrip("/")
+        database = "postgres"
+        driver = "asyncpg"
+        self.name = "pysura_sql_client"
+        self.user = user
+        self.password = password
+        self.host = host
+        self.database = database
+        self.driver = driver
+        self.engine = None
+        self.session = None
+        self.base = None
+        self.refresh_engine()
+
+    def __init__(self):
+        match = re.search(r"postgres://(.*?):(.*?)@(.*?)$", HASURA_GRAPHQL_DATABASE_URL)
+        user = match.group(1)
+        password = match.group(2)
+        host = match.group(3).lstrip("/")
+        database = "postgres"
+        driver = "asyncpg"
+        self.name = "pysura_sql_client"
+        self.user = user
+        self.password = password
+        self.host = host
+        self.database = database
+        self.driver = driver
+        self.engine = None
+        self.session = None
+        self.base = None
+        self.refresh_engine()
+
+
 class Provider(BaseModel):
     user_identity: UserIdentity | None = None
     firebase_app: App | None = None
     graphql: PysuraGraphql | None = None
     storage: PysuraStorage | None = None
+    sql: PysuraSQLClient | None = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -248,6 +406,7 @@ class Provider(BaseModel):
             App: lambda v: v if v is None else v.name,
             PysuraGraphql: lambda v: v if v is None else v.name,
             PysuraStorage: lambda v: v if v is None else v.name,
+            PysuraSQLClient: lambda v: v if v is None else v.name,
         }
 
 
@@ -257,11 +416,13 @@ class PysuraProvider:
                  provide_identity: bool = False,
                  provide_firebase: bool = False,
                  provide_graphql: bool = False,
-                 provide_storage: bool = False):
+                 provide_storage: bool = False,
+                 provide_sql: bool = False):
         self.provide_identity = provide_identity
         self.provide_firebase = provide_firebase
         self.provide_graphql = provide_graphql
         self.provide_storage = provide_storage
+        self.provide_sql = provide_sql
 
     async def __call__(self, request: Request) -> Provider:
         user_identity = None
@@ -282,10 +443,14 @@ class PysuraProvider:
         storage = None
         if self.provide_storage:
             storage = PysuraStorage()
+        sql = None
+        if self.provide_sql:
+            sql = PysuraSQLClient()
         provider = Provider(
             user_identity=user_identity,
             firebase_app=app_instance,
             graphql=graphql,
-            storage=storage
+            storage=storage,
+            sql=sql
         )
         return provider

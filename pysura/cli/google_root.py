@@ -16,6 +16,7 @@ import time
 import re
 import asyncpg
 import asyncio
+import requests
 
 
 class Gql:
@@ -32,6 +33,13 @@ class Gql:
   }
 }
 """
+
+    GET_ENUM = """query GetEnum {
+  enum_values: ENUM {
+    value
+    comment
+  }
+}"""
 
 
 class GoogleRoot(RootCmd):
@@ -79,22 +87,46 @@ class GoogleRoot(RootCmd):
     def get_site_packages_path(submodule="pysura_auth"):
         return os.path.join(site.getsitepackages()[0], "pysura", "library_data", submodule)
 
-    @staticmethod
-    async def run_sql(host="secret",
+    async def run_sql(self,
+                      host="secret",
                       name="postgres",
                       user="postgres",
                       password="secret",
                       port=5432,
                       sql=""):
-        conn = await asyncpg.connect(
-            host=host,
-            database=name,
-            user=user,
-            password=password,
-            port=port
-        )
-        await conn.execute(sql)
-        await conn.close()
+        result = None
+        conn = None
+        try:
+            conn = await asyncpg.connect(
+                host=host,
+                database=name,
+                user=user,
+                password=password,
+                port=port
+            )
+            if "SELECT" in sql:
+                result = await conn.fetch(sql)
+            else:
+                result = await conn.execute(sql)
+        except Exception as e:
+            self.log(str(e), logging.ERROR)
+            conn = await asyncpg.connect(
+                host=host,
+                database=name,
+                user=user,
+                password=password,
+                port=port
+            )
+            if "SELECT" in sql:
+                result = await conn.fetch(sql)
+            else:
+                result = await conn.execute(sql)
+        finally:
+            try:
+                await conn.close()
+            except Exception as e:
+                self.log(str(e), logging.ERROR)
+            return result
 
     @staticmethod
     def password(length: int = 64):
@@ -297,7 +329,7 @@ class GoogleRoot(RootCmd):
         if env.project is None:
             self.log("No project selected.")
             return
-        self.log("Enabling services...")
+        self.log("Enabling services... Please be patient! This may take a few minutes.")
         asyncio.run(self.async_gcloud_enable_api_services())
         project_id = env.project.name.split("/")[-1]
         cmd_str = f"gcloud services list --project={project_id} --format=json"
@@ -329,8 +361,11 @@ class GoogleRoot(RootCmd):
         use_org = use_organization.strip().lower() == "y"
         if use_org:
             if env.organization is None:
-                self.log("No organization selected.", level=logging.ERROR)
-                return
+                self.do_gcloud_choose_organization(None)
+                env = self.get_env()
+        if use_org and env.organization is None:
+            self.log("No organization selected.")
+            return
         arg_len = len(project_id.strip())
         if arg_len == 0:
             project_name = self.collect("Enter a project name: ")
@@ -617,14 +652,16 @@ class GoogleRoot(RootCmd):
 
     def do_gcloud_create_database(self,
                                   database_id="",
-                                  cpu_default="2",
-                                  memory_default="8192",
+                                  cpu_default="",
+                                  memory_default="",
+                                  storage_size_default="",
+                                  zone_default="",
+                                  availability_type_default="",
                                   db_version_default="POSTGRES_14",
-                                  zone_default="us-central1-b",
-                                  availability_type_default="regional",
                                   auto_advance=True):
         """
         Creates a database.
+        :param storage_size_default: The amount of storage for the database initially, auto-scales
         :param database_id: The name for the database
         :param cpu_default: The number of CPU's for the database
         :param memory_default: The amount of RAM for the database
@@ -658,20 +695,19 @@ class GoogleRoot(RootCmd):
         else:
             cpu_number = cpu_default
         if len(memory_default.strip()) == 0:
-            memory_amount = self.collect("Enter the amount of memory for the database (MiB) (Ex. 8192): ", ["2048",
-                                                                                                            "4096",
-                                                                                                            "8192",
-                                                                                                            "16384",
-                                                                                                            "24576",
-                                                                                                            "32768"])
+            memory_amount = self.collect("Enter the amount of RAM for the database (MiB) (Ex. 8192MiB): ",
+                                         ["2048MiB",
+                                          "4096MiB",
+                                          "8192MiB",
+                                          "16384MiB",
+                                          "24576MiB",
+                                          "32768MiB"])
         else:
             memory_amount = memory_default
         if len(db_version_default.strip()) == 0:
             db_version = self.collect("Enter the database version (Supports POSTGRES_14, ): ", ["POSTGRES_14"])
         else:
             db_version = db_version_default
-        cpu_number = str(int(cpu_number.strip()))
-        memory_amount = f"{str(int(memory_amount.strip()))}MiB"
         if len(zone_default.strip()) == 0:
             zone = self.gcloud_list_typed_choice(f"gcloud compute zones list "
                                                  f"--project={env.project.name.split('/')[-1]} "
@@ -689,6 +725,15 @@ class GoogleRoot(RootCmd):
                 return
         else:
             availability_type = availability_type_default
+        if len(storage_size_default.strip()) == 0:
+            size_types = ["1GB", "2GB", "5GB", "10GB", "20GB", "100GB", "500GB", "1000GB"]
+            storage_size = self.collect("Enter the storage size for the database [Auto-increases] "
+                                        "(Ex. 10GB): ", size_types)
+            if storage_size not in size_types:
+                self.log("Invalid storage size.", level=logging.ERROR)
+                return
+        else:
+            storage_size = storage_size_default
         db_password = self.password()
         self.log(f"You are preparing to create a database with the following parameters: "
                  f"Name: {db_name}, CPU's: {cpu_number}, Memory: {memory_amount}, "
@@ -710,6 +755,7 @@ class GoogleRoot(RootCmd):
             f"--memory={memory_amount} "
             f"--database-version={db_version} "
             f"--availability-type={availability_type} "
+            f"--storage-size={storage_size} "
             f"--enable-google-private-path"
         )
         self.log(cmd_str, level=logging.DEBUG)
@@ -902,46 +948,57 @@ class GoogleRoot(RootCmd):
         env.secrets = secret_set
         self.set_env(env)
 
-    async def async_update_default_compute_engine_service_account(self):
-        env = self.get_env()
-        project_id = env.project.name.split('/')[-1]
-        roles = [
-            "roles/cloudbuild.builds.builder",
-            "roles/run.admin",
-            "roles/secretmanager.secretAccessor",
-        ]
-        await self.add_service_account_roles(project_id, env.hasura_service_account.email, roles)
-
-    async def add_service_account_roles(self, project_id: str, email: str, roles: List[str]):
-        tasks = [self.add_service_account_role(project_id, email, role) for role in roles]
-        await asyncio.gather(*tasks)
-
-    async def add_service_account_role(self, project_id: str, email: str, role: str):
-        cmd_str = (f"gcloud projects add-iam-policy-binding {project_id} "
-                   f"--member=serviceAccount:{email} "
-                   f"--role={role} "
-                   f"--format=json")
-        await self.run_async_cmd(cmd_str)
-
     def update_default_compute_engine_service_account(self):
         env = self.get_env()
         account_choices = json.loads(os.popen(f"gcloud iam service-accounts list "
                                               f"--project={env.project.name.split('/')[-1]} "
                                               f"--format=json").read())
+        self.log(account_choices, level=logging.DEBUG)
         service_accounts = []
         for i, account in enumerate(account_choices):
             account_data = GoogleServiceAccount(**account)
-            if account_data.displayName == "Default compute service account":
+            if "default" in account_data.displayName.lower() and "compute@developer" in account_data.email:
                 env.hasura_service_account = account_data
             service_accounts.append(account_data)
         if env.hasura_service_account is None:
+            account_choices = json.loads(os.popen(f"gcloud iam service-accounts list "
+                                                  f"--project={env.project.name.split('/')[-1]} "
+                                                  f"--format=json").read())
+            self.log(account_choices, level=logging.DEBUG)
+            service_accounts = []
+            for i, account in enumerate(account_choices):
+                account_data = GoogleServiceAccount(**account)
+                if "default" in account_data.displayName.lower() and "compute@developer" in account_data.email:
+                    env.hasura_service_account = account_data
+                service_accounts.append(account_data)
+        if env.hasura_service_account is None:
             self.log("No service account found.", level=logging.ERROR)
             return
-        self.log(f"Service account {env.hasura_service_account.email} selected.", level=logging.INFO)
-        asyncio.run(self.async_update_default_compute_engine_service_account())
+        env.service_accounts = service_accounts
+        cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
+                       f"--member=serviceAccount:{env.hasura_service_account.email} "
+                       f"--role=roles/cloudbuild.builds.builder "
+                       f"--format=json"
+                       )
+        self.log(cmd_log_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
+        cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
+                       f"--member=serviceAccount:{env.hasura_service_account.email} "
+                       f"--role=roles/run.admin "
+                       f"--format=json"
+                       )
+        self.log(cmd_log_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
+        cmd_log_str = (f"gcloud projects add-iam-policy-binding {env.project.name.split('/')[-1]} "
+                       f"--member=serviceAccount:{env.hasura_service_account.email} "
+                       f"--role=roles/secretmanager.secretAccessor "
+                       f"--format=json"
+                       )
+        self.log(cmd_log_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
         self.set_env(env)
 
-    def do_gcloud_deploy_hasura(self, timeout_default="600s", memory_default="2Gi", max_instances_default="10"):
+    def do_gcloud_deploy_hasura(self, timeout_default="", memory_default="", max_instances_default=""):
         env = self.get_env()
         if env.project is None:
             self.log("No project selected.", level=logging.ERROR)
@@ -962,16 +1019,17 @@ class GoogleRoot(RootCmd):
             os.system(cmd_log_str)
             hasura_secret = self.password()
             if len(timeout_default.strip()) == 0:
-                timeout = self.collect("Timeout (Ex. 600s): ", ["60s", "300s", "600s", "900s", "1200s", "3600s"])
+                timeout = self.collect("Hasura Service Timeout (Ex. 600s): ",
+                                       ["300s", "600s", "900s", "1200s", "3600s"])
             else:
                 timeout = timeout_default
             if len(memory_default.strip()) == 0:
-                memory = self.collect("Memory (Ex. 2Gi): ",
+                memory = self.collect("Hasura Service Memory (Ex. 2Gi): ",
                                       ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
             else:
                 memory = memory_default
             if len(max_instances_default.strip()) == 0:
-                max_instances = self.collect("Max instances (Ex. 10): ")
+                max_instances = self.collect("Hasura Service Max instances (Ex. 10): ")
             else:
                 max_instances = max_instances_default
             hasura_event_secret = self.password()
@@ -1036,13 +1094,16 @@ class GoogleRoot(RootCmd):
                           f"--port=8080 "
                           f"--command='graphql-engine' "
                           f"--args='serve' "
-                          f"--timeout=600s "
+                          f"--timeout={hasura.timeout} "
                           f"--platform=managed "
                           f"--allow-unauthenticated "
                           f"--no-cpu-throttling "
+                          f"--region={env.database.region} "
                           f"--project={env.project.name.split('/')[-1]}")
         deploy_command += secret_text
         self.log(deploy_command, level=logging.DEBUG)
+        with open("deploy.txt", "w") as f:
+            f.write(deploy_command)
         os.system(deploy_command)
         services = json.loads(os.popen(f"gcloud run services list "
                                        f"--project={env.project.name.split('/')[-1]} "
@@ -1559,7 +1620,7 @@ alter table app
         service_accounts = []
         for i, account in enumerate(account_choices):
             account_data = GoogleServiceAccount(**account)
-            if account_data.displayName == "pysura-admin":
+            if account_data.displayName == "pysuraadmin":
                 env.auth_service_account = account_data
             service_accounts.append(account_data)
         if env.auth_service_account is None:
@@ -1601,41 +1662,6 @@ alter table app
         self.set_env(env)
         os.remove("admin.json")
 
-    async def async_deploy_functions(self):
-        env = self.get_env()
-        project_id = env.project.name.split("/")[-1]
-        functions_to_deploy = [
-            {
-                "name": "on_user_create",
-                "runtime": "python39",
-                "trigger_event": "providers/firebase.auth/eventTypes/user.create",
-                "min_instances": 1,
-                "format": "json"
-            },
-            {
-                "name": "on_user_delete",
-                "runtime": "python39",
-                "trigger_event": "providers/firebase.auth/eventTypes/user.delete",
-                "min_instances": 1,
-                "format": "json"
-            }
-        ]
-        await self.deploy_functions(functions_to_deploy, project_id)
-
-    async def deploy_functions(self, functions: List[dict], project_id: str):
-        tasks = [self.deploy_function(function, project_id) for function in functions]
-        await asyncio.gather(*tasks)
-
-    async def deploy_function(self, function: dict, project_id: str):
-        cmd_str = (f"gcloud functions deploy {function['name']} "
-                   f"--runtime={function['runtime']} "
-                   f"--trigger-event={function['trigger_event']} "
-                   f"--trigger-resource={project_id} "
-                   f"--min-instances={function['min_instances']} "
-                   f"--format={function['format']}")
-        self.log(cmd_str, level=logging.DEBUG)
-        await self.run_async_cmd(cmd_str)
-
     def attach_auth(self):
         env = self.get_env()
         if os.path.isdir("pysura_auth"):
@@ -1672,8 +1698,24 @@ alter table app
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
-        self.log("Deploying functions... this may take up to 2 minutes.", level=logging.INFO)
-        asyncio.run(self.async_deploy_functions())
+        cmd_str = f'gcloud functions deploy on_user_create ' \
+                  f'--runtime=python39 ' \
+                  f'--trigger-event=providers/firebase.auth/eventTypes/user.create ' \
+                  f'--trigger-resource={env.project.name.split("/")[-1]} ' \
+                  f'--min-instances=1 ' \
+                  f'--region={env.database.region} ' \
+                  f'--format=json'
+        self.log(cmd_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
+        cmd_str = f'gcloud functions deploy on_user_delete ' \
+                  f'--runtime=python39 ' \
+                  f'--trigger-event=providers/firebase.auth/eventTypes/user.delete ' \
+                  f'--trigger-resource={env.project.name.split("/")[-1]} ' \
+                  f'--min-instances=1 ' \
+                  f'--region={env.database.region} ' \
+                  f'--format=json'
+        self.log(cmd_str, level=logging.DEBUG)
+        self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
         os.chdir("..")
         cmd_str = f"gcloud functions list " \
                   f"--project={env.project.name.split('/')[-1]} " \
@@ -1778,7 +1820,7 @@ alter table app
                  f"/providers",
                  level=logging.INFO
                  )
-        ready = self.collect("Have you enabled phone sign in in the Firebase console? (y/n): ")
+        ready = self.collect("\n\nHave you enabled phone sign in in the Firebase console? (y/n README! IMPORTANT.): ")
         if ready != "y":
             self.log("Please enable phone sign in in the Firebase console", level=logging.INFO)
             return
@@ -1864,7 +1906,7 @@ alter table app
             self.log("Please setup Hasura first", level=logging.ERROR)
             return
         self.log(f"Your project name is: {env.project.name.split('/')[-1]}", level=logging.INFO)
-        confirm_choice = self.collect(f"Please enter a name of the Flutter project.\n"
+        confirm_choice = self.collect(f"\nPlease enter a name of the Flutter project.\n"
                                       f"This will be used to register your app.\n"
                                       f"com.example.[projectName]\n"
                                       f"Do not use spaces, and use _ instead of -\n"
@@ -1918,8 +1960,30 @@ alter table app
         cmd_str = f"dart pub global activate flutterfire_cli"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
+        ios_bundle_id = self.collect("Please enter a bundle id for your iOS app. (com.example.MyApp): ",
+                                     ["com.example." + project_name + "_ios"])
+        while not self.confirm_loop(ios_bundle_id):
+            ios_bundle_id = self.collect("Please enter a bundle id for your iOS app. (com.example.MyApp): ",
+                                         ["com.example." + project_name + "_ios"])
+        ios_bundle_id = ios_bundle_id.replace("_", "-").replace(" ", "-")
+        android_package_name = self.collect("Please enter a package name for your Android app. (com.example.MyApp): ",
+                                            ["com.example." + project_name + "_android"])
+        while not self.confirm_loop(android_package_name):
+            android_package_name = self.collect(
+                "Please enter a package name for your Android app. (com.example.MyApp): ",
+                ["com.example." + project_name + "_android"])
+        android_package_name = android_package_name.replace("-", "_").replace(" ", "_")
+        with open(".firebaserc", "w") as f:
+            f.write("""{
+  "projects": {
+    "default": "PROJECT_ID"
+  }
+}
+""".replace("PROJECT_ID", env.project.name.split("/")[-1]))
         cmd_str = f"dart pub global run flutterfire_cli:flutterfire configure " \
-                  f"--platforms=android,ios,macos,web,linux,windows"
+                  f"--platforms=android,ios,web " \
+                  f"--ios-bundle-id={ios_bundle_id} " \
+                  f"--android-package-name={android_package_name}"
         self.log(cmd_str, level=logging.DEBUG)
         os.system(cmd_str)
         cmd_str = "flutter pub get"
@@ -1945,63 +2009,6 @@ alter table app
             with open("ios/Runner/Info.plist", "wb") as f:
                 plistlib.dump(ios_plist, f)
 
-        if os.path.isdir("android"):
-            os.chdir("android")
-            cmd_str = "./gradlew signingReport"
-            self.log(cmd_str, level=logging.DEBUG)
-            response = os.popen(cmd_str).read()
-            variants = re.findall(r'Variant: (.+)', response)
-            configs = re.findall(r'Config: (.+)', response)
-            md5s = re.findall(r'MD5: (.+)', response)
-            sha1s = re.findall(r'SHA1: (.+)', response)
-            sha256s = re.findall(r'SHA-256: (.+)', response)
-            valid_until = re.findall(r'Valid until: (.+)', response)
-            if len(variants) == 0:
-                self.log("No signing report found", level=logging.WARNING)
-                cmd_str = "gradlew signingReport"
-                self.log(cmd_str, level=logging.DEBUG)
-                response = os.popen(cmd_str).read()
-                variants = re.findall(r'Variant: (.+)', response)
-                configs = re.findall(r'Config: (.+)', response)
-                md5s = re.findall(r'MD5: (.+)', response)
-                sha1s = re.findall(r'SHA1: (.+)', response)
-                sha256s = re.findall(r'SHA-256: (.+)', response)
-                valid_until = re.findall(r'Valid until: (.+)', response)
-
-            if len(variants) != 0:
-                signing_reports = []
-                for variant, config, md5, sha1, sha256, valid in zip(variants, configs, md5s, sha1s, sha256s,
-                                                                     valid_until):
-                    signing_report_data = {
-                        'variant': variant,
-                        'config': config,
-                        'md5': md5,
-                        'sha1': sha1,
-                        'sha256': sha256,
-                        'valid_until': valid
-                    }
-                    android_report = AndroidSigningReport(**signing_report_data)
-                    signing_reports.append(android_report)
-                    if android_report.variant == "debug":
-                        env.android_debug_signing_report = android_report
-
-                env.android_signing_reports = signing_reports
-            else:
-                self.log("No signing report found", level=logging.WARNING)
-                env.android_signing_reports = []
-            if env.android_debug_signing_report is not None and \
-                    env.android_debug_signing_report.sha1 is not None and \
-                    env.android_debug_signing_report.sha256 is not None:
-                self.log(f"SHA1:\n{env.android_debug_signing_report.sha1}", level=logging.INFO)
-                self.log(f"SHA256:\n{env.android_debug_signing_report.sha256}", level=logging.INFO)
-                self.log(
-                    f"Please visit:\nhttps://console.firebase.google.com/project/{env.project.name.split('/')[-1]}/"
-                    f"settings/general/android\nAdd the SHA1 and SHA256 to the list of fingerprints",
-                    level=logging.INFO)
-                ready = self.collect("Are you ready to continue? (y/n): ")
-                while ready != "y":
-                    ready = self.collect("Are you ready to continue? (y/n): ")
-            os.chdir("..")
         if env.hasura is not None and env.hasura.HASURA_GRAPHQL_URL_ROOT is not None and \
                 env.hasura.HASURA_GRAPHQL_ADMIN_SECRET is not None:
             graphql_file = """{
@@ -2171,7 +2178,8 @@ async def SNAKE(_: Request,
                     provide_identity=True,
                     provide_firebase=True,
                     provide_graphql=True,
-                    provide_storage=True
+                    provide_storage=True,
+                    provide_sql=True
                     # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                 ))):
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
@@ -2194,7 +2202,7 @@ async def SNAKE(_: Request,
                 camel_replace = snake_replace.replace("_", " ").title().replace(" ", "")
                 new_action_template = action_template.replace("SNAKE", snake_replace).replace("CAMEL", camel_replace)
                 collect_perms = []
-                for permission in action["permissions"]:
+                for permission in action.get("permissions", []):
                     collect_perms.append(permission["role"])
                 else:
                     collect_perms.append("admin")
@@ -2261,8 +2269,10 @@ async def SNAKE(_: Request,
                             in_import_lines = False
                         if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
                             new_lines.append(line + "\n")
-                with open(f"actions/{snake_replace}.py", "w") as f:
-                    f.write(new_action_template)
+                    new_action_template = "".join(new_lines)
+                if not os.path.isfile(f"actions/{snake_replace}.py"):
+                    with open(f"actions/{snake_replace}.py", "w") as f:
+                        f.write(new_action_template)
         action_names = []
         for action_data in hasura_metadata.get("actions", []):
             if action_data.get("name") in included_actions:
@@ -2326,7 +2336,8 @@ async def SNAKE(_: Request,
                         provide_identity=False,
                         provide_firebase=True,
                         provide_graphql=True,
-                        provide_storage=True
+                        provide_storage=True,
+                        provide_sql=True
                         # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                     )
                 ),
@@ -2407,8 +2418,9 @@ async def SNAKE(_: Request,
                     if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
                         new_lines.append(line + "\n")
                 new_event_template = "".join(new_lines)
-            with open(f"events/{snake_replace}.py", "w") as f:
-                f.write(new_event_template)
+            if not os.path.isfile(f"events/{snake_replace}.py"):
+                with open(f"events/{snake_replace}.py", "w") as f:
+                    f.write(new_event_template)
 
         event_init += f"\nevent_routers = [\n"
         for event_router in event_routers:
@@ -2443,7 +2455,8 @@ async def SNAKE(_: Request,
                         provide_identity=False,
                         provide_firebase=True,
                         provide_graphql=True,
-                        provide_storage=True
+                        provide_storage=True,
+                        provide_sql=True
                         # (DEPENDENCY-INJECTION-END) - DO NOT DELETE THIS LINE!
                     )
                 ),
@@ -2528,8 +2541,9 @@ async def SNAKE(_: Request,
                             if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
                                 new_lines.append(line + "\n")
                         new_cron_template = "".join(new_lines)
-                    with open(f"crons/{snake_replace}.py", "w") as f:
-                        f.write(new_cron_template)
+                    if not os.path.isfile(f"crons/{snake_replace}.py"):
+                        with open(f"crons/{snake_replace}.py", "w") as f:
+                            f.write(new_cron_template)
             cron_triggers_init += f"\ncron_routers = [\n"
             for cron_name in cron_names:
                 cron_triggers_init += f"    {cron_name}_router,\n"
@@ -2826,9 +2840,9 @@ async def SNAKE(_: Request,
     def do_deploy_microservice(self,
                                microservice_name="default",
                                url_wrapper="{{HASURA_MICROSERVICE_URL}}",
-                               timeout_default="600s",
-                               memory_default="2Gi",
-                               max_instances_default="10",
+                               timeout_default="",
+                               memory_default="",
+                               max_instances_default="",
                                default_init: bool | str = ""):
         """
         Deploys, or redeploys a microservice. Will rebuild routers, but as long as you leave the comments alone, it
@@ -2844,12 +2858,22 @@ async def SNAKE(_: Request,
         """
         if isinstance(default_init, str) and default_init.strip() == "":
             default_init = False
-        if microservice_name == "" or len(microservice_name.strip()) == 0:
-            self.log("Microservice name cannot be empty", level=logging.ERROR)
-            return
+        if isinstance(microservice_name, str) and len(microservice_name.strip()) == 0:
+            microservice_name = "default"
+        if isinstance(url_wrapper, str) and len(url_wrapper.strip()) == 0:
+            url_wrapper = "{{HASURA_MICROSERVICE_URL}}"
+        if isinstance(timeout_default, str) and len(timeout_default.strip()) == 0:
+            timeout_default = "600s"
+        if isinstance(memory_default, str) and len(memory_default.strip()) == 0:
+            memory_default = "2Gi"
+        if isinstance(max_instances_default, str) and len(max_instances_default.strip()) == 0:
+            max_instances_default = "10"
         env = self.get_env()
         if env.auth_service_account is None or env.auth_service_account.key_file is None:
             self.log("No auth service account specified", level=logging.ERROR)
+            return
+        if env.database is None:
+            self.log("No database specified", level=logging.ERROR)
             return
         if not os.path.isdir("microservices"):
             os.mkdir("microservices")
@@ -2869,10 +2893,12 @@ async def SNAKE(_: Request,
         default_crons = []
         for root, dirs, files in os.walk(path):
             for f in files:
+                self.log(f"Copying {f} to {microservice_name} microservice", level=logging.INFO)
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
                     continue
                 if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
-                    shutil.copy(os.path.join(root, f), ".")
+                    if not os.path.exists(f):
+                        shutil.copy(os.path.join(root, f), ".")
                 elif f == "pysura_metadata.json" and microservice_name == "default":
                     shutil.copy(os.path.join(root, f), ".")
                 else:
@@ -2883,9 +2909,9 @@ async def SNAKE(_: Request,
                                 os.mkdir(dir_path)
                             if f != "__init__.py" and microservice_name == "default":
                                 default_actions.append(f.replace(".py", ""))
-                            if f in ["action_upload_file.py"]:
-                                shutil.copy(os.path.join(root, f), dir_path)
                             if microservice_name != "default":
+                                continue
+                            if os.path.isfile(os.path.join(dir_path, f)):
                                 continue
                             shutil.copy(os.path.join(root, f), dir_path)
                     elif "crons" in root:
@@ -2897,6 +2923,8 @@ async def SNAKE(_: Request,
                                 default_crons.append(f.replace(".py", ""))
                             if microservice_name != "default":
                                 continue
+                            if os.path.isfile(os.path.join(dir_path, f)):
+                                continue
                             shutil.copy(os.path.join(root, f), dir_path)
                     elif "events" in root:
                         if f != "event_template.py":
@@ -2906,6 +2934,8 @@ async def SNAKE(_: Request,
                             if f != "__init__.py" and microservice_name == "default":
                                 default_events.append(f.replace(".py", ""))
                             if microservice_name != "default":
+                                continue
+                            if os.path.isfile(os.path.join(dir_path, f)):
                                 continue
                             shutil.copy(os.path.join(root, f), dir_path)
         if microservice_name == "default" and default_init:
@@ -2917,6 +2947,11 @@ async def SNAKE(_: Request,
                 metadata = json.load(f)
             os.chdir("microservices")
             os.chdir(microservice_name)
+        with open("app_secrets.py", "r") as f:
+            app_secrets_py = f.read()
+        app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
+        with open("app_secrets.py", "w") as f:
+            f.write(app_secrets_py)
         new_hasura_metadata = self.router_generator(metadata, url_wrapper)
         input_objects_set = set(
             [i.get("name", None) for i in new_hasura_metadata.get("custom_types", {}).get("input_objects", [])]
@@ -2931,59 +2966,13 @@ async def SNAKE(_: Request,
             timeout = timeout_default
         if len(memory_default.strip()) == 0:
             memory = self.collect("Microservice Memory (Ex. 2Gi): ",
-                                  ["256Mi", "512Mi", "1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
+                                  ["1Gi", "2Gi", "4Gi", "8Gi", "16Gi", "32Gi"])
         else:
             memory = memory_default
         if len(max_instances_default.strip()) == 0:
-            max_instances = self.collect("Max instances (Ex. 10): ")
+            max_instances = self.collect("Microservice Max instances (Ex. 10): ")
         else:
             max_instances = max_instances_default
-        for root, dirs, files in os.walk(path):
-            for f in files:
-                if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
-                    continue
-                if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
-                    shutil.copy(os.path.join(root, f), ".")
-                elif f == "pysura_metadata.json" and microservice_name == "default":
-                    shutil.copy(os.path.join(root, f), ".")
-                else:
-                    if "actions" in root:
-                        if f != "action_template.py":
-                            dir_path = os.path.join(os.getcwd(), "actions")
-                            if not os.path.isdir(dir_path):
-                                os.mkdir(dir_path)
-                            if f != "__init__.py" and microservice_name == "default":
-                                default_actions.append(f.replace(".py", ""))
-                            if f in ["action_upload_file.py"]:
-                                shutil.copy(os.path.join(root, f), dir_path)
-                            if microservice_name != "default":
-                                continue
-                            shutil.copy(os.path.join(root, f), dir_path)
-                    elif "crons" in root:
-                        if f != "cron_template.py":
-                            dir_path = os.path.join(os.getcwd(), "crons")
-                            if not os.path.isdir(dir_path):
-                                os.mkdir(dir_path)
-                            if f != "__init__.py" and microservice_name == "default":
-                                default_crons.append(f.replace(".py", ""))
-                            if microservice_name != "default":
-                                continue
-                            shutil.copy(os.path.join(root, f), dir_path)
-                    elif "events" in root:
-                        if f != "event_template.py":
-                            dir_path = os.path.join(os.getcwd(), "events")
-                            if not os.path.isdir(dir_path):
-                                os.mkdir(dir_path)
-                            if f != "__init__.py" and microservice_name == "default":
-                                default_events.append(f.replace(".py", ""))
-                            if microservice_name != "default":
-                                continue
-                            shutil.copy(os.path.join(root, f), dir_path)
-        with open("app_secrets.py", "r") as f:
-            app_secrets_py = f.read()
-        app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
-        with open("app_secrets.py", "w") as f:
-            f.write(app_secrets_py)
         cmd_str = f"gcloud run deploy {microservice_name} --source . " \
                   f"--min-instances=1 " \
                   f"--max-instances={max_instances} " \
@@ -2992,8 +2981,11 @@ async def SNAKE(_: Request,
                   f"--timeout={timeout} " \
                   f"--allow-unauthenticated " \
                   f"--no-cpu-throttling " \
+                  f"--region={env.database.region} " \
                   f"--project={env.project.name.split('/')[-1]}"
         self.log(cmd_str, level=logging.DEBUG)
+        with open("deploy.txt", "w") as f:
+            f.write(cmd_str)
         os.system(cmd_str)
         services = json.loads(os.popen(f"gcloud run services list "
                                        f"--project={env.project.name.split('/')[-1]} "
@@ -3144,6 +3136,125 @@ async def SNAKE(_: Request,
         with open("hasura_metadata.json", "w") as f:
             json.dump(new_metadata, f, indent=4)
 
+    def do_import_existing_hasura(self, _):
+        base_path = self.collect("Enter the base path to the existing hasura!\n"
+                                 "(Ex: https://hasura-ny5gxlz7tq-uc.a.run.app): ")
+        if not self.confirm_loop(base_path):
+            return
+        admin_secret = self.collect("Enter the admin secret for the existing hasura!\n"
+                                    "(Ex: 1234567890): ")
+        if not self.confirm_loop(admin_secret):
+            return
+        self.log("Importing existing hasura metadata...")
+        path = f"{base_path}/v1alpha1/pg_dump"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Hasura-Admin-Secret": admin_secret
+        }
+
+        data = {
+            "opts": ["-O", "-x", "--schema-only", "--schema=public", "--clean", "--if-exists"],
+            "clean_output": True,
+            "source": "default"
+        }
+        response = requests.post(path, headers=headers, json=data)
+        create_sql = response.text
+        create_sql = create_sql.replace("DROP SCHEMA IF EXISTS public;\n", "")
+        with open("create.sql", "w") as f:
+            f.write(create_sql)
+        env = self.get_env()
+        if env.database is None:
+            self.log("No database set.", level=logging.ERROR)
+            return
+        if env.database_credentials is None:
+            self.log("No database credentials set.", level=logging.ERROR)
+            return
+
+        host = None
+        for ip_addr in env.database.ipAddresses:
+            if ip_addr.type == "PRIMARY":
+                host = ip_addr.ipAddress
+
+        if host is None:
+            self.log("No primary IP address found.", level=logging.ERROR)
+            return
+
+        # Check if the public schema exists
+        schema_exists = asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql="SELECT EXISTS(SELECT 1 FROM information_schema.schemata WHERE schema_name = 'public')"
+        ))
+
+        # If the public schema does not exist, create it
+        if not schema_exists[0]['exists']:
+            asyncio.run(self.run_sql(
+                host=host,
+                password=env.database_credential.password,
+                sql="CREATE SCHEMA public"
+            ))
+
+        # List all tables in the public schema and drop them individually
+        tables = asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql="SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
+        ))
+        for table in tables:
+            table_name = table['tablename']
+            asyncio.run(self.run_sql(
+                host=host,
+                password=env.database_credential.password,
+                sql=f'DROP TABLE IF EXISTS public."{table_name}" CASCADE'
+            ))
+
+        self.log(create_sql, level=logging.DEBUG)
+        asyncio.run(self.run_sql(
+            host=host,
+            password=env.database_credential.password,
+            sql=create_sql
+        ))
+        metadata_url = base_path + "/v1/metadata"
+        cmd_str = f"""curl -d'{{"type": "export_metadata", "args": {{}}}}' {metadata_url} -H "X-Hasura-Admin-Secret: {
+        admin_secret}" -o hasura_metadata.json"""
+        self.log(cmd_str, level=logging.DEBUG)
+        os.system(cmd_str)
+        with open("hasura_metadata.json", "r") as f:
+            metadata = json.load(f)
+
+        client = GraphqlClient(endpoint=base_path + "/v1/graphql")
+        headers = {
+            "X-Hasura-Admin-Secret": admin_secret,
+            "Content-Type": "application/json"
+        }
+        for source in metadata.get("sources", []):
+            for table in source.get("tables", []):
+                if table.get("is_enum", None) is True:
+                    table_name = table.get("table", {}).get("name", None)
+                    if table_name is not None:
+                        values = client.execute(Gql.GET_ENUM.replace("ENUM", table_name), headers=headers)
+                        if values is not None:
+                            try:
+                                for value in values.get("data", {}).get("enum_values", [{}]):
+                                    val = value.get("value", None)
+                                    comment = value.get("comment", None)
+                                    if comment is not None:
+                                        db_string = f"insert into \"{table_name}\" (value, comment) values " \
+                                                    f"('{val}', '{comment}')"
+                                    else:
+                                        db_string = f"insert into \"{table_name}\" (value) values ('{val}')"
+                                    asyncio.run(self.run_sql(
+                                        host=host,
+                                        password=env.database_credential.password,
+                                        sql=db_string
+                                    ))
+                            except Exception as e:
+                                self.log(str(e), level=logging.DEBUG)
+        self.do_export_hasura_metadata(None)
+        if env.default_microservice is not None:
+            self.do_deploy_microservice()
+
     def do_deploy_frontend(self, _):
         env = self.get_env()
         if env.flutter_app_name is None:
@@ -3185,9 +3296,208 @@ async def SNAKE(_: Request,
             json.dump(data, f, indent=4)
         deploy_command = f"firebase deploy --only hosting"
         self.log(deploy_command, level=logging.DEBUG)
+        with open("deploy.txt", "w") as f:
+            f.write(deploy_command)
         os.system(deploy_command)
         os.chdir("../..")
         self.set_env(env)
+
+    def do_print_pysura(self, _):
+        env = self.get_env()
+        self.log(f"Pysura App is ready to run!, open the folder named {env.flutter_app_name} in Android Studio!",
+                 level=logging.INFO)
+        assert env.hasura is not None
+        assert env.hasura_metadata is not None
+        if env.hasura.microservice_urls is not None:
+            num_services = len(env.hasura.microservice_urls)
+        else:
+            num_services = 0
+        log_str = f"""
+Pysura Project Setup Complete!
+
+The default microservice can be found at:
+{env.default_microservice_url}/docs
+
+"""
+        actions = [action for action in env.hasura_metadata.actions if
+                   action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
+        if len(actions) > 0:
+            log_str += f"""The default microservice has {len(actions)} actions:\n"""
+            for action in actions:
+                log_str += f"""\t{action.name}\n"""
+
+        log_str += f"""\nYou have {num_services} additional microservice(s) deployed."""
+        if num_services > 0:
+            log_str += "\n\tMicroservice URLs:\n"
+
+        for microservice_url in env.hasura.microservice_urls:
+            actions = [action for action in env.hasura_metadata.actions if
+                       action.definition.handler == microservice_url.url_wrapper]
+            log_str += f"""\t{microservice_url.url}\n"""
+            if len(actions) > 0:
+                log_str += f"""\t\t{len(actions)} action(s):\n"""
+                for action in actions:
+                    log_str += f"""\t\t\t{action.name}\n"""
+
+        if env.database_credential is not None:
+            public_ip = None
+            private_ip = None
+            db_password = env.database_credential.password
+            db_connect_string = env.database_credential.connect_url
+            for ip_addr in env.database.ipAddresses:
+                if ip_addr.type == "PRIMARY":
+                    public_ip = ip_addr.ipAddress
+                elif ip_addr.type == "PRIVATE":
+                    private_ip = ip_addr.ipAddress
+
+            log_str += f"""
+You can connect to your database using the following credentials, which IP you use depends on if you are connecting 
+from a serverless connector, or your local machine. If you are connecting from a serverless connector, you will need to
+use the private IP address, if you are connecting from your local machine, you will need to use the public IP address.
+
+Public IP Address: {public_ip}
+Private IP Address: {private_ip}
+Database Password: {db_password}
+Default Private Connect String used for Hasura: {db_connect_string}
+
+"""
+
+        log_str += f"""
+
+Your Hasura instance can be found at:
+{env.hasura_service.status.address.url}/console
+
+Your Hasura Admin Secret is:
+{env.hasura.HASURA_GRAPHQL_ADMIN_SECRET}
+
+The event secret for the all attached microservices is:
+{env.hasura.HASURA_EVENT_SECRET}
+
+You can find authorization tokens for your microservice by running your flutter application and logging in, navigate to
+the settings tab, and click the "Copy GraphQL Token" button and a bearer token will be copied to your clipboard.
+The bearer token will have the role of the user that is logged in.
+
+You can find your web application here:
+https://{env.project.name.split('/')[-1]}.web.app/
+
+
+"""
+
+        test_phone_numbers = env.test_phone_numbers
+        if isinstance(test_phone_numbers, list):
+            for test_phone_number in test_phone_numbers:
+                if test_phone_number.role == "admin":
+                    log_str += f"\nAdmin Phone Number: {test_phone_number.phone_number}\t" \
+                               f"Code: {test_phone_number.code}\n"
+                elif test_phone_number.role == "user":
+                    log_str += f"\nUser Phone Number: {test_phone_number.phone_number}\t" \
+                               f"Code: {test_phone_number.code}\n"
+
+        log_str += "\n\nTo see these credentials again, run print_pysura\n"
+        self.log(log_str, level=logging.INFO)
+
+    @staticmethod
+    def setup_gitignore():
+        git_ignore_text = """# .gitignore file
+
+# Ignore .git folder and its contents
+.git/
+
+# Ignore .idea folder and its contents
+.idea/
+
+# Logs
+/logs/*.log
+
+# Compiled python files
+__pycache__/
+
+*.pyc
+*.pyo
+*.pyd
+
+# Packages
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib64/
+__pycache__/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test and coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+
+# DS_Store files
+.DS_Store
+
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+
+android/.gradle/
+android/app/build/
+android/local.properties
+
+flutter_build/
+build/
+web_plugin_registrant.dart
+*.d
+*.stamp
+*.deps
+*_web_entrypoint.dart
+
+.vscode/"""
+        with open(".gitignore", "w") as git_ignore_file:
+            git_ignore_file.write(git_ignore_text)
+
+    @staticmethod
+    def setup_readme():
+        readme_text = """# Pysura Project
+
+## IMPORTANT NOTE!!!
+
+Ensure that the env.json file is properly maintained and be careful when making modifications. If the env.json
+file is maintained, then you can run pysura and the setup step is complete and you have access to these useful
+commands.
+
+## Useful Pysura commands:
+
+- `deploy_frontend` - Rebuild and Deploy the web frontend to firebase hosting for release
+- `deploy_microservice` - Regenerate routers and re-deploy the default microservice
+- `print_pysura` - Prints important pysura details like login credentials for the project
+- `import_hasura_metadata` - Import the hasura metadata from Hasura
+- `export_hasura_metadata` - Export the hasura metadata to Hasura
+- `gcloud_deploy_hasura` - Deploy the hasura microservice to GCloud"""
+        with open("README.md", "w") as readme_file:
+            readme_file.write(readme_text)
 
     def do_setup_pysura(self, recurse=0):
         """
@@ -3218,9 +3528,6 @@ async def SNAKE(_: Request,
         cmd_str = "gcloud auth configure-docker gcr.io"
         self.log(f"Running command: {cmd_str}", level=logging.INFO)
         os.system(cmd_str)
-        if env.organization is None:
-            self.do_gcloud_choose_organization(None)
-            env = self.get_env()
         if env.project is None:
             hasura_project_name = self.collect("Hasura project name: ")
             if not self.confirm_loop(hasura_project_name):
@@ -3232,6 +3539,8 @@ async def SNAKE(_: Request,
         if env.project is None:
             self.gcloud_create_project(project_id=hasura_project_name)
             env = self.get_env()
+            self.setup_gitignore()
+            self.setup_readme()
         else:
             cmd_str = f"gcloud config set project {env.project.name.split('/')[-1]}"
             self.log(cmd_str, level=logging.DEBUG)
@@ -3353,7 +3662,18 @@ async def SNAKE(_: Request,
                      f"/providers",
                      level=logging.INFO
                      )
-            admin_phone = self.collect("What phone number did you add? (Ex. +15555215551): ")
+            admin_phone = self.collect("What phone number did you add? (Ex. +15555215551): ",
+                                       [
+                                           "+15555215551",
+                                           "+15555215552",
+                                           "+15555215553",
+                                           "+15555215554",
+                                           "+15555215555",
+                                           "+15555215556",
+                                           "+15555215557",
+                                           "+15555215558",
+                                           "+15555215559"
+                                       ])
             while not self.confirm_loop(admin_phone):
                 self.log("Please add a test phone number to be granted ADMIN access in the firebase console.",
                          level=logging.INFO)
@@ -3395,7 +3715,18 @@ async def SNAKE(_: Request,
                      f"/providers",
                      level=logging.INFO
                      )
-            user_phone = self.collect("What phone number did you add?: ")
+            user_phone = self.collect("What phone number did you add? (Ex. +15555215551): ",
+                                      [
+                                          "+15555215551",
+                                          "+15555215552",
+                                          "+15555215553",
+                                          "+15555215554",
+                                          "+15555215555",
+                                          "+15555215556",
+                                          "+15555215557",
+                                          "+15555215558",
+                                          "+15555215559"
+                                      ])
             while not self.confirm_loop(user_phone):
                 self.log("Please add a test phone number to be granted USER access in the firebase console.",
                          level=logging.INFO)
@@ -3431,60 +3762,4 @@ async def SNAKE(_: Request,
         if isinstance(test_phone_numbers, list) and len(test_phone_numbers) > 0:
             env.test_phone_numbers = test_phone_numbers
             self.set_env(env)
-        self.log(f"Pysura App is ready to run!, open the folder named {env.flutter_app_name} in Android Studio!",
-                 level=logging.INFO)
-        assert env.hasura is not None
-        assert env.hasura_metadata is not None
-        if env.hasura.microservice_urls is not None:
-            num_services = len(env.hasura.microservice_urls)
-        else:
-            num_services = 0
-        log_str = f"""
-Pysura Project Setup Complete!
-
-The default microservice can be found at:
-{env.default_microservice_url}/docs
-
-"""
-        actions = [action for action in env.hasura_metadata.actions if
-                   action.definition.handler == "{{HASURA_MICROSERVICE_URL}}"]
-        if len(actions) > 0:
-            log_str += f"""The default microservice has {len(actions)} actions:\n"""
-            for action in actions:
-                log_str += f"""\t{action.name}\n"""
-
-        log_str += f"""\nYou have {num_services} additional microservice(s) deployed."""
-        if num_services > 0:
-            log_str += "\n\tMicroservice URLs:\n"
-
-        for microservice_url in env.hasura.microservice_urls:
-            actions = [action for action in env.hasura_metadata.actions if
-                       action.definition.handler == microservice_url.url_wrapper]
-            log_str += f"""\t{microservice_url.url}\n"""
-            if len(actions) > 0:
-                log_str += f"""\t\t{len(actions)} action(s):\n"""
-                for action in actions:
-                    log_str += f"""\t\t\t{action.name}\n"""
-
-        log_str += f"""
-
-Your Hasura instance can be found at:
-{env.hasura_service.status.address.url}/console
-
-Your Hasura Admin Secret is:
-{env.hasura.HASURA_GRAPHQL_ADMIN_SECRET}
-
-The event secret for the all attached microservices is:
-{env.hasura.HASURA_EVENT_SECRET}
-
-You can find authorization tokens for your microservice by running your flutter application and logging in, navigate to
-the settings tab, and click the "Copy GraphQL Token" button and a bearer token will be copied to your clipboard.
-The bearer token will have the role of the user that is logged in.
-
-You can find your web application here:
-https://{env.project.name.split('/')[-1]}.web.app/
-
-
-"""
-
-        self.log(log_str, level=logging.INFO)
+        self.do_print_pysura(None)
