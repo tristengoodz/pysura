@@ -2270,8 +2270,9 @@ async def SNAKE(_: Request,
                         if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
                             new_lines.append(line + "\n")
                     new_action_template = "".join(new_lines)
-                with open(f"actions/{snake_replace}.py", "w") as f:
-                    f.write(new_action_template)
+                if not os.path.isfile(f"actions/{snake_replace}.py"):
+                    with open(f"actions/{snake_replace}.py", "w") as f:
+                        f.write(new_action_template)
         action_names = []
         for action_data in hasura_metadata.get("actions", []):
             if action_data.get("name") in included_actions:
@@ -2417,8 +2418,9 @@ async def SNAKE(_: Request,
                     if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
                         new_lines.append(line + "\n")
                 new_event_template = "".join(new_lines)
-            with open(f"events/{snake_replace}.py", "w") as f:
-                f.write(new_event_template)
+            if not os.path.isfile(f"events/{snake_replace}.py"):
+                with open(f"events/{snake_replace}.py", "w") as f:
+                    f.write(new_event_template)
 
         event_init += f"\nevent_routers = [\n"
         for event_router in event_routers:
@@ -2539,8 +2541,9 @@ async def SNAKE(_: Request,
                             if (not in_business_logic) and (not in_dependency_injection) and (not in_import_lines):
                                 new_lines.append(line + "\n")
                         new_cron_template = "".join(new_lines)
-                    with open(f"crons/{snake_replace}.py", "w") as f:
-                        f.write(new_cron_template)
+                    if not os.path.isfile(f"crons/{snake_replace}.py"):
+                        with open(f"crons/{snake_replace}.py", "w") as f:
+                            f.write(new_cron_template)
             cron_triggers_init += f"\ncron_routers = [\n"
             for cron_name in cron_names:
                 cron_triggers_init += f"    {cron_name}_router,\n"
@@ -2894,7 +2897,8 @@ async def SNAKE(_: Request,
                 if "__pycache__" in root or ".dart_tool" in root or ".idea" in root or ".git" in root:
                     continue
                 if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
-                    shutil.copy(os.path.join(root, f), ".")
+                    if not os.path.exists(f):
+                        shutil.copy(os.path.join(root, f), ".")
                 elif f == "pysura_metadata.json" and microservice_name == "default":
                     shutil.copy(os.path.join(root, f), ".")
                 else:

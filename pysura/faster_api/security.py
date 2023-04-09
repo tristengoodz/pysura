@@ -116,6 +116,7 @@ class PysuraSecurity:
                        request: Request,
                        _: str | None = Depends(jwt_token_header),
                        __: str | None = Depends(event_secret_header)):
+        logging.log(logging.INFO, f"Security: {request.method} {request.url.path}")
         if self.require_jwt:
             if self.allowed_roles is None or len(self.allowed_roles) == 0:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Method Restricted")
