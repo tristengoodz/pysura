@@ -256,11 +256,11 @@ class PysuraGraphql(GraphqlClient):
             return response
 
     async def execute_async_as_user(self,
-                              token: str,
-                              query: str,
-                              variables: dict = None,
-                              operation_name: str = None
-                              ):
+                                    token: str,
+                                    query: str,
+                                    variables: dict = None,
+                                    operation_name: str = None
+                                    ):
         response = None
         try:
             response = await super().execute_async(
