@@ -452,12 +452,14 @@ class GoogleCloudFunction(DictModel):
 
 
 class HasuraMetadataEventTriggerUpdate(DictModel):
-    columns: List[str] | None = None
+    columns: List[str] | str | None = None
 
 
 class HasuraMetadataEventTriggerDefinition(DictModel):
     enable_manual: bool | None = None
     update: HasuraMetadataEventTriggerUpdate | None = None
+    insert: HasuraMetadataEventTriggerUpdate | None = None
+    delete: HasuraMetadataEventTriggerUpdate | None = None
 
 
 class HasuraMetadataEventTriggerRetryConf(DictModel):
