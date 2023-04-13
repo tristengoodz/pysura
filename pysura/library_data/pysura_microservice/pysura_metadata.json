@@ -1,4 +1,334 @@
 {
+  "version": 3,
+  "sources": [
+    {
+      "name": "default",
+      "kind": "postgres",
+      "tables": [
+        {
+          "table": {
+            "name": "ENUM_ROLE",
+            "schema": "public"
+          },
+          "is_enum": true,
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": [
+                  "comment",
+                  "value"
+                ],
+                "filter": {}
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "name": "app",
+            "schema": "public"
+          }
+        },
+        {
+          "table": {
+            "name": "file",
+            "schema": "public"
+          },
+          "insert_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "check": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                },
+                "columns": [
+                  "file_id",
+                  "name",
+                  "signed_url",
+                  "type",
+                  "user_id"
+                ]
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": [
+                  "file_id",
+                  "name",
+                  "public",
+                  "signed_url",
+                  "type",
+                  "user_id"
+                ],
+                "filter": {
+                  "_or": [
+                    {
+                      "user_id": {
+                        "_eq": "X-Hasura-User-Id"
+                      }
+                    },
+                    {
+                      "public": {
+                        "_eq": true
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ],
+          "update_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": [
+                  "public",
+                  "file_id",
+                  "name",
+                  "signed_url",
+                  "type",
+                  "user_id"
+                ],
+                "filter": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                },
+                "check": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                }
+              }
+            }
+          ],
+          "delete_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "filter": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "name": "public_user",
+            "schema": "public"
+          },
+          "insert_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "check": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                },
+                "columns": [
+                  "number",
+                  "message",
+                  "user_id"
+                ]
+              }
+            }
+          ],
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": [
+                  "user_id",
+                  "message",
+                  "number"
+                ],
+                "filter": {}
+              }
+            }
+          ],
+          "update_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": [
+                  "number",
+                  "message",
+                  "user_id"
+                ],
+                "filter": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                },
+                "check": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                }
+              }
+            }
+          ],
+          "delete_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "filter": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "table": {
+            "name": "user",
+            "schema": "public"
+          },
+          "select_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": [
+                  "user_id",
+                  "user_phone",
+                  "role",
+                  "created_at",
+                  "updated_at"
+                ],
+                "filter": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                }
+              }
+            }
+          ],
+          "update_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "columns": [
+                  "created_at",
+                  "updated_at",
+                  "user_phone"
+                ],
+                "filter": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                },
+                "check": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                }
+              }
+            }
+          ],
+          "delete_permissions": [
+            {
+              "role": "user",
+              "permission": {
+                "filter": {
+                  "user_id": {
+                    "_eq": "X-Hasura-User-Id"
+                  }
+                }
+              }
+            }
+          ],
+          "event_triggers": [
+            {
+              "name": "event_update_user_cascade",
+              "definition": {
+                "enable_manual": false,
+                "insert": {
+                  "columns": "*"
+                },
+                "update": {
+                  "columns": "*"
+                }
+              },
+              "retry_conf": {
+                "interval_sec": 10,
+                "num_retries": 3,
+                "timeout_sec": 60
+              },
+              "webhook": "{{HASURA_MICROSERVICE_URL}}",
+              "headers": [
+                {
+                  "name": "HASURA_EVENT_SECRET",
+                  "value_from_env": "HASURA_EVENT_SECRET"
+                }
+              ],
+              "request_transform": {
+                "method": "POST",
+                "query_params": {},
+                "template_engine": "Kriti",
+                "url": "{{$base_url}}/event_update_user_cascade/",
+                "version": 2
+              }
+            },
+            {
+              "name": "event_update_user_role",
+              "definition": {
+                "enable_manual": false,
+                "insert": {
+                  "columns": "*"
+                }
+              },
+              "retry_conf": {
+                "interval_sec": 30,
+                "num_retries": 3,
+                "timeout_sec": 60
+              },
+              "webhook": "{{HASURA_MICROSERVICE_URL}}",
+              "headers": [
+                {
+                  "name": "HASURA_EVENT_SECRET",
+                  "value_from_env": "HASURA_EVENT_SECRET"
+                }
+              ],
+              "request_transform": {
+                "method": "POST",
+                "query_params": {},
+                "template_engine": "Kriti",
+                "url": "{{$base_url}}/event_update_user_role/",
+                "version": 2
+              }
+            }
+          ]
+        }
+      ],
+      "configuration": {
+        "connection_info": {
+          "database_url": {
+            "from_env": "HASURA_GRAPHQL_DATABASE_URL"
+          },
+          "isolation_level": "read-committed",
+          "pool_settings": {
+            "connection_lifetime": 600,
+            "idle_timeout": 180,
+            "max_connections": 50,
+            "retries": 1
+          },
+          "use_prepared_statements": true
+        }
+      }
+    }
+  ],
   "actions": [
     {
       "name": "action_mutation_pong",
@@ -19,6 +349,10 @@
           }
         ],
         "request_transform": {
+          "body": {
+            "action": "transform",
+            "template": "{{$body?.input?.action_mutation_pong_input}}"
+          },
           "method": "POST",
           "query_params": {},
           "template_engine": "Kriti",
@@ -29,41 +363,6 @@
         "kind": "synchronous"
       },
       "comment": "/action_mutation_pong/",
-      "permissions": [
-        {
-          "role": "user"
-        }
-      ]
-    },
-    {
-      "name": "action_upload_file",
-      "definition": {
-        "handler": "{{HASURA_MICROSERVICE_URL}}",
-        "output_type": "ActionUploadFileOutput",
-        "forward_client_headers": true,
-        "headers": [
-          {
-            "name": "HASURA_EVENT_SECRET",
-            "value_from_env": "HASURA_EVENT_SECRET"
-          }
-        ],
-        "arguments": [
-          {
-            "name": "action_upload_file_input",
-            "type": "ActionUploadFileInput"
-          }
-        ],
-        "request_transform": {
-          "method": "POST",
-          "query_params": {},
-          "template_engine": "Kriti",
-          "url": "{{$base_url}}/action_upload_file/",
-          "version": 2
-        },
-        "type": "mutation",
-        "kind": "asynchronous"
-      },
-      "comment": "/action_upload_file/",
       "permissions": [
         {
           "role": "user"
@@ -89,6 +388,10 @@
           }
         ],
         "request_transform": {
+          "body": {
+            "action": "transform",
+            "template": "{{$body?.input?.action_query_ping_input}}"
+          },
           "method": "POST",
           "query_params": {},
           "template_engine": "Kriti",
@@ -105,10 +408,10 @@
       ]
     },
     {
-      "name": "test_wrong_service_url_excluded",
+      "name": "action_upload_file",
       "definition": {
-        "handler": "{{DEFAULT_SERVICE_URL1}}",
-        "output_type": "ActionMutationPongOutput1",
+        "handler": "{{HASURA_MICROSERVICE_URL}}",
+        "output_type": "ActionUploadFileOutput",
         "forward_client_headers": true,
         "headers": [
           {
@@ -118,21 +421,25 @@
         ],
         "arguments": [
           {
-            "name": "action_mutation_pong_input1",
-            "type": "ActionMutationPongInput1"
+            "name": "action_upload_file_input",
+            "type": "ActionUploadFileInput"
           }
         ],
         "request_transform": {
+          "body": {
+            "action": "transform",
+            "template": "{{$body?.input?.action_upload_file_input}}"
+          },
           "method": "POST",
           "query_params": {},
           "template_engine": "Kriti",
-          "url": "{{$base_url}}/action_mutation_pong1/",
+          "url": "{{$base_url}}/action_upload_file/",
           "version": 2
         },
         "type": "mutation",
-        "kind": "synchronous"
+        "kind": "asynchronous"
       },
-      "comment": "/action_mutation_pong1/",
+      "comment": "/action_upload_file/",
       "permissions": [
         {
           "role": "user"
@@ -144,19 +451,6 @@
     "input_objects": [
       {
         "name": "ActionMutationPongInput",
-        "fields": [
-          {
-            "name": "message",
-            "type": "String!"
-          },
-          {
-            "name": "number",
-            "type": "Int!"
-          }
-        ]
-      },
-      {
-        "name": "ActionMutationPongInput1",
         "fields": [
           {
             "name": "message",
@@ -204,44 +498,6 @@
       }
     ],
     "objects": [
-      {
-        "name": "ActionMutationPongOutput1",
-        "fields": [
-          {
-            "name": "data",
-            "type": "ActionMutationPongOutputData1"
-          },
-          {
-            "name": "nodes",
-            "type": "[IdLink]"
-          },
-          {
-            "name": "response_name",
-            "type": "String!"
-          },
-          {
-            "name": "response_value",
-            "type": "Int!"
-          },
-          {
-            "name": "errors",
-            "type": "[Error]"
-          }
-        ]
-      },
-      {
-        "name": "ActionMutationPongOutputData1",
-        "fields": [
-          {
-            "name": "message",
-            "type": "String!"
-          },
-          {
-            "name": "number",
-            "type": "Int!"
-          }
-        ]
-      },
       {
         "name": "ActionMutationPongOutput",
         "fields": [
@@ -388,53 +644,6 @@
       }
     ]
   },
-  "sources": [
-    {
-      "name": "default",
-      "kind": "postgres",
-      "tables": [
-        {
-          "table": {
-            "name": "user",
-            "schema": "public"
-          },
-          "event_triggers": [
-            {
-              "name": "event_update_user_role",
-              "definition": {
-                "enable_manual": false,
-                "update": {
-                  "columns": [
-                    "role",
-                    "user_id"
-                  ]
-                }
-              },
-              "retry_conf": {
-                "interval_sec": 30,
-                "num_retries": 3,
-                "timeout_sec": 60
-              },
-              "webhook": "{{HASURA_MICROSERVICE_URL}}",
-              "headers": [
-                {
-                  "name": "HASURA_EVENT_SECRET",
-                  "value_from_env": "HASURA_EVENT_SECRET"
-                }
-              ],
-              "request_transform": {
-                "method": "POST",
-                "query_params": {},
-                "template_engine": "Kriti",
-                "url": "{{$base_url}}/event_update_user_role/",
-                "version": 2
-              }
-            }
-          ]
-        }
-      ]
-    }
-  ],
   "cron_triggers": [
     {
       "name": "cron_update_app_message",

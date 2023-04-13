@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pysura",
-    version="0.99.138",
+    version="0.99.139",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -70,11 +70,17 @@ setup(
             "library_data/pysura_microservice/actions/__init__.py",
             "library_data/pysura_microservice/actions/action_template.py",
             "library_data/pysura_microservice/actions/action_upload_file.py",
+            "library_data/pysura_microservice/actions/action_mutation_pong.py",
+            "library_data/pysura_microservice/actions/action_query_ping.py",
 
             "library_data/pysura_microservice/crons/__init__.py",
+            "library_data/pysura_microservice/crons/cron_template.py",
+            "library_data/pysura_microservice/crons/cron_update_app_message.py",
 
             "library_data/pysura_microservice/events/__init__.py",
+            "library_data/pysura_microservice/events/event_template.py",
             "library_data/pysura_microservice/events/event_update_user_role.py",
+            "library_data/pysura_microservice/events/event_update_user_cascade.py",
 
             "library_data/pysura_microservice/Dockerfile",
             "library_data/pysura_microservice/app.py",

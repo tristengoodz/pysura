@@ -1317,6 +1317,7 @@ create table app
     storage_bucket    text not null,
     version_latest    text not null,
     version_supported text not null,
+    message           text not null,
     primary key (name)
 );
 
