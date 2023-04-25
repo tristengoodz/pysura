@@ -3144,6 +3144,7 @@ async def SNAKE(_: Request,
         }
         with open("hasura_metadata.json", "w") as f:
             json.dump(new_metadata, f, indent=4)
+        self.do_export_hasura_metadata(None)
 
     def do_import_existing_hasura(self, _):
         base_path = self.collect("Enter the base path to the existing hasura!\n"
