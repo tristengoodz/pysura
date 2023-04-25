@@ -287,6 +287,12 @@
                 "enable_manual": false,
                 "insert": {
                   "columns": "*"
+                },
+                "update": {
+                  "columns": [
+                    "role",
+                    "user_id"
+                  ]
                 }
               },
               "retry_conf": {
