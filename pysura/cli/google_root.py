@@ -1317,6 +1317,7 @@ create table app
     storage_bucket    text not null,
     version_latest    text not null,
     version_supported text not null,
+    message           text not null,
     primary key (name)
 );
 
@@ -2899,7 +2900,7 @@ async def SNAKE(_: Request,
                 if f in ["requirements.txt", "app.py", "Dockerfile", "app_secrets.py", "README.md"]:
                     if not os.path.exists(f):
                         shutil.copy(os.path.join(root, f), ".")
-                elif f == "pysura_metadata.json" and microservice_name == "default":
+                elif f == "pysura_metadata.json" and microservice_name == "default" and default_init:
                     shutil.copy(os.path.join(root, f), ".")
                 else:
                     if "actions" in root:
@@ -2952,6 +2953,14 @@ async def SNAKE(_: Request,
         app_secrets_py = app_secrets_py.replace("YOUR_PROJECT_ID", env.project.name.split("/")[-1])
         with open("app_secrets.py", "w") as f:
             f.write(app_secrets_py)
+        if os.path.exists("generated_types.py"):
+            os.remove("generated_types.py")
+        if os.path.exists("actions/__init__.py"):
+            os.remove("actions/__init__.py")
+        if os.path.exists("crons/__init__.py"):
+            os.remove("crons/__init__.py")
+        if os.path.exists("events/__init__.py"):
+            os.remove("events/__init__.py")
         new_hasura_metadata = self.router_generator(metadata, url_wrapper)
         input_objects_set = set(
             [i.get("name", None) for i in new_hasura_metadata.get("custom_types", {}).get("input_objects", [])]
@@ -3135,6 +3144,7 @@ async def SNAKE(_: Request,
         }
         with open("hasura_metadata.json", "w") as f:
             json.dump(new_metadata, f, indent=4)
+        self.do_export_hasura_metadata(None)
 
     def do_import_existing_hasura(self, _):
         base_path = self.collect("Enter the base path to the existing hasura!\n"
