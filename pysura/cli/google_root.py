@@ -1699,6 +1699,7 @@ alter table app
                        )
         self.log(cmd_log_str, level=logging.DEBUG)
         self.log(os.popen(cmd_log_str).read(), level=logging.DEBUG)
+        deploy_str = ""
         cmd_str = f'gcloud functions deploy on_user_create ' \
                   f'--runtime=python39 ' \
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.create ' \
@@ -1708,6 +1709,7 @@ alter table app
                   f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
         self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
+        deploy_str += cmd_str + "\n"
         cmd_str = f'gcloud functions deploy on_user_delete ' \
                   f'--runtime=python39 ' \
                   f'--trigger-event=providers/firebase.auth/eventTypes/user.delete ' \
@@ -1717,6 +1719,9 @@ alter table app
                   f'--format=json'
         self.log(cmd_str, level=logging.DEBUG)
         self.log(os.popen(cmd_str).read(), level=logging.DEBUG)
+        deploy_str += cmd_str + "\n"
+        with open("deploy.txt", "w") as f:
+            f.write(deploy_str)
         os.chdir("..")
         cmd_str = f"gcloud functions list " \
                   f"--project={env.project.name.split('/')[-1]} " \
