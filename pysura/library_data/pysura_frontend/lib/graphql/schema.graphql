@@ -1,4 +1,4 @@
-# This file was generated based on ".graphqlconfig". Do not edit manually.
+# This file was generated. Do not edit manually.
 
 schema {
     query: query_root
@@ -14,6 +14,18 @@ directive @cached(
     ttl: Int! = 60
 ) on QUERY
 
+type ActionCreateChatOutput {
+    data: ActionCreateChatOutputData
+    errors: [Error]
+    nodes: [IdLink]
+    response_name: String!
+    response_value: Int!
+}
+
+type ActionCreateChatOutputData {
+    chat_id: String!
+}
+
 type ActionMutationPongOutput {
     data: ActionMutationPongOutputData
     errors: [Error]
@@ -23,8 +35,7 @@ type ActionMutationPongOutput {
 }
 
 type ActionMutationPongOutputData {
-    message: String!
-    number: Int!
+    user_id: String!
 }
 
 type ActionQueryPingOutput {
@@ -36,8 +47,20 @@ type ActionQueryPingOutput {
 }
 
 type ActionQueryPingOutputData {
-    message: String!
+    message: String
     number: Int!
+}
+
+type ActionStartGenerateChatOutput {
+    data: ActionStartGenerateChatOutputData
+    errors: [Error]
+    nodes: [IdLink]
+    response_name: String!
+    response_value: Int!
+}
+
+type ActionStartGenerateChatOutputData {
+    chat_id: String!
 }
 
 type ActionUploadFileOutput {
@@ -49,6 +72,7 @@ type ActionUploadFileOutput {
 }
 
 type ActionUploadFileOutputData {
+    file_id: String!
     file_name: String!
     file_type: String!
     file_url: String!
@@ -57,6 +81,58 @@ type ActionUploadFileOutputData {
 "columns and relationships of \"ENUM_ROLE\""
 type ENUM_ROLE {
     comment: String
+    "An array relationship"
+    messages(
+        "distinct select on columns"
+        distinct_on: [message_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [message_order_by!],
+        "filter the rows returned"
+        where: message_bool_exp
+    ): [message!]!
+    "An aggregate relationship"
+    messages_aggregate(
+        "distinct select on columns"
+        distinct_on: [message_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [message_order_by!],
+        "filter the rows returned"
+        where: message_bool_exp
+    ): message_aggregate!
+    "An array relationship"
+    users(
+        "distinct select on columns"
+        distinct_on: [user_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [user_order_by!],
+        "filter the rows returned"
+        where: user_bool_exp
+    ): [user!]!
+    "An aggregate relationship"
+    users_aggregate(
+        "distinct select on columns"
+        distinct_on: [user_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [user_order_by!],
+        "filter the rows returned"
+        where: user_bool_exp
+    ): user_aggregate!
     value: String!
 }
 
@@ -102,6 +178,18 @@ type IdLink {
     table: String!
 }
 
+"fields of action: \"action_start_generate_chat\""
+type action_start_generate_chat {
+    "the time at which this action was created"
+    created_at: timestamptz!
+    "errors related to the invocation"
+    errors: json
+    "the unique id of an action"
+    id: uuid!
+    "the output fields of this action"
+    output: ActionStartGenerateChatOutput
+}
+
 "fields of action: \"action_upload_file\""
 type action_upload_file {
     "the time at which this action was created"
@@ -116,6 +204,7 @@ type action_upload_file {
 
 "columns and relationships of \"app\""
 type app {
+    message: String!
     name: String!
     storage_bucket: String!
     version_latest: String!
@@ -137,6 +226,7 @@ type app_aggregate_fields {
 
 "aggregate max on columns"
 type app_max_fields {
+    message: String
     name: String
     storage_bucket: String
     version_latest: String
@@ -145,6 +235,7 @@ type app_max_fields {
 
 "aggregate min on columns"
 type app_min_fields {
+    message: String
     name: String
     storage_bucket: String
     version_latest: String
@@ -159,11 +250,170 @@ type app_mutation_response {
     returning: [app!]!
 }
 
+"a thread of chat messages between a AI persona and user"
+type chat {
+    chat_id: String!
+    created_at: timestamptz!
+    is_typing: Boolean!
+    "An array relationship"
+    messages(
+        "distinct select on columns"
+        distinct_on: [message_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [message_order_by!],
+        "filter the rows returned"
+        where: message_bool_exp
+    ): [message!]!
+    "An aggregate relationship"
+    messages_aggregate(
+        "distinct select on columns"
+        distinct_on: [message_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [message_order_by!],
+        "filter the rows returned"
+        where: message_bool_exp
+    ): message_aggregate!
+    "An object relationship"
+    persona: persona!
+    persona_id: String!
+    "An object relationship"
+    public_user: public_user!
+    updated_at: timestamptz!
+    user_id: String!
+}
+
+"aggregated selection of \"chat\""
+type chat_aggregate {
+    aggregate: chat_aggregate_fields
+    nodes: [chat!]!
+}
+
+"aggregate fields of \"chat\""
+type chat_aggregate_fields {
+    count(columns: [chat_select_column!], distinct: Boolean): Int!
+    max: chat_max_fields
+    min: chat_min_fields
+}
+
+"aggregate max on columns"
+type chat_max_fields {
+    chat_id: String
+    created_at: timestamptz
+    persona_id: String
+    updated_at: timestamptz
+    user_id: String
+}
+
+"aggregate min on columns"
+type chat_min_fields {
+    chat_id: String
+    created_at: timestamptz
+    persona_id: String
+    updated_at: timestamptz
+    user_id: String
+}
+
+"response of any mutation on the table \"chat\""
+type chat_mutation_response {
+    "number of rows affected by the mutation"
+    affected_rows: Int!
+    "data from the rows affected by the mutation"
+    returning: [chat!]!
+}
+
 "columns and relationships of \"file\""
 type file {
+    "An object relationship"
+    creator: user
     file_id: String!
+    "An array relationship"
+    messages(
+        "distinct select on columns"
+        distinct_on: [message_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [message_order_by!],
+        "filter the rows returned"
+        where: message_bool_exp
+    ): [message!]!
+    "An aggregate relationship"
+    messages_aggregate(
+        "distinct select on columns"
+        distinct_on: [message_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [message_order_by!],
+        "filter the rows returned"
+        where: message_bool_exp
+    ): message_aggregate!
     name: String!
+    "An array relationship"
+    personas(
+        "distinct select on columns"
+        distinct_on: [persona_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [persona_order_by!],
+        "filter the rows returned"
+        where: persona_bool_exp
+    ): [persona!]!
+    "An aggregate relationship"
+    personas_aggregate(
+        "distinct select on columns"
+        distinct_on: [persona_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [persona_order_by!],
+        "filter the rows returned"
+        where: persona_bool_exp
+    ): persona_aggregate!
     public: Boolean!
+    "An array relationship"
+    public_users(
+        "distinct select on columns"
+        distinct_on: [public_user_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [public_user_order_by!],
+        "filter the rows returned"
+        where: public_user_bool_exp
+    ): [public_user!]!
+    "An aggregate relationship"
+    public_users_aggregate(
+        "distinct select on columns"
+        distinct_on: [public_user_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [public_user_order_by!],
+        "filter the rows returned"
+        where: public_user_bool_exp
+    ): public_user_aggregate!
     signed_url: String!
     type: String!
     user_id: String
@@ -208,10 +458,73 @@ type file_mutation_response {
     returning: [file!]!
 }
 
+"Each conversations in a chat"
+type message {
+    "An object relationship"
+    ENUM_ROLE: ENUM_ROLE!
+    "An object relationship"
+    attachment: file
+    "An object relationship"
+    chat: chat!
+    chat_id: String!
+    created_at: timestamptz!
+    file_id: String
+    indexed: Boolean!
+    message_id: String!
+    sender: ENUM_ROLE_enum!
+    text: String
+    updated_at: timestamptz!
+}
+
+"aggregated selection of \"message\""
+type message_aggregate {
+    aggregate: message_aggregate_fields
+    nodes: [message!]!
+}
+
+"aggregate fields of \"message\""
+type message_aggregate_fields {
+    count(columns: [message_select_column!], distinct: Boolean): Int!
+    max: message_max_fields
+    min: message_min_fields
+}
+
+"aggregate max on columns"
+type message_max_fields {
+    chat_id: String
+    created_at: timestamptz
+    file_id: String
+    message_id: String
+    text: String
+    updated_at: timestamptz
+}
+
+"aggregate min on columns"
+type message_min_fields {
+    chat_id: String
+    created_at: timestamptz
+    file_id: String
+    message_id: String
+    text: String
+    updated_at: timestamptz
+}
+
+"response of any mutation on the table \"message\""
+type message_mutation_response {
+    "number of rows affected by the mutation"
+    affected_rows: Int!
+    "data from the rows affected by the mutation"
+    returning: [message!]!
+}
+
 "mutation root"
 type mutation_root {
+    "/action_create_chat/"
+    action_create_chat(action_create_chat_input: ActionCreateChatInput): ActionCreateChatOutput
     "/action_mutation_pong/"
     action_mutation_pong(action_mutation_pong_input: ActionMutationPongInput): ActionMutationPongOutput
+    "/action_start_generate_chat/"
+    action_start_generate_chat(action_start_generate_chat_input: ActionStartGenerateChatInput): uuid!
     "/action_upload_file/"
     action_upload_file(action_upload_file_input: ActionUploadFileInput): uuid!
     "delete data from the table: \"ENUM_ROLE\""
@@ -228,6 +541,13 @@ type mutation_root {
     ): app_mutation_response
     "delete single row from the table: \"app\""
     delete_app_by_pk(name: String!): app
+    "delete data from the table: \"chat\""
+    delete_chat(
+        "filter the rows which have to be deleted"
+        where: chat_bool_exp!
+    ): chat_mutation_response
+    "delete single row from the table: \"chat\""
+    delete_chat_by_pk(chat_id: String!): chat
     "delete data from the table: \"file\""
     delete_file(
         "filter the rows which have to be deleted"
@@ -235,6 +555,20 @@ type mutation_root {
     ): file_mutation_response
     "delete single row from the table: \"file\""
     delete_file_by_pk(file_id: String!): file
+    "delete data from the table: \"message\""
+    delete_message(
+        "filter the rows which have to be deleted"
+        where: message_bool_exp!
+    ): message_mutation_response
+    "delete single row from the table: \"message\""
+    delete_message_by_pk(message_id: String!): message
+    "delete data from the table: \"persona\""
+    delete_persona(
+        "filter the rows which have to be deleted"
+        where: persona_bool_exp!
+    ): persona_mutation_response
+    "delete single row from the table: \"persona\""
+    delete_persona_by_pk(persona_id: String!): persona
     "delete data from the table: \"public_user\""
     delete_public_user(
         "filter the rows which have to be deleted"
@@ -277,6 +611,20 @@ type mutation_root {
         "upsert condition"
         on_conflict: app_on_conflict
     ): app
+    "insert data into the table: \"chat\""
+    insert_chat(
+        "the rows to be inserted"
+        objects: [chat_insert_input!]!,
+        "upsert condition"
+        on_conflict: chat_on_conflict
+    ): chat_mutation_response
+    "insert a single row into the table: \"chat\""
+    insert_chat_one(
+        "the row to be inserted"
+        object: chat_insert_input!,
+        "upsert condition"
+        on_conflict: chat_on_conflict
+    ): chat
     "insert data into the table: \"file\""
     insert_file(
         "the rows to be inserted"
@@ -291,6 +639,34 @@ type mutation_root {
         "upsert condition"
         on_conflict: file_on_conflict
     ): file
+    "insert data into the table: \"message\""
+    insert_message(
+        "the rows to be inserted"
+        objects: [message_insert_input!]!,
+        "upsert condition"
+        on_conflict: message_on_conflict
+    ): message_mutation_response
+    "insert a single row into the table: \"message\""
+    insert_message_one(
+        "the row to be inserted"
+        object: message_insert_input!,
+        "upsert condition"
+        on_conflict: message_on_conflict
+    ): message
+    "insert data into the table: \"persona\""
+    insert_persona(
+        "the rows to be inserted"
+        objects: [persona_insert_input!]!,
+        "upsert condition"
+        on_conflict: persona_on_conflict
+    ): persona_mutation_response
+    "insert a single row into the table: \"persona\""
+    insert_persona_one(
+        "the row to be inserted"
+        object: persona_insert_input!,
+        "upsert condition"
+        on_conflict: persona_on_conflict
+    ): persona
     "insert data into the table: \"public_user\""
     insert_public_user(
         "the rows to be inserted"
@@ -355,6 +731,24 @@ type mutation_root {
         "updates to execute, in order"
         updates: [app_updates!]!
     ): [app_mutation_response]
+    "update data of the table: \"chat\""
+    update_chat(
+        "sets the columns of the filtered rows to the given values"
+        _set: chat_set_input,
+        "filter the rows which have to be updated"
+        where: chat_bool_exp!
+    ): chat_mutation_response
+    "update single row of the table: \"chat\""
+    update_chat_by_pk(
+        "sets the columns of the filtered rows to the given values"
+        _set: chat_set_input,
+        pk_columns: chat_pk_columns_input!
+    ): chat
+    "update multiples rows of table: \"chat\""
+    update_chat_many(
+        "updates to execute, in order"
+        updates: [chat_updates!]!
+    ): [chat_mutation_response]
     "update data of the table: \"file\""
     update_file(
         "sets the columns of the filtered rows to the given values"
@@ -373,6 +767,42 @@ type mutation_root {
         "updates to execute, in order"
         updates: [file_updates!]!
     ): [file_mutation_response]
+    "update data of the table: \"message\""
+    update_message(
+        "sets the columns of the filtered rows to the given values"
+        _set: message_set_input,
+        "filter the rows which have to be updated"
+        where: message_bool_exp!
+    ): message_mutation_response
+    "update single row of the table: \"message\""
+    update_message_by_pk(
+        "sets the columns of the filtered rows to the given values"
+        _set: message_set_input,
+        pk_columns: message_pk_columns_input!
+    ): message
+    "update multiples rows of table: \"message\""
+    update_message_many(
+        "updates to execute, in order"
+        updates: [message_updates!]!
+    ): [message_mutation_response]
+    "update data of the table: \"persona\""
+    update_persona(
+        "sets the columns of the filtered rows to the given values"
+        _set: persona_set_input,
+        "filter the rows which have to be updated"
+        where: persona_bool_exp!
+    ): persona_mutation_response
+    "update single row of the table: \"persona\""
+    update_persona_by_pk(
+        "sets the columns of the filtered rows to the given values"
+        _set: persona_set_input,
+        pk_columns: persona_pk_columns_input!
+    ): persona
+    "update multiples rows of table: \"persona\""
+    update_persona_many(
+        "updates to execute, in order"
+        updates: [persona_updates!]!
+    ): [persona_mutation_response]
     "update data of the table: \"public_user\""
     update_public_user(
         "increments the numeric columns with given value of the filtered values"
@@ -397,6 +827,8 @@ type mutation_root {
     ): [public_user_mutation_response]
     "update data of the table: \"user\""
     update_user(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: user_inc_input,
         "sets the columns of the filtered rows to the given values"
         _set: user_set_input,
         "filter the rows which have to be updated"
@@ -404,6 +836,8 @@ type mutation_root {
     ): user_mutation_response
     "update single row of the table: \"user\""
     update_user_by_pk(
+        "increments the numeric columns with given value of the filtered values"
+        _inc: user_inc_input,
         "sets the columns of the filtered rows to the given values"
         _set: user_set_input,
         pk_columns: user_pk_columns_input!
@@ -415,10 +849,155 @@ type mutation_root {
     ): [user_mutation_response]
 }
 
+"store personas set for AI bot"
+type persona {
+    "An array relationship"
+    chats(
+        "distinct select on columns"
+        distinct_on: [chat_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [chat_order_by!],
+        "filter the rows returned"
+        where: chat_bool_exp
+    ): [chat!]!
+    "An aggregate relationship"
+    chats_aggregate(
+        "distinct select on columns"
+        distinct_on: [chat_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [chat_order_by!],
+        "filter the rows returned"
+        where: chat_bool_exp
+    ): chat_aggregate!
+    created_at: timestamptz!
+    description: String
+    file_id: String
+    name: String!
+    persona_id: String!
+    "An object relationship"
+    persona_owner: public_user!
+    "An object relationship"
+    photo: file
+    system_prompt: String!
+    updated_at: timestamptz!
+    user_id: String!
+}
+
+"aggregated selection of \"persona\""
+type persona_aggregate {
+    aggregate: persona_aggregate_fields
+    nodes: [persona!]!
+}
+
+"aggregate fields of \"persona\""
+type persona_aggregate_fields {
+    count(columns: [persona_select_column!], distinct: Boolean): Int!
+    max: persona_max_fields
+    min: persona_min_fields
+}
+
+"aggregate max on columns"
+type persona_max_fields {
+    created_at: timestamptz
+    description: String
+    file_id: String
+    name: String
+    persona_id: String
+    system_prompt: String
+    updated_at: timestamptz
+    user_id: String
+}
+
+"aggregate min on columns"
+type persona_min_fields {
+    created_at: timestamptz
+    description: String
+    file_id: String
+    name: String
+    persona_id: String
+    system_prompt: String
+    updated_at: timestamptz
+    user_id: String
+}
+
+"response of any mutation on the table \"persona\""
+type persona_mutation_response {
+    "number of rows affected by the mutation"
+    affected_rows: Int!
+    "data from the rows affected by the mutation"
+    returning: [persona!]!
+}
+
 "columns and relationships of \"public_user\""
 type public_user {
-    message: String!
+    "An array relationship"
+    chats(
+        "distinct select on columns"
+        distinct_on: [chat_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [chat_order_by!],
+        "filter the rows returned"
+        where: chat_bool_exp
+    ): [chat!]!
+    "An aggregate relationship"
+    chats_aggregate(
+        "distinct select on columns"
+        distinct_on: [chat_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [chat_order_by!],
+        "filter the rows returned"
+        where: chat_bool_exp
+    ): chat_aggregate!
+    file_id: String
+    message: String
+    name: String
     number: Int!
+    "An array relationship"
+    personas(
+        "distinct select on columns"
+        distinct_on: [persona_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [persona_order_by!],
+        "filter the rows returned"
+        where: persona_bool_exp
+    ): [persona!]!
+    "An aggregate relationship"
+    personas_aggregate(
+        "distinct select on columns"
+        distinct_on: [persona_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [persona_order_by!],
+        "filter the rows returned"
+        where: persona_bool_exp
+    ): persona_aggregate!
+    "An object relationship"
+    photo: file
+    "An object relationship"
+    user: user!
     user_id: String!
 }
 
@@ -450,14 +1029,18 @@ type public_user_avg_fields {
 
 "aggregate max on columns"
 type public_user_max_fields {
+    file_id: String
     message: String
+    name: String
     number: Int
     user_id: String
 }
 
 "aggregate min on columns"
 type public_user_min_fields {
+    file_id: String
     message: String
+    name: String
     number: Int
     user_id: String
 }
@@ -536,6 +1119,11 @@ type query_root {
     ENUM_ROLE_by_pk(value: String!): ENUM_ROLE
     "/action_query_ping/"
     action_query_ping(action_query_ping_input: ActionQueryPingInput): ActionQueryPingOutput
+    "/action_start_generate_chat/"
+    action_start_generate_chat(
+        "the unique id of an action"
+        id: uuid!
+    ): action_start_generate_chat
     "/action_upload_file/"
     action_upload_file(
         "the unique id of an action"
@@ -569,6 +1157,34 @@ type query_root {
     ): app_aggregate!
     "fetch data from the table: \"app\" using primary key columns"
     app_by_pk(name: String!): app
+    "fetch data from the table: \"chat\""
+    chat(
+        "distinct select on columns"
+        distinct_on: [chat_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [chat_order_by!],
+        "filter the rows returned"
+        where: chat_bool_exp
+    ): [chat!]!
+    "fetch aggregated fields from the table: \"chat\""
+    chat_aggregate(
+        "distinct select on columns"
+        distinct_on: [chat_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [chat_order_by!],
+        "filter the rows returned"
+        where: chat_bool_exp
+    ): chat_aggregate!
+    "fetch data from the table: \"chat\" using primary key columns"
+    chat_by_pk(chat_id: String!): chat
     "fetch data from the table: \"file\""
     file(
         "distinct select on columns"
@@ -597,7 +1213,63 @@ type query_root {
     ): file_aggregate!
     "fetch data from the table: \"file\" using primary key columns"
     file_by_pk(file_id: String!): file
-    "fetch data from the table: \"public_user\""
+    "fetch data from the table: \"message\""
+    message(
+        "distinct select on columns"
+        distinct_on: [message_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [message_order_by!],
+        "filter the rows returned"
+        where: message_bool_exp
+    ): [message!]!
+    "fetch aggregated fields from the table: \"message\""
+    message_aggregate(
+        "distinct select on columns"
+        distinct_on: [message_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [message_order_by!],
+        "filter the rows returned"
+        where: message_bool_exp
+    ): message_aggregate!
+    "fetch data from the table: \"message\" using primary key columns"
+    message_by_pk(message_id: String!): message
+    "fetch data from the table: \"persona\""
+    persona(
+        "distinct select on columns"
+        distinct_on: [persona_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [persona_order_by!],
+        "filter the rows returned"
+        where: persona_bool_exp
+    ): [persona!]!
+    "fetch aggregated fields from the table: \"persona\""
+    persona_aggregate(
+        "distinct select on columns"
+        distinct_on: [persona_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [persona_order_by!],
+        "filter the rows returned"
+        where: persona_bool_exp
+    ): persona_aggregate!
+    "fetch data from the table: \"persona\" using primary key columns"
+    persona_by_pk(persona_id: String!): persona
+    "An array relationship"
     public_user(
         "distinct select on columns"
         distinct_on: [public_user_select_column!],
@@ -610,7 +1282,7 @@ type query_root {
         "filter the rows returned"
         where: public_user_bool_exp
     ): [public_user!]!
-    "fetch aggregated fields from the table: \"public_user\""
+    "An aggregate relationship"
     public_user_aggregate(
         "distinct select on columns"
         distinct_on: [public_user_select_column!],
@@ -693,6 +1365,11 @@ type subscription_root {
         "filter the rows returned"
         where: ENUM_ROLE_bool_exp
     ): [ENUM_ROLE!]!
+    "/action_start_generate_chat/"
+    action_start_generate_chat(
+        "the unique id of an action"
+        id: uuid!
+    ): action_start_generate_chat
     "/action_upload_file/"
     action_upload_file(
         "the unique id of an action"
@@ -735,6 +1412,43 @@ type subscription_root {
         "filter the rows returned"
         where: app_bool_exp
     ): [app!]!
+    "fetch data from the table: \"chat\""
+    chat(
+        "distinct select on columns"
+        distinct_on: [chat_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [chat_order_by!],
+        "filter the rows returned"
+        where: chat_bool_exp
+    ): [chat!]!
+    "fetch aggregated fields from the table: \"chat\""
+    chat_aggregate(
+        "distinct select on columns"
+        distinct_on: [chat_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [chat_order_by!],
+        "filter the rows returned"
+        where: chat_bool_exp
+    ): chat_aggregate!
+    "fetch data from the table: \"chat\" using primary key columns"
+    chat_by_pk(chat_id: String!): chat
+    "fetch data from the table in a streaming manner: \"chat\""
+    chat_stream(
+        "maximum number of rows returned in a single batch"
+        batch_size: Int!,
+        "cursor to stream the results returned by the query"
+        cursor: [chat_stream_cursor_input]!,
+        "filter the rows returned"
+        where: chat_bool_exp
+    ): [chat!]!
     "fetch data from the table: \"file\""
     file(
         "distinct select on columns"
@@ -772,7 +1486,81 @@ type subscription_root {
         "filter the rows returned"
         where: file_bool_exp
     ): [file!]!
-    "fetch data from the table: \"public_user\""
+    "fetch data from the table: \"message\""
+    message(
+        "distinct select on columns"
+        distinct_on: [message_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [message_order_by!],
+        "filter the rows returned"
+        where: message_bool_exp
+    ): [message!]!
+    "fetch aggregated fields from the table: \"message\""
+    message_aggregate(
+        "distinct select on columns"
+        distinct_on: [message_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [message_order_by!],
+        "filter the rows returned"
+        where: message_bool_exp
+    ): message_aggregate!
+    "fetch data from the table: \"message\" using primary key columns"
+    message_by_pk(message_id: String!): message
+    "fetch data from the table in a streaming manner: \"message\""
+    message_stream(
+        "maximum number of rows returned in a single batch"
+        batch_size: Int!,
+        "cursor to stream the results returned by the query"
+        cursor: [message_stream_cursor_input]!,
+        "filter the rows returned"
+        where: message_bool_exp
+    ): [message!]!
+    "fetch data from the table: \"persona\""
+    persona(
+        "distinct select on columns"
+        distinct_on: [persona_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [persona_order_by!],
+        "filter the rows returned"
+        where: persona_bool_exp
+    ): [persona!]!
+    "fetch aggregated fields from the table: \"persona\""
+    persona_aggregate(
+        "distinct select on columns"
+        distinct_on: [persona_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [persona_order_by!],
+        "filter the rows returned"
+        where: persona_bool_exp
+    ): persona_aggregate!
+    "fetch data from the table: \"persona\" using primary key columns"
+    persona_by_pk(persona_id: String!): persona
+    "fetch data from the table in a streaming manner: \"persona\""
+    persona_stream(
+        "maximum number of rows returned in a single batch"
+        batch_size: Int!,
+        "cursor to stream the results returned by the query"
+        cursor: [persona_stream_cursor_input]!,
+        "filter the rows returned"
+        where: persona_bool_exp
+    ): [persona!]!
+    "An array relationship"
     public_user(
         "distinct select on columns"
         distinct_on: [public_user_select_column!],
@@ -785,7 +1573,7 @@ type subscription_root {
         "filter the rows returned"
         where: public_user_bool_exp
     ): [public_user!]!
-    "fetch aggregated fields from the table: \"public_user\""
+    "An aggregate relationship"
     public_user_aggregate(
         "distinct select on columns"
         distinct_on: [public_user_select_column!],
@@ -851,8 +1639,65 @@ type subscription_root {
 "columns and relationships of \"user\""
 type user {
     created_at: timestamptz
+    "An object relationship"
+    publicUserByUserId: public_user
+    "An array relationship"
+    public_user(
+        "distinct select on columns"
+        distinct_on: [public_user_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [public_user_order_by!],
+        "filter the rows returned"
+        where: public_user_bool_exp
+    ): [public_user!]!
+    "An aggregate relationship"
+    public_user_aggregate(
+        "distinct select on columns"
+        distinct_on: [public_user_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [public_user_order_by!],
+        "filter the rows returned"
+        where: public_user_bool_exp
+    ): public_user_aggregate!
     role: ENUM_ROLE_enum!
+    token: Int!
     updated_at: timestamptz
+    "An object relationship"
+    user_ENUM_ROLE: ENUM_ROLE!
+    "An array relationship"
+    user_files(
+        "distinct select on columns"
+        distinct_on: [file_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [file_order_by!],
+        "filter the rows returned"
+        where: file_bool_exp
+    ): [file!]!
+    "An aggregate relationship"
+    user_files_aggregate(
+        "distinct select on columns"
+        distinct_on: [file_select_column!],
+        "limit the number of rows returned"
+        limit: Int,
+        "skip the first n rows. Use only with order_by"
+        offset: Int,
+        "sort the rows by one or more columns"
+        order_by: [file_order_by!],
+        "filter the rows returned"
+        where: file_bool_exp
+    ): file_aggregate!
     user_id: String!
     user_phone: String!
 }
@@ -865,14 +1710,28 @@ type user_aggregate {
 
 "aggregate fields of \"user\""
 type user_aggregate_fields {
+    avg: user_avg_fields
     count(columns: [user_select_column!], distinct: Boolean): Int!
     max: user_max_fields
     min: user_min_fields
+    stddev: user_stddev_fields
+    stddev_pop: user_stddev_pop_fields
+    stddev_samp: user_stddev_samp_fields
+    sum: user_sum_fields
+    var_pop: user_var_pop_fields
+    var_samp: user_var_samp_fields
+    variance: user_variance_fields
+}
+
+"aggregate avg on columns"
+type user_avg_fields {
+    token: Float
 }
 
 "aggregate max on columns"
 type user_max_fields {
     created_at: timestamptz
+    token: Int
     updated_at: timestamptz
     user_id: String
     user_phone: String
@@ -881,6 +1740,7 @@ type user_max_fields {
 "aggregate min on columns"
 type user_min_fields {
     created_at: timestamptz
+    token: Int
     updated_at: timestamptz
     user_id: String
     user_phone: String
@@ -894,6 +1754,41 @@ type user_mutation_response {
     returning: [user!]!
 }
 
+"aggregate stddev on columns"
+type user_stddev_fields {
+    token: Float
+}
+
+"aggregate stddev_pop on columns"
+type user_stddev_pop_fields {
+    token: Float
+}
+
+"aggregate stddev_samp on columns"
+type user_stddev_samp_fields {
+    token: Float
+}
+
+"aggregate sum on columns"
+type user_sum_fields {
+    token: Int
+}
+
+"aggregate var_pop on columns"
+type user_var_pop_fields {
+    token: Float
+}
+
+"aggregate var_samp on columns"
+type user_var_samp_fields {
+    token: Float
+}
+
+"aggregate variance on columns"
+type user_variance_fields {
+    token: Float
+}
+
 "unique or primary key constraints on table \"ENUM_ROLE\""
 enum ENUM_ROLE_constraint {
     "unique or primary key constraint on columns \"value\""
@@ -902,6 +1797,7 @@ enum ENUM_ROLE_constraint {
 
 enum ENUM_ROLE_enum {
     admin
+    persona
     user
 }
 
@@ -930,6 +1826,8 @@ enum app_constraint {
 "select columns of table \"app\""
 enum app_select_column {
     "column name"
+    message
+    "column name"
     name
     "column name"
     storage_bucket
@@ -942,6 +1840,8 @@ enum app_select_column {
 "update columns of table \"app\""
 enum app_update_column {
     "column name"
+    message
+    "column name"
     name
     "column name"
     storage_bucket
@@ -949,6 +1849,56 @@ enum app_update_column {
     version_latest
     "column name"
     version_supported
+}
+
+"unique or primary key constraints on table \"chat\""
+enum chat_constraint {
+    "unique or primary key constraint on columns \"chat_id\""
+    chat_pkey
+}
+
+"select columns of table \"chat\""
+enum chat_select_column {
+    "column name"
+    chat_id
+    "column name"
+    created_at
+    "column name"
+    is_typing
+    "column name"
+    persona_id
+    "column name"
+    updated_at
+    "column name"
+    user_id
+}
+
+"select \"chat_aggregate_bool_exp_bool_and_arguments_columns\" columns of table \"chat\""
+enum chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns {
+    "column name"
+    is_typing
+}
+
+"select \"chat_aggregate_bool_exp_bool_or_arguments_columns\" columns of table \"chat\""
+enum chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns {
+    "column name"
+    is_typing
+}
+
+"update columns of table \"chat\""
+enum chat_update_column {
+    "column name"
+    chat_id
+    "column name"
+    created_at
+    "column name"
+    is_typing
+    "column name"
+    persona_id
+    "column name"
+    updated_at
+    "column name"
+    user_id
 }
 
 "ordering argument of a cursor"
@@ -981,6 +1931,18 @@ enum file_select_column {
     user_id
 }
 
+"select \"file_aggregate_bool_exp_bool_and_arguments_columns\" columns of table \"file\""
+enum file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns {
+    "column name"
+    public
+}
+
+"select \"file_aggregate_bool_exp_bool_or_arguments_columns\" columns of table \"file\""
+enum file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns {
+    "column name"
+    public
+}
+
 "update columns of table \"file\""
 enum file_update_column {
     "column name"
@@ -995,6 +1957,64 @@ enum file_update_column {
     type
     "column name"
     user_id
+}
+
+"unique or primary key constraints on table \"message\""
+enum message_constraint {
+    "unique or primary key constraint on columns \"message_id\""
+    message_pkey
+}
+
+"select columns of table \"message\""
+enum message_select_column {
+    "column name"
+    chat_id
+    "column name"
+    created_at
+    "column name"
+    file_id
+    "column name"
+    indexed
+    "column name"
+    message_id
+    "column name"
+    sender
+    "column name"
+    text
+    "column name"
+    updated_at
+}
+
+"select \"message_aggregate_bool_exp_bool_and_arguments_columns\" columns of table \"message\""
+enum message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns {
+    "column name"
+    indexed
+}
+
+"select \"message_aggregate_bool_exp_bool_or_arguments_columns\" columns of table \"message\""
+enum message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns {
+    "column name"
+    indexed
+}
+
+"update columns of table \"message\""
+enum message_update_column {
+    "column name"
+    chat_id
+    "column name"
+    created_at
+    "column name"
+    file_id
+    "column name"
+    indexed
+    "column name"
+    message_id
+    "column name"
+    sender
+    "column name"
+    text
+    "column name"
+    updated_at
 }
 
 "column ordering options"
@@ -1013,6 +2033,54 @@ enum order_by {
     desc_nulls_last
 }
 
+"unique or primary key constraints on table \"persona\""
+enum persona_constraint {
+    "unique or primary key constraint on columns \"persona_id\""
+    persona_persona_id_key
+    "unique or primary key constraint on columns \"persona_id\""
+    persona_pkey
+}
+
+"select columns of table \"persona\""
+enum persona_select_column {
+    "column name"
+    created_at
+    "column name"
+    description
+    "column name"
+    file_id
+    "column name"
+    name
+    "column name"
+    persona_id
+    "column name"
+    system_prompt
+    "column name"
+    updated_at
+    "column name"
+    user_id
+}
+
+"update columns of table \"persona\""
+enum persona_update_column {
+    "column name"
+    created_at
+    "column name"
+    description
+    "column name"
+    file_id
+    "column name"
+    name
+    "column name"
+    persona_id
+    "column name"
+    system_prompt
+    "column name"
+    updated_at
+    "column name"
+    user_id
+}
+
 "unique or primary key constraints on table \"public_user\""
 enum public_user_constraint {
     "unique or primary key constraint on columns \"user_id\""
@@ -1022,7 +2090,11 @@ enum public_user_constraint {
 "select columns of table \"public_user\""
 enum public_user_select_column {
     "column name"
+    file_id
+    "column name"
     message
+    "column name"
+    name
     "column name"
     number
     "column name"
@@ -1032,7 +2104,11 @@ enum public_user_select_column {
 "update columns of table \"public_user\""
 enum public_user_update_column {
     "column name"
+    file_id
+    "column name"
     message
+    "column name"
+    name
     "column name"
     number
     "column name"
@@ -1054,6 +2130,8 @@ enum user_select_column {
     "column name"
     role
     "column name"
+    token
+    "column name"
     updated_at
     "column name"
     user_id
@@ -1068,6 +2146,8 @@ enum user_update_column {
     "column name"
     role
     "column name"
+    token
+    "column name"
     updated_at
     "column name"
     user_id
@@ -1081,20 +2161,34 @@ scalar timestamptz
 
 scalar uuid
 
+input ActionCreateChatInput {
+    persona_id: String!
+    user_id: String!
+}
+
 input ActionMutationPongInput {
-    message: String!
+    message: String
     number: Int!
+    user_id: String!
 }
 
 input ActionQueryPingInput {
-    message: String
-    number: Int
+    user_id: String!
+}
+
+input ActionStartGenerateChatInput {
+    chat_id: String!
+    max_history_count: Int!
+    max_match_count: Int!
+    min_match_score: Float!
+    model_temperature: Float!
 }
 
 input ActionUploadFileInput {
     file_data: String!
     file_name: String!
     file_type: String!
+    public: Boolean!
 }
 
 "Boolean expression to compare columns of type \"Boolean\". All fields are combined with logical 'AND'."
@@ -1116,6 +2210,10 @@ input ENUM_ROLE_bool_exp {
     _not: ENUM_ROLE_bool_exp
     _or: [ENUM_ROLE_bool_exp!]
     comment: String_comparison_exp
+    messages: message_bool_exp
+    messages_aggregate: message_aggregate_bool_exp
+    users: user_bool_exp
+    users_aggregate: user_aggregate_bool_exp
     value: String_comparison_exp
 }
 
@@ -1131,7 +2229,16 @@ input ENUM_ROLE_enum_comparison_exp {
 "input type for inserting data into table \"ENUM_ROLE\""
 input ENUM_ROLE_insert_input {
     comment: String
+    messages: message_arr_rel_insert_input
+    users: user_arr_rel_insert_input
     value: String
+}
+
+"input type for inserting object relation for remote table \"ENUM_ROLE\""
+input ENUM_ROLE_obj_rel_insert_input {
+    data: ENUM_ROLE_insert_input!
+    "upsert condition"
+    on_conflict: ENUM_ROLE_on_conflict
 }
 
 "on_conflict condition type for table \"ENUM_ROLE\""
@@ -1144,6 +2251,8 @@ input ENUM_ROLE_on_conflict {
 "Ordering options when selecting data from \"ENUM_ROLE\"."
 input ENUM_ROLE_order_by {
     comment: order_by
+    messages_aggregate: message_aggregate_order_by
+    users_aggregate: user_aggregate_order_by
     value: order_by
 }
 
@@ -1230,6 +2339,7 @@ input app_bool_exp {
     _and: [app_bool_exp!]
     _not: app_bool_exp
     _or: [app_bool_exp!]
+    message: String_comparison_exp
     name: String_comparison_exp
     storage_bucket: String_comparison_exp
     version_latest: String_comparison_exp
@@ -1238,6 +2348,7 @@ input app_bool_exp {
 
 "input type for inserting data into table \"app\""
 input app_insert_input {
+    message: String
     name: String
     storage_bucket: String
     version_latest: String
@@ -1253,6 +2364,7 @@ input app_on_conflict {
 
 "Ordering options when selecting data from \"app\"."
 input app_order_by {
+    message: order_by
     name: order_by
     storage_bucket: order_by
     version_latest: order_by
@@ -1266,6 +2378,7 @@ input app_pk_columns_input {
 
 "input type for updating data in table \"app\""
 input app_set_input {
+    message: String
     name: String
     storage_bucket: String
     version_latest: String
@@ -1282,6 +2395,7 @@ input app_stream_cursor_input {
 
 "Initial value of the column from where the streaming should start"
 input app_stream_cursor_value_input {
+    message: String
     name: String
     storage_bucket: String
     version_latest: String
@@ -1295,14 +2409,218 @@ input app_updates {
     where: app_bool_exp!
 }
 
+input chat_aggregate_bool_exp {
+    bool_and: chat_aggregate_bool_exp_bool_and
+    bool_or: chat_aggregate_bool_exp_bool_or
+    count: chat_aggregate_bool_exp_count
+}
+
+input chat_aggregate_bool_exp_bool_and {
+    arguments: chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns!
+    distinct: Boolean
+    filter: chat_bool_exp
+    predicate: Boolean_comparison_exp!
+}
+
+input chat_aggregate_bool_exp_bool_or {
+    arguments: chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns!
+    distinct: Boolean
+    filter: chat_bool_exp
+    predicate: Boolean_comparison_exp!
+}
+
+input chat_aggregate_bool_exp_count {
+    arguments: [chat_select_column!]
+    distinct: Boolean
+    filter: chat_bool_exp
+    predicate: Int_comparison_exp!
+}
+
+"order by aggregate values of table \"chat\""
+input chat_aggregate_order_by {
+    count: order_by
+    max: chat_max_order_by
+    min: chat_min_order_by
+}
+
+"input type for inserting array relation for remote table \"chat\""
+input chat_arr_rel_insert_input {
+    data: [chat_insert_input!]!
+    "upsert condition"
+    on_conflict: chat_on_conflict
+}
+
+"Boolean expression to filter rows from the table \"chat\". All fields are combined with a logical 'AND'."
+input chat_bool_exp {
+    _and: [chat_bool_exp!]
+    _not: chat_bool_exp
+    _or: [chat_bool_exp!]
+    chat_id: String_comparison_exp
+    created_at: timestamptz_comparison_exp
+    is_typing: Boolean_comparison_exp
+    messages: message_bool_exp
+    messages_aggregate: message_aggregate_bool_exp
+    persona: persona_bool_exp
+    persona_id: String_comparison_exp
+    public_user: public_user_bool_exp
+    updated_at: timestamptz_comparison_exp
+    user_id: String_comparison_exp
+}
+
+"input type for inserting data into table \"chat\""
+input chat_insert_input {
+    chat_id: String
+    created_at: timestamptz
+    is_typing: Boolean
+    messages: message_arr_rel_insert_input
+    persona: persona_obj_rel_insert_input
+    persona_id: String
+    public_user: public_user_obj_rel_insert_input
+    updated_at: timestamptz
+    user_id: String
+}
+
+"order by max() on columns of table \"chat\""
+input chat_max_order_by {
+    chat_id: order_by
+    created_at: order_by
+    persona_id: order_by
+    updated_at: order_by
+    user_id: order_by
+}
+
+"order by min() on columns of table \"chat\""
+input chat_min_order_by {
+    chat_id: order_by
+    created_at: order_by
+    persona_id: order_by
+    updated_at: order_by
+    user_id: order_by
+}
+
+"input type for inserting object relation for remote table \"chat\""
+input chat_obj_rel_insert_input {
+    data: chat_insert_input!
+    "upsert condition"
+    on_conflict: chat_on_conflict
+}
+
+"on_conflict condition type for table \"chat\""
+input chat_on_conflict {
+    constraint: chat_constraint!
+    update_columns: [chat_update_column!]! = []
+    where: chat_bool_exp
+}
+
+"Ordering options when selecting data from \"chat\"."
+input chat_order_by {
+    chat_id: order_by
+    created_at: order_by
+    is_typing: order_by
+    messages_aggregate: message_aggregate_order_by
+    persona: persona_order_by
+    persona_id: order_by
+    public_user: public_user_order_by
+    updated_at: order_by
+    user_id: order_by
+}
+
+"primary key columns input for table: chat"
+input chat_pk_columns_input {
+    chat_id: String!
+}
+
+"input type for updating data in table \"chat\""
+input chat_set_input {
+    chat_id: String
+    created_at: timestamptz
+    is_typing: Boolean
+    persona_id: String
+    updated_at: timestamptz
+    user_id: String
+}
+
+"Streaming cursor of the table \"chat\""
+input chat_stream_cursor_input {
+    "Stream column input with initial value"
+    initial_value: chat_stream_cursor_value_input!
+    "cursor ordering"
+    ordering: cursor_ordering
+}
+
+"Initial value of the column from where the streaming should start"
+input chat_stream_cursor_value_input {
+    chat_id: String
+    created_at: timestamptz
+    is_typing: Boolean
+    persona_id: String
+    updated_at: timestamptz
+    user_id: String
+}
+
+input chat_updates {
+    "sets the columns of the filtered rows to the given values"
+    _set: chat_set_input
+    "filter the rows which have to be updated"
+    where: chat_bool_exp!
+}
+
+input file_aggregate_bool_exp {
+    bool_and: file_aggregate_bool_exp_bool_and
+    bool_or: file_aggregate_bool_exp_bool_or
+    count: file_aggregate_bool_exp_count
+}
+
+input file_aggregate_bool_exp_bool_and {
+    arguments: file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns!
+    distinct: Boolean
+    filter: file_bool_exp
+    predicate: Boolean_comparison_exp!
+}
+
+input file_aggregate_bool_exp_bool_or {
+    arguments: file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns!
+    distinct: Boolean
+    filter: file_bool_exp
+    predicate: Boolean_comparison_exp!
+}
+
+input file_aggregate_bool_exp_count {
+    arguments: [file_select_column!]
+    distinct: Boolean
+    filter: file_bool_exp
+    predicate: Int_comparison_exp!
+}
+
+"order by aggregate values of table \"file\""
+input file_aggregate_order_by {
+    count: order_by
+    max: file_max_order_by
+    min: file_min_order_by
+}
+
+"input type for inserting array relation for remote table \"file\""
+input file_arr_rel_insert_input {
+    data: [file_insert_input!]!
+    "upsert condition"
+    on_conflict: file_on_conflict
+}
+
 "Boolean expression to filter rows from the table \"file\". All fields are combined with a logical 'AND'."
 input file_bool_exp {
     _and: [file_bool_exp!]
     _not: file_bool_exp
     _or: [file_bool_exp!]
+    creator: user_bool_exp
     file_id: String_comparison_exp
+    messages: message_bool_exp
+    messages_aggregate: message_aggregate_bool_exp
     name: String_comparison_exp
+    personas: persona_bool_exp
+    personas_aggregate: persona_aggregate_bool_exp
     public: Boolean_comparison_exp
+    public_users: public_user_bool_exp
+    public_users_aggregate: public_user_aggregate_bool_exp
     signed_url: String_comparison_exp
     type: String_comparison_exp
     user_id: String_comparison_exp
@@ -1310,12 +2628,41 @@ input file_bool_exp {
 
 "input type for inserting data into table \"file\""
 input file_insert_input {
+    creator: user_obj_rel_insert_input
     file_id: String
+    messages: message_arr_rel_insert_input
     name: String
+    personas: persona_arr_rel_insert_input
     public: Boolean
+    public_users: public_user_arr_rel_insert_input
     signed_url: String
     type: String
     user_id: String
+}
+
+"order by max() on columns of table \"file\""
+input file_max_order_by {
+    file_id: order_by
+    name: order_by
+    signed_url: order_by
+    type: order_by
+    user_id: order_by
+}
+
+"order by min() on columns of table \"file\""
+input file_min_order_by {
+    file_id: order_by
+    name: order_by
+    signed_url: order_by
+    type: order_by
+    user_id: order_by
+}
+
+"input type for inserting object relation for remote table \"file\""
+input file_obj_rel_insert_input {
+    data: file_insert_input!
+    "upsert condition"
+    on_conflict: file_on_conflict
 }
 
 "on_conflict condition type for table \"file\""
@@ -1327,9 +2674,13 @@ input file_on_conflict {
 
 "Ordering options when selecting data from \"file\"."
 input file_order_by {
+    creator: user_order_by
     file_id: order_by
+    messages_aggregate: message_aggregate_order_by
     name: order_by
+    personas_aggregate: persona_aggregate_order_by
     public: order_by
+    public_users_aggregate: public_user_aggregate_order_by
     signed_url: order_by
     type: order_by
     user_id: order_by
@@ -1375,13 +2726,375 @@ input file_updates {
     where: file_bool_exp!
 }
 
+input message_aggregate_bool_exp {
+    bool_and: message_aggregate_bool_exp_bool_and
+    bool_or: message_aggregate_bool_exp_bool_or
+    count: message_aggregate_bool_exp_count
+}
+
+input message_aggregate_bool_exp_bool_and {
+    arguments: message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns!
+    distinct: Boolean
+    filter: message_bool_exp
+    predicate: Boolean_comparison_exp!
+}
+
+input message_aggregate_bool_exp_bool_or {
+    arguments: message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns!
+    distinct: Boolean
+    filter: message_bool_exp
+    predicate: Boolean_comparison_exp!
+}
+
+input message_aggregate_bool_exp_count {
+    arguments: [message_select_column!]
+    distinct: Boolean
+    filter: message_bool_exp
+    predicate: Int_comparison_exp!
+}
+
+"order by aggregate values of table \"message\""
+input message_aggregate_order_by {
+    count: order_by
+    max: message_max_order_by
+    min: message_min_order_by
+}
+
+"input type for inserting array relation for remote table \"message\""
+input message_arr_rel_insert_input {
+    data: [message_insert_input!]!
+    "upsert condition"
+    on_conflict: message_on_conflict
+}
+
+"Boolean expression to filter rows from the table \"message\". All fields are combined with a logical 'AND'."
+input message_bool_exp {
+    ENUM_ROLE: ENUM_ROLE_bool_exp
+    _and: [message_bool_exp!]
+    _not: message_bool_exp
+    _or: [message_bool_exp!]
+    attachment: file_bool_exp
+    chat: chat_bool_exp
+    chat_id: String_comparison_exp
+    created_at: timestamptz_comparison_exp
+    file_id: String_comparison_exp
+    indexed: Boolean_comparison_exp
+    message_id: String_comparison_exp
+    sender: ENUM_ROLE_enum_comparison_exp
+    text: String_comparison_exp
+    updated_at: timestamptz_comparison_exp
+}
+
+"input type for inserting data into table \"message\""
+input message_insert_input {
+    ENUM_ROLE: ENUM_ROLE_obj_rel_insert_input
+    attachment: file_obj_rel_insert_input
+    chat: chat_obj_rel_insert_input
+    chat_id: String
+    created_at: timestamptz
+    file_id: String
+    indexed: Boolean
+    message_id: String
+    sender: ENUM_ROLE_enum
+    text: String
+    updated_at: timestamptz
+}
+
+"order by max() on columns of table \"message\""
+input message_max_order_by {
+    chat_id: order_by
+    created_at: order_by
+    file_id: order_by
+    message_id: order_by
+    text: order_by
+    updated_at: order_by
+}
+
+"order by min() on columns of table \"message\""
+input message_min_order_by {
+    chat_id: order_by
+    created_at: order_by
+    file_id: order_by
+    message_id: order_by
+    text: order_by
+    updated_at: order_by
+}
+
+"on_conflict condition type for table \"message\""
+input message_on_conflict {
+    constraint: message_constraint!
+    update_columns: [message_update_column!]! = []
+    where: message_bool_exp
+}
+
+"Ordering options when selecting data from \"message\"."
+input message_order_by {
+    ENUM_ROLE: ENUM_ROLE_order_by
+    attachment: file_order_by
+    chat: chat_order_by
+    chat_id: order_by
+    created_at: order_by
+    file_id: order_by
+    indexed: order_by
+    message_id: order_by
+    sender: order_by
+    text: order_by
+    updated_at: order_by
+}
+
+"primary key columns input for table: message"
+input message_pk_columns_input {
+    message_id: String!
+}
+
+"input type for updating data in table \"message\""
+input message_set_input {
+    chat_id: String
+    created_at: timestamptz
+    file_id: String
+    indexed: Boolean
+    message_id: String
+    sender: ENUM_ROLE_enum
+    text: String
+    updated_at: timestamptz
+}
+
+"Streaming cursor of the table \"message\""
+input message_stream_cursor_input {
+    "Stream column input with initial value"
+    initial_value: message_stream_cursor_value_input!
+    "cursor ordering"
+    ordering: cursor_ordering
+}
+
+"Initial value of the column from where the streaming should start"
+input message_stream_cursor_value_input {
+    chat_id: String
+    created_at: timestamptz
+    file_id: String
+    indexed: Boolean
+    message_id: String
+    sender: ENUM_ROLE_enum
+    text: String
+    updated_at: timestamptz
+}
+
+input message_updates {
+    "sets the columns of the filtered rows to the given values"
+    _set: message_set_input
+    "filter the rows which have to be updated"
+    where: message_bool_exp!
+}
+
+input persona_aggregate_bool_exp {
+    count: persona_aggregate_bool_exp_count
+}
+
+input persona_aggregate_bool_exp_count {
+    arguments: [persona_select_column!]
+    distinct: Boolean
+    filter: persona_bool_exp
+    predicate: Int_comparison_exp!
+}
+
+"order by aggregate values of table \"persona\""
+input persona_aggregate_order_by {
+    count: order_by
+    max: persona_max_order_by
+    min: persona_min_order_by
+}
+
+"input type for inserting array relation for remote table \"persona\""
+input persona_arr_rel_insert_input {
+    data: [persona_insert_input!]!
+    "upsert condition"
+    on_conflict: persona_on_conflict
+}
+
+"Boolean expression to filter rows from the table \"persona\". All fields are combined with a logical 'AND'."
+input persona_bool_exp {
+    _and: [persona_bool_exp!]
+    _not: persona_bool_exp
+    _or: [persona_bool_exp!]
+    chats: chat_bool_exp
+    chats_aggregate: chat_aggregate_bool_exp
+    created_at: timestamptz_comparison_exp
+    description: String_comparison_exp
+    file_id: String_comparison_exp
+    name: String_comparison_exp
+    persona_id: String_comparison_exp
+    persona_owner: public_user_bool_exp
+    photo: file_bool_exp
+    system_prompt: String_comparison_exp
+    updated_at: timestamptz_comparison_exp
+    user_id: String_comparison_exp
+}
+
+"input type for inserting data into table \"persona\""
+input persona_insert_input {
+    chats: chat_arr_rel_insert_input
+    created_at: timestamptz
+    description: String
+    file_id: String
+    name: String
+    persona_id: String
+    persona_owner: public_user_obj_rel_insert_input
+    photo: file_obj_rel_insert_input
+    system_prompt: String
+    updated_at: timestamptz
+    user_id: String
+}
+
+"order by max() on columns of table \"persona\""
+input persona_max_order_by {
+    created_at: order_by
+    description: order_by
+    file_id: order_by
+    name: order_by
+    persona_id: order_by
+    system_prompt: order_by
+    updated_at: order_by
+    user_id: order_by
+}
+
+"order by min() on columns of table \"persona\""
+input persona_min_order_by {
+    created_at: order_by
+    description: order_by
+    file_id: order_by
+    name: order_by
+    persona_id: order_by
+    system_prompt: order_by
+    updated_at: order_by
+    user_id: order_by
+}
+
+"input type for inserting object relation for remote table \"persona\""
+input persona_obj_rel_insert_input {
+    data: persona_insert_input!
+    "upsert condition"
+    on_conflict: persona_on_conflict
+}
+
+"on_conflict condition type for table \"persona\""
+input persona_on_conflict {
+    constraint: persona_constraint!
+    update_columns: [persona_update_column!]! = []
+    where: persona_bool_exp
+}
+
+"Ordering options when selecting data from \"persona\"."
+input persona_order_by {
+    chats_aggregate: chat_aggregate_order_by
+    created_at: order_by
+    description: order_by
+    file_id: order_by
+    name: order_by
+    persona_id: order_by
+    persona_owner: public_user_order_by
+    photo: file_order_by
+    system_prompt: order_by
+    updated_at: order_by
+    user_id: order_by
+}
+
+"primary key columns input for table: persona"
+input persona_pk_columns_input {
+    persona_id: String!
+}
+
+"input type for updating data in table \"persona\""
+input persona_set_input {
+    created_at: timestamptz
+    description: String
+    file_id: String
+    name: String
+    persona_id: String
+    system_prompt: String
+    updated_at: timestamptz
+    user_id: String
+}
+
+"Streaming cursor of the table \"persona\""
+input persona_stream_cursor_input {
+    "Stream column input with initial value"
+    initial_value: persona_stream_cursor_value_input!
+    "cursor ordering"
+    ordering: cursor_ordering
+}
+
+"Initial value of the column from where the streaming should start"
+input persona_stream_cursor_value_input {
+    created_at: timestamptz
+    description: String
+    file_id: String
+    name: String
+    persona_id: String
+    system_prompt: String
+    updated_at: timestamptz
+    user_id: String
+}
+
+input persona_updates {
+    "sets the columns of the filtered rows to the given values"
+    _set: persona_set_input
+    "filter the rows which have to be updated"
+    where: persona_bool_exp!
+}
+
+input public_user_aggregate_bool_exp {
+    count: public_user_aggregate_bool_exp_count
+}
+
+input public_user_aggregate_bool_exp_count {
+    arguments: [public_user_select_column!]
+    distinct: Boolean
+    filter: public_user_bool_exp
+    predicate: Int_comparison_exp!
+}
+
+"order by aggregate values of table \"public_user\""
+input public_user_aggregate_order_by {
+    avg: public_user_avg_order_by
+    count: order_by
+    max: public_user_max_order_by
+    min: public_user_min_order_by
+    stddev: public_user_stddev_order_by
+    stddev_pop: public_user_stddev_pop_order_by
+    stddev_samp: public_user_stddev_samp_order_by
+    sum: public_user_sum_order_by
+    var_pop: public_user_var_pop_order_by
+    var_samp: public_user_var_samp_order_by
+    variance: public_user_variance_order_by
+}
+
+"input type for inserting array relation for remote table \"public_user\""
+input public_user_arr_rel_insert_input {
+    data: [public_user_insert_input!]!
+    "upsert condition"
+    on_conflict: public_user_on_conflict
+}
+
+"order by avg() on columns of table \"public_user\""
+input public_user_avg_order_by {
+    number: order_by
+}
+
 "Boolean expression to filter rows from the table \"public_user\". All fields are combined with a logical 'AND'."
 input public_user_bool_exp {
     _and: [public_user_bool_exp!]
     _not: public_user_bool_exp
     _or: [public_user_bool_exp!]
+    chats: chat_bool_exp
+    chats_aggregate: chat_aggregate_bool_exp
+    file_id: String_comparison_exp
     message: String_comparison_exp
+    name: String_comparison_exp
     number: Int_comparison_exp
+    personas: persona_bool_exp
+    personas_aggregate: persona_aggregate_bool_exp
+    photo: file_bool_exp
+    user: user_bool_exp
     user_id: String_comparison_exp
 }
 
@@ -1392,9 +3105,40 @@ input public_user_inc_input {
 
 "input type for inserting data into table \"public_user\""
 input public_user_insert_input {
+    chats: chat_arr_rel_insert_input
+    file_id: String
     message: String
+    name: String
     number: Int
+    personas: persona_arr_rel_insert_input
+    photo: file_obj_rel_insert_input
+    user: user_obj_rel_insert_input
     user_id: String
+}
+
+"order by max() on columns of table \"public_user\""
+input public_user_max_order_by {
+    file_id: order_by
+    message: order_by
+    name: order_by
+    number: order_by
+    user_id: order_by
+}
+
+"order by min() on columns of table \"public_user\""
+input public_user_min_order_by {
+    file_id: order_by
+    message: order_by
+    name: order_by
+    number: order_by
+    user_id: order_by
+}
+
+"input type for inserting object relation for remote table \"public_user\""
+input public_user_obj_rel_insert_input {
+    data: public_user_insert_input!
+    "upsert condition"
+    on_conflict: public_user_on_conflict
 }
 
 "on_conflict condition type for table \"public_user\""
@@ -1406,8 +3150,14 @@ input public_user_on_conflict {
 
 "Ordering options when selecting data from \"public_user\"."
 input public_user_order_by {
+    chats_aggregate: chat_aggregate_order_by
+    file_id: order_by
     message: order_by
+    name: order_by
     number: order_by
+    personas_aggregate: persona_aggregate_order_by
+    photo: file_order_by
+    user: user_order_by
     user_id: order_by
 }
 
@@ -1418,9 +3168,26 @@ input public_user_pk_columns_input {
 
 "input type for updating data in table \"public_user\""
 input public_user_set_input {
+    file_id: String
     message: String
+    name: String
     number: Int
     user_id: String
+}
+
+"order by stddev() on columns of table \"public_user\""
+input public_user_stddev_order_by {
+    number: order_by
+}
+
+"order by stddev_pop() on columns of table \"public_user\""
+input public_user_stddev_pop_order_by {
+    number: order_by
+}
+
+"order by stddev_samp() on columns of table \"public_user\""
+input public_user_stddev_samp_order_by {
+    number: order_by
 }
 
 "Streaming cursor of the table \"public_user\""
@@ -1433,9 +3200,16 @@ input public_user_stream_cursor_input {
 
 "Initial value of the column from where the streaming should start"
 input public_user_stream_cursor_value_input {
+    file_id: String
     message: String
+    name: String
     number: Int
     user_id: String
+}
+
+"order by sum() on columns of table \"public_user\""
+input public_user_sum_order_by {
+    number: order_by
 }
 
 input public_user_updates {
@@ -1445,6 +3219,21 @@ input public_user_updates {
     _set: public_user_set_input
     "filter the rows which have to be updated"
     where: public_user_bool_exp!
+}
+
+"order by var_pop() on columns of table \"public_user\""
+input public_user_var_pop_order_by {
+    number: order_by
+}
+
+"order by var_samp() on columns of table \"public_user\""
+input public_user_var_samp_order_by {
+    number: order_by
+}
+
+"order by variance() on columns of table \"public_user\""
+input public_user_variance_order_by {
+    number: order_by
 }
 
 "Boolean expression to compare columns of type \"timestamptz\". All fields are combined with logical 'AND'."
@@ -1460,25 +3249,105 @@ input timestamptz_comparison_exp {
     _nin: [timestamptz!]
 }
 
+input user_aggregate_bool_exp {
+    count: user_aggregate_bool_exp_count
+}
+
+input user_aggregate_bool_exp_count {
+    arguments: [user_select_column!]
+    distinct: Boolean
+    filter: user_bool_exp
+    predicate: Int_comparison_exp!
+}
+
+"order by aggregate values of table \"user\""
+input user_aggregate_order_by {
+    avg: user_avg_order_by
+    count: order_by
+    max: user_max_order_by
+    min: user_min_order_by
+    stddev: user_stddev_order_by
+    stddev_pop: user_stddev_pop_order_by
+    stddev_samp: user_stddev_samp_order_by
+    sum: user_sum_order_by
+    var_pop: user_var_pop_order_by
+    var_samp: user_var_samp_order_by
+    variance: user_variance_order_by
+}
+
+"input type for inserting array relation for remote table \"user\""
+input user_arr_rel_insert_input {
+    data: [user_insert_input!]!
+    "upsert condition"
+    on_conflict: user_on_conflict
+}
+
+"order by avg() on columns of table \"user\""
+input user_avg_order_by {
+    token: order_by
+}
+
 "Boolean expression to filter rows from the table \"user\". All fields are combined with a logical 'AND'."
 input user_bool_exp {
     _and: [user_bool_exp!]
     _not: user_bool_exp
     _or: [user_bool_exp!]
     created_at: timestamptz_comparison_exp
+    publicUserByUserId: public_user_bool_exp
+    public_user: public_user_bool_exp
+    public_user_aggregate: public_user_aggregate_bool_exp
     role: ENUM_ROLE_enum_comparison_exp
+    token: Int_comparison_exp
     updated_at: timestamptz_comparison_exp
+    user_ENUM_ROLE: ENUM_ROLE_bool_exp
+    user_files: file_bool_exp
+    user_files_aggregate: file_aggregate_bool_exp
     user_id: String_comparison_exp
     user_phone: String_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"user\""
+input user_inc_input {
+    token: Int
 }
 
 "input type for inserting data into table \"user\""
 input user_insert_input {
     created_at: timestamptz
+    publicUserByUserId: public_user_obj_rel_insert_input
+    public_user: public_user_arr_rel_insert_input
     role: ENUM_ROLE_enum
+    token: Int
     updated_at: timestamptz
+    user_ENUM_ROLE: ENUM_ROLE_obj_rel_insert_input
+    user_files: file_arr_rel_insert_input
     user_id: String
     user_phone: String
+}
+
+"order by max() on columns of table \"user\""
+input user_max_order_by {
+    created_at: order_by
+    token: order_by
+    updated_at: order_by
+    user_id: order_by
+    user_phone: order_by
+}
+
+"order by min() on columns of table \"user\""
+input user_min_order_by {
+    created_at: order_by
+    token: order_by
+    updated_at: order_by
+    user_id: order_by
+    user_phone: order_by
+}
+
+"input type for inserting object relation for remote table \"user\""
+input user_obj_rel_insert_input {
+    data: user_insert_input!
+    "upsert condition"
+    on_conflict: user_on_conflict
 }
 
 "on_conflict condition type for table \"user\""
@@ -1491,8 +3360,13 @@ input user_on_conflict {
 "Ordering options when selecting data from \"user\"."
 input user_order_by {
     created_at: order_by
+    publicUserByUserId: public_user_order_by
+    public_user_aggregate: public_user_aggregate_order_by
     role: order_by
+    token: order_by
     updated_at: order_by
+    user_ENUM_ROLE: ENUM_ROLE_order_by
+    user_files_aggregate: file_aggregate_order_by
     user_id: order_by
     user_phone: order_by
 }
@@ -1506,9 +3380,25 @@ input user_pk_columns_input {
 input user_set_input {
     created_at: timestamptz
     role: ENUM_ROLE_enum
+    token: Int
     updated_at: timestamptz
     user_id: String
     user_phone: String
+}
+
+"order by stddev() on columns of table \"user\""
+input user_stddev_order_by {
+    token: order_by
+}
+
+"order by stddev_pop() on columns of table \"user\""
+input user_stddev_pop_order_by {
+    token: order_by
+}
+
+"order by stddev_samp() on columns of table \"user\""
+input user_stddev_samp_order_by {
+    token: order_by
 }
 
 "Streaming cursor of the table \"user\""
@@ -1523,14 +3413,37 @@ input user_stream_cursor_input {
 input user_stream_cursor_value_input {
     created_at: timestamptz
     role: ENUM_ROLE_enum
+    token: Int
     updated_at: timestamptz
     user_id: String
     user_phone: String
 }
 
+"order by sum() on columns of table \"user\""
+input user_sum_order_by {
+    token: order_by
+}
+
 input user_updates {
+    "increments the numeric columns with given value of the filtered values"
+    _inc: user_inc_input
     "sets the columns of the filtered rows to the given values"
     _set: user_set_input
     "filter the rows which have to be updated"
     where: user_bool_exp!
+}
+
+"order by var_pop() on columns of table \"user\""
+input user_var_pop_order_by {
+    token: order_by
+}
+
+"order by var_samp() on columns of table \"user\""
+input user_var_samp_order_by {
+    token: order_by
+}
+
+"order by variance() on columns of table \"user\""
+input user_variance_order_by {
+    token: order_by
 }

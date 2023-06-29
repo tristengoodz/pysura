@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
-import 'login_page_controller.dart';
-import '../../widgets/primary_button.dart';
-import '../../widgets/secondary_button.dart';
-import '../../common/constants.dart';
-import '../../widgets/phone_number_field.dart';
-import '../../common/app_text_style.dart';
-import '../../common/app_color.dart';
+import '/common/constants.dart';
+import '/common/utils.dart';
+import '/pages/auth/login_page_provider.dart';
+import '/widgets/primary_button.dart';
+import '/widgets/secondary_button.dart';
+import '/widgets/phone_number_field.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({
@@ -17,11 +15,16 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LoginPageController controller = Get.find();
-    return Obx(
-      () => Scaffold(
-        body: SafeArea(
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final provider = Provider.of<LoginPageProvider>(context, listen: true);
+    return Scaffold(
+      body: SafeArea(
+        child: Center(
           child: Container(
+            constraints: MediaQuery.sizeOf(context).width > Constants.kMinWidth
+                ? const BoxConstraints(maxWidth: 500)
+                : const BoxConstraints(),
             padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -32,20 +35,18 @@ class LoginPage extends StatelessWidget {
                 /// Title and App Name
                 Text(
                   'Login',
-                  style: GoogleFonts.poppins(
-                    textStyle: AppTextStyle.displaySmall,
-                    color: AppColor.primary,
+                  style: textTheme.displaySmall!.copyWith(
+                    color: colorScheme.primary,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 Text(
                   'Welcome to ${Constants.kAppName}',
-                  style: GoogleFonts.poppins(
-                    textStyle: AppTextStyle.headlineSmall,
-                    color: AppColor.primary,
+                  style: textTheme.headlineSmall!.copyWith(
+                    color: colorScheme.primary,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 8),
 
                 /// Phone number text field and Code request button
                 Row(
@@ -55,7 +56,7 @@ class LoginPage extends StatelessWidget {
                     Expanded(
                       child: PhoneNumberField(
                         onNumberChanged: (number) {
-                          controller.phoneNumber = number ?? '';
+                          provider.phoneNumber = number ?? '';
                         },
                       ),
                     ),
@@ -68,35 +69,31 @@ class LoginPage extends StatelessWidget {
                           width: 90,
                           child: SecondaryButton(
                             title: 'Code',
-                            textStyle: GoogleFonts.poppins(
-                              textStyle: AppTextStyle.titleMedium,
-                            ),
+                            textStyle: textTheme.titleMedium!,
                             onPressed: () {
-                              controller.requestSmsCode();
+                              provider.requestSmsCode(context);
                             },
-                            isBusy: controller.codeRequested,
+                            isBusy: provider.codeRequested,
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
 
                 /// SMS Code input box and Login button
                 Opacity(
-                  opacity: controller.shouldShowSmsCodeBox ? 1 : 0,
+                  opacity: provider.shouldShowSmsCodeBox ? 1 : 0,
                   child: Column(
                     children: [
                       TextField(
-                        controller: controller.smsCodeController,
-                        decoration: AppTextStyle.generateTextFieldDecoration(
-                            'SMS Code', ''),
+                        controller: provider.smsCodeController,
+                        decoration: generateTextFieldDecoration(
+                            context, 'SMS Code', ''),
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          textStyle: AppTextStyle.displaySmall,
-                        ),
+                        style: textTheme.displaySmall!,
                       ),
                       const SizedBox(
                         height: 20,
@@ -106,13 +103,11 @@ class LoginPage extends StatelessWidget {
                         width: double.infinity,
                         child: PrimaryButton(
                           title: 'Login',
-                          textStyle: GoogleFonts.poppins(
-                            textStyle: AppTextStyle.headlineMedium,
-                          ),
+                          textStyle: textTheme.headlineMedium!,
                           onPressed: () {
-                            controller.signIn();
+                            provider.signIn(context);
                           },
-                          isBusy: controller.signInRequested,
+                          isBusy: provider.signInRequested,
                         ),
                       ),
                     ],
@@ -125,14 +120,13 @@ class LoginPage extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: InkWell(
                     onTap: () {
-                      controller.openPrivacyPolicy();
+                      provider.openPrivacyPolicy(context);
                     },
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        style: GoogleFonts.poppins(
-                          textStyle: AppTextStyle.bodySmall,
-                          color: AppColor.secondary,
+                        style: textTheme.bodySmall!.copyWith(
+                          color: colorScheme.secondary,
                         ),
                         children: const [
                           TextSpan(

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../common/app_color.dart';
-
 class PrimaryButton extends StatelessWidget {
   final String title;
   final TextStyle textStyle;
@@ -14,12 +12,13 @@ class PrimaryButton extends StatelessWidget {
     required this.title,
     required this.textStyle,
     this.onPressed,
-    required this.isBusy,
+    this.isBusy = false,
     this.overrideColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return FilledButton(
       onPressed: isBusy ? null : onPressed,
       style: ButtonStyle(
@@ -27,15 +26,17 @@ class PrimaryButton extends StatelessWidget {
         padding: MaterialStateProperty.all(
             const EdgeInsets.symmetric(horizontal: 16, vertical: 8)),
         backgroundColor:
-            MaterialStateProperty.all(overrideColor ?? AppColor.primary),
+            MaterialStateProperty.all(overrideColor ?? colorScheme.primary),
       ),
       child: isBusy
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: AppColor.onPrimary,
-                strokeWidth: 2,
+          ? Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: colorScheme.onPrimary,
+                  strokeWidth: 2,
+                ),
               ),
             )
           : Text(title),
