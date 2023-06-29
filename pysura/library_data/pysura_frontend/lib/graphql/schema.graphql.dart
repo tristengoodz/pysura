@@ -1,34 +1,171 @@
+class Input$ActionCreateChatInput {
+  factory Input$ActionCreateChatInput({
+    required String persona_id,
+    required String user_id,
+  }) =>
+      Input$ActionCreateChatInput._({
+        r'persona_id': persona_id,
+        r'user_id': user_id,
+      });
+
+  Input$ActionCreateChatInput._(this._$data);
+
+  factory Input$ActionCreateChatInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$persona_id = data['persona_id'];
+    result$data['persona_id'] = (l$persona_id as String);
+    final l$user_id = data['user_id'];
+    result$data['user_id'] = (l$user_id as String);
+    return Input$ActionCreateChatInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get persona_id => (_$data['persona_id'] as String);
+  String get user_id => (_$data['user_id'] as String);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$persona_id = persona_id;
+    result$data['persona_id'] = l$persona_id;
+    final l$user_id = user_id;
+    result$data['user_id'] = l$user_id;
+    return result$data;
+  }
+
+  CopyWith$Input$ActionCreateChatInput<Input$ActionCreateChatInput>
+      get copyWith => CopyWith$Input$ActionCreateChatInput(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$ActionCreateChatInput) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$persona_id = persona_id;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      l$persona_id,
+      l$user_id,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$ActionCreateChatInput<TRes> {
+  factory CopyWith$Input$ActionCreateChatInput(
+    Input$ActionCreateChatInput instance,
+    TRes Function(Input$ActionCreateChatInput) then,
+  ) = _CopyWithImpl$Input$ActionCreateChatInput;
+
+  factory CopyWith$Input$ActionCreateChatInput.stub(TRes res) =
+      _CopyWithStubImpl$Input$ActionCreateChatInput;
+
+  TRes call({
+    String? persona_id,
+    String? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$ActionCreateChatInput<TRes>
+    implements CopyWith$Input$ActionCreateChatInput<TRes> {
+  _CopyWithImpl$Input$ActionCreateChatInput(
+    this._instance,
+    this._then,
+  );
+
+  final Input$ActionCreateChatInput _instance;
+
+  final TRes Function(Input$ActionCreateChatInput) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? persona_id = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$ActionCreateChatInput._({
+        ..._instance._$data,
+        if (persona_id != _undefined && persona_id != null)
+          'persona_id': (persona_id as String),
+        if (user_id != _undefined && user_id != null)
+          'user_id': (user_id as String),
+      }));
+}
+
+class _CopyWithStubImpl$Input$ActionCreateChatInput<TRes>
+    implements CopyWith$Input$ActionCreateChatInput<TRes> {
+  _CopyWithStubImpl$Input$ActionCreateChatInput(this._res);
+
+  TRes _res;
+
+  call({
+    String? persona_id,
+    String? user_id,
+  }) =>
+      _res;
+}
+
 class Input$ActionMutationPongInput {
   factory Input$ActionMutationPongInput({
-    required String message,
+    String? message,
     required int number,
+    required String user_id,
   }) =>
       Input$ActionMutationPongInput._({
-        r'message': message,
+        if (message != null) r'message': message,
         r'number': number,
+        r'user_id': user_id,
       });
 
   Input$ActionMutationPongInput._(this._$data);
 
   factory Input$ActionMutationPongInput.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
-    final l$message = data['message'];
-    result$data['message'] = (l$message as String);
+    if (data.containsKey('message')) {
+      final l$message = data['message'];
+      result$data['message'] = (l$message as String?);
+    }
     final l$number = data['number'];
     result$data['number'] = (l$number as int);
+    final l$user_id = data['user_id'];
+    result$data['user_id'] = (l$user_id as String);
     return Input$ActionMutationPongInput._(result$data);
   }
 
   Map<String, dynamic> _$data;
 
-  String get message => (_$data['message'] as String);
+  String? get message => (_$data['message'] as String?);
   int get number => (_$data['number'] as int);
+  String get user_id => (_$data['user_id'] as String);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
-    final l$message = message;
-    result$data['message'] = l$message;
+    if (_$data.containsKey('message')) {
+      final l$message = message;
+      result$data['message'] = l$message;
+    }
     final l$number = number;
     result$data['number'] = l$number;
+    final l$user_id = user_id;
+    result$data['user_id'] = l$user_id;
     return result$data;
   }
 
@@ -48,12 +185,20 @@ class Input$ActionMutationPongInput {
     }
     final l$message = message;
     final lOther$message = other.message;
+    if (_$data.containsKey('message') != other._$data.containsKey('message')) {
+      return false;
+    }
     if (l$message != lOther$message) {
       return false;
     }
     final l$number = number;
     final lOther$number = other.number;
     if (l$number != lOther$number) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (l$user_id != lOther$user_id) {
       return false;
     }
     return true;
@@ -63,9 +208,11 @@ class Input$ActionMutationPongInput {
   int get hashCode {
     final l$message = message;
     final l$number = number;
+    final l$user_id = user_id;
     return Object.hashAll([
-      l$message,
+      _$data.containsKey('message') ? l$message : const {},
       l$number,
+      l$user_id,
     ]);
   }
 }
@@ -82,6 +229,7 @@ abstract class CopyWith$Input$ActionMutationPongInput<TRes> {
   TRes call({
     String? message,
     int? number,
+    String? user_id,
   });
 }
 
@@ -101,12 +249,14 @@ class _CopyWithImpl$Input$ActionMutationPongInput<TRes>
   TRes call({
     Object? message = _undefined,
     Object? number = _undefined,
+    Object? user_id = _undefined,
   }) =>
       _then(Input$ActionMutationPongInput._({
         ..._instance._$data,
-        if (message != _undefined && message != null)
-          'message': (message as String),
+        if (message != _undefined) 'message': (message as String?),
         if (number != _undefined && number != null) 'number': (number as int),
+        if (user_id != _undefined && user_id != null)
+          'user_id': (user_id as String),
       }));
 }
 
@@ -119,49 +269,33 @@ class _CopyWithStubImpl$Input$ActionMutationPongInput<TRes>
   call({
     String? message,
     int? number,
+    String? user_id,
   }) =>
       _res;
 }
 
 class Input$ActionQueryPingInput {
-  factory Input$ActionQueryPingInput({
-    String? message,
-    int? number,
-  }) =>
+  factory Input$ActionQueryPingInput({required String user_id}) =>
       Input$ActionQueryPingInput._({
-        if (message != null) r'message': message,
-        if (number != null) r'number': number,
+        r'user_id': user_id,
       });
 
   Input$ActionQueryPingInput._(this._$data);
 
   factory Input$ActionQueryPingInput.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
-    if (data.containsKey('message')) {
-      final l$message = data['message'];
-      result$data['message'] = (l$message as String?);
-    }
-    if (data.containsKey('number')) {
-      final l$number = data['number'];
-      result$data['number'] = (l$number as int?);
-    }
+    final l$user_id = data['user_id'];
+    result$data['user_id'] = (l$user_id as String);
     return Input$ActionQueryPingInput._(result$data);
   }
 
   Map<String, dynamic> _$data;
 
-  String? get message => (_$data['message'] as String?);
-  int? get number => (_$data['number'] as int?);
+  String get user_id => (_$data['user_id'] as String);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
-    if (_$data.containsKey('message')) {
-      final l$message = message;
-      result$data['message'] = l$message;
-    }
-    if (_$data.containsKey('number')) {
-      final l$number = number;
-      result$data['number'] = l$number;
-    }
+    final l$user_id = user_id;
+    result$data['user_id'] = l$user_id;
     return result$data;
   }
 
@@ -179,20 +313,9 @@ class Input$ActionQueryPingInput {
         runtimeType != other.runtimeType) {
       return false;
     }
-    final l$message = message;
-    final lOther$message = other.message;
-    if (_$data.containsKey('message') != other._$data.containsKey('message')) {
-      return false;
-    }
-    if (l$message != lOther$message) {
-      return false;
-    }
-    final l$number = number;
-    final lOther$number = other.number;
-    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
-      return false;
-    }
-    if (l$number != lOther$number) {
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (l$user_id != lOther$user_id) {
       return false;
     }
     return true;
@@ -200,12 +323,8 @@ class Input$ActionQueryPingInput {
 
   @override
   int get hashCode {
-    final l$message = message;
-    final l$number = number;
-    return Object.hashAll([
-      _$data.containsKey('message') ? l$message : const {},
-      _$data.containsKey('number') ? l$number : const {},
-    ]);
+    final l$user_id = user_id;
+    return Object.hashAll([l$user_id]);
   }
 }
 
@@ -218,10 +337,7 @@ abstract class CopyWith$Input$ActionQueryPingInput<TRes> {
   factory CopyWith$Input$ActionQueryPingInput.stub(TRes res) =
       _CopyWithStubImpl$Input$ActionQueryPingInput;
 
-  TRes call({
-    String? message,
-    int? number,
-  });
+  TRes call({String? user_id});
 }
 
 class _CopyWithImpl$Input$ActionQueryPingInput<TRes>
@@ -237,14 +353,11 @@ class _CopyWithImpl$Input$ActionQueryPingInput<TRes>
 
   static const _undefined = <dynamic, dynamic>{};
 
-  TRes call({
-    Object? message = _undefined,
-    Object? number = _undefined,
-  }) =>
+  TRes call({Object? user_id = _undefined}) =>
       _then(Input$ActionQueryPingInput._({
         ..._instance._$data,
-        if (message != _undefined) 'message': (message as String?),
-        if (number != _undefined) 'number': (number as int?),
+        if (user_id != _undefined && user_id != null)
+          'user_id': (user_id as String),
       }));
 }
 
@@ -254,9 +367,190 @@ class _CopyWithStubImpl$Input$ActionQueryPingInput<TRes>
 
   TRes _res;
 
+  call({String? user_id}) => _res;
+}
+
+class Input$ActionStartGenerateChatInput {
+  factory Input$ActionStartGenerateChatInput({
+    required String chat_id,
+    required int max_history_count,
+    required int max_match_count,
+    required double min_match_score,
+    required double model_temperature,
+  }) =>
+      Input$ActionStartGenerateChatInput._({
+        r'chat_id': chat_id,
+        r'max_history_count': max_history_count,
+        r'max_match_count': max_match_count,
+        r'min_match_score': min_match_score,
+        r'model_temperature': model_temperature,
+      });
+
+  Input$ActionStartGenerateChatInput._(this._$data);
+
+  factory Input$ActionStartGenerateChatInput.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$chat_id = data['chat_id'];
+    result$data['chat_id'] = (l$chat_id as String);
+    final l$max_history_count = data['max_history_count'];
+    result$data['max_history_count'] = (l$max_history_count as int);
+    final l$max_match_count = data['max_match_count'];
+    result$data['max_match_count'] = (l$max_match_count as int);
+    final l$min_match_score = data['min_match_score'];
+    result$data['min_match_score'] = (l$min_match_score as num).toDouble();
+    final l$model_temperature = data['model_temperature'];
+    result$data['model_temperature'] = (l$model_temperature as num).toDouble();
+    return Input$ActionStartGenerateChatInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get chat_id => (_$data['chat_id'] as String);
+  int get max_history_count => (_$data['max_history_count'] as int);
+  int get max_match_count => (_$data['max_match_count'] as int);
+  double get min_match_score => (_$data['min_match_score'] as double);
+  double get model_temperature => (_$data['model_temperature'] as double);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$chat_id = chat_id;
+    result$data['chat_id'] = l$chat_id;
+    final l$max_history_count = max_history_count;
+    result$data['max_history_count'] = l$max_history_count;
+    final l$max_match_count = max_match_count;
+    result$data['max_match_count'] = l$max_match_count;
+    final l$min_match_score = min_match_score;
+    result$data['min_match_score'] = l$min_match_score;
+    final l$model_temperature = model_temperature;
+    result$data['model_temperature'] = l$model_temperature;
+    return result$data;
+  }
+
+  CopyWith$Input$ActionStartGenerateChatInput<
+          Input$ActionStartGenerateChatInput>
+      get copyWith => CopyWith$Input$ActionStartGenerateChatInput(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$ActionStartGenerateChatInput) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$max_history_count = max_history_count;
+    final lOther$max_history_count = other.max_history_count;
+    if (l$max_history_count != lOther$max_history_count) {
+      return false;
+    }
+    final l$max_match_count = max_match_count;
+    final lOther$max_match_count = other.max_match_count;
+    if (l$max_match_count != lOther$max_match_count) {
+      return false;
+    }
+    final l$min_match_score = min_match_score;
+    final lOther$min_match_score = other.min_match_score;
+    if (l$min_match_score != lOther$min_match_score) {
+      return false;
+    }
+    final l$model_temperature = model_temperature;
+    final lOther$model_temperature = other.model_temperature;
+    if (l$model_temperature != lOther$model_temperature) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$max_history_count = max_history_count;
+    final l$max_match_count = max_match_count;
+    final l$min_match_score = min_match_score;
+    final l$model_temperature = model_temperature;
+    return Object.hashAll([
+      l$chat_id,
+      l$max_history_count,
+      l$max_match_count,
+      l$min_match_score,
+      l$model_temperature,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$ActionStartGenerateChatInput<TRes> {
+  factory CopyWith$Input$ActionStartGenerateChatInput(
+    Input$ActionStartGenerateChatInput instance,
+    TRes Function(Input$ActionStartGenerateChatInput) then,
+  ) = _CopyWithImpl$Input$ActionStartGenerateChatInput;
+
+  factory CopyWith$Input$ActionStartGenerateChatInput.stub(TRes res) =
+      _CopyWithStubImpl$Input$ActionStartGenerateChatInput;
+
+  TRes call({
+    String? chat_id,
+    int? max_history_count,
+    int? max_match_count,
+    double? min_match_score,
+    double? model_temperature,
+  });
+}
+
+class _CopyWithImpl$Input$ActionStartGenerateChatInput<TRes>
+    implements CopyWith$Input$ActionStartGenerateChatInput<TRes> {
+  _CopyWithImpl$Input$ActionStartGenerateChatInput(
+    this._instance,
+    this._then,
+  );
+
+  final Input$ActionStartGenerateChatInput _instance;
+
+  final TRes Function(Input$ActionStartGenerateChatInput) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? max_history_count = _undefined,
+    Object? max_match_count = _undefined,
+    Object? min_match_score = _undefined,
+    Object? model_temperature = _undefined,
+  }) =>
+      _then(Input$ActionStartGenerateChatInput._({
+        ..._instance._$data,
+        if (chat_id != _undefined && chat_id != null)
+          'chat_id': (chat_id as String),
+        if (max_history_count != _undefined && max_history_count != null)
+          'max_history_count': (max_history_count as int),
+        if (max_match_count != _undefined && max_match_count != null)
+          'max_match_count': (max_match_count as int),
+        if (min_match_score != _undefined && min_match_score != null)
+          'min_match_score': (min_match_score as double),
+        if (model_temperature != _undefined && model_temperature != null)
+          'model_temperature': (model_temperature as double),
+      }));
+}
+
+class _CopyWithStubImpl$Input$ActionStartGenerateChatInput<TRes>
+    implements CopyWith$Input$ActionStartGenerateChatInput<TRes> {
+  _CopyWithStubImpl$Input$ActionStartGenerateChatInput(this._res);
+
+  TRes _res;
+
   call({
-    String? message,
-    int? number,
+    String? chat_id,
+    int? max_history_count,
+    int? max_match_count,
+    double? min_match_score,
+    double? model_temperature,
   }) =>
       _res;
 }
@@ -266,11 +560,13 @@ class Input$ActionUploadFileInput {
     required String file_data,
     required String file_name,
     required String file_type,
+    required bool public,
   }) =>
       Input$ActionUploadFileInput._({
         r'file_data': file_data,
         r'file_name': file_name,
         r'file_type': file_type,
+        r'public': public,
       });
 
   Input$ActionUploadFileInput._(this._$data);
@@ -283,6 +579,8 @@ class Input$ActionUploadFileInput {
     result$data['file_name'] = (l$file_name as String);
     final l$file_type = data['file_type'];
     result$data['file_type'] = (l$file_type as String);
+    final l$public = data['public'];
+    result$data['public'] = (l$public as bool);
     return Input$ActionUploadFileInput._(result$data);
   }
 
@@ -291,6 +589,7 @@ class Input$ActionUploadFileInput {
   String get file_data => (_$data['file_data'] as String);
   String get file_name => (_$data['file_name'] as String);
   String get file_type => (_$data['file_type'] as String);
+  bool get public => (_$data['public'] as bool);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$file_data = file_data;
@@ -299,6 +598,8 @@ class Input$ActionUploadFileInput {
     result$data['file_name'] = l$file_name;
     final l$file_type = file_type;
     result$data['file_type'] = l$file_type;
+    final l$public = public;
+    result$data['public'] = l$public;
     return result$data;
   }
 
@@ -331,6 +632,11 @@ class Input$ActionUploadFileInput {
     if (l$file_type != lOther$file_type) {
       return false;
     }
+    final l$public = public;
+    final lOther$public = other.public;
+    if (l$public != lOther$public) {
+      return false;
+    }
     return true;
   }
 
@@ -339,10 +645,12 @@ class Input$ActionUploadFileInput {
     final l$file_data = file_data;
     final l$file_name = file_name;
     final l$file_type = file_type;
+    final l$public = public;
     return Object.hashAll([
       l$file_data,
       l$file_name,
       l$file_type,
+      l$public,
     ]);
   }
 }
@@ -360,6 +668,7 @@ abstract class CopyWith$Input$ActionUploadFileInput<TRes> {
     String? file_data,
     String? file_name,
     String? file_type,
+    bool? public,
   });
 }
 
@@ -380,6 +689,7 @@ class _CopyWithImpl$Input$ActionUploadFileInput<TRes>
     Object? file_data = _undefined,
     Object? file_name = _undefined,
     Object? file_type = _undefined,
+    Object? public = _undefined,
   }) =>
       _then(Input$ActionUploadFileInput._({
         ..._instance._$data,
@@ -389,6 +699,7 @@ class _CopyWithImpl$Input$ActionUploadFileInput<TRes>
           'file_name': (file_name as String),
         if (file_type != _undefined && file_type != null)
           'file_type': (file_type as String),
+        if (public != _undefined && public != null) 'public': (public as bool),
       }));
 }
 
@@ -402,6 +713,7 @@ class _CopyWithStubImpl$Input$ActionUploadFileInput<TRes>
     String? file_data,
     String? file_name,
     String? file_type,
+    bool? public,
   }) =>
       _res;
 }
@@ -758,6 +1070,10 @@ class Input$ENUM_ROLE_bool_exp {
     Input$ENUM_ROLE_bool_exp? $_not,
     List<Input$ENUM_ROLE_bool_exp>? $_or,
     Input$String_comparison_exp? comment,
+    Input$message_bool_exp? messages,
+    Input$message_aggregate_bool_exp? messages_aggregate,
+    Input$user_bool_exp? users,
+    Input$user_aggregate_bool_exp? users_aggregate,
     Input$String_comparison_exp? value,
   }) =>
       Input$ENUM_ROLE_bool_exp._({
@@ -765,6 +1081,11 @@ class Input$ENUM_ROLE_bool_exp {
         if ($_not != null) r'_not': $_not,
         if ($_or != null) r'_or': $_or,
         if (comment != null) r'comment': comment,
+        if (messages != null) r'messages': messages,
+        if (messages_aggregate != null)
+          r'messages_aggregate': messages_aggregate,
+        if (users != null) r'users': users,
+        if (users_aggregate != null) r'users_aggregate': users_aggregate,
         if (value != null) r'value': value,
       });
 
@@ -800,6 +1121,33 @@ class Input$ENUM_ROLE_bool_exp {
           : Input$String_comparison_exp.fromJson(
               (l$comment as Map<String, dynamic>));
     }
+    if (data.containsKey('messages')) {
+      final l$messages = data['messages'];
+      result$data['messages'] = l$messages == null
+          ? null
+          : Input$message_bool_exp.fromJson(
+              (l$messages as Map<String, dynamic>));
+    }
+    if (data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = data['messages_aggregate'];
+      result$data['messages_aggregate'] = l$messages_aggregate == null
+          ? null
+          : Input$message_aggregate_bool_exp.fromJson(
+              (l$messages_aggregate as Map<String, dynamic>));
+    }
+    if (data.containsKey('users')) {
+      final l$users = data['users'];
+      result$data['users'] = l$users == null
+          ? null
+          : Input$user_bool_exp.fromJson((l$users as Map<String, dynamic>));
+    }
+    if (data.containsKey('users_aggregate')) {
+      final l$users_aggregate = data['users_aggregate'];
+      result$data['users_aggregate'] = l$users_aggregate == null
+          ? null
+          : Input$user_aggregate_bool_exp.fromJson(
+              (l$users_aggregate as Map<String, dynamic>));
+    }
     if (data.containsKey('value')) {
       final l$value = data['value'];
       result$data['value'] = l$value == null
@@ -820,6 +1168,13 @@ class Input$ENUM_ROLE_bool_exp {
       (_$data['_or'] as List<Input$ENUM_ROLE_bool_exp>?);
   Input$String_comparison_exp? get comment =>
       (_$data['comment'] as Input$String_comparison_exp?);
+  Input$message_bool_exp? get messages =>
+      (_$data['messages'] as Input$message_bool_exp?);
+  Input$message_aggregate_bool_exp? get messages_aggregate =>
+      (_$data['messages_aggregate'] as Input$message_aggregate_bool_exp?);
+  Input$user_bool_exp? get users => (_$data['users'] as Input$user_bool_exp?);
+  Input$user_aggregate_bool_exp? get users_aggregate =>
+      (_$data['users_aggregate'] as Input$user_aggregate_bool_exp?);
   Input$String_comparison_exp? get value =>
       (_$data['value'] as Input$String_comparison_exp?);
   Map<String, dynamic> toJson() {
@@ -839,6 +1194,22 @@ class Input$ENUM_ROLE_bool_exp {
     if (_$data.containsKey('comment')) {
       final l$comment = comment;
       result$data['comment'] = l$comment?.toJson();
+    }
+    if (_$data.containsKey('messages')) {
+      final l$messages = messages;
+      result$data['messages'] = l$messages?.toJson();
+    }
+    if (_$data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = messages_aggregate;
+      result$data['messages_aggregate'] = l$messages_aggregate?.toJson();
+    }
+    if (_$data.containsKey('users')) {
+      final l$users = users;
+      result$data['users'] = l$users?.toJson();
+    }
+    if (_$data.containsKey('users_aggregate')) {
+      final l$users_aggregate = users_aggregate;
+      result$data['users_aggregate'] = l$users_aggregate?.toJson();
     }
     if (_$data.containsKey('value')) {
       final l$value = value;
@@ -915,6 +1286,41 @@ class Input$ENUM_ROLE_bool_exp {
     if (l$comment != lOther$comment) {
       return false;
     }
+    final l$messages = messages;
+    final lOther$messages = other.messages;
+    if (_$data.containsKey('messages') !=
+        other._$data.containsKey('messages')) {
+      return false;
+    }
+    if (l$messages != lOther$messages) {
+      return false;
+    }
+    final l$messages_aggregate = messages_aggregate;
+    final lOther$messages_aggregate = other.messages_aggregate;
+    if (_$data.containsKey('messages_aggregate') !=
+        other._$data.containsKey('messages_aggregate')) {
+      return false;
+    }
+    if (l$messages_aggregate != lOther$messages_aggregate) {
+      return false;
+    }
+    final l$users = users;
+    final lOther$users = other.users;
+    if (_$data.containsKey('users') != other._$data.containsKey('users')) {
+      return false;
+    }
+    if (l$users != lOther$users) {
+      return false;
+    }
+    final l$users_aggregate = users_aggregate;
+    final lOther$users_aggregate = other.users_aggregate;
+    if (_$data.containsKey('users_aggregate') !=
+        other._$data.containsKey('users_aggregate')) {
+      return false;
+    }
+    if (l$users_aggregate != lOther$users_aggregate) {
+      return false;
+    }
     final l$value = value;
     final lOther$value = other.value;
     if (_$data.containsKey('value') != other._$data.containsKey('value')) {
@@ -932,6 +1338,10 @@ class Input$ENUM_ROLE_bool_exp {
     final l$$_not = $_not;
     final l$$_or = $_or;
     final l$comment = comment;
+    final l$messages = messages;
+    final l$messages_aggregate = messages_aggregate;
+    final l$users = users;
+    final l$users_aggregate = users_aggregate;
     final l$value = value;
     return Object.hashAll([
       _$data.containsKey('_and')
@@ -946,6 +1356,12 @@ class Input$ENUM_ROLE_bool_exp {
               : Object.hashAll(l$$_or.map((v) => v))
           : const {},
       _$data.containsKey('comment') ? l$comment : const {},
+      _$data.containsKey('messages') ? l$messages : const {},
+      _$data.containsKey('messages_aggregate')
+          ? l$messages_aggregate
+          : const {},
+      _$data.containsKey('users') ? l$users : const {},
+      _$data.containsKey('users_aggregate') ? l$users_aggregate : const {},
       _$data.containsKey('value') ? l$value : const {},
     ]);
   }
@@ -965,6 +1381,10 @@ abstract class CopyWith$Input$ENUM_ROLE_bool_exp<TRes> {
     Input$ENUM_ROLE_bool_exp? $_not,
     List<Input$ENUM_ROLE_bool_exp>? $_or,
     Input$String_comparison_exp? comment,
+    Input$message_bool_exp? messages,
+    Input$message_aggregate_bool_exp? messages_aggregate,
+    Input$user_bool_exp? users,
+    Input$user_aggregate_bool_exp? users_aggregate,
     Input$String_comparison_exp? value,
   });
   TRes $_and(
@@ -979,6 +1399,10 @@ abstract class CopyWith$Input$ENUM_ROLE_bool_exp<TRes> {
                   CopyWith$Input$ENUM_ROLE_bool_exp<Input$ENUM_ROLE_bool_exp>>?)
           _fn);
   CopyWith$Input$String_comparison_exp<TRes> get comment;
+  CopyWith$Input$message_bool_exp<TRes> get messages;
+  CopyWith$Input$message_aggregate_bool_exp<TRes> get messages_aggregate;
+  CopyWith$Input$user_bool_exp<TRes> get users;
+  CopyWith$Input$user_aggregate_bool_exp<TRes> get users_aggregate;
   CopyWith$Input$String_comparison_exp<TRes> get value;
 }
 
@@ -1000,6 +1424,10 @@ class _CopyWithImpl$Input$ENUM_ROLE_bool_exp<TRes>
     Object? $_not = _undefined,
     Object? $_or = _undefined,
     Object? comment = _undefined,
+    Object? messages = _undefined,
+    Object? messages_aggregate = _undefined,
+    Object? users = _undefined,
+    Object? users_aggregate = _undefined,
     Object? value = _undefined,
   }) =>
       _then(Input$ENUM_ROLE_bool_exp._({
@@ -1011,6 +1439,15 @@ class _CopyWithImpl$Input$ENUM_ROLE_bool_exp<TRes>
           '_or': ($_or as List<Input$ENUM_ROLE_bool_exp>?),
         if (comment != _undefined)
           'comment': (comment as Input$String_comparison_exp?),
+        if (messages != _undefined)
+          'messages': (messages as Input$message_bool_exp?),
+        if (messages_aggregate != _undefined)
+          'messages_aggregate':
+              (messages_aggregate as Input$message_aggregate_bool_exp?),
+        if (users != _undefined) 'users': (users as Input$user_bool_exp?),
+        if (users_aggregate != _undefined)
+          'users_aggregate':
+              (users_aggregate as Input$user_aggregate_bool_exp?),
         if (value != _undefined)
           'value': (value as Input$String_comparison_exp?),
       }));
@@ -1053,6 +1490,37 @@ class _CopyWithImpl$Input$ENUM_ROLE_bool_exp<TRes>
             local$comment, (e) => call(comment: e));
   }
 
+  CopyWith$Input$message_bool_exp<TRes> get messages {
+    final local$messages = _instance.messages;
+    return local$messages == null
+        ? CopyWith$Input$message_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_bool_exp(
+            local$messages, (e) => call(messages: e));
+  }
+
+  CopyWith$Input$message_aggregate_bool_exp<TRes> get messages_aggregate {
+    final local$messages_aggregate = _instance.messages_aggregate;
+    return local$messages_aggregate == null
+        ? CopyWith$Input$message_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_aggregate_bool_exp(
+            local$messages_aggregate, (e) => call(messages_aggregate: e));
+  }
+
+  CopyWith$Input$user_bool_exp<TRes> get users {
+    final local$users = _instance.users;
+    return local$users == null
+        ? CopyWith$Input$user_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$user_bool_exp(local$users, (e) => call(users: e));
+  }
+
+  CopyWith$Input$user_aggregate_bool_exp<TRes> get users_aggregate {
+    final local$users_aggregate = _instance.users_aggregate;
+    return local$users_aggregate == null
+        ? CopyWith$Input$user_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$user_aggregate_bool_exp(
+            local$users_aggregate, (e) => call(users_aggregate: e));
+  }
+
   CopyWith$Input$String_comparison_exp<TRes> get value {
     final local$value = _instance.value;
     return local$value == null
@@ -1073,6 +1541,10 @@ class _CopyWithStubImpl$Input$ENUM_ROLE_bool_exp<TRes>
     Input$ENUM_ROLE_bool_exp? $_not,
     List<Input$ENUM_ROLE_bool_exp>? $_or,
     Input$String_comparison_exp? comment,
+    Input$message_bool_exp? messages,
+    Input$message_aggregate_bool_exp? messages_aggregate,
+    Input$user_bool_exp? users,
+    Input$user_aggregate_bool_exp? users_aggregate,
     Input$String_comparison_exp? value,
   }) =>
       _res;
@@ -1082,6 +1554,14 @@ class _CopyWithStubImpl$Input$ENUM_ROLE_bool_exp<TRes>
   $_or(_fn) => _res;
   CopyWith$Input$String_comparison_exp<TRes> get comment =>
       CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$message_bool_exp<TRes> get messages =>
+      CopyWith$Input$message_bool_exp.stub(_res);
+  CopyWith$Input$message_aggregate_bool_exp<TRes> get messages_aggregate =>
+      CopyWith$Input$message_aggregate_bool_exp.stub(_res);
+  CopyWith$Input$user_bool_exp<TRes> get users =>
+      CopyWith$Input$user_bool_exp.stub(_res);
+  CopyWith$Input$user_aggregate_bool_exp<TRes> get users_aggregate =>
+      CopyWith$Input$user_aggregate_bool_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get value =>
       CopyWith$Input$String_comparison_exp.stub(_res);
 }
@@ -1349,10 +1829,14 @@ class _CopyWithStubImpl$Input$ENUM_ROLE_enum_comparison_exp<TRes>
 class Input$ENUM_ROLE_insert_input {
   factory Input$ENUM_ROLE_insert_input({
     String? comment,
+    Input$message_arr_rel_insert_input? messages,
+    Input$user_arr_rel_insert_input? users,
     String? value,
   }) =>
       Input$ENUM_ROLE_insert_input._({
         if (comment != null) r'comment': comment,
+        if (messages != null) r'messages': messages,
+        if (users != null) r'users': users,
         if (value != null) r'value': value,
       });
 
@@ -1364,6 +1848,20 @@ class Input$ENUM_ROLE_insert_input {
       final l$comment = data['comment'];
       result$data['comment'] = (l$comment as String?);
     }
+    if (data.containsKey('messages')) {
+      final l$messages = data['messages'];
+      result$data['messages'] = l$messages == null
+          ? null
+          : Input$message_arr_rel_insert_input.fromJson(
+              (l$messages as Map<String, dynamic>));
+    }
+    if (data.containsKey('users')) {
+      final l$users = data['users'];
+      result$data['users'] = l$users == null
+          ? null
+          : Input$user_arr_rel_insert_input.fromJson(
+              (l$users as Map<String, dynamic>));
+    }
     if (data.containsKey('value')) {
       final l$value = data['value'];
       result$data['value'] = (l$value as String?);
@@ -1374,12 +1872,24 @@ class Input$ENUM_ROLE_insert_input {
   Map<String, dynamic> _$data;
 
   String? get comment => (_$data['comment'] as String?);
+  Input$message_arr_rel_insert_input? get messages =>
+      (_$data['messages'] as Input$message_arr_rel_insert_input?);
+  Input$user_arr_rel_insert_input? get users =>
+      (_$data['users'] as Input$user_arr_rel_insert_input?);
   String? get value => (_$data['value'] as String?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     if (_$data.containsKey('comment')) {
       final l$comment = comment;
       result$data['comment'] = l$comment;
+    }
+    if (_$data.containsKey('messages')) {
+      final l$messages = messages;
+      result$data['messages'] = l$messages?.toJson();
+    }
+    if (_$data.containsKey('users')) {
+      final l$users = users;
+      result$data['users'] = l$users?.toJson();
     }
     if (_$data.containsKey('value')) {
       final l$value = value;
@@ -1410,6 +1920,23 @@ class Input$ENUM_ROLE_insert_input {
     if (l$comment != lOther$comment) {
       return false;
     }
+    final l$messages = messages;
+    final lOther$messages = other.messages;
+    if (_$data.containsKey('messages') !=
+        other._$data.containsKey('messages')) {
+      return false;
+    }
+    if (l$messages != lOther$messages) {
+      return false;
+    }
+    final l$users = users;
+    final lOther$users = other.users;
+    if (_$data.containsKey('users') != other._$data.containsKey('users')) {
+      return false;
+    }
+    if (l$users != lOther$users) {
+      return false;
+    }
     final l$value = value;
     final lOther$value = other.value;
     if (_$data.containsKey('value') != other._$data.containsKey('value')) {
@@ -1424,9 +1951,13 @@ class Input$ENUM_ROLE_insert_input {
   @override
   int get hashCode {
     final l$comment = comment;
+    final l$messages = messages;
+    final l$users = users;
     final l$value = value;
     return Object.hashAll([
       _$data.containsKey('comment') ? l$comment : const {},
+      _$data.containsKey('messages') ? l$messages : const {},
+      _$data.containsKey('users') ? l$users : const {},
       _$data.containsKey('value') ? l$value : const {},
     ]);
   }
@@ -1443,8 +1974,12 @@ abstract class CopyWith$Input$ENUM_ROLE_insert_input<TRes> {
 
   TRes call({
     String? comment,
+    Input$message_arr_rel_insert_input? messages,
+    Input$user_arr_rel_insert_input? users,
     String? value,
   });
+  CopyWith$Input$message_arr_rel_insert_input<TRes> get messages;
+  CopyWith$Input$user_arr_rel_insert_input<TRes> get users;
 }
 
 class _CopyWithImpl$Input$ENUM_ROLE_insert_input<TRes>
@@ -1462,13 +1997,34 @@ class _CopyWithImpl$Input$ENUM_ROLE_insert_input<TRes>
 
   TRes call({
     Object? comment = _undefined,
+    Object? messages = _undefined,
+    Object? users = _undefined,
     Object? value = _undefined,
   }) =>
       _then(Input$ENUM_ROLE_insert_input._({
         ..._instance._$data,
         if (comment != _undefined) 'comment': (comment as String?),
+        if (messages != _undefined)
+          'messages': (messages as Input$message_arr_rel_insert_input?),
+        if (users != _undefined)
+          'users': (users as Input$user_arr_rel_insert_input?),
         if (value != _undefined) 'value': (value as String?),
       }));
+  CopyWith$Input$message_arr_rel_insert_input<TRes> get messages {
+    final local$messages = _instance.messages;
+    return local$messages == null
+        ? CopyWith$Input$message_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$message_arr_rel_insert_input(
+            local$messages, (e) => call(messages: e));
+  }
+
+  CopyWith$Input$user_arr_rel_insert_input<TRes> get users {
+    final local$users = _instance.users;
+    return local$users == null
+        ? CopyWith$Input$user_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$user_arr_rel_insert_input(
+            local$users, (e) => call(users: e));
+  }
 }
 
 class _CopyWithStubImpl$Input$ENUM_ROLE_insert_input<TRes>
@@ -1479,20 +2035,187 @@ class _CopyWithStubImpl$Input$ENUM_ROLE_insert_input<TRes>
 
   call({
     String? comment,
+    Input$message_arr_rel_insert_input? messages,
+    Input$user_arr_rel_insert_input? users,
     String? value,
   }) =>
       _res;
+  CopyWith$Input$message_arr_rel_insert_input<TRes> get messages =>
+      CopyWith$Input$message_arr_rel_insert_input.stub(_res);
+  CopyWith$Input$user_arr_rel_insert_input<TRes> get users =>
+      CopyWith$Input$user_arr_rel_insert_input.stub(_res);
+}
+
+class Input$ENUM_ROLE_obj_rel_insert_input {
+  factory Input$ENUM_ROLE_obj_rel_insert_input({
+    required Input$ENUM_ROLE_insert_input data,
+    Input$ENUM_ROLE_on_conflict? on_conflict,
+  }) =>
+      Input$ENUM_ROLE_obj_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$ENUM_ROLE_obj_rel_insert_input._(this._$data);
+
+  factory Input$ENUM_ROLE_obj_rel_insert_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] =
+        Input$ENUM_ROLE_insert_input.fromJson((l$data as Map<String, dynamic>));
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$ENUM_ROLE_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$ENUM_ROLE_obj_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$ENUM_ROLE_insert_input get data =>
+      (_$data['data'] as Input$ENUM_ROLE_insert_input);
+  Input$ENUM_ROLE_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$ENUM_ROLE_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.toJson();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$ENUM_ROLE_obj_rel_insert_input<
+          Input$ENUM_ROLE_obj_rel_insert_input>
+      get copyWith => CopyWith$Input$ENUM_ROLE_obj_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$ENUM_ROLE_obj_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data != lOther$data) {
+      return false;
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      l$data,
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$ENUM_ROLE_obj_rel_insert_input<TRes> {
+  factory CopyWith$Input$ENUM_ROLE_obj_rel_insert_input(
+    Input$ENUM_ROLE_obj_rel_insert_input instance,
+    TRes Function(Input$ENUM_ROLE_obj_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$ENUM_ROLE_obj_rel_insert_input;
+
+  factory CopyWith$Input$ENUM_ROLE_obj_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$ENUM_ROLE_obj_rel_insert_input;
+
+  TRes call({
+    Input$ENUM_ROLE_insert_input? data,
+    Input$ENUM_ROLE_on_conflict? on_conflict,
+  });
+  CopyWith$Input$ENUM_ROLE_insert_input<TRes> get data;
+  CopyWith$Input$ENUM_ROLE_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$ENUM_ROLE_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$ENUM_ROLE_obj_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$ENUM_ROLE_obj_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$ENUM_ROLE_obj_rel_insert_input _instance;
+
+  final TRes Function(Input$ENUM_ROLE_obj_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$ENUM_ROLE_obj_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as Input$ENUM_ROLE_insert_input),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$ENUM_ROLE_on_conflict?),
+      }));
+  CopyWith$Input$ENUM_ROLE_insert_input<TRes> get data {
+    final local$data = _instance.data;
+    return CopyWith$Input$ENUM_ROLE_insert_input(
+        local$data, (e) => call(data: e));
+  }
+
+  CopyWith$Input$ENUM_ROLE_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$ENUM_ROLE_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$ENUM_ROLE_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$ENUM_ROLE_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$ENUM_ROLE_obj_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$ENUM_ROLE_obj_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$ENUM_ROLE_insert_input? data,
+    Input$ENUM_ROLE_on_conflict? on_conflict,
+  }) =>
+      _res;
+  CopyWith$Input$ENUM_ROLE_insert_input<TRes> get data =>
+      CopyWith$Input$ENUM_ROLE_insert_input.stub(_res);
+  CopyWith$Input$ENUM_ROLE_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$ENUM_ROLE_on_conflict.stub(_res);
 }
 
 class Input$ENUM_ROLE_on_conflict {
   factory Input$ENUM_ROLE_on_conflict({
     required Enum$ENUM_ROLE_constraint constraint,
-    required List<Enum$ENUM_ROLE_update_column> update_columns,
+    List<Enum$ENUM_ROLE_update_column>? update_columns,
     Input$ENUM_ROLE_bool_exp? where,
   }) =>
       Input$ENUM_ROLE_on_conflict._({
         r'constraint': constraint,
-        r'update_columns': update_columns,
+        if (update_columns != null) r'update_columns': update_columns,
         if (where != null) r'where': where,
       });
 
@@ -1503,10 +2226,12 @@ class Input$ENUM_ROLE_on_conflict {
     final l$constraint = data['constraint'];
     result$data['constraint'] =
         fromJson$Enum$ENUM_ROLE_constraint((l$constraint as String));
-    final l$update_columns = data['update_columns'];
-    result$data['update_columns'] = (l$update_columns as List<dynamic>)
-        .map((e) => fromJson$Enum$ENUM_ROLE_update_column((e as String)))
-        .toList();
+    if (data.containsKey('update_columns')) {
+      final l$update_columns = data['update_columns'];
+      result$data['update_columns'] = (l$update_columns as List<dynamic>)
+          .map((e) => fromJson$Enum$ENUM_ROLE_update_column((e as String)))
+          .toList();
+    }
     if (data.containsKey('where')) {
       final l$where = data['where'];
       result$data['where'] = l$where == null
@@ -1521,18 +2246,21 @@ class Input$ENUM_ROLE_on_conflict {
 
   Enum$ENUM_ROLE_constraint get constraint =>
       (_$data['constraint'] as Enum$ENUM_ROLE_constraint);
-  List<Enum$ENUM_ROLE_update_column> get update_columns =>
-      (_$data['update_columns'] as List<Enum$ENUM_ROLE_update_column>);
+  List<Enum$ENUM_ROLE_update_column>? get update_columns =>
+      (_$data['update_columns'] as List<Enum$ENUM_ROLE_update_column>?);
   Input$ENUM_ROLE_bool_exp? get where =>
       (_$data['where'] as Input$ENUM_ROLE_bool_exp?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$constraint = constraint;
     result$data['constraint'] = toJson$Enum$ENUM_ROLE_constraint(l$constraint);
-    final l$update_columns = update_columns;
-    result$data['update_columns'] = l$update_columns
-        .map((e) => toJson$Enum$ENUM_ROLE_update_column(e))
-        .toList();
+    if (_$data.containsKey('update_columns')) {
+      final l$update_columns = update_columns;
+      result$data['update_columns'] =
+          (l$update_columns as List<Enum$ENUM_ROLE_update_column>)
+              .map((e) => toJson$Enum$ENUM_ROLE_update_column(e))
+              .toList();
+    }
     if (_$data.containsKey('where')) {
       final l$where = where;
       result$data['where'] = l$where?.toJson();
@@ -1561,15 +2289,23 @@ class Input$ENUM_ROLE_on_conflict {
     }
     final l$update_columns = update_columns;
     final lOther$update_columns = other.update_columns;
-    if (l$update_columns.length != lOther$update_columns.length) {
+    if (_$data.containsKey('update_columns') !=
+        other._$data.containsKey('update_columns')) {
       return false;
     }
-    for (int i = 0; i < l$update_columns.length; i++) {
-      final l$update_columns$entry = l$update_columns[i];
-      final lOther$update_columns$entry = lOther$update_columns[i];
-      if (l$update_columns$entry != lOther$update_columns$entry) {
+    if (l$update_columns != null && lOther$update_columns != null) {
+      if (l$update_columns.length != lOther$update_columns.length) {
         return false;
       }
+      for (int i = 0; i < l$update_columns.length; i++) {
+        final l$update_columns$entry = l$update_columns[i];
+        final lOther$update_columns$entry = lOther$update_columns[i];
+        if (l$update_columns$entry != lOther$update_columns$entry) {
+          return false;
+        }
+      }
+    } else if (l$update_columns != lOther$update_columns) {
+      return false;
     }
     final l$where = where;
     final lOther$where = other.where;
@@ -1589,7 +2325,11 @@ class Input$ENUM_ROLE_on_conflict {
     final l$where = where;
     return Object.hashAll([
       l$constraint,
-      Object.hashAll(l$update_columns.map((v) => v)),
+      _$data.containsKey('update_columns')
+          ? l$update_columns == null
+              ? null
+              : Object.hashAll(l$update_columns.map((v) => v))
+          : const {},
       _$data.containsKey('where') ? l$where : const {},
     ]);
   }
@@ -1666,10 +2406,15 @@ class _CopyWithStubImpl$Input$ENUM_ROLE_on_conflict<TRes>
 class Input$ENUM_ROLE_order_by {
   factory Input$ENUM_ROLE_order_by({
     Enum$order_by? comment,
+    Input$message_aggregate_order_by? messages_aggregate,
+    Input$user_aggregate_order_by? users_aggregate,
     Enum$order_by? value,
   }) =>
       Input$ENUM_ROLE_order_by._({
         if (comment != null) r'comment': comment,
+        if (messages_aggregate != null)
+          r'messages_aggregate': messages_aggregate,
+        if (users_aggregate != null) r'users_aggregate': users_aggregate,
         if (value != null) r'value': value,
       });
 
@@ -1683,6 +2428,20 @@ class Input$ENUM_ROLE_order_by {
           ? null
           : fromJson$Enum$order_by((l$comment as String));
     }
+    if (data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = data['messages_aggregate'];
+      result$data['messages_aggregate'] = l$messages_aggregate == null
+          ? null
+          : Input$message_aggregate_order_by.fromJson(
+              (l$messages_aggregate as Map<String, dynamic>));
+    }
+    if (data.containsKey('users_aggregate')) {
+      final l$users_aggregate = data['users_aggregate'];
+      result$data['users_aggregate'] = l$users_aggregate == null
+          ? null
+          : Input$user_aggregate_order_by.fromJson(
+              (l$users_aggregate as Map<String, dynamic>));
+    }
     if (data.containsKey('value')) {
       final l$value = data['value'];
       result$data['value'] =
@@ -1694,6 +2453,10 @@ class Input$ENUM_ROLE_order_by {
   Map<String, dynamic> _$data;
 
   Enum$order_by? get comment => (_$data['comment'] as Enum$order_by?);
+  Input$message_aggregate_order_by? get messages_aggregate =>
+      (_$data['messages_aggregate'] as Input$message_aggregate_order_by?);
+  Input$user_aggregate_order_by? get users_aggregate =>
+      (_$data['users_aggregate'] as Input$user_aggregate_order_by?);
   Enum$order_by? get value => (_$data['value'] as Enum$order_by?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
@@ -1701,6 +2464,14 @@ class Input$ENUM_ROLE_order_by {
       final l$comment = comment;
       result$data['comment'] =
           l$comment == null ? null : toJson$Enum$order_by(l$comment);
+    }
+    if (_$data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = messages_aggregate;
+      result$data['messages_aggregate'] = l$messages_aggregate?.toJson();
+    }
+    if (_$data.containsKey('users_aggregate')) {
+      final l$users_aggregate = users_aggregate;
+      result$data['users_aggregate'] = l$users_aggregate?.toJson();
     }
     if (_$data.containsKey('value')) {
       final l$value = value;
@@ -1732,6 +2503,24 @@ class Input$ENUM_ROLE_order_by {
     if (l$comment != lOther$comment) {
       return false;
     }
+    final l$messages_aggregate = messages_aggregate;
+    final lOther$messages_aggregate = other.messages_aggregate;
+    if (_$data.containsKey('messages_aggregate') !=
+        other._$data.containsKey('messages_aggregate')) {
+      return false;
+    }
+    if (l$messages_aggregate != lOther$messages_aggregate) {
+      return false;
+    }
+    final l$users_aggregate = users_aggregate;
+    final lOther$users_aggregate = other.users_aggregate;
+    if (_$data.containsKey('users_aggregate') !=
+        other._$data.containsKey('users_aggregate')) {
+      return false;
+    }
+    if (l$users_aggregate != lOther$users_aggregate) {
+      return false;
+    }
     final l$value = value;
     final lOther$value = other.value;
     if (_$data.containsKey('value') != other._$data.containsKey('value')) {
@@ -1746,9 +2535,15 @@ class Input$ENUM_ROLE_order_by {
   @override
   int get hashCode {
     final l$comment = comment;
+    final l$messages_aggregate = messages_aggregate;
+    final l$users_aggregate = users_aggregate;
     final l$value = value;
     return Object.hashAll([
       _$data.containsKey('comment') ? l$comment : const {},
+      _$data.containsKey('messages_aggregate')
+          ? l$messages_aggregate
+          : const {},
+      _$data.containsKey('users_aggregate') ? l$users_aggregate : const {},
       _$data.containsKey('value') ? l$value : const {},
     ]);
   }
@@ -1765,8 +2560,12 @@ abstract class CopyWith$Input$ENUM_ROLE_order_by<TRes> {
 
   TRes call({
     Enum$order_by? comment,
+    Input$message_aggregate_order_by? messages_aggregate,
+    Input$user_aggregate_order_by? users_aggregate,
     Enum$order_by? value,
   });
+  CopyWith$Input$message_aggregate_order_by<TRes> get messages_aggregate;
+  CopyWith$Input$user_aggregate_order_by<TRes> get users_aggregate;
 }
 
 class _CopyWithImpl$Input$ENUM_ROLE_order_by<TRes>
@@ -1784,13 +2583,36 @@ class _CopyWithImpl$Input$ENUM_ROLE_order_by<TRes>
 
   TRes call({
     Object? comment = _undefined,
+    Object? messages_aggregate = _undefined,
+    Object? users_aggregate = _undefined,
     Object? value = _undefined,
   }) =>
       _then(Input$ENUM_ROLE_order_by._({
         ..._instance._$data,
         if (comment != _undefined) 'comment': (comment as Enum$order_by?),
+        if (messages_aggregate != _undefined)
+          'messages_aggregate':
+              (messages_aggregate as Input$message_aggregate_order_by?),
+        if (users_aggregate != _undefined)
+          'users_aggregate':
+              (users_aggregate as Input$user_aggregate_order_by?),
         if (value != _undefined) 'value': (value as Enum$order_by?),
       }));
+  CopyWith$Input$message_aggregate_order_by<TRes> get messages_aggregate {
+    final local$messages_aggregate = _instance.messages_aggregate;
+    return local$messages_aggregate == null
+        ? CopyWith$Input$message_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$message_aggregate_order_by(
+            local$messages_aggregate, (e) => call(messages_aggregate: e));
+  }
+
+  CopyWith$Input$user_aggregate_order_by<TRes> get users_aggregate {
+    final local$users_aggregate = _instance.users_aggregate;
+    return local$users_aggregate == null
+        ? CopyWith$Input$user_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_aggregate_order_by(
+            local$users_aggregate, (e) => call(users_aggregate: e));
+  }
 }
 
 class _CopyWithStubImpl$Input$ENUM_ROLE_order_by<TRes>
@@ -1801,9 +2623,15 @@ class _CopyWithStubImpl$Input$ENUM_ROLE_order_by<TRes>
 
   call({
     Enum$order_by? comment,
+    Input$message_aggregate_order_by? messages_aggregate,
+    Input$user_aggregate_order_by? users_aggregate,
     Enum$order_by? value,
   }) =>
       _res;
+  CopyWith$Input$message_aggregate_order_by<TRes> get messages_aggregate =>
+      CopyWith$Input$message_aggregate_order_by.stub(_res);
+  CopyWith$Input$user_aggregate_order_by<TRes> get users_aggregate =>
+      CopyWith$Input$user_aggregate_order_by.stub(_res);
 }
 
 class Input$ENUM_ROLE_pk_columns_input {
@@ -3438,6 +4266,7 @@ class Input$app_bool_exp {
     List<Input$app_bool_exp>? $_and,
     Input$app_bool_exp? $_not,
     List<Input$app_bool_exp>? $_or,
+    Input$String_comparison_exp? message,
     Input$String_comparison_exp? name,
     Input$String_comparison_exp? storage_bucket,
     Input$String_comparison_exp? version_latest,
@@ -3447,6 +4276,7 @@ class Input$app_bool_exp {
         if ($_and != null) r'_and': $_and,
         if ($_not != null) r'_not': $_not,
         if ($_or != null) r'_or': $_or,
+        if (message != null) r'message': message,
         if (name != null) r'name': name,
         if (storage_bucket != null) r'storage_bucket': storage_bucket,
         if (version_latest != null) r'version_latest': version_latest,
@@ -3474,6 +4304,13 @@ class Input$app_bool_exp {
       result$data['_or'] = (l$$_or as List<dynamic>?)
           ?.map((e) => Input$app_bool_exp.fromJson((e as Map<String, dynamic>)))
           .toList();
+    }
+    if (data.containsKey('message')) {
+      final l$message = data['message'];
+      result$data['message'] = l$message == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$message as Map<String, dynamic>));
     }
     if (data.containsKey('name')) {
       final l$name = data['name'];
@@ -3513,6 +4350,8 @@ class Input$app_bool_exp {
   Input$app_bool_exp? get $_not => (_$data['_not'] as Input$app_bool_exp?);
   List<Input$app_bool_exp>? get $_or =>
       (_$data['_or'] as List<Input$app_bool_exp>?);
+  Input$String_comparison_exp? get message =>
+      (_$data['message'] as Input$String_comparison_exp?);
   Input$String_comparison_exp? get name =>
       (_$data['name'] as Input$String_comparison_exp?);
   Input$String_comparison_exp? get storage_bucket =>
@@ -3534,6 +4373,10 @@ class Input$app_bool_exp {
     if (_$data.containsKey('_or')) {
       final l$$_or = $_or;
       result$data['_or'] = l$$_or?.map((e) => e.toJson()).toList();
+    }
+    if (_$data.containsKey('message')) {
+      final l$message = message;
+      result$data['message'] = l$message?.toJson();
     }
     if (_$data.containsKey('name')) {
       final l$name = name;
@@ -3613,6 +4456,14 @@ class Input$app_bool_exp {
     } else if (l$$_or != lOther$$_or) {
       return false;
     }
+    final l$message = message;
+    final lOther$message = other.message;
+    if (_$data.containsKey('message') != other._$data.containsKey('message')) {
+      return false;
+    }
+    if (l$message != lOther$message) {
+      return false;
+    }
     final l$name = name;
     final lOther$name = other.name;
     if (_$data.containsKey('name') != other._$data.containsKey('name')) {
@@ -3656,6 +4507,7 @@ class Input$app_bool_exp {
     final l$$_and = $_and;
     final l$$_not = $_not;
     final l$$_or = $_or;
+    final l$message = message;
     final l$name = name;
     final l$storage_bucket = storage_bucket;
     final l$version_latest = version_latest;
@@ -3672,6 +4524,7 @@ class Input$app_bool_exp {
               ? null
               : Object.hashAll(l$$_or.map((v) => v))
           : const {},
+      _$data.containsKey('message') ? l$message : const {},
       _$data.containsKey('name') ? l$name : const {},
       _$data.containsKey('storage_bucket') ? l$storage_bucket : const {},
       _$data.containsKey('version_latest') ? l$version_latest : const {},
@@ -3693,6 +4546,7 @@ abstract class CopyWith$Input$app_bool_exp<TRes> {
     List<Input$app_bool_exp>? $_and,
     Input$app_bool_exp? $_not,
     List<Input$app_bool_exp>? $_or,
+    Input$String_comparison_exp? message,
     Input$String_comparison_exp? name,
     Input$String_comparison_exp? storage_bucket,
     Input$String_comparison_exp? version_latest,
@@ -3707,6 +4561,7 @@ abstract class CopyWith$Input$app_bool_exp<TRes> {
       Iterable<Input$app_bool_exp>? Function(
               Iterable<CopyWith$Input$app_bool_exp<Input$app_bool_exp>>?)
           _fn);
+  CopyWith$Input$String_comparison_exp<TRes> get message;
   CopyWith$Input$String_comparison_exp<TRes> get name;
   CopyWith$Input$String_comparison_exp<TRes> get storage_bucket;
   CopyWith$Input$String_comparison_exp<TRes> get version_latest;
@@ -3730,6 +4585,7 @@ class _CopyWithImpl$Input$app_bool_exp<TRes>
     Object? $_and = _undefined,
     Object? $_not = _undefined,
     Object? $_or = _undefined,
+    Object? message = _undefined,
     Object? name = _undefined,
     Object? storage_bucket = _undefined,
     Object? version_latest = _undefined,
@@ -3740,6 +4596,8 @@ class _CopyWithImpl$Input$app_bool_exp<TRes>
         if ($_and != _undefined) '_and': ($_and as List<Input$app_bool_exp>?),
         if ($_not != _undefined) '_not': ($_not as Input$app_bool_exp?),
         if ($_or != _undefined) '_or': ($_or as List<Input$app_bool_exp>?),
+        if (message != _undefined)
+          'message': (message as Input$String_comparison_exp?),
         if (name != _undefined) 'name': (name as Input$String_comparison_exp?),
         if (storage_bucket != _undefined)
           'storage_bucket': (storage_bucket as Input$String_comparison_exp?),
@@ -3774,6 +4632,14 @@ class _CopyWithImpl$Input$app_bool_exp<TRes>
                 e,
                 (i) => i,
               )))?.toList());
+  CopyWith$Input$String_comparison_exp<TRes> get message {
+    final local$message = _instance.message;
+    return local$message == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$message, (e) => call(message: e));
+  }
+
   CopyWith$Input$String_comparison_exp<TRes> get name {
     final local$name = _instance.name;
     return local$name == null
@@ -3817,6 +4683,7 @@ class _CopyWithStubImpl$Input$app_bool_exp<TRes>
     List<Input$app_bool_exp>? $_and,
     Input$app_bool_exp? $_not,
     List<Input$app_bool_exp>? $_or,
+    Input$String_comparison_exp? message,
     Input$String_comparison_exp? name,
     Input$String_comparison_exp? storage_bucket,
     Input$String_comparison_exp? version_latest,
@@ -3827,6 +4694,8 @@ class _CopyWithStubImpl$Input$app_bool_exp<TRes>
   CopyWith$Input$app_bool_exp<TRes> get $_not =>
       CopyWith$Input$app_bool_exp.stub(_res);
   $_or(_fn) => _res;
+  CopyWith$Input$String_comparison_exp<TRes> get message =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get name =>
       CopyWith$Input$String_comparison_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get storage_bucket =>
@@ -3839,12 +4708,14 @@ class _CopyWithStubImpl$Input$app_bool_exp<TRes>
 
 class Input$app_insert_input {
   factory Input$app_insert_input({
+    String? message,
     String? name,
     String? storage_bucket,
     String? version_latest,
     String? version_supported,
   }) =>
       Input$app_insert_input._({
+        if (message != null) r'message': message,
         if (name != null) r'name': name,
         if (storage_bucket != null) r'storage_bucket': storage_bucket,
         if (version_latest != null) r'version_latest': version_latest,
@@ -3855,6 +4726,10 @@ class Input$app_insert_input {
 
   factory Input$app_insert_input.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('message')) {
+      final l$message = data['message'];
+      result$data['message'] = (l$message as String?);
+    }
     if (data.containsKey('name')) {
       final l$name = data['name'];
       result$data['name'] = (l$name as String?);
@@ -3876,12 +4751,17 @@ class Input$app_insert_input {
 
   Map<String, dynamic> _$data;
 
+  String? get message => (_$data['message'] as String?);
   String? get name => (_$data['name'] as String?);
   String? get storage_bucket => (_$data['storage_bucket'] as String?);
   String? get version_latest => (_$data['version_latest'] as String?);
   String? get version_supported => (_$data['version_supported'] as String?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('message')) {
+      final l$message = message;
+      result$data['message'] = l$message;
+    }
     if (_$data.containsKey('name')) {
       final l$name = name;
       result$data['name'] = l$name;
@@ -3913,6 +4793,14 @@ class Input$app_insert_input {
     }
     if (!(other is Input$app_insert_input) ||
         runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$message = message;
+    final lOther$message = other.message;
+    if (_$data.containsKey('message') != other._$data.containsKey('message')) {
+      return false;
+    }
+    if (l$message != lOther$message) {
       return false;
     }
     final l$name = name;
@@ -3955,11 +4843,13 @@ class Input$app_insert_input {
 
   @override
   int get hashCode {
+    final l$message = message;
     final l$name = name;
     final l$storage_bucket = storage_bucket;
     final l$version_latest = version_latest;
     final l$version_supported = version_supported;
     return Object.hashAll([
+      _$data.containsKey('message') ? l$message : const {},
       _$data.containsKey('name') ? l$name : const {},
       _$data.containsKey('storage_bucket') ? l$storage_bucket : const {},
       _$data.containsKey('version_latest') ? l$version_latest : const {},
@@ -3978,6 +4868,7 @@ abstract class CopyWith$Input$app_insert_input<TRes> {
       _CopyWithStubImpl$Input$app_insert_input;
 
   TRes call({
+    String? message,
     String? name,
     String? storage_bucket,
     String? version_latest,
@@ -3999,6 +4890,7 @@ class _CopyWithImpl$Input$app_insert_input<TRes>
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
+    Object? message = _undefined,
     Object? name = _undefined,
     Object? storage_bucket = _undefined,
     Object? version_latest = _undefined,
@@ -4006,6 +4898,7 @@ class _CopyWithImpl$Input$app_insert_input<TRes>
   }) =>
       _then(Input$app_insert_input._({
         ..._instance._$data,
+        if (message != _undefined) 'message': (message as String?),
         if (name != _undefined) 'name': (name as String?),
         if (storage_bucket != _undefined)
           'storage_bucket': (storage_bucket as String?),
@@ -4023,6 +4916,7 @@ class _CopyWithStubImpl$Input$app_insert_input<TRes>
   TRes _res;
 
   call({
+    String? message,
     String? name,
     String? storage_bucket,
     String? version_latest,
@@ -4034,12 +4928,12 @@ class _CopyWithStubImpl$Input$app_insert_input<TRes>
 class Input$app_on_conflict {
   factory Input$app_on_conflict({
     required Enum$app_constraint constraint,
-    required List<Enum$app_update_column> update_columns,
+    List<Enum$app_update_column>? update_columns,
     Input$app_bool_exp? where,
   }) =>
       Input$app_on_conflict._({
         r'constraint': constraint,
-        r'update_columns': update_columns,
+        if (update_columns != null) r'update_columns': update_columns,
         if (where != null) r'where': where,
       });
 
@@ -4050,10 +4944,12 @@ class Input$app_on_conflict {
     final l$constraint = data['constraint'];
     result$data['constraint'] =
         fromJson$Enum$app_constraint((l$constraint as String));
-    final l$update_columns = data['update_columns'];
-    result$data['update_columns'] = (l$update_columns as List<dynamic>)
-        .map((e) => fromJson$Enum$app_update_column((e as String)))
-        .toList();
+    if (data.containsKey('update_columns')) {
+      final l$update_columns = data['update_columns'];
+      result$data['update_columns'] = (l$update_columns as List<dynamic>)
+          .map((e) => fromJson$Enum$app_update_column((e as String)))
+          .toList();
+    }
     if (data.containsKey('where')) {
       final l$where = data['where'];
       result$data['where'] = l$where == null
@@ -4067,16 +4963,20 @@ class Input$app_on_conflict {
 
   Enum$app_constraint get constraint =>
       (_$data['constraint'] as Enum$app_constraint);
-  List<Enum$app_update_column> get update_columns =>
-      (_$data['update_columns'] as List<Enum$app_update_column>);
+  List<Enum$app_update_column>? get update_columns =>
+      (_$data['update_columns'] as List<Enum$app_update_column>?);
   Input$app_bool_exp? get where => (_$data['where'] as Input$app_bool_exp?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$constraint = constraint;
     result$data['constraint'] = toJson$Enum$app_constraint(l$constraint);
-    final l$update_columns = update_columns;
-    result$data['update_columns'] =
-        l$update_columns.map((e) => toJson$Enum$app_update_column(e)).toList();
+    if (_$data.containsKey('update_columns')) {
+      final l$update_columns = update_columns;
+      result$data['update_columns'] =
+          (l$update_columns as List<Enum$app_update_column>)
+              .map((e) => toJson$Enum$app_update_column(e))
+              .toList();
+    }
     if (_$data.containsKey('where')) {
       final l$where = where;
       result$data['where'] = l$where?.toJson();
@@ -4104,15 +5004,23 @@ class Input$app_on_conflict {
     }
     final l$update_columns = update_columns;
     final lOther$update_columns = other.update_columns;
-    if (l$update_columns.length != lOther$update_columns.length) {
+    if (_$data.containsKey('update_columns') !=
+        other._$data.containsKey('update_columns')) {
       return false;
     }
-    for (int i = 0; i < l$update_columns.length; i++) {
-      final l$update_columns$entry = l$update_columns[i];
-      final lOther$update_columns$entry = lOther$update_columns[i];
-      if (l$update_columns$entry != lOther$update_columns$entry) {
+    if (l$update_columns != null && lOther$update_columns != null) {
+      if (l$update_columns.length != lOther$update_columns.length) {
         return false;
       }
+      for (int i = 0; i < l$update_columns.length; i++) {
+        final l$update_columns$entry = l$update_columns[i];
+        final lOther$update_columns$entry = lOther$update_columns[i];
+        if (l$update_columns$entry != lOther$update_columns$entry) {
+          return false;
+        }
+      }
+    } else if (l$update_columns != lOther$update_columns) {
+      return false;
     }
     final l$where = where;
     final lOther$where = other.where;
@@ -4132,7 +5040,11 @@ class Input$app_on_conflict {
     final l$where = where;
     return Object.hashAll([
       l$constraint,
-      Object.hashAll(l$update_columns.map((v) => v)),
+      _$data.containsKey('update_columns')
+          ? l$update_columns == null
+              ? null
+              : Object.hashAll(l$update_columns.map((v) => v))
+          : const {},
       _$data.containsKey('where') ? l$where : const {},
     ]);
   }
@@ -4207,12 +5119,14 @@ class _CopyWithStubImpl$Input$app_on_conflict<TRes>
 
 class Input$app_order_by {
   factory Input$app_order_by({
+    Enum$order_by? message,
     Enum$order_by? name,
     Enum$order_by? storage_bucket,
     Enum$order_by? version_latest,
     Enum$order_by? version_supported,
   }) =>
       Input$app_order_by._({
+        if (message != null) r'message': message,
         if (name != null) r'name': name,
         if (storage_bucket != null) r'storage_bucket': storage_bucket,
         if (version_latest != null) r'version_latest': version_latest,
@@ -4223,6 +5137,12 @@ class Input$app_order_by {
 
   factory Input$app_order_by.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('message')) {
+      final l$message = data['message'];
+      result$data['message'] = l$message == null
+          ? null
+          : fromJson$Enum$order_by((l$message as String));
+    }
     if (data.containsKey('name')) {
       final l$name = data['name'];
       result$data['name'] =
@@ -4251,6 +5171,7 @@ class Input$app_order_by {
 
   Map<String, dynamic> _$data;
 
+  Enum$order_by? get message => (_$data['message'] as Enum$order_by?);
   Enum$order_by? get name => (_$data['name'] as Enum$order_by?);
   Enum$order_by? get storage_bucket =>
       (_$data['storage_bucket'] as Enum$order_by?);
@@ -4260,6 +5181,11 @@ class Input$app_order_by {
       (_$data['version_supported'] as Enum$order_by?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('message')) {
+      final l$message = message;
+      result$data['message'] =
+          l$message == null ? null : toJson$Enum$order_by(l$message);
+    }
     if (_$data.containsKey('name')) {
       final l$name = name;
       result$data['name'] =
@@ -4297,6 +5223,14 @@ class Input$app_order_by {
       return true;
     }
     if (!(other is Input$app_order_by) || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$message = message;
+    final lOther$message = other.message;
+    if (_$data.containsKey('message') != other._$data.containsKey('message')) {
+      return false;
+    }
+    if (l$message != lOther$message) {
       return false;
     }
     final l$name = name;
@@ -4339,11 +5273,13 @@ class Input$app_order_by {
 
   @override
   int get hashCode {
+    final l$message = message;
     final l$name = name;
     final l$storage_bucket = storage_bucket;
     final l$version_latest = version_latest;
     final l$version_supported = version_supported;
     return Object.hashAll([
+      _$data.containsKey('message') ? l$message : const {},
       _$data.containsKey('name') ? l$name : const {},
       _$data.containsKey('storage_bucket') ? l$storage_bucket : const {},
       _$data.containsKey('version_latest') ? l$version_latest : const {},
@@ -4362,6 +5298,7 @@ abstract class CopyWith$Input$app_order_by<TRes> {
       _CopyWithStubImpl$Input$app_order_by;
 
   TRes call({
+    Enum$order_by? message,
     Enum$order_by? name,
     Enum$order_by? storage_bucket,
     Enum$order_by? version_latest,
@@ -4383,6 +5320,7 @@ class _CopyWithImpl$Input$app_order_by<TRes>
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
+    Object? message = _undefined,
     Object? name = _undefined,
     Object? storage_bucket = _undefined,
     Object? version_latest = _undefined,
@@ -4390,6 +5328,7 @@ class _CopyWithImpl$Input$app_order_by<TRes>
   }) =>
       _then(Input$app_order_by._({
         ..._instance._$data,
+        if (message != _undefined) 'message': (message as Enum$order_by?),
         if (name != _undefined) 'name': (name as Enum$order_by?),
         if (storage_bucket != _undefined)
           'storage_bucket': (storage_bucket as Enum$order_by?),
@@ -4407,6 +5346,7 @@ class _CopyWithStubImpl$Input$app_order_by<TRes>
   TRes _res;
 
   call({
+    Enum$order_by? message,
     Enum$order_by? name,
     Enum$order_by? storage_bucket,
     Enum$order_by? version_latest,
@@ -4511,12 +5451,14 @@ class _CopyWithStubImpl$Input$app_pk_columns_input<TRes>
 
 class Input$app_set_input {
   factory Input$app_set_input({
+    String? message,
     String? name,
     String? storage_bucket,
     String? version_latest,
     String? version_supported,
   }) =>
       Input$app_set_input._({
+        if (message != null) r'message': message,
         if (name != null) r'name': name,
         if (storage_bucket != null) r'storage_bucket': storage_bucket,
         if (version_latest != null) r'version_latest': version_latest,
@@ -4527,6 +5469,10 @@ class Input$app_set_input {
 
   factory Input$app_set_input.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('message')) {
+      final l$message = data['message'];
+      result$data['message'] = (l$message as String?);
+    }
     if (data.containsKey('name')) {
       final l$name = data['name'];
       result$data['name'] = (l$name as String?);
@@ -4548,12 +5494,17 @@ class Input$app_set_input {
 
   Map<String, dynamic> _$data;
 
+  String? get message => (_$data['message'] as String?);
   String? get name => (_$data['name'] as String?);
   String? get storage_bucket => (_$data['storage_bucket'] as String?);
   String? get version_latest => (_$data['version_latest'] as String?);
   String? get version_supported => (_$data['version_supported'] as String?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('message')) {
+      final l$message = message;
+      result$data['message'] = l$message;
+    }
     if (_$data.containsKey('name')) {
       final l$name = name;
       result$data['name'] = l$name;
@@ -4584,6 +5535,14 @@ class Input$app_set_input {
       return true;
     }
     if (!(other is Input$app_set_input) || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$message = message;
+    final lOther$message = other.message;
+    if (_$data.containsKey('message') != other._$data.containsKey('message')) {
+      return false;
+    }
+    if (l$message != lOther$message) {
       return false;
     }
     final l$name = name;
@@ -4626,11 +5585,13 @@ class Input$app_set_input {
 
   @override
   int get hashCode {
+    final l$message = message;
     final l$name = name;
     final l$storage_bucket = storage_bucket;
     final l$version_latest = version_latest;
     final l$version_supported = version_supported;
     return Object.hashAll([
+      _$data.containsKey('message') ? l$message : const {},
       _$data.containsKey('name') ? l$name : const {},
       _$data.containsKey('storage_bucket') ? l$storage_bucket : const {},
       _$data.containsKey('version_latest') ? l$version_latest : const {},
@@ -4649,6 +5610,7 @@ abstract class CopyWith$Input$app_set_input<TRes> {
       _CopyWithStubImpl$Input$app_set_input;
 
   TRes call({
+    String? message,
     String? name,
     String? storage_bucket,
     String? version_latest,
@@ -4670,6 +5632,7 @@ class _CopyWithImpl$Input$app_set_input<TRes>
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
+    Object? message = _undefined,
     Object? name = _undefined,
     Object? storage_bucket = _undefined,
     Object? version_latest = _undefined,
@@ -4677,6 +5640,7 @@ class _CopyWithImpl$Input$app_set_input<TRes>
   }) =>
       _then(Input$app_set_input._({
         ..._instance._$data,
+        if (message != _undefined) 'message': (message as String?),
         if (name != _undefined) 'name': (name as String?),
         if (storage_bucket != _undefined)
           'storage_bucket': (storage_bucket as String?),
@@ -4694,6 +5658,7 @@ class _CopyWithStubImpl$Input$app_set_input<TRes>
   TRes _res;
 
   call({
+    String? message,
     String? name,
     String? storage_bucket,
     String? version_latest,
@@ -4853,12 +5818,14 @@ class _CopyWithStubImpl$Input$app_stream_cursor_input<TRes>
 
 class Input$app_stream_cursor_value_input {
   factory Input$app_stream_cursor_value_input({
+    String? message,
     String? name,
     String? storage_bucket,
     String? version_latest,
     String? version_supported,
   }) =>
       Input$app_stream_cursor_value_input._({
+        if (message != null) r'message': message,
         if (name != null) r'name': name,
         if (storage_bucket != null) r'storage_bucket': storage_bucket,
         if (version_latest != null) r'version_latest': version_latest,
@@ -4870,6 +5837,10 @@ class Input$app_stream_cursor_value_input {
   factory Input$app_stream_cursor_value_input.fromJson(
       Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('message')) {
+      final l$message = data['message'];
+      result$data['message'] = (l$message as String?);
+    }
     if (data.containsKey('name')) {
       final l$name = data['name'];
       result$data['name'] = (l$name as String?);
@@ -4891,12 +5862,17 @@ class Input$app_stream_cursor_value_input {
 
   Map<String, dynamic> _$data;
 
+  String? get message => (_$data['message'] as String?);
   String? get name => (_$data['name'] as String?);
   String? get storage_bucket => (_$data['storage_bucket'] as String?);
   String? get version_latest => (_$data['version_latest'] as String?);
   String? get version_supported => (_$data['version_supported'] as String?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('message')) {
+      final l$message = message;
+      result$data['message'] = l$message;
+    }
     if (_$data.containsKey('name')) {
       final l$name = name;
       result$data['name'] = l$name;
@@ -4929,6 +5905,14 @@ class Input$app_stream_cursor_value_input {
     }
     if (!(other is Input$app_stream_cursor_value_input) ||
         runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$message = message;
+    final lOther$message = other.message;
+    if (_$data.containsKey('message') != other._$data.containsKey('message')) {
+      return false;
+    }
+    if (l$message != lOther$message) {
       return false;
     }
     final l$name = name;
@@ -4971,11 +5955,13 @@ class Input$app_stream_cursor_value_input {
 
   @override
   int get hashCode {
+    final l$message = message;
     final l$name = name;
     final l$storage_bucket = storage_bucket;
     final l$version_latest = version_latest;
     final l$version_supported = version_supported;
     return Object.hashAll([
+      _$data.containsKey('message') ? l$message : const {},
       _$data.containsKey('name') ? l$name : const {},
       _$data.containsKey('storage_bucket') ? l$storage_bucket : const {},
       _$data.containsKey('version_latest') ? l$version_latest : const {},
@@ -4994,6 +5980,7 @@ abstract class CopyWith$Input$app_stream_cursor_value_input<TRes> {
       _CopyWithStubImpl$Input$app_stream_cursor_value_input;
 
   TRes call({
+    String? message,
     String? name,
     String? storage_bucket,
     String? version_latest,
@@ -5015,6 +6002,7 @@ class _CopyWithImpl$Input$app_stream_cursor_value_input<TRes>
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
+    Object? message = _undefined,
     Object? name = _undefined,
     Object? storage_bucket = _undefined,
     Object? version_latest = _undefined,
@@ -5022,6 +6010,7 @@ class _CopyWithImpl$Input$app_stream_cursor_value_input<TRes>
   }) =>
       _then(Input$app_stream_cursor_value_input._({
         ..._instance._$data,
+        if (message != _undefined) 'message': (message as String?),
         if (name != _undefined) 'name': (name as String?),
         if (storage_bucket != _undefined)
           'storage_bucket': (storage_bucket as String?),
@@ -5039,6 +6028,7 @@ class _CopyWithStubImpl$Input$app_stream_cursor_value_input<TRes>
   TRes _res;
 
   call({
+    String? message,
     String? name,
     String? storage_bucket,
     String? version_latest,
@@ -5198,14 +6188,5593 @@ class _CopyWithStubImpl$Input$app_updates<TRes>
       CopyWith$Input$app_bool_exp.stub(_res);
 }
 
+class Input$chat_aggregate_bool_exp {
+  factory Input$chat_aggregate_bool_exp({
+    Input$chat_aggregate_bool_exp_bool_and? bool_and,
+    Input$chat_aggregate_bool_exp_bool_or? bool_or,
+    Input$chat_aggregate_bool_exp_count? count,
+  }) =>
+      Input$chat_aggregate_bool_exp._({
+        if (bool_and != null) r'bool_and': bool_and,
+        if (bool_or != null) r'bool_or': bool_or,
+        if (count != null) r'count': count,
+      });
+
+  Input$chat_aggregate_bool_exp._(this._$data);
+
+  factory Input$chat_aggregate_bool_exp.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('bool_and')) {
+      final l$bool_and = data['bool_and'];
+      result$data['bool_and'] = l$bool_and == null
+          ? null
+          : Input$chat_aggregate_bool_exp_bool_and.fromJson(
+              (l$bool_and as Map<String, dynamic>));
+    }
+    if (data.containsKey('bool_or')) {
+      final l$bool_or = data['bool_or'];
+      result$data['bool_or'] = l$bool_or == null
+          ? null
+          : Input$chat_aggregate_bool_exp_bool_or.fromJson(
+              (l$bool_or as Map<String, dynamic>));
+    }
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] = l$count == null
+          ? null
+          : Input$chat_aggregate_bool_exp_count.fromJson(
+              (l$count as Map<String, dynamic>));
+    }
+    return Input$chat_aggregate_bool_exp._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$chat_aggregate_bool_exp_bool_and? get bool_and =>
+      (_$data['bool_and'] as Input$chat_aggregate_bool_exp_bool_and?);
+  Input$chat_aggregate_bool_exp_bool_or? get bool_or =>
+      (_$data['bool_or'] as Input$chat_aggregate_bool_exp_bool_or?);
+  Input$chat_aggregate_bool_exp_count? get count =>
+      (_$data['count'] as Input$chat_aggregate_bool_exp_count?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('bool_and')) {
+      final l$bool_and = bool_and;
+      result$data['bool_and'] = l$bool_and?.toJson();
+    }
+    if (_$data.containsKey('bool_or')) {
+      final l$bool_or = bool_or;
+      result$data['bool_or'] = l$bool_or?.toJson();
+    }
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] = l$count?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_aggregate_bool_exp<Input$chat_aggregate_bool_exp>
+      get copyWith => CopyWith$Input$chat_aggregate_bool_exp(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_aggregate_bool_exp) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$bool_and = bool_and;
+    final lOther$bool_and = other.bool_and;
+    if (_$data.containsKey('bool_and') !=
+        other._$data.containsKey('bool_and')) {
+      return false;
+    }
+    if (l$bool_and != lOther$bool_and) {
+      return false;
+    }
+    final l$bool_or = bool_or;
+    final lOther$bool_or = other.bool_or;
+    if (_$data.containsKey('bool_or') != other._$data.containsKey('bool_or')) {
+      return false;
+    }
+    if (l$bool_or != lOther$bool_or) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$bool_and = bool_and;
+    final l$bool_or = bool_or;
+    final l$count = count;
+    return Object.hashAll([
+      _$data.containsKey('bool_and') ? l$bool_and : const {},
+      _$data.containsKey('bool_or') ? l$bool_or : const {},
+      _$data.containsKey('count') ? l$count : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_aggregate_bool_exp<TRes> {
+  factory CopyWith$Input$chat_aggregate_bool_exp(
+    Input$chat_aggregate_bool_exp instance,
+    TRes Function(Input$chat_aggregate_bool_exp) then,
+  ) = _CopyWithImpl$Input$chat_aggregate_bool_exp;
+
+  factory CopyWith$Input$chat_aggregate_bool_exp.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_aggregate_bool_exp;
+
+  TRes call({
+    Input$chat_aggregate_bool_exp_bool_and? bool_and,
+    Input$chat_aggregate_bool_exp_bool_or? bool_or,
+    Input$chat_aggregate_bool_exp_count? count,
+  });
+  CopyWith$Input$chat_aggregate_bool_exp_bool_and<TRes> get bool_and;
+  CopyWith$Input$chat_aggregate_bool_exp_bool_or<TRes> get bool_or;
+  CopyWith$Input$chat_aggregate_bool_exp_count<TRes> get count;
+}
+
+class _CopyWithImpl$Input$chat_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$chat_aggregate_bool_exp<TRes> {
+  _CopyWithImpl$Input$chat_aggregate_bool_exp(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_aggregate_bool_exp _instance;
+
+  final TRes Function(Input$chat_aggregate_bool_exp) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? bool_and = _undefined,
+    Object? bool_or = _undefined,
+    Object? count = _undefined,
+  }) =>
+      _then(Input$chat_aggregate_bool_exp._({
+        ..._instance._$data,
+        if (bool_and != _undefined)
+          'bool_and': (bool_and as Input$chat_aggregate_bool_exp_bool_and?),
+        if (bool_or != _undefined)
+          'bool_or': (bool_or as Input$chat_aggregate_bool_exp_bool_or?),
+        if (count != _undefined)
+          'count': (count as Input$chat_aggregate_bool_exp_count?),
+      }));
+  CopyWith$Input$chat_aggregate_bool_exp_bool_and<TRes> get bool_and {
+    final local$bool_and = _instance.bool_and;
+    return local$bool_and == null
+        ? CopyWith$Input$chat_aggregate_bool_exp_bool_and.stub(_then(_instance))
+        : CopyWith$Input$chat_aggregate_bool_exp_bool_and(
+            local$bool_and, (e) => call(bool_and: e));
+  }
+
+  CopyWith$Input$chat_aggregate_bool_exp_bool_or<TRes> get bool_or {
+    final local$bool_or = _instance.bool_or;
+    return local$bool_or == null
+        ? CopyWith$Input$chat_aggregate_bool_exp_bool_or.stub(_then(_instance))
+        : CopyWith$Input$chat_aggregate_bool_exp_bool_or(
+            local$bool_or, (e) => call(bool_or: e));
+  }
+
+  CopyWith$Input$chat_aggregate_bool_exp_count<TRes> get count {
+    final local$count = _instance.count;
+    return local$count == null
+        ? CopyWith$Input$chat_aggregate_bool_exp_count.stub(_then(_instance))
+        : CopyWith$Input$chat_aggregate_bool_exp_count(
+            local$count, (e) => call(count: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$chat_aggregate_bool_exp<TRes> {
+  _CopyWithStubImpl$Input$chat_aggregate_bool_exp(this._res);
+
+  TRes _res;
+
+  call({
+    Input$chat_aggregate_bool_exp_bool_and? bool_and,
+    Input$chat_aggregate_bool_exp_bool_or? bool_or,
+    Input$chat_aggregate_bool_exp_count? count,
+  }) =>
+      _res;
+  CopyWith$Input$chat_aggregate_bool_exp_bool_and<TRes> get bool_and =>
+      CopyWith$Input$chat_aggregate_bool_exp_bool_and.stub(_res);
+  CopyWith$Input$chat_aggregate_bool_exp_bool_or<TRes> get bool_or =>
+      CopyWith$Input$chat_aggregate_bool_exp_bool_or.stub(_res);
+  CopyWith$Input$chat_aggregate_bool_exp_count<TRes> get count =>
+      CopyWith$Input$chat_aggregate_bool_exp_count.stub(_res);
+}
+
+class Input$chat_aggregate_bool_exp_bool_and {
+  factory Input$chat_aggregate_bool_exp_bool_and({
+    required Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns
+        arguments,
+    bool? distinct,
+    Input$chat_bool_exp? filter,
+    required Input$Boolean_comparison_exp predicate,
+  }) =>
+      Input$chat_aggregate_bool_exp_bool_and._({
+        r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$chat_aggregate_bool_exp_bool_and._(this._$data);
+
+  factory Input$chat_aggregate_bool_exp_bool_and.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$arguments = data['arguments'];
+    result$data['arguments'] =
+        fromJson$Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns(
+            (l$arguments as String));
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$chat_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Boolean_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$chat_aggregate_bool_exp_bool_and._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns
+      get arguments => (_$data['arguments']
+          as Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$chat_bool_exp? get filter => (_$data['filter'] as Input$chat_bool_exp?);
+  Input$Boolean_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Boolean_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$arguments = arguments;
+    result$data['arguments'] =
+        toJson$Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns(
+            l$arguments);
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$chat_aggregate_bool_exp_bool_and<
+          Input$chat_aggregate_bool_exp_bool_and>
+      get copyWith => CopyWith$Input$chat_aggregate_bool_exp_bool_and(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_aggregate_bool_exp_bool_and) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      l$arguments,
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_aggregate_bool_exp_bool_and<TRes> {
+  factory CopyWith$Input$chat_aggregate_bool_exp_bool_and(
+    Input$chat_aggregate_bool_exp_bool_and instance,
+    TRes Function(Input$chat_aggregate_bool_exp_bool_and) then,
+  ) = _CopyWithImpl$Input$chat_aggregate_bool_exp_bool_and;
+
+  factory CopyWith$Input$chat_aggregate_bool_exp_bool_and.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_aggregate_bool_exp_bool_and;
+
+  TRes call({
+    Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$chat_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  });
+  CopyWith$Input$chat_bool_exp<TRes> get filter;
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$chat_aggregate_bool_exp_bool_and<TRes>
+    implements CopyWith$Input$chat_aggregate_bool_exp_bool_and<TRes> {
+  _CopyWithImpl$Input$chat_aggregate_bool_exp_bool_and(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_aggregate_bool_exp_bool_and _instance;
+
+  final TRes Function(Input$chat_aggregate_bool_exp_bool_and) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$chat_aggregate_bool_exp_bool_and._({
+        ..._instance._$data,
+        if (arguments != _undefined && arguments != null)
+          'arguments': (arguments
+              as Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$chat_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Boolean_comparison_exp),
+      }));
+  CopyWith$Input$chat_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$chat_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$chat_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Boolean_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_aggregate_bool_exp_bool_and<TRes>
+    implements CopyWith$Input$chat_aggregate_bool_exp_bool_and<TRes> {
+  _CopyWithStubImpl$Input$chat_aggregate_bool_exp_bool_and(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$chat_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$chat_bool_exp<TRes> get filter =>
+      CopyWith$Input$chat_bool_exp.stub(_res);
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Boolean_comparison_exp.stub(_res);
+}
+
+class Input$chat_aggregate_bool_exp_bool_or {
+  factory Input$chat_aggregate_bool_exp_bool_or({
+    required Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns
+        arguments,
+    bool? distinct,
+    Input$chat_bool_exp? filter,
+    required Input$Boolean_comparison_exp predicate,
+  }) =>
+      Input$chat_aggregate_bool_exp_bool_or._({
+        r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$chat_aggregate_bool_exp_bool_or._(this._$data);
+
+  factory Input$chat_aggregate_bool_exp_bool_or.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$arguments = data['arguments'];
+    result$data['arguments'] =
+        fromJson$Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns(
+            (l$arguments as String));
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$chat_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Boolean_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$chat_aggregate_bool_exp_bool_or._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns
+      get arguments => (_$data['arguments']
+          as Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$chat_bool_exp? get filter => (_$data['filter'] as Input$chat_bool_exp?);
+  Input$Boolean_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Boolean_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$arguments = arguments;
+    result$data['arguments'] =
+        toJson$Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns(
+            l$arguments);
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$chat_aggregate_bool_exp_bool_or<
+          Input$chat_aggregate_bool_exp_bool_or>
+      get copyWith => CopyWith$Input$chat_aggregate_bool_exp_bool_or(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_aggregate_bool_exp_bool_or) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      l$arguments,
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_aggregate_bool_exp_bool_or<TRes> {
+  factory CopyWith$Input$chat_aggregate_bool_exp_bool_or(
+    Input$chat_aggregate_bool_exp_bool_or instance,
+    TRes Function(Input$chat_aggregate_bool_exp_bool_or) then,
+  ) = _CopyWithImpl$Input$chat_aggregate_bool_exp_bool_or;
+
+  factory CopyWith$Input$chat_aggregate_bool_exp_bool_or.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_aggregate_bool_exp_bool_or;
+
+  TRes call({
+    Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$chat_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  });
+  CopyWith$Input$chat_bool_exp<TRes> get filter;
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$chat_aggregate_bool_exp_bool_or<TRes>
+    implements CopyWith$Input$chat_aggregate_bool_exp_bool_or<TRes> {
+  _CopyWithImpl$Input$chat_aggregate_bool_exp_bool_or(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_aggregate_bool_exp_bool_or _instance;
+
+  final TRes Function(Input$chat_aggregate_bool_exp_bool_or) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$chat_aggregate_bool_exp_bool_or._({
+        ..._instance._$data,
+        if (arguments != _undefined && arguments != null)
+          'arguments': (arguments
+              as Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$chat_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Boolean_comparison_exp),
+      }));
+  CopyWith$Input$chat_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$chat_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$chat_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Boolean_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_aggregate_bool_exp_bool_or<TRes>
+    implements CopyWith$Input$chat_aggregate_bool_exp_bool_or<TRes> {
+  _CopyWithStubImpl$Input$chat_aggregate_bool_exp_bool_or(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$chat_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$chat_bool_exp<TRes> get filter =>
+      CopyWith$Input$chat_bool_exp.stub(_res);
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Boolean_comparison_exp.stub(_res);
+}
+
+class Input$chat_aggregate_bool_exp_count {
+  factory Input$chat_aggregate_bool_exp_count({
+    List<Enum$chat_select_column>? arguments,
+    bool? distinct,
+    Input$chat_bool_exp? filter,
+    required Input$Int_comparison_exp predicate,
+  }) =>
+      Input$chat_aggregate_bool_exp_count._({
+        if (arguments != null) r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$chat_aggregate_bool_exp_count._(this._$data);
+
+  factory Input$chat_aggregate_bool_exp_count.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('arguments')) {
+      final l$arguments = data['arguments'];
+      result$data['arguments'] = (l$arguments as List<dynamic>?)
+          ?.map((e) => fromJson$Enum$chat_select_column((e as String)))
+          .toList();
+    }
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$chat_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Int_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$chat_aggregate_bool_exp_count._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Enum$chat_select_column>? get arguments =>
+      (_$data['arguments'] as List<Enum$chat_select_column>?);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$chat_bool_exp? get filter => (_$data['filter'] as Input$chat_bool_exp?);
+  Input$Int_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Int_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('arguments')) {
+      final l$arguments = arguments;
+      result$data['arguments'] =
+          l$arguments?.map((e) => toJson$Enum$chat_select_column(e)).toList();
+    }
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$chat_aggregate_bool_exp_count<
+          Input$chat_aggregate_bool_exp_count>
+      get copyWith => CopyWith$Input$chat_aggregate_bool_exp_count(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_aggregate_bool_exp_count) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (_$data.containsKey('arguments') !=
+        other._$data.containsKey('arguments')) {
+      return false;
+    }
+    if (l$arguments != null && lOther$arguments != null) {
+      if (l$arguments.length != lOther$arguments.length) {
+        return false;
+      }
+      for (int i = 0; i < l$arguments.length; i++) {
+        final l$arguments$entry = l$arguments[i];
+        final lOther$arguments$entry = lOther$arguments[i];
+        if (l$arguments$entry != lOther$arguments$entry) {
+          return false;
+        }
+      }
+    } else if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      _$data.containsKey('arguments')
+          ? l$arguments == null
+              ? null
+              : Object.hashAll(l$arguments.map((v) => v))
+          : const {},
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_aggregate_bool_exp_count<TRes> {
+  factory CopyWith$Input$chat_aggregate_bool_exp_count(
+    Input$chat_aggregate_bool_exp_count instance,
+    TRes Function(Input$chat_aggregate_bool_exp_count) then,
+  ) = _CopyWithImpl$Input$chat_aggregate_bool_exp_count;
+
+  factory CopyWith$Input$chat_aggregate_bool_exp_count.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_aggregate_bool_exp_count;
+
+  TRes call({
+    List<Enum$chat_select_column>? arguments,
+    bool? distinct,
+    Input$chat_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  });
+  CopyWith$Input$chat_bool_exp<TRes> get filter;
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$chat_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$chat_aggregate_bool_exp_count<TRes> {
+  _CopyWithImpl$Input$chat_aggregate_bool_exp_count(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_aggregate_bool_exp_count _instance;
+
+  final TRes Function(Input$chat_aggregate_bool_exp_count) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$chat_aggregate_bool_exp_count._({
+        ..._instance._$data,
+        if (arguments != _undefined)
+          'arguments': (arguments as List<Enum$chat_select_column>?),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$chat_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Int_comparison_exp),
+      }));
+  CopyWith$Input$chat_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$chat_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$chat_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Int_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$chat_aggregate_bool_exp_count<TRes> {
+  _CopyWithStubImpl$Input$chat_aggregate_bool_exp_count(this._res);
+
+  TRes _res;
+
+  call({
+    List<Enum$chat_select_column>? arguments,
+    bool? distinct,
+    Input$chat_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$chat_bool_exp<TRes> get filter =>
+      CopyWith$Input$chat_bool_exp.stub(_res);
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Int_comparison_exp.stub(_res);
+}
+
+class Input$chat_aggregate_order_by {
+  factory Input$chat_aggregate_order_by({
+    Enum$order_by? count,
+    Input$chat_max_order_by? max,
+    Input$chat_min_order_by? min,
+  }) =>
+      Input$chat_aggregate_order_by._({
+        if (count != null) r'count': count,
+        if (max != null) r'max': max,
+        if (min != null) r'min': min,
+      });
+
+  Input$chat_aggregate_order_by._(this._$data);
+
+  factory Input$chat_aggregate_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] =
+          l$count == null ? null : fromJson$Enum$order_by((l$count as String));
+    }
+    if (data.containsKey('max')) {
+      final l$max = data['max'];
+      result$data['max'] = l$max == null
+          ? null
+          : Input$chat_max_order_by.fromJson((l$max as Map<String, dynamic>));
+    }
+    if (data.containsKey('min')) {
+      final l$min = data['min'];
+      result$data['min'] = l$min == null
+          ? null
+          : Input$chat_min_order_by.fromJson((l$min as Map<String, dynamic>));
+    }
+    return Input$chat_aggregate_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get count => (_$data['count'] as Enum$order_by?);
+  Input$chat_max_order_by? get max =>
+      (_$data['max'] as Input$chat_max_order_by?);
+  Input$chat_min_order_by? get min =>
+      (_$data['min'] as Input$chat_min_order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] =
+          l$count == null ? null : toJson$Enum$order_by(l$count);
+    }
+    if (_$data.containsKey('max')) {
+      final l$max = max;
+      result$data['max'] = l$max?.toJson();
+    }
+    if (_$data.containsKey('min')) {
+      final l$min = min;
+      result$data['min'] = l$min?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_aggregate_order_by<Input$chat_aggregate_order_by>
+      get copyWith => CopyWith$Input$chat_aggregate_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_aggregate_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    final l$max = max;
+    final lOther$max = other.max;
+    if (_$data.containsKey('max') != other._$data.containsKey('max')) {
+      return false;
+    }
+    if (l$max != lOther$max) {
+      return false;
+    }
+    final l$min = min;
+    final lOther$min = other.min;
+    if (_$data.containsKey('min') != other._$data.containsKey('min')) {
+      return false;
+    }
+    if (l$min != lOther$min) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$count = count;
+    final l$max = max;
+    final l$min = min;
+    return Object.hashAll([
+      _$data.containsKey('count') ? l$count : const {},
+      _$data.containsKey('max') ? l$max : const {},
+      _$data.containsKey('min') ? l$min : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_aggregate_order_by<TRes> {
+  factory CopyWith$Input$chat_aggregate_order_by(
+    Input$chat_aggregate_order_by instance,
+    TRes Function(Input$chat_aggregate_order_by) then,
+  ) = _CopyWithImpl$Input$chat_aggregate_order_by;
+
+  factory CopyWith$Input$chat_aggregate_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_aggregate_order_by;
+
+  TRes call({
+    Enum$order_by? count,
+    Input$chat_max_order_by? max,
+    Input$chat_min_order_by? min,
+  });
+  CopyWith$Input$chat_max_order_by<TRes> get max;
+  CopyWith$Input$chat_min_order_by<TRes> get min;
+}
+
+class _CopyWithImpl$Input$chat_aggregate_order_by<TRes>
+    implements CopyWith$Input$chat_aggregate_order_by<TRes> {
+  _CopyWithImpl$Input$chat_aggregate_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_aggregate_order_by _instance;
+
+  final TRes Function(Input$chat_aggregate_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? count = _undefined,
+    Object? max = _undefined,
+    Object? min = _undefined,
+  }) =>
+      _then(Input$chat_aggregate_order_by._({
+        ..._instance._$data,
+        if (count != _undefined) 'count': (count as Enum$order_by?),
+        if (max != _undefined) 'max': (max as Input$chat_max_order_by?),
+        if (min != _undefined) 'min': (min as Input$chat_min_order_by?),
+      }));
+  CopyWith$Input$chat_max_order_by<TRes> get max {
+    final local$max = _instance.max;
+    return local$max == null
+        ? CopyWith$Input$chat_max_order_by.stub(_then(_instance))
+        : CopyWith$Input$chat_max_order_by(local$max, (e) => call(max: e));
+  }
+
+  CopyWith$Input$chat_min_order_by<TRes> get min {
+    final local$min = _instance.min;
+    return local$min == null
+        ? CopyWith$Input$chat_min_order_by.stub(_then(_instance))
+        : CopyWith$Input$chat_min_order_by(local$min, (e) => call(min: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_aggregate_order_by<TRes>
+    implements CopyWith$Input$chat_aggregate_order_by<TRes> {
+  _CopyWithStubImpl$Input$chat_aggregate_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? count,
+    Input$chat_max_order_by? max,
+    Input$chat_min_order_by? min,
+  }) =>
+      _res;
+  CopyWith$Input$chat_max_order_by<TRes> get max =>
+      CopyWith$Input$chat_max_order_by.stub(_res);
+  CopyWith$Input$chat_min_order_by<TRes> get min =>
+      CopyWith$Input$chat_min_order_by.stub(_res);
+}
+
+class Input$chat_arr_rel_insert_input {
+  factory Input$chat_arr_rel_insert_input({
+    required List<Input$chat_insert_input> data,
+    Input$chat_on_conflict? on_conflict,
+  }) =>
+      Input$chat_arr_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$chat_arr_rel_insert_input._(this._$data);
+
+  factory Input$chat_arr_rel_insert_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] = (l$data as List<dynamic>)
+        .map((e) =>
+            Input$chat_insert_input.fromJson((e as Map<String, dynamic>)))
+        .toList();
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$chat_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$chat_arr_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Input$chat_insert_input> get data =>
+      (_$data['data'] as List<Input$chat_insert_input>);
+  Input$chat_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$chat_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.map((e) => e.toJson()).toList();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_arr_rel_insert_input<Input$chat_arr_rel_insert_input>
+      get copyWith => CopyWith$Input$chat_arr_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_arr_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data.length != lOther$data.length) {
+      return false;
+    }
+    for (int i = 0; i < l$data.length; i++) {
+      final l$data$entry = l$data[i];
+      final lOther$data$entry = lOther$data[i];
+      if (l$data$entry != lOther$data$entry) {
+        return false;
+      }
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      Object.hashAll(l$data.map((v) => v)),
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_arr_rel_insert_input<TRes> {
+  factory CopyWith$Input$chat_arr_rel_insert_input(
+    Input$chat_arr_rel_insert_input instance,
+    TRes Function(Input$chat_arr_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$chat_arr_rel_insert_input;
+
+  factory CopyWith$Input$chat_arr_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_arr_rel_insert_input;
+
+  TRes call({
+    List<Input$chat_insert_input>? data,
+    Input$chat_on_conflict? on_conflict,
+  });
+  TRes data(
+      Iterable<Input$chat_insert_input> Function(
+              Iterable<
+                  CopyWith$Input$chat_insert_input<Input$chat_insert_input>>)
+          _fn);
+  CopyWith$Input$chat_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$chat_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$chat_arr_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$chat_arr_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_arr_rel_insert_input _instance;
+
+  final TRes Function(Input$chat_arr_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$chat_arr_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as List<Input$chat_insert_input>),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$chat_on_conflict?),
+      }));
+  TRes data(
+          Iterable<Input$chat_insert_input> Function(
+                  Iterable<
+                      CopyWith$Input$chat_insert_input<
+                          Input$chat_insert_input>>)
+              _fn) =>
+      call(
+          data: _fn(_instance.data.map((e) => CopyWith$Input$chat_insert_input(
+                e,
+                (i) => i,
+              ))).toList());
+  CopyWith$Input$chat_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$chat_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$chat_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$chat_arr_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$chat_arr_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    List<Input$chat_insert_input>? data,
+    Input$chat_on_conflict? on_conflict,
+  }) =>
+      _res;
+  data(_fn) => _res;
+  CopyWith$Input$chat_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$chat_on_conflict.stub(_res);
+}
+
+class Input$chat_bool_exp {
+  factory Input$chat_bool_exp({
+    List<Input$chat_bool_exp>? $_and,
+    Input$chat_bool_exp? $_not,
+    List<Input$chat_bool_exp>? $_or,
+    Input$String_comparison_exp? chat_id,
+    Input$timestamptz_comparison_exp? created_at,
+    Input$Boolean_comparison_exp? is_typing,
+    Input$message_bool_exp? messages,
+    Input$message_aggregate_bool_exp? messages_aggregate,
+    Input$persona_bool_exp? persona,
+    Input$String_comparison_exp? persona_id,
+    Input$public_user_bool_exp? public_user,
+    Input$timestamptz_comparison_exp? updated_at,
+    Input$String_comparison_exp? user_id,
+  }) =>
+      Input$chat_bool_exp._({
+        if ($_and != null) r'_and': $_and,
+        if ($_not != null) r'_not': $_not,
+        if ($_or != null) r'_or': $_or,
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (is_typing != null) r'is_typing': is_typing,
+        if (messages != null) r'messages': messages,
+        if (messages_aggregate != null)
+          r'messages_aggregate': messages_aggregate,
+        if (persona != null) r'persona': persona,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (public_user != null) r'public_user': public_user,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$chat_bool_exp._(this._$data);
+
+  factory Input$chat_bool_exp.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('_and')) {
+      final l$$_and = data['_and'];
+      result$data['_and'] = (l$$_and as List<dynamic>?)
+          ?.map(
+              (e) => Input$chat_bool_exp.fromJson((e as Map<String, dynamic>)))
+          .toList();
+    }
+    if (data.containsKey('_not')) {
+      final l$$_not = data['_not'];
+      result$data['_not'] = l$$_not == null
+          ? null
+          : Input$chat_bool_exp.fromJson((l$$_not as Map<String, dynamic>));
+    }
+    if (data.containsKey('_or')) {
+      final l$$_or = data['_or'];
+      result$data['_or'] = (l$$_or as List<dynamic>?)
+          ?.map(
+              (e) => Input$chat_bool_exp.fromJson((e as Map<String, dynamic>)))
+          .toList();
+    }
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = l$chat_id == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$chat_id as Map<String, dynamic>));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : Input$timestamptz_comparison_exp.fromJson(
+              (l$created_at as Map<String, dynamic>));
+    }
+    if (data.containsKey('is_typing')) {
+      final l$is_typing = data['is_typing'];
+      result$data['is_typing'] = l$is_typing == null
+          ? null
+          : Input$Boolean_comparison_exp.fromJson(
+              (l$is_typing as Map<String, dynamic>));
+    }
+    if (data.containsKey('messages')) {
+      final l$messages = data['messages'];
+      result$data['messages'] = l$messages == null
+          ? null
+          : Input$message_bool_exp.fromJson(
+              (l$messages as Map<String, dynamic>));
+    }
+    if (data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = data['messages_aggregate'];
+      result$data['messages_aggregate'] = l$messages_aggregate == null
+          ? null
+          : Input$message_aggregate_bool_exp.fromJson(
+              (l$messages_aggregate as Map<String, dynamic>));
+    }
+    if (data.containsKey('persona')) {
+      final l$persona = data['persona'];
+      result$data['persona'] = l$persona == null
+          ? null
+          : Input$persona_bool_exp.fromJson(
+              (l$persona as Map<String, dynamic>));
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = l$persona_id == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$persona_id as Map<String, dynamic>));
+    }
+    if (data.containsKey('public_user')) {
+      final l$public_user = data['public_user'];
+      result$data['public_user'] = l$public_user == null
+          ? null
+          : Input$public_user_bool_exp.fromJson(
+              (l$public_user as Map<String, dynamic>));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : Input$timestamptz_comparison_exp.fromJson(
+              (l$updated_at as Map<String, dynamic>));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$user_id as Map<String, dynamic>));
+    }
+    return Input$chat_bool_exp._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Input$chat_bool_exp>? get $_and =>
+      (_$data['_and'] as List<Input$chat_bool_exp>?);
+  Input$chat_bool_exp? get $_not => (_$data['_not'] as Input$chat_bool_exp?);
+  List<Input$chat_bool_exp>? get $_or =>
+      (_$data['_or'] as List<Input$chat_bool_exp>?);
+  Input$String_comparison_exp? get chat_id =>
+      (_$data['chat_id'] as Input$String_comparison_exp?);
+  Input$timestamptz_comparison_exp? get created_at =>
+      (_$data['created_at'] as Input$timestamptz_comparison_exp?);
+  Input$Boolean_comparison_exp? get is_typing =>
+      (_$data['is_typing'] as Input$Boolean_comparison_exp?);
+  Input$message_bool_exp? get messages =>
+      (_$data['messages'] as Input$message_bool_exp?);
+  Input$message_aggregate_bool_exp? get messages_aggregate =>
+      (_$data['messages_aggregate'] as Input$message_aggregate_bool_exp?);
+  Input$persona_bool_exp? get persona =>
+      (_$data['persona'] as Input$persona_bool_exp?);
+  Input$String_comparison_exp? get persona_id =>
+      (_$data['persona_id'] as Input$String_comparison_exp?);
+  Input$public_user_bool_exp? get public_user =>
+      (_$data['public_user'] as Input$public_user_bool_exp?);
+  Input$timestamptz_comparison_exp? get updated_at =>
+      (_$data['updated_at'] as Input$timestamptz_comparison_exp?);
+  Input$String_comparison_exp? get user_id =>
+      (_$data['user_id'] as Input$String_comparison_exp?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('_and')) {
+      final l$$_and = $_and;
+      result$data['_and'] = l$$_and?.map((e) => e.toJson()).toList();
+    }
+    if (_$data.containsKey('_not')) {
+      final l$$_not = $_not;
+      result$data['_not'] = l$$_not?.toJson();
+    }
+    if (_$data.containsKey('_or')) {
+      final l$$_or = $_or;
+      result$data['_or'] = l$$_or?.map((e) => e.toJson()).toList();
+    }
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] = l$chat_id?.toJson();
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at?.toJson();
+    }
+    if (_$data.containsKey('is_typing')) {
+      final l$is_typing = is_typing;
+      result$data['is_typing'] = l$is_typing?.toJson();
+    }
+    if (_$data.containsKey('messages')) {
+      final l$messages = messages;
+      result$data['messages'] = l$messages?.toJson();
+    }
+    if (_$data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = messages_aggregate;
+      result$data['messages_aggregate'] = l$messages_aggregate?.toJson();
+    }
+    if (_$data.containsKey('persona')) {
+      final l$persona = persona;
+      result$data['persona'] = l$persona?.toJson();
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] = l$persona_id?.toJson();
+    }
+    if (_$data.containsKey('public_user')) {
+      final l$public_user = public_user;
+      result$data['public_user'] = l$public_user?.toJson();
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at?.toJson();
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] = l$user_id?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_bool_exp<Input$chat_bool_exp> get copyWith =>
+      CopyWith$Input$chat_bool_exp(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_bool_exp) || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$_and = $_and;
+    final lOther$$_and = other.$_and;
+    if (_$data.containsKey('_and') != other._$data.containsKey('_and')) {
+      return false;
+    }
+    if (l$$_and != null && lOther$$_and != null) {
+      if (l$$_and.length != lOther$$_and.length) {
+        return false;
+      }
+      for (int i = 0; i < l$$_and.length; i++) {
+        final l$$_and$entry = l$$_and[i];
+        final lOther$$_and$entry = lOther$$_and[i];
+        if (l$$_and$entry != lOther$$_and$entry) {
+          return false;
+        }
+      }
+    } else if (l$$_and != lOther$$_and) {
+      return false;
+    }
+    final l$$_not = $_not;
+    final lOther$$_not = other.$_not;
+    if (_$data.containsKey('_not') != other._$data.containsKey('_not')) {
+      return false;
+    }
+    if (l$$_not != lOther$$_not) {
+      return false;
+    }
+    final l$$_or = $_or;
+    final lOther$$_or = other.$_or;
+    if (_$data.containsKey('_or') != other._$data.containsKey('_or')) {
+      return false;
+    }
+    if (l$$_or != null && lOther$$_or != null) {
+      if (l$$_or.length != lOther$$_or.length) {
+        return false;
+      }
+      for (int i = 0; i < l$$_or.length; i++) {
+        final l$$_or$entry = l$$_or[i];
+        final lOther$$_or$entry = lOther$$_or[i];
+        if (l$$_or$entry != lOther$$_or$entry) {
+          return false;
+        }
+      }
+    } else if (l$$_or != lOther$$_or) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$is_typing = is_typing;
+    final lOther$is_typing = other.is_typing;
+    if (_$data.containsKey('is_typing') !=
+        other._$data.containsKey('is_typing')) {
+      return false;
+    }
+    if (l$is_typing != lOther$is_typing) {
+      return false;
+    }
+    final l$messages = messages;
+    final lOther$messages = other.messages;
+    if (_$data.containsKey('messages') !=
+        other._$data.containsKey('messages')) {
+      return false;
+    }
+    if (l$messages != lOther$messages) {
+      return false;
+    }
+    final l$messages_aggregate = messages_aggregate;
+    final lOther$messages_aggregate = other.messages_aggregate;
+    if (_$data.containsKey('messages_aggregate') !=
+        other._$data.containsKey('messages_aggregate')) {
+      return false;
+    }
+    if (l$messages_aggregate != lOther$messages_aggregate) {
+      return false;
+    }
+    final l$persona = persona;
+    final lOther$persona = other.persona;
+    if (_$data.containsKey('persona') != other._$data.containsKey('persona')) {
+      return false;
+    }
+    if (l$persona != lOther$persona) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$public_user = public_user;
+    final lOther$public_user = other.public_user;
+    if (_$data.containsKey('public_user') !=
+        other._$data.containsKey('public_user')) {
+      return false;
+    }
+    if (l$public_user != lOther$public_user) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$$_and = $_and;
+    final l$$_not = $_not;
+    final l$$_or = $_or;
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$is_typing = is_typing;
+    final l$messages = messages;
+    final l$messages_aggregate = messages_aggregate;
+    final l$persona = persona;
+    final l$persona_id = persona_id;
+    final l$public_user = public_user;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('_and')
+          ? l$$_and == null
+              ? null
+              : Object.hashAll(l$$_and.map((v) => v))
+          : const {},
+      _$data.containsKey('_not') ? l$$_not : const {},
+      _$data.containsKey('_or')
+          ? l$$_or == null
+              ? null
+              : Object.hashAll(l$$_or.map((v) => v))
+          : const {},
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('is_typing') ? l$is_typing : const {},
+      _$data.containsKey('messages') ? l$messages : const {},
+      _$data.containsKey('messages_aggregate')
+          ? l$messages_aggregate
+          : const {},
+      _$data.containsKey('persona') ? l$persona : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('public_user') ? l$public_user : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_bool_exp<TRes> {
+  factory CopyWith$Input$chat_bool_exp(
+    Input$chat_bool_exp instance,
+    TRes Function(Input$chat_bool_exp) then,
+  ) = _CopyWithImpl$Input$chat_bool_exp;
+
+  factory CopyWith$Input$chat_bool_exp.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_bool_exp;
+
+  TRes call({
+    List<Input$chat_bool_exp>? $_and,
+    Input$chat_bool_exp? $_not,
+    List<Input$chat_bool_exp>? $_or,
+    Input$String_comparison_exp? chat_id,
+    Input$timestamptz_comparison_exp? created_at,
+    Input$Boolean_comparison_exp? is_typing,
+    Input$message_bool_exp? messages,
+    Input$message_aggregate_bool_exp? messages_aggregate,
+    Input$persona_bool_exp? persona,
+    Input$String_comparison_exp? persona_id,
+    Input$public_user_bool_exp? public_user,
+    Input$timestamptz_comparison_exp? updated_at,
+    Input$String_comparison_exp? user_id,
+  });
+  TRes $_and(
+      Iterable<Input$chat_bool_exp>? Function(
+              Iterable<CopyWith$Input$chat_bool_exp<Input$chat_bool_exp>>?)
+          _fn);
+  CopyWith$Input$chat_bool_exp<TRes> get $_not;
+  TRes $_or(
+      Iterable<Input$chat_bool_exp>? Function(
+              Iterable<CopyWith$Input$chat_bool_exp<Input$chat_bool_exp>>?)
+          _fn);
+  CopyWith$Input$String_comparison_exp<TRes> get chat_id;
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at;
+  CopyWith$Input$Boolean_comparison_exp<TRes> get is_typing;
+  CopyWith$Input$message_bool_exp<TRes> get messages;
+  CopyWith$Input$message_aggregate_bool_exp<TRes> get messages_aggregate;
+  CopyWith$Input$persona_bool_exp<TRes> get persona;
+  CopyWith$Input$String_comparison_exp<TRes> get persona_id;
+  CopyWith$Input$public_user_bool_exp<TRes> get public_user;
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at;
+  CopyWith$Input$String_comparison_exp<TRes> get user_id;
+}
+
+class _CopyWithImpl$Input$chat_bool_exp<TRes>
+    implements CopyWith$Input$chat_bool_exp<TRes> {
+  _CopyWithImpl$Input$chat_bool_exp(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_bool_exp _instance;
+
+  final TRes Function(Input$chat_bool_exp) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? $_and = _undefined,
+    Object? $_not = _undefined,
+    Object? $_or = _undefined,
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? is_typing = _undefined,
+    Object? messages = _undefined,
+    Object? messages_aggregate = _undefined,
+    Object? persona = _undefined,
+    Object? persona_id = _undefined,
+    Object? public_user = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$chat_bool_exp._({
+        ..._instance._$data,
+        if ($_and != _undefined) '_and': ($_and as List<Input$chat_bool_exp>?),
+        if ($_not != _undefined) '_not': ($_not as Input$chat_bool_exp?),
+        if ($_or != _undefined) '_or': ($_or as List<Input$chat_bool_exp>?),
+        if (chat_id != _undefined)
+          'chat_id': (chat_id as Input$String_comparison_exp?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Input$timestamptz_comparison_exp?),
+        if (is_typing != _undefined)
+          'is_typing': (is_typing as Input$Boolean_comparison_exp?),
+        if (messages != _undefined)
+          'messages': (messages as Input$message_bool_exp?),
+        if (messages_aggregate != _undefined)
+          'messages_aggregate':
+              (messages_aggregate as Input$message_aggregate_bool_exp?),
+        if (persona != _undefined)
+          'persona': (persona as Input$persona_bool_exp?),
+        if (persona_id != _undefined)
+          'persona_id': (persona_id as Input$String_comparison_exp?),
+        if (public_user != _undefined)
+          'public_user': (public_user as Input$public_user_bool_exp?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Input$timestamptz_comparison_exp?),
+        if (user_id != _undefined)
+          'user_id': (user_id as Input$String_comparison_exp?),
+      }));
+  TRes $_and(
+          Iterable<Input$chat_bool_exp>? Function(
+                  Iterable<CopyWith$Input$chat_bool_exp<Input$chat_bool_exp>>?)
+              _fn) =>
+      call(
+          $_and: _fn(_instance.$_and?.map((e) => CopyWith$Input$chat_bool_exp(
+                e,
+                (i) => i,
+              )))?.toList());
+  CopyWith$Input$chat_bool_exp<TRes> get $_not {
+    final local$$_not = _instance.$_not;
+    return local$$_not == null
+        ? CopyWith$Input$chat_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$chat_bool_exp(local$$_not, (e) => call($_not: e));
+  }
+
+  TRes $_or(
+          Iterable<Input$chat_bool_exp>? Function(
+                  Iterable<CopyWith$Input$chat_bool_exp<Input$chat_bool_exp>>?)
+              _fn) =>
+      call(
+          $_or: _fn(_instance.$_or?.map((e) => CopyWith$Input$chat_bool_exp(
+                e,
+                (i) => i,
+              )))?.toList());
+  CopyWith$Input$String_comparison_exp<TRes> get chat_id {
+    final local$chat_id = _instance.chat_id;
+    return local$chat_id == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$chat_id, (e) => call(chat_id: e));
+  }
+
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at {
+    final local$created_at = _instance.created_at;
+    return local$created_at == null
+        ? CopyWith$Input$timestamptz_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$timestamptz_comparison_exp(
+            local$created_at, (e) => call(created_at: e));
+  }
+
+  CopyWith$Input$Boolean_comparison_exp<TRes> get is_typing {
+    final local$is_typing = _instance.is_typing;
+    return local$is_typing == null
+        ? CopyWith$Input$Boolean_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$Boolean_comparison_exp(
+            local$is_typing, (e) => call(is_typing: e));
+  }
+
+  CopyWith$Input$message_bool_exp<TRes> get messages {
+    final local$messages = _instance.messages;
+    return local$messages == null
+        ? CopyWith$Input$message_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_bool_exp(
+            local$messages, (e) => call(messages: e));
+  }
+
+  CopyWith$Input$message_aggregate_bool_exp<TRes> get messages_aggregate {
+    final local$messages_aggregate = _instance.messages_aggregate;
+    return local$messages_aggregate == null
+        ? CopyWith$Input$message_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_aggregate_bool_exp(
+            local$messages_aggregate, (e) => call(messages_aggregate: e));
+  }
+
+  CopyWith$Input$persona_bool_exp<TRes> get persona {
+    final local$persona = _instance.persona;
+    return local$persona == null
+        ? CopyWith$Input$persona_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$persona_bool_exp(
+            local$persona, (e) => call(persona: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get persona_id {
+    final local$persona_id = _instance.persona_id;
+    return local$persona_id == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$persona_id, (e) => call(persona_id: e));
+  }
+
+  CopyWith$Input$public_user_bool_exp<TRes> get public_user {
+    final local$public_user = _instance.public_user;
+    return local$public_user == null
+        ? CopyWith$Input$public_user_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$public_user_bool_exp(
+            local$public_user, (e) => call(public_user: e));
+  }
+
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at {
+    final local$updated_at = _instance.updated_at;
+    return local$updated_at == null
+        ? CopyWith$Input$timestamptz_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$timestamptz_comparison_exp(
+            local$updated_at, (e) => call(updated_at: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get user_id {
+    final local$user_id = _instance.user_id;
+    return local$user_id == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$user_id, (e) => call(user_id: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_bool_exp<TRes>
+    implements CopyWith$Input$chat_bool_exp<TRes> {
+  _CopyWithStubImpl$Input$chat_bool_exp(this._res);
+
+  TRes _res;
+
+  call({
+    List<Input$chat_bool_exp>? $_and,
+    Input$chat_bool_exp? $_not,
+    List<Input$chat_bool_exp>? $_or,
+    Input$String_comparison_exp? chat_id,
+    Input$timestamptz_comparison_exp? created_at,
+    Input$Boolean_comparison_exp? is_typing,
+    Input$message_bool_exp? messages,
+    Input$message_aggregate_bool_exp? messages_aggregate,
+    Input$persona_bool_exp? persona,
+    Input$String_comparison_exp? persona_id,
+    Input$public_user_bool_exp? public_user,
+    Input$timestamptz_comparison_exp? updated_at,
+    Input$String_comparison_exp? user_id,
+  }) =>
+      _res;
+  $_and(_fn) => _res;
+  CopyWith$Input$chat_bool_exp<TRes> get $_not =>
+      CopyWith$Input$chat_bool_exp.stub(_res);
+  $_or(_fn) => _res;
+  CopyWith$Input$String_comparison_exp<TRes> get chat_id =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at =>
+      CopyWith$Input$timestamptz_comparison_exp.stub(_res);
+  CopyWith$Input$Boolean_comparison_exp<TRes> get is_typing =>
+      CopyWith$Input$Boolean_comparison_exp.stub(_res);
+  CopyWith$Input$message_bool_exp<TRes> get messages =>
+      CopyWith$Input$message_bool_exp.stub(_res);
+  CopyWith$Input$message_aggregate_bool_exp<TRes> get messages_aggregate =>
+      CopyWith$Input$message_aggregate_bool_exp.stub(_res);
+  CopyWith$Input$persona_bool_exp<TRes> get persona =>
+      CopyWith$Input$persona_bool_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get persona_id =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$public_user_bool_exp<TRes> get public_user =>
+      CopyWith$Input$public_user_bool_exp.stub(_res);
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at =>
+      CopyWith$Input$timestamptz_comparison_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get user_id =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+}
+
+class Input$chat_insert_input {
+  factory Input$chat_insert_input({
+    String? chat_id,
+    String? created_at,
+    bool? is_typing,
+    Input$message_arr_rel_insert_input? messages,
+    Input$persona_obj_rel_insert_input? persona,
+    String? persona_id,
+    Input$public_user_obj_rel_insert_input? public_user,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      Input$chat_insert_input._({
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (is_typing != null) r'is_typing': is_typing,
+        if (messages != null) r'messages': messages,
+        if (persona != null) r'persona': persona,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (public_user != null) r'public_user': public_user,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$chat_insert_input._(this._$data);
+
+  factory Input$chat_insert_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = (l$chat_id as String?);
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = (l$created_at as String?);
+    }
+    if (data.containsKey('is_typing')) {
+      final l$is_typing = data['is_typing'];
+      result$data['is_typing'] = (l$is_typing as bool?);
+    }
+    if (data.containsKey('messages')) {
+      final l$messages = data['messages'];
+      result$data['messages'] = l$messages == null
+          ? null
+          : Input$message_arr_rel_insert_input.fromJson(
+              (l$messages as Map<String, dynamic>));
+    }
+    if (data.containsKey('persona')) {
+      final l$persona = data['persona'];
+      result$data['persona'] = l$persona == null
+          ? null
+          : Input$persona_obj_rel_insert_input.fromJson(
+              (l$persona as Map<String, dynamic>));
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = (l$persona_id as String?);
+    }
+    if (data.containsKey('public_user')) {
+      final l$public_user = data['public_user'];
+      result$data['public_user'] = l$public_user == null
+          ? null
+          : Input$public_user_obj_rel_insert_input.fromJson(
+              (l$public_user as Map<String, dynamic>));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = (l$updated_at as String?);
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = (l$user_id as String?);
+    }
+    return Input$chat_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String? get chat_id => (_$data['chat_id'] as String?);
+  String? get created_at => (_$data['created_at'] as String?);
+  bool? get is_typing => (_$data['is_typing'] as bool?);
+  Input$message_arr_rel_insert_input? get messages =>
+      (_$data['messages'] as Input$message_arr_rel_insert_input?);
+  Input$persona_obj_rel_insert_input? get persona =>
+      (_$data['persona'] as Input$persona_obj_rel_insert_input?);
+  String? get persona_id => (_$data['persona_id'] as String?);
+  Input$public_user_obj_rel_insert_input? get public_user =>
+      (_$data['public_user'] as Input$public_user_obj_rel_insert_input?);
+  String? get updated_at => (_$data['updated_at'] as String?);
+  String? get user_id => (_$data['user_id'] as String?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] = l$chat_id;
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at;
+    }
+    if (_$data.containsKey('is_typing')) {
+      final l$is_typing = is_typing;
+      result$data['is_typing'] = l$is_typing;
+    }
+    if (_$data.containsKey('messages')) {
+      final l$messages = messages;
+      result$data['messages'] = l$messages?.toJson();
+    }
+    if (_$data.containsKey('persona')) {
+      final l$persona = persona;
+      result$data['persona'] = l$persona?.toJson();
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] = l$persona_id;
+    }
+    if (_$data.containsKey('public_user')) {
+      final l$public_user = public_user;
+      result$data['public_user'] = l$public_user?.toJson();
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at;
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] = l$user_id;
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_insert_input<Input$chat_insert_input> get copyWith =>
+      CopyWith$Input$chat_insert_input(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$is_typing = is_typing;
+    final lOther$is_typing = other.is_typing;
+    if (_$data.containsKey('is_typing') !=
+        other._$data.containsKey('is_typing')) {
+      return false;
+    }
+    if (l$is_typing != lOther$is_typing) {
+      return false;
+    }
+    final l$messages = messages;
+    final lOther$messages = other.messages;
+    if (_$data.containsKey('messages') !=
+        other._$data.containsKey('messages')) {
+      return false;
+    }
+    if (l$messages != lOther$messages) {
+      return false;
+    }
+    final l$persona = persona;
+    final lOther$persona = other.persona;
+    if (_$data.containsKey('persona') != other._$data.containsKey('persona')) {
+      return false;
+    }
+    if (l$persona != lOther$persona) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$public_user = public_user;
+    final lOther$public_user = other.public_user;
+    if (_$data.containsKey('public_user') !=
+        other._$data.containsKey('public_user')) {
+      return false;
+    }
+    if (l$public_user != lOther$public_user) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$is_typing = is_typing;
+    final l$messages = messages;
+    final l$persona = persona;
+    final l$persona_id = persona_id;
+    final l$public_user = public_user;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('is_typing') ? l$is_typing : const {},
+      _$data.containsKey('messages') ? l$messages : const {},
+      _$data.containsKey('persona') ? l$persona : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('public_user') ? l$public_user : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_insert_input<TRes> {
+  factory CopyWith$Input$chat_insert_input(
+    Input$chat_insert_input instance,
+    TRes Function(Input$chat_insert_input) then,
+  ) = _CopyWithImpl$Input$chat_insert_input;
+
+  factory CopyWith$Input$chat_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_insert_input;
+
+  TRes call({
+    String? chat_id,
+    String? created_at,
+    bool? is_typing,
+    Input$message_arr_rel_insert_input? messages,
+    Input$persona_obj_rel_insert_input? persona,
+    String? persona_id,
+    Input$public_user_obj_rel_insert_input? public_user,
+    String? updated_at,
+    String? user_id,
+  });
+  CopyWith$Input$message_arr_rel_insert_input<TRes> get messages;
+  CopyWith$Input$persona_obj_rel_insert_input<TRes> get persona;
+  CopyWith$Input$public_user_obj_rel_insert_input<TRes> get public_user;
+}
+
+class _CopyWithImpl$Input$chat_insert_input<TRes>
+    implements CopyWith$Input$chat_insert_input<TRes> {
+  _CopyWithImpl$Input$chat_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_insert_input _instance;
+
+  final TRes Function(Input$chat_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? is_typing = _undefined,
+    Object? messages = _undefined,
+    Object? persona = _undefined,
+    Object? persona_id = _undefined,
+    Object? public_user = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$chat_insert_input._({
+        ..._instance._$data,
+        if (chat_id != _undefined) 'chat_id': (chat_id as String?),
+        if (created_at != _undefined) 'created_at': (created_at as String?),
+        if (is_typing != _undefined) 'is_typing': (is_typing as bool?),
+        if (messages != _undefined)
+          'messages': (messages as Input$message_arr_rel_insert_input?),
+        if (persona != _undefined)
+          'persona': (persona as Input$persona_obj_rel_insert_input?),
+        if (persona_id != _undefined) 'persona_id': (persona_id as String?),
+        if (public_user != _undefined)
+          'public_user':
+              (public_user as Input$public_user_obj_rel_insert_input?),
+        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
+        if (user_id != _undefined) 'user_id': (user_id as String?),
+      }));
+  CopyWith$Input$message_arr_rel_insert_input<TRes> get messages {
+    final local$messages = _instance.messages;
+    return local$messages == null
+        ? CopyWith$Input$message_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$message_arr_rel_insert_input(
+            local$messages, (e) => call(messages: e));
+  }
+
+  CopyWith$Input$persona_obj_rel_insert_input<TRes> get persona {
+    final local$persona = _instance.persona;
+    return local$persona == null
+        ? CopyWith$Input$persona_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$persona_obj_rel_insert_input(
+            local$persona, (e) => call(persona: e));
+  }
+
+  CopyWith$Input$public_user_obj_rel_insert_input<TRes> get public_user {
+    final local$public_user = _instance.public_user;
+    return local$public_user == null
+        ? CopyWith$Input$public_user_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$public_user_obj_rel_insert_input(
+            local$public_user, (e) => call(public_user: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_insert_input<TRes>
+    implements CopyWith$Input$chat_insert_input<TRes> {
+  _CopyWithStubImpl$Input$chat_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    String? chat_id,
+    String? created_at,
+    bool? is_typing,
+    Input$message_arr_rel_insert_input? messages,
+    Input$persona_obj_rel_insert_input? persona,
+    String? persona_id,
+    Input$public_user_obj_rel_insert_input? public_user,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      _res;
+  CopyWith$Input$message_arr_rel_insert_input<TRes> get messages =>
+      CopyWith$Input$message_arr_rel_insert_input.stub(_res);
+  CopyWith$Input$persona_obj_rel_insert_input<TRes> get persona =>
+      CopyWith$Input$persona_obj_rel_insert_input.stub(_res);
+  CopyWith$Input$public_user_obj_rel_insert_input<TRes> get public_user =>
+      CopyWith$Input$public_user_obj_rel_insert_input.stub(_res);
+}
+
+class Input$chat_max_order_by {
+  factory Input$chat_max_order_by({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? persona_id,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      Input$chat_max_order_by._({
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$chat_max_order_by._(this._$data);
+
+  factory Input$chat_max_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = l$chat_id == null
+          ? null
+          : fromJson$Enum$order_by((l$chat_id as String));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = l$persona_id == null
+          ? null
+          : fromJson$Enum$order_by((l$persona_id as String));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    return Input$chat_max_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get chat_id => (_$data['chat_id'] as Enum$order_by?);
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get persona_id => (_$data['persona_id'] as Enum$order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] =
+          l$chat_id == null ? null : toJson$Enum$order_by(l$chat_id);
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] =
+          l$persona_id == null ? null : toJson$Enum$order_by(l$persona_id);
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_max_order_by<Input$chat_max_order_by> get copyWith =>
+      CopyWith$Input$chat_max_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_max_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$persona_id = persona_id;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_max_order_by<TRes> {
+  factory CopyWith$Input$chat_max_order_by(
+    Input$chat_max_order_by instance,
+    TRes Function(Input$chat_max_order_by) then,
+  ) = _CopyWithImpl$Input$chat_max_order_by;
+
+  factory CopyWith$Input$chat_max_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_max_order_by;
+
+  TRes call({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? persona_id,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$chat_max_order_by<TRes>
+    implements CopyWith$Input$chat_max_order_by<TRes> {
+  _CopyWithImpl$Input$chat_max_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_max_order_by _instance;
+
+  final TRes Function(Input$chat_max_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? persona_id = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$chat_max_order_by._({
+        ..._instance._$data,
+        if (chat_id != _undefined) 'chat_id': (chat_id as Enum$order_by?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (persona_id != _undefined)
+          'persona_id': (persona_id as Enum$order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$chat_max_order_by<TRes>
+    implements CopyWith$Input$chat_max_order_by<TRes> {
+  _CopyWithStubImpl$Input$chat_max_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? persona_id,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      _res;
+}
+
+class Input$chat_min_order_by {
+  factory Input$chat_min_order_by({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? persona_id,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      Input$chat_min_order_by._({
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$chat_min_order_by._(this._$data);
+
+  factory Input$chat_min_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = l$chat_id == null
+          ? null
+          : fromJson$Enum$order_by((l$chat_id as String));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = l$persona_id == null
+          ? null
+          : fromJson$Enum$order_by((l$persona_id as String));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    return Input$chat_min_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get chat_id => (_$data['chat_id'] as Enum$order_by?);
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get persona_id => (_$data['persona_id'] as Enum$order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] =
+          l$chat_id == null ? null : toJson$Enum$order_by(l$chat_id);
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] =
+          l$persona_id == null ? null : toJson$Enum$order_by(l$persona_id);
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_min_order_by<Input$chat_min_order_by> get copyWith =>
+      CopyWith$Input$chat_min_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_min_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$persona_id = persona_id;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_min_order_by<TRes> {
+  factory CopyWith$Input$chat_min_order_by(
+    Input$chat_min_order_by instance,
+    TRes Function(Input$chat_min_order_by) then,
+  ) = _CopyWithImpl$Input$chat_min_order_by;
+
+  factory CopyWith$Input$chat_min_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_min_order_by;
+
+  TRes call({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? persona_id,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$chat_min_order_by<TRes>
+    implements CopyWith$Input$chat_min_order_by<TRes> {
+  _CopyWithImpl$Input$chat_min_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_min_order_by _instance;
+
+  final TRes Function(Input$chat_min_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? persona_id = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$chat_min_order_by._({
+        ..._instance._$data,
+        if (chat_id != _undefined) 'chat_id': (chat_id as Enum$order_by?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (persona_id != _undefined)
+          'persona_id': (persona_id as Enum$order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$chat_min_order_by<TRes>
+    implements CopyWith$Input$chat_min_order_by<TRes> {
+  _CopyWithStubImpl$Input$chat_min_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? persona_id,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      _res;
+}
+
+class Input$chat_obj_rel_insert_input {
+  factory Input$chat_obj_rel_insert_input({
+    required Input$chat_insert_input data,
+    Input$chat_on_conflict? on_conflict,
+  }) =>
+      Input$chat_obj_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$chat_obj_rel_insert_input._(this._$data);
+
+  factory Input$chat_obj_rel_insert_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] =
+        Input$chat_insert_input.fromJson((l$data as Map<String, dynamic>));
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$chat_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$chat_obj_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$chat_insert_input get data =>
+      (_$data['data'] as Input$chat_insert_input);
+  Input$chat_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$chat_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.toJson();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_obj_rel_insert_input<Input$chat_obj_rel_insert_input>
+      get copyWith => CopyWith$Input$chat_obj_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_obj_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data != lOther$data) {
+      return false;
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      l$data,
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_obj_rel_insert_input<TRes> {
+  factory CopyWith$Input$chat_obj_rel_insert_input(
+    Input$chat_obj_rel_insert_input instance,
+    TRes Function(Input$chat_obj_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$chat_obj_rel_insert_input;
+
+  factory CopyWith$Input$chat_obj_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_obj_rel_insert_input;
+
+  TRes call({
+    Input$chat_insert_input? data,
+    Input$chat_on_conflict? on_conflict,
+  });
+  CopyWith$Input$chat_insert_input<TRes> get data;
+  CopyWith$Input$chat_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$chat_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$chat_obj_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$chat_obj_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_obj_rel_insert_input _instance;
+
+  final TRes Function(Input$chat_obj_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$chat_obj_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as Input$chat_insert_input),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$chat_on_conflict?),
+      }));
+  CopyWith$Input$chat_insert_input<TRes> get data {
+    final local$data = _instance.data;
+    return CopyWith$Input$chat_insert_input(local$data, (e) => call(data: e));
+  }
+
+  CopyWith$Input$chat_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$chat_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$chat_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$chat_obj_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$chat_obj_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$chat_insert_input? data,
+    Input$chat_on_conflict? on_conflict,
+  }) =>
+      _res;
+  CopyWith$Input$chat_insert_input<TRes> get data =>
+      CopyWith$Input$chat_insert_input.stub(_res);
+  CopyWith$Input$chat_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$chat_on_conflict.stub(_res);
+}
+
+class Input$chat_on_conflict {
+  factory Input$chat_on_conflict({
+    required Enum$chat_constraint constraint,
+    List<Enum$chat_update_column>? update_columns,
+    Input$chat_bool_exp? where,
+  }) =>
+      Input$chat_on_conflict._({
+        r'constraint': constraint,
+        if (update_columns != null) r'update_columns': update_columns,
+        if (where != null) r'where': where,
+      });
+
+  Input$chat_on_conflict._(this._$data);
+
+  factory Input$chat_on_conflict.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$constraint = data['constraint'];
+    result$data['constraint'] =
+        fromJson$Enum$chat_constraint((l$constraint as String));
+    if (data.containsKey('update_columns')) {
+      final l$update_columns = data['update_columns'];
+      result$data['update_columns'] = (l$update_columns as List<dynamic>)
+          .map((e) => fromJson$Enum$chat_update_column((e as String)))
+          .toList();
+    }
+    if (data.containsKey('where')) {
+      final l$where = data['where'];
+      result$data['where'] = l$where == null
+          ? null
+          : Input$chat_bool_exp.fromJson((l$where as Map<String, dynamic>));
+    }
+    return Input$chat_on_conflict._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$chat_constraint get constraint =>
+      (_$data['constraint'] as Enum$chat_constraint);
+  List<Enum$chat_update_column>? get update_columns =>
+      (_$data['update_columns'] as List<Enum$chat_update_column>?);
+  Input$chat_bool_exp? get where => (_$data['where'] as Input$chat_bool_exp?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$constraint = constraint;
+    result$data['constraint'] = toJson$Enum$chat_constraint(l$constraint);
+    if (_$data.containsKey('update_columns')) {
+      final l$update_columns = update_columns;
+      result$data['update_columns'] =
+          (l$update_columns as List<Enum$chat_update_column>)
+              .map((e) => toJson$Enum$chat_update_column(e))
+              .toList();
+    }
+    if (_$data.containsKey('where')) {
+      final l$where = where;
+      result$data['where'] = l$where?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_on_conflict<Input$chat_on_conflict> get copyWith =>
+      CopyWith$Input$chat_on_conflict(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_on_conflict) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$constraint = constraint;
+    final lOther$constraint = other.constraint;
+    if (l$constraint != lOther$constraint) {
+      return false;
+    }
+    final l$update_columns = update_columns;
+    final lOther$update_columns = other.update_columns;
+    if (_$data.containsKey('update_columns') !=
+        other._$data.containsKey('update_columns')) {
+      return false;
+    }
+    if (l$update_columns != null && lOther$update_columns != null) {
+      if (l$update_columns.length != lOther$update_columns.length) {
+        return false;
+      }
+      for (int i = 0; i < l$update_columns.length; i++) {
+        final l$update_columns$entry = l$update_columns[i];
+        final lOther$update_columns$entry = lOther$update_columns[i];
+        if (l$update_columns$entry != lOther$update_columns$entry) {
+          return false;
+        }
+      }
+    } else if (l$update_columns != lOther$update_columns) {
+      return false;
+    }
+    final l$where = where;
+    final lOther$where = other.where;
+    if (_$data.containsKey('where') != other._$data.containsKey('where')) {
+      return false;
+    }
+    if (l$where != lOther$where) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$constraint = constraint;
+    final l$update_columns = update_columns;
+    final l$where = where;
+    return Object.hashAll([
+      l$constraint,
+      _$data.containsKey('update_columns')
+          ? l$update_columns == null
+              ? null
+              : Object.hashAll(l$update_columns.map((v) => v))
+          : const {},
+      _$data.containsKey('where') ? l$where : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_on_conflict<TRes> {
+  factory CopyWith$Input$chat_on_conflict(
+    Input$chat_on_conflict instance,
+    TRes Function(Input$chat_on_conflict) then,
+  ) = _CopyWithImpl$Input$chat_on_conflict;
+
+  factory CopyWith$Input$chat_on_conflict.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_on_conflict;
+
+  TRes call({
+    Enum$chat_constraint? constraint,
+    List<Enum$chat_update_column>? update_columns,
+    Input$chat_bool_exp? where,
+  });
+  CopyWith$Input$chat_bool_exp<TRes> get where;
+}
+
+class _CopyWithImpl$Input$chat_on_conflict<TRes>
+    implements CopyWith$Input$chat_on_conflict<TRes> {
+  _CopyWithImpl$Input$chat_on_conflict(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_on_conflict _instance;
+
+  final TRes Function(Input$chat_on_conflict) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? constraint = _undefined,
+    Object? update_columns = _undefined,
+    Object? where = _undefined,
+  }) =>
+      _then(Input$chat_on_conflict._({
+        ..._instance._$data,
+        if (constraint != _undefined && constraint != null)
+          'constraint': (constraint as Enum$chat_constraint),
+        if (update_columns != _undefined && update_columns != null)
+          'update_columns': (update_columns as List<Enum$chat_update_column>),
+        if (where != _undefined) 'where': (where as Input$chat_bool_exp?),
+      }));
+  CopyWith$Input$chat_bool_exp<TRes> get where {
+    final local$where = _instance.where;
+    return local$where == null
+        ? CopyWith$Input$chat_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$chat_bool_exp(local$where, (e) => call(where: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_on_conflict<TRes>
+    implements CopyWith$Input$chat_on_conflict<TRes> {
+  _CopyWithStubImpl$Input$chat_on_conflict(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$chat_constraint? constraint,
+    List<Enum$chat_update_column>? update_columns,
+    Input$chat_bool_exp? where,
+  }) =>
+      _res;
+  CopyWith$Input$chat_bool_exp<TRes> get where =>
+      CopyWith$Input$chat_bool_exp.stub(_res);
+}
+
+class Input$chat_order_by {
+  factory Input$chat_order_by({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? is_typing,
+    Input$message_aggregate_order_by? messages_aggregate,
+    Input$persona_order_by? persona,
+    Enum$order_by? persona_id,
+    Input$public_user_order_by? public_user,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      Input$chat_order_by._({
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (is_typing != null) r'is_typing': is_typing,
+        if (messages_aggregate != null)
+          r'messages_aggregate': messages_aggregate,
+        if (persona != null) r'persona': persona,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (public_user != null) r'public_user': public_user,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$chat_order_by._(this._$data);
+
+  factory Input$chat_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = l$chat_id == null
+          ? null
+          : fromJson$Enum$order_by((l$chat_id as String));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('is_typing')) {
+      final l$is_typing = data['is_typing'];
+      result$data['is_typing'] = l$is_typing == null
+          ? null
+          : fromJson$Enum$order_by((l$is_typing as String));
+    }
+    if (data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = data['messages_aggregate'];
+      result$data['messages_aggregate'] = l$messages_aggregate == null
+          ? null
+          : Input$message_aggregate_order_by.fromJson(
+              (l$messages_aggregate as Map<String, dynamic>));
+    }
+    if (data.containsKey('persona')) {
+      final l$persona = data['persona'];
+      result$data['persona'] = l$persona == null
+          ? null
+          : Input$persona_order_by.fromJson(
+              (l$persona as Map<String, dynamic>));
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = l$persona_id == null
+          ? null
+          : fromJson$Enum$order_by((l$persona_id as String));
+    }
+    if (data.containsKey('public_user')) {
+      final l$public_user = data['public_user'];
+      result$data['public_user'] = l$public_user == null
+          ? null
+          : Input$public_user_order_by.fromJson(
+              (l$public_user as Map<String, dynamic>));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    return Input$chat_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get chat_id => (_$data['chat_id'] as Enum$order_by?);
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get is_typing => (_$data['is_typing'] as Enum$order_by?);
+  Input$message_aggregate_order_by? get messages_aggregate =>
+      (_$data['messages_aggregate'] as Input$message_aggregate_order_by?);
+  Input$persona_order_by? get persona =>
+      (_$data['persona'] as Input$persona_order_by?);
+  Enum$order_by? get persona_id => (_$data['persona_id'] as Enum$order_by?);
+  Input$public_user_order_by? get public_user =>
+      (_$data['public_user'] as Input$public_user_order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] =
+          l$chat_id == null ? null : toJson$Enum$order_by(l$chat_id);
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('is_typing')) {
+      final l$is_typing = is_typing;
+      result$data['is_typing'] =
+          l$is_typing == null ? null : toJson$Enum$order_by(l$is_typing);
+    }
+    if (_$data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = messages_aggregate;
+      result$data['messages_aggregate'] = l$messages_aggregate?.toJson();
+    }
+    if (_$data.containsKey('persona')) {
+      final l$persona = persona;
+      result$data['persona'] = l$persona?.toJson();
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] =
+          l$persona_id == null ? null : toJson$Enum$order_by(l$persona_id);
+    }
+    if (_$data.containsKey('public_user')) {
+      final l$public_user = public_user;
+      result$data['public_user'] = l$public_user?.toJson();
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_order_by<Input$chat_order_by> get copyWith =>
+      CopyWith$Input$chat_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_order_by) || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$is_typing = is_typing;
+    final lOther$is_typing = other.is_typing;
+    if (_$data.containsKey('is_typing') !=
+        other._$data.containsKey('is_typing')) {
+      return false;
+    }
+    if (l$is_typing != lOther$is_typing) {
+      return false;
+    }
+    final l$messages_aggregate = messages_aggregate;
+    final lOther$messages_aggregate = other.messages_aggregate;
+    if (_$data.containsKey('messages_aggregate') !=
+        other._$data.containsKey('messages_aggregate')) {
+      return false;
+    }
+    if (l$messages_aggregate != lOther$messages_aggregate) {
+      return false;
+    }
+    final l$persona = persona;
+    final lOther$persona = other.persona;
+    if (_$data.containsKey('persona') != other._$data.containsKey('persona')) {
+      return false;
+    }
+    if (l$persona != lOther$persona) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$public_user = public_user;
+    final lOther$public_user = other.public_user;
+    if (_$data.containsKey('public_user') !=
+        other._$data.containsKey('public_user')) {
+      return false;
+    }
+    if (l$public_user != lOther$public_user) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$is_typing = is_typing;
+    final l$messages_aggregate = messages_aggregate;
+    final l$persona = persona;
+    final l$persona_id = persona_id;
+    final l$public_user = public_user;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('is_typing') ? l$is_typing : const {},
+      _$data.containsKey('messages_aggregate')
+          ? l$messages_aggregate
+          : const {},
+      _$data.containsKey('persona') ? l$persona : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('public_user') ? l$public_user : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_order_by<TRes> {
+  factory CopyWith$Input$chat_order_by(
+    Input$chat_order_by instance,
+    TRes Function(Input$chat_order_by) then,
+  ) = _CopyWithImpl$Input$chat_order_by;
+
+  factory CopyWith$Input$chat_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_order_by;
+
+  TRes call({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? is_typing,
+    Input$message_aggregate_order_by? messages_aggregate,
+    Input$persona_order_by? persona,
+    Enum$order_by? persona_id,
+    Input$public_user_order_by? public_user,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  });
+  CopyWith$Input$message_aggregate_order_by<TRes> get messages_aggregate;
+  CopyWith$Input$persona_order_by<TRes> get persona;
+  CopyWith$Input$public_user_order_by<TRes> get public_user;
+}
+
+class _CopyWithImpl$Input$chat_order_by<TRes>
+    implements CopyWith$Input$chat_order_by<TRes> {
+  _CopyWithImpl$Input$chat_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_order_by _instance;
+
+  final TRes Function(Input$chat_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? is_typing = _undefined,
+    Object? messages_aggregate = _undefined,
+    Object? persona = _undefined,
+    Object? persona_id = _undefined,
+    Object? public_user = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$chat_order_by._({
+        ..._instance._$data,
+        if (chat_id != _undefined) 'chat_id': (chat_id as Enum$order_by?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (is_typing != _undefined) 'is_typing': (is_typing as Enum$order_by?),
+        if (messages_aggregate != _undefined)
+          'messages_aggregate':
+              (messages_aggregate as Input$message_aggregate_order_by?),
+        if (persona != _undefined)
+          'persona': (persona as Input$persona_order_by?),
+        if (persona_id != _undefined)
+          'persona_id': (persona_id as Enum$order_by?),
+        if (public_user != _undefined)
+          'public_user': (public_user as Input$public_user_order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
+      }));
+  CopyWith$Input$message_aggregate_order_by<TRes> get messages_aggregate {
+    final local$messages_aggregate = _instance.messages_aggregate;
+    return local$messages_aggregate == null
+        ? CopyWith$Input$message_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$message_aggregate_order_by(
+            local$messages_aggregate, (e) => call(messages_aggregate: e));
+  }
+
+  CopyWith$Input$persona_order_by<TRes> get persona {
+    final local$persona = _instance.persona;
+    return local$persona == null
+        ? CopyWith$Input$persona_order_by.stub(_then(_instance))
+        : CopyWith$Input$persona_order_by(
+            local$persona, (e) => call(persona: e));
+  }
+
+  CopyWith$Input$public_user_order_by<TRes> get public_user {
+    final local$public_user = _instance.public_user;
+    return local$public_user == null
+        ? CopyWith$Input$public_user_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_order_by(
+            local$public_user, (e) => call(public_user: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_order_by<TRes>
+    implements CopyWith$Input$chat_order_by<TRes> {
+  _CopyWithStubImpl$Input$chat_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? is_typing,
+    Input$message_aggregate_order_by? messages_aggregate,
+    Input$persona_order_by? persona,
+    Enum$order_by? persona_id,
+    Input$public_user_order_by? public_user,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      _res;
+  CopyWith$Input$message_aggregate_order_by<TRes> get messages_aggregate =>
+      CopyWith$Input$message_aggregate_order_by.stub(_res);
+  CopyWith$Input$persona_order_by<TRes> get persona =>
+      CopyWith$Input$persona_order_by.stub(_res);
+  CopyWith$Input$public_user_order_by<TRes> get public_user =>
+      CopyWith$Input$public_user_order_by.stub(_res);
+}
+
+class Input$chat_pk_columns_input {
+  factory Input$chat_pk_columns_input({required String chat_id}) =>
+      Input$chat_pk_columns_input._({
+        r'chat_id': chat_id,
+      });
+
+  Input$chat_pk_columns_input._(this._$data);
+
+  factory Input$chat_pk_columns_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$chat_id = data['chat_id'];
+    result$data['chat_id'] = (l$chat_id as String);
+    return Input$chat_pk_columns_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get chat_id => (_$data['chat_id'] as String);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$chat_id = chat_id;
+    result$data['chat_id'] = l$chat_id;
+    return result$data;
+  }
+
+  CopyWith$Input$chat_pk_columns_input<Input$chat_pk_columns_input>
+      get copyWith => CopyWith$Input$chat_pk_columns_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_pk_columns_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    return Object.hashAll([l$chat_id]);
+  }
+}
+
+abstract class CopyWith$Input$chat_pk_columns_input<TRes> {
+  factory CopyWith$Input$chat_pk_columns_input(
+    Input$chat_pk_columns_input instance,
+    TRes Function(Input$chat_pk_columns_input) then,
+  ) = _CopyWithImpl$Input$chat_pk_columns_input;
+
+  factory CopyWith$Input$chat_pk_columns_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_pk_columns_input;
+
+  TRes call({String? chat_id});
+}
+
+class _CopyWithImpl$Input$chat_pk_columns_input<TRes>
+    implements CopyWith$Input$chat_pk_columns_input<TRes> {
+  _CopyWithImpl$Input$chat_pk_columns_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_pk_columns_input _instance;
+
+  final TRes Function(Input$chat_pk_columns_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? chat_id = _undefined}) =>
+      _then(Input$chat_pk_columns_input._({
+        ..._instance._$data,
+        if (chat_id != _undefined && chat_id != null)
+          'chat_id': (chat_id as String),
+      }));
+}
+
+class _CopyWithStubImpl$Input$chat_pk_columns_input<TRes>
+    implements CopyWith$Input$chat_pk_columns_input<TRes> {
+  _CopyWithStubImpl$Input$chat_pk_columns_input(this._res);
+
+  TRes _res;
+
+  call({String? chat_id}) => _res;
+}
+
+class Input$chat_set_input {
+  factory Input$chat_set_input({
+    String? chat_id,
+    String? created_at,
+    bool? is_typing,
+    String? persona_id,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      Input$chat_set_input._({
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (is_typing != null) r'is_typing': is_typing,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$chat_set_input._(this._$data);
+
+  factory Input$chat_set_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = (l$chat_id as String?);
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = (l$created_at as String?);
+    }
+    if (data.containsKey('is_typing')) {
+      final l$is_typing = data['is_typing'];
+      result$data['is_typing'] = (l$is_typing as bool?);
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = (l$persona_id as String?);
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = (l$updated_at as String?);
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = (l$user_id as String?);
+    }
+    return Input$chat_set_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String? get chat_id => (_$data['chat_id'] as String?);
+  String? get created_at => (_$data['created_at'] as String?);
+  bool? get is_typing => (_$data['is_typing'] as bool?);
+  String? get persona_id => (_$data['persona_id'] as String?);
+  String? get updated_at => (_$data['updated_at'] as String?);
+  String? get user_id => (_$data['user_id'] as String?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] = l$chat_id;
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at;
+    }
+    if (_$data.containsKey('is_typing')) {
+      final l$is_typing = is_typing;
+      result$data['is_typing'] = l$is_typing;
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] = l$persona_id;
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at;
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] = l$user_id;
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_set_input<Input$chat_set_input> get copyWith =>
+      CopyWith$Input$chat_set_input(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_set_input) || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$is_typing = is_typing;
+    final lOther$is_typing = other.is_typing;
+    if (_$data.containsKey('is_typing') !=
+        other._$data.containsKey('is_typing')) {
+      return false;
+    }
+    if (l$is_typing != lOther$is_typing) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$is_typing = is_typing;
+    final l$persona_id = persona_id;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('is_typing') ? l$is_typing : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_set_input<TRes> {
+  factory CopyWith$Input$chat_set_input(
+    Input$chat_set_input instance,
+    TRes Function(Input$chat_set_input) then,
+  ) = _CopyWithImpl$Input$chat_set_input;
+
+  factory CopyWith$Input$chat_set_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_set_input;
+
+  TRes call({
+    String? chat_id,
+    String? created_at,
+    bool? is_typing,
+    String? persona_id,
+    String? updated_at,
+    String? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$chat_set_input<TRes>
+    implements CopyWith$Input$chat_set_input<TRes> {
+  _CopyWithImpl$Input$chat_set_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_set_input _instance;
+
+  final TRes Function(Input$chat_set_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? is_typing = _undefined,
+    Object? persona_id = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$chat_set_input._({
+        ..._instance._$data,
+        if (chat_id != _undefined) 'chat_id': (chat_id as String?),
+        if (created_at != _undefined) 'created_at': (created_at as String?),
+        if (is_typing != _undefined) 'is_typing': (is_typing as bool?),
+        if (persona_id != _undefined) 'persona_id': (persona_id as String?),
+        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
+        if (user_id != _undefined) 'user_id': (user_id as String?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$chat_set_input<TRes>
+    implements CopyWith$Input$chat_set_input<TRes> {
+  _CopyWithStubImpl$Input$chat_set_input(this._res);
+
+  TRes _res;
+
+  call({
+    String? chat_id,
+    String? created_at,
+    bool? is_typing,
+    String? persona_id,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      _res;
+}
+
+class Input$chat_stream_cursor_input {
+  factory Input$chat_stream_cursor_input({
+    required Input$chat_stream_cursor_value_input initial_value,
+    Enum$cursor_ordering? ordering,
+  }) =>
+      Input$chat_stream_cursor_input._({
+        r'initial_value': initial_value,
+        if (ordering != null) r'ordering': ordering,
+      });
+
+  Input$chat_stream_cursor_input._(this._$data);
+
+  factory Input$chat_stream_cursor_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$initial_value = data['initial_value'];
+    result$data['initial_value'] =
+        Input$chat_stream_cursor_value_input.fromJson(
+            (l$initial_value as Map<String, dynamic>));
+    if (data.containsKey('ordering')) {
+      final l$ordering = data['ordering'];
+      result$data['ordering'] = l$ordering == null
+          ? null
+          : fromJson$Enum$cursor_ordering((l$ordering as String));
+    }
+    return Input$chat_stream_cursor_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$chat_stream_cursor_value_input get initial_value =>
+      (_$data['initial_value'] as Input$chat_stream_cursor_value_input);
+  Enum$cursor_ordering? get ordering =>
+      (_$data['ordering'] as Enum$cursor_ordering?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$initial_value = initial_value;
+    result$data['initial_value'] = l$initial_value.toJson();
+    if (_$data.containsKey('ordering')) {
+      final l$ordering = ordering;
+      result$data['ordering'] =
+          l$ordering == null ? null : toJson$Enum$cursor_ordering(l$ordering);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_stream_cursor_input<Input$chat_stream_cursor_input>
+      get copyWith => CopyWith$Input$chat_stream_cursor_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_stream_cursor_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$initial_value = initial_value;
+    final lOther$initial_value = other.initial_value;
+    if (l$initial_value != lOther$initial_value) {
+      return false;
+    }
+    final l$ordering = ordering;
+    final lOther$ordering = other.ordering;
+    if (_$data.containsKey('ordering') !=
+        other._$data.containsKey('ordering')) {
+      return false;
+    }
+    if (l$ordering != lOther$ordering) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$initial_value = initial_value;
+    final l$ordering = ordering;
+    return Object.hashAll([
+      l$initial_value,
+      _$data.containsKey('ordering') ? l$ordering : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_stream_cursor_input<TRes> {
+  factory CopyWith$Input$chat_stream_cursor_input(
+    Input$chat_stream_cursor_input instance,
+    TRes Function(Input$chat_stream_cursor_input) then,
+  ) = _CopyWithImpl$Input$chat_stream_cursor_input;
+
+  factory CopyWith$Input$chat_stream_cursor_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_stream_cursor_input;
+
+  TRes call({
+    Input$chat_stream_cursor_value_input? initial_value,
+    Enum$cursor_ordering? ordering,
+  });
+  CopyWith$Input$chat_stream_cursor_value_input<TRes> get initial_value;
+}
+
+class _CopyWithImpl$Input$chat_stream_cursor_input<TRes>
+    implements CopyWith$Input$chat_stream_cursor_input<TRes> {
+  _CopyWithImpl$Input$chat_stream_cursor_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_stream_cursor_input _instance;
+
+  final TRes Function(Input$chat_stream_cursor_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? initial_value = _undefined,
+    Object? ordering = _undefined,
+  }) =>
+      _then(Input$chat_stream_cursor_input._({
+        ..._instance._$data,
+        if (initial_value != _undefined && initial_value != null)
+          'initial_value':
+              (initial_value as Input$chat_stream_cursor_value_input),
+        if (ordering != _undefined)
+          'ordering': (ordering as Enum$cursor_ordering?),
+      }));
+  CopyWith$Input$chat_stream_cursor_value_input<TRes> get initial_value {
+    final local$initial_value = _instance.initial_value;
+    return CopyWith$Input$chat_stream_cursor_value_input(
+        local$initial_value, (e) => call(initial_value: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_stream_cursor_input<TRes>
+    implements CopyWith$Input$chat_stream_cursor_input<TRes> {
+  _CopyWithStubImpl$Input$chat_stream_cursor_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$chat_stream_cursor_value_input? initial_value,
+    Enum$cursor_ordering? ordering,
+  }) =>
+      _res;
+  CopyWith$Input$chat_stream_cursor_value_input<TRes> get initial_value =>
+      CopyWith$Input$chat_stream_cursor_value_input.stub(_res);
+}
+
+class Input$chat_stream_cursor_value_input {
+  factory Input$chat_stream_cursor_value_input({
+    String? chat_id,
+    String? created_at,
+    bool? is_typing,
+    String? persona_id,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      Input$chat_stream_cursor_value_input._({
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (is_typing != null) r'is_typing': is_typing,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$chat_stream_cursor_value_input._(this._$data);
+
+  factory Input$chat_stream_cursor_value_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = (l$chat_id as String?);
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = (l$created_at as String?);
+    }
+    if (data.containsKey('is_typing')) {
+      final l$is_typing = data['is_typing'];
+      result$data['is_typing'] = (l$is_typing as bool?);
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = (l$persona_id as String?);
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = (l$updated_at as String?);
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = (l$user_id as String?);
+    }
+    return Input$chat_stream_cursor_value_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String? get chat_id => (_$data['chat_id'] as String?);
+  String? get created_at => (_$data['created_at'] as String?);
+  bool? get is_typing => (_$data['is_typing'] as bool?);
+  String? get persona_id => (_$data['persona_id'] as String?);
+  String? get updated_at => (_$data['updated_at'] as String?);
+  String? get user_id => (_$data['user_id'] as String?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] = l$chat_id;
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at;
+    }
+    if (_$data.containsKey('is_typing')) {
+      final l$is_typing = is_typing;
+      result$data['is_typing'] = l$is_typing;
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] = l$persona_id;
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at;
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] = l$user_id;
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$chat_stream_cursor_value_input<
+          Input$chat_stream_cursor_value_input>
+      get copyWith => CopyWith$Input$chat_stream_cursor_value_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_stream_cursor_value_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$is_typing = is_typing;
+    final lOther$is_typing = other.is_typing;
+    if (_$data.containsKey('is_typing') !=
+        other._$data.containsKey('is_typing')) {
+      return false;
+    }
+    if (l$is_typing != lOther$is_typing) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$is_typing = is_typing;
+    final l$persona_id = persona_id;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('is_typing') ? l$is_typing : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_stream_cursor_value_input<TRes> {
+  factory CopyWith$Input$chat_stream_cursor_value_input(
+    Input$chat_stream_cursor_value_input instance,
+    TRes Function(Input$chat_stream_cursor_value_input) then,
+  ) = _CopyWithImpl$Input$chat_stream_cursor_value_input;
+
+  factory CopyWith$Input$chat_stream_cursor_value_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_stream_cursor_value_input;
+
+  TRes call({
+    String? chat_id,
+    String? created_at,
+    bool? is_typing,
+    String? persona_id,
+    String? updated_at,
+    String? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$chat_stream_cursor_value_input<TRes>
+    implements CopyWith$Input$chat_stream_cursor_value_input<TRes> {
+  _CopyWithImpl$Input$chat_stream_cursor_value_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_stream_cursor_value_input _instance;
+
+  final TRes Function(Input$chat_stream_cursor_value_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? is_typing = _undefined,
+    Object? persona_id = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$chat_stream_cursor_value_input._({
+        ..._instance._$data,
+        if (chat_id != _undefined) 'chat_id': (chat_id as String?),
+        if (created_at != _undefined) 'created_at': (created_at as String?),
+        if (is_typing != _undefined) 'is_typing': (is_typing as bool?),
+        if (persona_id != _undefined) 'persona_id': (persona_id as String?),
+        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
+        if (user_id != _undefined) 'user_id': (user_id as String?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$chat_stream_cursor_value_input<TRes>
+    implements CopyWith$Input$chat_stream_cursor_value_input<TRes> {
+  _CopyWithStubImpl$Input$chat_stream_cursor_value_input(this._res);
+
+  TRes _res;
+
+  call({
+    String? chat_id,
+    String? created_at,
+    bool? is_typing,
+    String? persona_id,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      _res;
+}
+
+class Input$chat_updates {
+  factory Input$chat_updates({
+    Input$chat_set_input? $_set,
+    required Input$chat_bool_exp where,
+  }) =>
+      Input$chat_updates._({
+        if ($_set != null) r'_set': $_set,
+        r'where': where,
+      });
+
+  Input$chat_updates._(this._$data);
+
+  factory Input$chat_updates.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('_set')) {
+      final l$$_set = data['_set'];
+      result$data['_set'] = l$$_set == null
+          ? null
+          : Input$chat_set_input.fromJson((l$$_set as Map<String, dynamic>));
+    }
+    final l$where = data['where'];
+    result$data['where'] =
+        Input$chat_bool_exp.fromJson((l$where as Map<String, dynamic>));
+    return Input$chat_updates._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$chat_set_input? get $_set => (_$data['_set'] as Input$chat_set_input?);
+  Input$chat_bool_exp get where => (_$data['where'] as Input$chat_bool_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('_set')) {
+      final l$$_set = $_set;
+      result$data['_set'] = l$$_set?.toJson();
+    }
+    final l$where = where;
+    result$data['where'] = l$where.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$chat_updates<Input$chat_updates> get copyWith =>
+      CopyWith$Input$chat_updates(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$chat_updates) || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$_set = $_set;
+    final lOther$$_set = other.$_set;
+    if (_$data.containsKey('_set') != other._$data.containsKey('_set')) {
+      return false;
+    }
+    if (l$$_set != lOther$$_set) {
+      return false;
+    }
+    final l$where = where;
+    final lOther$where = other.where;
+    if (l$where != lOther$where) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$$_set = $_set;
+    final l$where = where;
+    return Object.hashAll([
+      _$data.containsKey('_set') ? l$$_set : const {},
+      l$where,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$chat_updates<TRes> {
+  factory CopyWith$Input$chat_updates(
+    Input$chat_updates instance,
+    TRes Function(Input$chat_updates) then,
+  ) = _CopyWithImpl$Input$chat_updates;
+
+  factory CopyWith$Input$chat_updates.stub(TRes res) =
+      _CopyWithStubImpl$Input$chat_updates;
+
+  TRes call({
+    Input$chat_set_input? $_set,
+    Input$chat_bool_exp? where,
+  });
+  CopyWith$Input$chat_set_input<TRes> get $_set;
+  CopyWith$Input$chat_bool_exp<TRes> get where;
+}
+
+class _CopyWithImpl$Input$chat_updates<TRes>
+    implements CopyWith$Input$chat_updates<TRes> {
+  _CopyWithImpl$Input$chat_updates(
+    this._instance,
+    this._then,
+  );
+
+  final Input$chat_updates _instance;
+
+  final TRes Function(Input$chat_updates) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? $_set = _undefined,
+    Object? where = _undefined,
+  }) =>
+      _then(Input$chat_updates._({
+        ..._instance._$data,
+        if ($_set != _undefined) '_set': ($_set as Input$chat_set_input?),
+        if (where != _undefined && where != null)
+          'where': (where as Input$chat_bool_exp),
+      }));
+  CopyWith$Input$chat_set_input<TRes> get $_set {
+    final local$$_set = _instance.$_set;
+    return local$$_set == null
+        ? CopyWith$Input$chat_set_input.stub(_then(_instance))
+        : CopyWith$Input$chat_set_input(local$$_set, (e) => call($_set: e));
+  }
+
+  CopyWith$Input$chat_bool_exp<TRes> get where {
+    final local$where = _instance.where;
+    return CopyWith$Input$chat_bool_exp(local$where, (e) => call(where: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$chat_updates<TRes>
+    implements CopyWith$Input$chat_updates<TRes> {
+  _CopyWithStubImpl$Input$chat_updates(this._res);
+
+  TRes _res;
+
+  call({
+    Input$chat_set_input? $_set,
+    Input$chat_bool_exp? where,
+  }) =>
+      _res;
+  CopyWith$Input$chat_set_input<TRes> get $_set =>
+      CopyWith$Input$chat_set_input.stub(_res);
+  CopyWith$Input$chat_bool_exp<TRes> get where =>
+      CopyWith$Input$chat_bool_exp.stub(_res);
+}
+
+class Input$file_aggregate_bool_exp {
+  factory Input$file_aggregate_bool_exp({
+    Input$file_aggregate_bool_exp_bool_and? bool_and,
+    Input$file_aggregate_bool_exp_bool_or? bool_or,
+    Input$file_aggregate_bool_exp_count? count,
+  }) =>
+      Input$file_aggregate_bool_exp._({
+        if (bool_and != null) r'bool_and': bool_and,
+        if (bool_or != null) r'bool_or': bool_or,
+        if (count != null) r'count': count,
+      });
+
+  Input$file_aggregate_bool_exp._(this._$data);
+
+  factory Input$file_aggregate_bool_exp.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('bool_and')) {
+      final l$bool_and = data['bool_and'];
+      result$data['bool_and'] = l$bool_and == null
+          ? null
+          : Input$file_aggregate_bool_exp_bool_and.fromJson(
+              (l$bool_and as Map<String, dynamic>));
+    }
+    if (data.containsKey('bool_or')) {
+      final l$bool_or = data['bool_or'];
+      result$data['bool_or'] = l$bool_or == null
+          ? null
+          : Input$file_aggregate_bool_exp_bool_or.fromJson(
+              (l$bool_or as Map<String, dynamic>));
+    }
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] = l$count == null
+          ? null
+          : Input$file_aggregate_bool_exp_count.fromJson(
+              (l$count as Map<String, dynamic>));
+    }
+    return Input$file_aggregate_bool_exp._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$file_aggregate_bool_exp_bool_and? get bool_and =>
+      (_$data['bool_and'] as Input$file_aggregate_bool_exp_bool_and?);
+  Input$file_aggregate_bool_exp_bool_or? get bool_or =>
+      (_$data['bool_or'] as Input$file_aggregate_bool_exp_bool_or?);
+  Input$file_aggregate_bool_exp_count? get count =>
+      (_$data['count'] as Input$file_aggregate_bool_exp_count?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('bool_and')) {
+      final l$bool_and = bool_and;
+      result$data['bool_and'] = l$bool_and?.toJson();
+    }
+    if (_$data.containsKey('bool_or')) {
+      final l$bool_or = bool_or;
+      result$data['bool_or'] = l$bool_or?.toJson();
+    }
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] = l$count?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$file_aggregate_bool_exp<Input$file_aggregate_bool_exp>
+      get copyWith => CopyWith$Input$file_aggregate_bool_exp(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$file_aggregate_bool_exp) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$bool_and = bool_and;
+    final lOther$bool_and = other.bool_and;
+    if (_$data.containsKey('bool_and') !=
+        other._$data.containsKey('bool_and')) {
+      return false;
+    }
+    if (l$bool_and != lOther$bool_and) {
+      return false;
+    }
+    final l$bool_or = bool_or;
+    final lOther$bool_or = other.bool_or;
+    if (_$data.containsKey('bool_or') != other._$data.containsKey('bool_or')) {
+      return false;
+    }
+    if (l$bool_or != lOther$bool_or) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$bool_and = bool_and;
+    final l$bool_or = bool_or;
+    final l$count = count;
+    return Object.hashAll([
+      _$data.containsKey('bool_and') ? l$bool_and : const {},
+      _$data.containsKey('bool_or') ? l$bool_or : const {},
+      _$data.containsKey('count') ? l$count : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$file_aggregate_bool_exp<TRes> {
+  factory CopyWith$Input$file_aggregate_bool_exp(
+    Input$file_aggregate_bool_exp instance,
+    TRes Function(Input$file_aggregate_bool_exp) then,
+  ) = _CopyWithImpl$Input$file_aggregate_bool_exp;
+
+  factory CopyWith$Input$file_aggregate_bool_exp.stub(TRes res) =
+      _CopyWithStubImpl$Input$file_aggregate_bool_exp;
+
+  TRes call({
+    Input$file_aggregate_bool_exp_bool_and? bool_and,
+    Input$file_aggregate_bool_exp_bool_or? bool_or,
+    Input$file_aggregate_bool_exp_count? count,
+  });
+  CopyWith$Input$file_aggregate_bool_exp_bool_and<TRes> get bool_and;
+  CopyWith$Input$file_aggregate_bool_exp_bool_or<TRes> get bool_or;
+  CopyWith$Input$file_aggregate_bool_exp_count<TRes> get count;
+}
+
+class _CopyWithImpl$Input$file_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$file_aggregate_bool_exp<TRes> {
+  _CopyWithImpl$Input$file_aggregate_bool_exp(
+    this._instance,
+    this._then,
+  );
+
+  final Input$file_aggregate_bool_exp _instance;
+
+  final TRes Function(Input$file_aggregate_bool_exp) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? bool_and = _undefined,
+    Object? bool_or = _undefined,
+    Object? count = _undefined,
+  }) =>
+      _then(Input$file_aggregate_bool_exp._({
+        ..._instance._$data,
+        if (bool_and != _undefined)
+          'bool_and': (bool_and as Input$file_aggregate_bool_exp_bool_and?),
+        if (bool_or != _undefined)
+          'bool_or': (bool_or as Input$file_aggregate_bool_exp_bool_or?),
+        if (count != _undefined)
+          'count': (count as Input$file_aggregate_bool_exp_count?),
+      }));
+  CopyWith$Input$file_aggregate_bool_exp_bool_and<TRes> get bool_and {
+    final local$bool_and = _instance.bool_and;
+    return local$bool_and == null
+        ? CopyWith$Input$file_aggregate_bool_exp_bool_and.stub(_then(_instance))
+        : CopyWith$Input$file_aggregate_bool_exp_bool_and(
+            local$bool_and, (e) => call(bool_and: e));
+  }
+
+  CopyWith$Input$file_aggregate_bool_exp_bool_or<TRes> get bool_or {
+    final local$bool_or = _instance.bool_or;
+    return local$bool_or == null
+        ? CopyWith$Input$file_aggregate_bool_exp_bool_or.stub(_then(_instance))
+        : CopyWith$Input$file_aggregate_bool_exp_bool_or(
+            local$bool_or, (e) => call(bool_or: e));
+  }
+
+  CopyWith$Input$file_aggregate_bool_exp_count<TRes> get count {
+    final local$count = _instance.count;
+    return local$count == null
+        ? CopyWith$Input$file_aggregate_bool_exp_count.stub(_then(_instance))
+        : CopyWith$Input$file_aggregate_bool_exp_count(
+            local$count, (e) => call(count: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$file_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$file_aggregate_bool_exp<TRes> {
+  _CopyWithStubImpl$Input$file_aggregate_bool_exp(this._res);
+
+  TRes _res;
+
+  call({
+    Input$file_aggregate_bool_exp_bool_and? bool_and,
+    Input$file_aggregate_bool_exp_bool_or? bool_or,
+    Input$file_aggregate_bool_exp_count? count,
+  }) =>
+      _res;
+  CopyWith$Input$file_aggregate_bool_exp_bool_and<TRes> get bool_and =>
+      CopyWith$Input$file_aggregate_bool_exp_bool_and.stub(_res);
+  CopyWith$Input$file_aggregate_bool_exp_bool_or<TRes> get bool_or =>
+      CopyWith$Input$file_aggregate_bool_exp_bool_or.stub(_res);
+  CopyWith$Input$file_aggregate_bool_exp_count<TRes> get count =>
+      CopyWith$Input$file_aggregate_bool_exp_count.stub(_res);
+}
+
+class Input$file_aggregate_bool_exp_bool_and {
+  factory Input$file_aggregate_bool_exp_bool_and({
+    required Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns
+        arguments,
+    bool? distinct,
+    Input$file_bool_exp? filter,
+    required Input$Boolean_comparison_exp predicate,
+  }) =>
+      Input$file_aggregate_bool_exp_bool_and._({
+        r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$file_aggregate_bool_exp_bool_and._(this._$data);
+
+  factory Input$file_aggregate_bool_exp_bool_and.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$arguments = data['arguments'];
+    result$data['arguments'] =
+        fromJson$Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns(
+            (l$arguments as String));
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$file_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Boolean_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$file_aggregate_bool_exp_bool_and._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns
+      get arguments => (_$data['arguments']
+          as Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$file_bool_exp? get filter => (_$data['filter'] as Input$file_bool_exp?);
+  Input$Boolean_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Boolean_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$arguments = arguments;
+    result$data['arguments'] =
+        toJson$Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns(
+            l$arguments);
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$file_aggregate_bool_exp_bool_and<
+          Input$file_aggregate_bool_exp_bool_and>
+      get copyWith => CopyWith$Input$file_aggregate_bool_exp_bool_and(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$file_aggregate_bool_exp_bool_and) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      l$arguments,
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$file_aggregate_bool_exp_bool_and<TRes> {
+  factory CopyWith$Input$file_aggregate_bool_exp_bool_and(
+    Input$file_aggregate_bool_exp_bool_and instance,
+    TRes Function(Input$file_aggregate_bool_exp_bool_and) then,
+  ) = _CopyWithImpl$Input$file_aggregate_bool_exp_bool_and;
+
+  factory CopyWith$Input$file_aggregate_bool_exp_bool_and.stub(TRes res) =
+      _CopyWithStubImpl$Input$file_aggregate_bool_exp_bool_and;
+
+  TRes call({
+    Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$file_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  });
+  CopyWith$Input$file_bool_exp<TRes> get filter;
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$file_aggregate_bool_exp_bool_and<TRes>
+    implements CopyWith$Input$file_aggregate_bool_exp_bool_and<TRes> {
+  _CopyWithImpl$Input$file_aggregate_bool_exp_bool_and(
+    this._instance,
+    this._then,
+  );
+
+  final Input$file_aggregate_bool_exp_bool_and _instance;
+
+  final TRes Function(Input$file_aggregate_bool_exp_bool_and) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$file_aggregate_bool_exp_bool_and._({
+        ..._instance._$data,
+        if (arguments != _undefined && arguments != null)
+          'arguments': (arguments
+              as Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$file_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Boolean_comparison_exp),
+      }));
+  CopyWith$Input$file_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$file_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$file_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Boolean_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$file_aggregate_bool_exp_bool_and<TRes>
+    implements CopyWith$Input$file_aggregate_bool_exp_bool_and<TRes> {
+  _CopyWithStubImpl$Input$file_aggregate_bool_exp_bool_and(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$file_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$file_bool_exp<TRes> get filter =>
+      CopyWith$Input$file_bool_exp.stub(_res);
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Boolean_comparison_exp.stub(_res);
+}
+
+class Input$file_aggregate_bool_exp_bool_or {
+  factory Input$file_aggregate_bool_exp_bool_or({
+    required Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns
+        arguments,
+    bool? distinct,
+    Input$file_bool_exp? filter,
+    required Input$Boolean_comparison_exp predicate,
+  }) =>
+      Input$file_aggregate_bool_exp_bool_or._({
+        r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$file_aggregate_bool_exp_bool_or._(this._$data);
+
+  factory Input$file_aggregate_bool_exp_bool_or.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$arguments = data['arguments'];
+    result$data['arguments'] =
+        fromJson$Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns(
+            (l$arguments as String));
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$file_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Boolean_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$file_aggregate_bool_exp_bool_or._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns
+      get arguments => (_$data['arguments']
+          as Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$file_bool_exp? get filter => (_$data['filter'] as Input$file_bool_exp?);
+  Input$Boolean_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Boolean_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$arguments = arguments;
+    result$data['arguments'] =
+        toJson$Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns(
+            l$arguments);
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$file_aggregate_bool_exp_bool_or<
+          Input$file_aggregate_bool_exp_bool_or>
+      get copyWith => CopyWith$Input$file_aggregate_bool_exp_bool_or(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$file_aggregate_bool_exp_bool_or) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      l$arguments,
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$file_aggregate_bool_exp_bool_or<TRes> {
+  factory CopyWith$Input$file_aggregate_bool_exp_bool_or(
+    Input$file_aggregate_bool_exp_bool_or instance,
+    TRes Function(Input$file_aggregate_bool_exp_bool_or) then,
+  ) = _CopyWithImpl$Input$file_aggregate_bool_exp_bool_or;
+
+  factory CopyWith$Input$file_aggregate_bool_exp_bool_or.stub(TRes res) =
+      _CopyWithStubImpl$Input$file_aggregate_bool_exp_bool_or;
+
+  TRes call({
+    Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$file_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  });
+  CopyWith$Input$file_bool_exp<TRes> get filter;
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$file_aggregate_bool_exp_bool_or<TRes>
+    implements CopyWith$Input$file_aggregate_bool_exp_bool_or<TRes> {
+  _CopyWithImpl$Input$file_aggregate_bool_exp_bool_or(
+    this._instance,
+    this._then,
+  );
+
+  final Input$file_aggregate_bool_exp_bool_or _instance;
+
+  final TRes Function(Input$file_aggregate_bool_exp_bool_or) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$file_aggregate_bool_exp_bool_or._({
+        ..._instance._$data,
+        if (arguments != _undefined && arguments != null)
+          'arguments': (arguments
+              as Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$file_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Boolean_comparison_exp),
+      }));
+  CopyWith$Input$file_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$file_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$file_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Boolean_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$file_aggregate_bool_exp_bool_or<TRes>
+    implements CopyWith$Input$file_aggregate_bool_exp_bool_or<TRes> {
+  _CopyWithStubImpl$Input$file_aggregate_bool_exp_bool_or(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$file_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$file_bool_exp<TRes> get filter =>
+      CopyWith$Input$file_bool_exp.stub(_res);
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Boolean_comparison_exp.stub(_res);
+}
+
+class Input$file_aggregate_bool_exp_count {
+  factory Input$file_aggregate_bool_exp_count({
+    List<Enum$file_select_column>? arguments,
+    bool? distinct,
+    Input$file_bool_exp? filter,
+    required Input$Int_comparison_exp predicate,
+  }) =>
+      Input$file_aggregate_bool_exp_count._({
+        if (arguments != null) r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$file_aggregate_bool_exp_count._(this._$data);
+
+  factory Input$file_aggregate_bool_exp_count.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('arguments')) {
+      final l$arguments = data['arguments'];
+      result$data['arguments'] = (l$arguments as List<dynamic>?)
+          ?.map((e) => fromJson$Enum$file_select_column((e as String)))
+          .toList();
+    }
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$file_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Int_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$file_aggregate_bool_exp_count._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Enum$file_select_column>? get arguments =>
+      (_$data['arguments'] as List<Enum$file_select_column>?);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$file_bool_exp? get filter => (_$data['filter'] as Input$file_bool_exp?);
+  Input$Int_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Int_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('arguments')) {
+      final l$arguments = arguments;
+      result$data['arguments'] =
+          l$arguments?.map((e) => toJson$Enum$file_select_column(e)).toList();
+    }
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$file_aggregate_bool_exp_count<
+          Input$file_aggregate_bool_exp_count>
+      get copyWith => CopyWith$Input$file_aggregate_bool_exp_count(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$file_aggregate_bool_exp_count) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (_$data.containsKey('arguments') !=
+        other._$data.containsKey('arguments')) {
+      return false;
+    }
+    if (l$arguments != null && lOther$arguments != null) {
+      if (l$arguments.length != lOther$arguments.length) {
+        return false;
+      }
+      for (int i = 0; i < l$arguments.length; i++) {
+        final l$arguments$entry = l$arguments[i];
+        final lOther$arguments$entry = lOther$arguments[i];
+        if (l$arguments$entry != lOther$arguments$entry) {
+          return false;
+        }
+      }
+    } else if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      _$data.containsKey('arguments')
+          ? l$arguments == null
+              ? null
+              : Object.hashAll(l$arguments.map((v) => v))
+          : const {},
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$file_aggregate_bool_exp_count<TRes> {
+  factory CopyWith$Input$file_aggregate_bool_exp_count(
+    Input$file_aggregate_bool_exp_count instance,
+    TRes Function(Input$file_aggregate_bool_exp_count) then,
+  ) = _CopyWithImpl$Input$file_aggregate_bool_exp_count;
+
+  factory CopyWith$Input$file_aggregate_bool_exp_count.stub(TRes res) =
+      _CopyWithStubImpl$Input$file_aggregate_bool_exp_count;
+
+  TRes call({
+    List<Enum$file_select_column>? arguments,
+    bool? distinct,
+    Input$file_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  });
+  CopyWith$Input$file_bool_exp<TRes> get filter;
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$file_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$file_aggregate_bool_exp_count<TRes> {
+  _CopyWithImpl$Input$file_aggregate_bool_exp_count(
+    this._instance,
+    this._then,
+  );
+
+  final Input$file_aggregate_bool_exp_count _instance;
+
+  final TRes Function(Input$file_aggregate_bool_exp_count) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$file_aggregate_bool_exp_count._({
+        ..._instance._$data,
+        if (arguments != _undefined)
+          'arguments': (arguments as List<Enum$file_select_column>?),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$file_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Int_comparison_exp),
+      }));
+  CopyWith$Input$file_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$file_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$file_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Int_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$file_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$file_aggregate_bool_exp_count<TRes> {
+  _CopyWithStubImpl$Input$file_aggregate_bool_exp_count(this._res);
+
+  TRes _res;
+
+  call({
+    List<Enum$file_select_column>? arguments,
+    bool? distinct,
+    Input$file_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$file_bool_exp<TRes> get filter =>
+      CopyWith$Input$file_bool_exp.stub(_res);
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Int_comparison_exp.stub(_res);
+}
+
+class Input$file_aggregate_order_by {
+  factory Input$file_aggregate_order_by({
+    Enum$order_by? count,
+    Input$file_max_order_by? max,
+    Input$file_min_order_by? min,
+  }) =>
+      Input$file_aggregate_order_by._({
+        if (count != null) r'count': count,
+        if (max != null) r'max': max,
+        if (min != null) r'min': min,
+      });
+
+  Input$file_aggregate_order_by._(this._$data);
+
+  factory Input$file_aggregate_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] =
+          l$count == null ? null : fromJson$Enum$order_by((l$count as String));
+    }
+    if (data.containsKey('max')) {
+      final l$max = data['max'];
+      result$data['max'] = l$max == null
+          ? null
+          : Input$file_max_order_by.fromJson((l$max as Map<String, dynamic>));
+    }
+    if (data.containsKey('min')) {
+      final l$min = data['min'];
+      result$data['min'] = l$min == null
+          ? null
+          : Input$file_min_order_by.fromJson((l$min as Map<String, dynamic>));
+    }
+    return Input$file_aggregate_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get count => (_$data['count'] as Enum$order_by?);
+  Input$file_max_order_by? get max =>
+      (_$data['max'] as Input$file_max_order_by?);
+  Input$file_min_order_by? get min =>
+      (_$data['min'] as Input$file_min_order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] =
+          l$count == null ? null : toJson$Enum$order_by(l$count);
+    }
+    if (_$data.containsKey('max')) {
+      final l$max = max;
+      result$data['max'] = l$max?.toJson();
+    }
+    if (_$data.containsKey('min')) {
+      final l$min = min;
+      result$data['min'] = l$min?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$file_aggregate_order_by<Input$file_aggregate_order_by>
+      get copyWith => CopyWith$Input$file_aggregate_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$file_aggregate_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    final l$max = max;
+    final lOther$max = other.max;
+    if (_$data.containsKey('max') != other._$data.containsKey('max')) {
+      return false;
+    }
+    if (l$max != lOther$max) {
+      return false;
+    }
+    final l$min = min;
+    final lOther$min = other.min;
+    if (_$data.containsKey('min') != other._$data.containsKey('min')) {
+      return false;
+    }
+    if (l$min != lOther$min) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$count = count;
+    final l$max = max;
+    final l$min = min;
+    return Object.hashAll([
+      _$data.containsKey('count') ? l$count : const {},
+      _$data.containsKey('max') ? l$max : const {},
+      _$data.containsKey('min') ? l$min : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$file_aggregate_order_by<TRes> {
+  factory CopyWith$Input$file_aggregate_order_by(
+    Input$file_aggregate_order_by instance,
+    TRes Function(Input$file_aggregate_order_by) then,
+  ) = _CopyWithImpl$Input$file_aggregate_order_by;
+
+  factory CopyWith$Input$file_aggregate_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$file_aggregate_order_by;
+
+  TRes call({
+    Enum$order_by? count,
+    Input$file_max_order_by? max,
+    Input$file_min_order_by? min,
+  });
+  CopyWith$Input$file_max_order_by<TRes> get max;
+  CopyWith$Input$file_min_order_by<TRes> get min;
+}
+
+class _CopyWithImpl$Input$file_aggregate_order_by<TRes>
+    implements CopyWith$Input$file_aggregate_order_by<TRes> {
+  _CopyWithImpl$Input$file_aggregate_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$file_aggregate_order_by _instance;
+
+  final TRes Function(Input$file_aggregate_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? count = _undefined,
+    Object? max = _undefined,
+    Object? min = _undefined,
+  }) =>
+      _then(Input$file_aggregate_order_by._({
+        ..._instance._$data,
+        if (count != _undefined) 'count': (count as Enum$order_by?),
+        if (max != _undefined) 'max': (max as Input$file_max_order_by?),
+        if (min != _undefined) 'min': (min as Input$file_min_order_by?),
+      }));
+  CopyWith$Input$file_max_order_by<TRes> get max {
+    final local$max = _instance.max;
+    return local$max == null
+        ? CopyWith$Input$file_max_order_by.stub(_then(_instance))
+        : CopyWith$Input$file_max_order_by(local$max, (e) => call(max: e));
+  }
+
+  CopyWith$Input$file_min_order_by<TRes> get min {
+    final local$min = _instance.min;
+    return local$min == null
+        ? CopyWith$Input$file_min_order_by.stub(_then(_instance))
+        : CopyWith$Input$file_min_order_by(local$min, (e) => call(min: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$file_aggregate_order_by<TRes>
+    implements CopyWith$Input$file_aggregate_order_by<TRes> {
+  _CopyWithStubImpl$Input$file_aggregate_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? count,
+    Input$file_max_order_by? max,
+    Input$file_min_order_by? min,
+  }) =>
+      _res;
+  CopyWith$Input$file_max_order_by<TRes> get max =>
+      CopyWith$Input$file_max_order_by.stub(_res);
+  CopyWith$Input$file_min_order_by<TRes> get min =>
+      CopyWith$Input$file_min_order_by.stub(_res);
+}
+
+class Input$file_arr_rel_insert_input {
+  factory Input$file_arr_rel_insert_input({
+    required List<Input$file_insert_input> data,
+    Input$file_on_conflict? on_conflict,
+  }) =>
+      Input$file_arr_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$file_arr_rel_insert_input._(this._$data);
+
+  factory Input$file_arr_rel_insert_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] = (l$data as List<dynamic>)
+        .map((e) =>
+            Input$file_insert_input.fromJson((e as Map<String, dynamic>)))
+        .toList();
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$file_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$file_arr_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Input$file_insert_input> get data =>
+      (_$data['data'] as List<Input$file_insert_input>);
+  Input$file_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$file_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.map((e) => e.toJson()).toList();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$file_arr_rel_insert_input<Input$file_arr_rel_insert_input>
+      get copyWith => CopyWith$Input$file_arr_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$file_arr_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data.length != lOther$data.length) {
+      return false;
+    }
+    for (int i = 0; i < l$data.length; i++) {
+      final l$data$entry = l$data[i];
+      final lOther$data$entry = lOther$data[i];
+      if (l$data$entry != lOther$data$entry) {
+        return false;
+      }
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      Object.hashAll(l$data.map((v) => v)),
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$file_arr_rel_insert_input<TRes> {
+  factory CopyWith$Input$file_arr_rel_insert_input(
+    Input$file_arr_rel_insert_input instance,
+    TRes Function(Input$file_arr_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$file_arr_rel_insert_input;
+
+  factory CopyWith$Input$file_arr_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$file_arr_rel_insert_input;
+
+  TRes call({
+    List<Input$file_insert_input>? data,
+    Input$file_on_conflict? on_conflict,
+  });
+  TRes data(
+      Iterable<Input$file_insert_input> Function(
+              Iterable<
+                  CopyWith$Input$file_insert_input<Input$file_insert_input>>)
+          _fn);
+  CopyWith$Input$file_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$file_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$file_arr_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$file_arr_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$file_arr_rel_insert_input _instance;
+
+  final TRes Function(Input$file_arr_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$file_arr_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as List<Input$file_insert_input>),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$file_on_conflict?),
+      }));
+  TRes data(
+          Iterable<Input$file_insert_input> Function(
+                  Iterable<
+                      CopyWith$Input$file_insert_input<
+                          Input$file_insert_input>>)
+              _fn) =>
+      call(
+          data: _fn(_instance.data.map((e) => CopyWith$Input$file_insert_input(
+                e,
+                (i) => i,
+              ))).toList());
+  CopyWith$Input$file_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$file_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$file_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$file_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$file_arr_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$file_arr_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    List<Input$file_insert_input>? data,
+    Input$file_on_conflict? on_conflict,
+  }) =>
+      _res;
+  data(_fn) => _res;
+  CopyWith$Input$file_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$file_on_conflict.stub(_res);
+}
+
 class Input$file_bool_exp {
   factory Input$file_bool_exp({
     List<Input$file_bool_exp>? $_and,
     Input$file_bool_exp? $_not,
     List<Input$file_bool_exp>? $_or,
+    Input$user_bool_exp? creator,
     Input$String_comparison_exp? file_id,
+    Input$message_bool_exp? messages,
+    Input$message_aggregate_bool_exp? messages_aggregate,
     Input$String_comparison_exp? name,
+    Input$persona_bool_exp? personas,
+    Input$persona_aggregate_bool_exp? personas_aggregate,
     Input$Boolean_comparison_exp? public,
+    Input$public_user_bool_exp? public_users,
+    Input$public_user_aggregate_bool_exp? public_users_aggregate,
     Input$String_comparison_exp? signed_url,
     Input$String_comparison_exp? type,
     Input$String_comparison_exp? user_id,
@@ -5214,9 +11783,19 @@ class Input$file_bool_exp {
         if ($_and != null) r'_and': $_and,
         if ($_not != null) r'_not': $_not,
         if ($_or != null) r'_or': $_or,
+        if (creator != null) r'creator': creator,
         if (file_id != null) r'file_id': file_id,
+        if (messages != null) r'messages': messages,
+        if (messages_aggregate != null)
+          r'messages_aggregate': messages_aggregate,
         if (name != null) r'name': name,
+        if (personas != null) r'personas': personas,
+        if (personas_aggregate != null)
+          r'personas_aggregate': personas_aggregate,
         if (public != null) r'public': public,
+        if (public_users != null) r'public_users': public_users,
+        if (public_users_aggregate != null)
+          r'public_users_aggregate': public_users_aggregate,
         if (signed_url != null) r'signed_url': signed_url,
         if (type != null) r'type': type,
         if (user_id != null) r'user_id': user_id,
@@ -5246,12 +11825,32 @@ class Input$file_bool_exp {
               (e) => Input$file_bool_exp.fromJson((e as Map<String, dynamic>)))
           .toList();
     }
+    if (data.containsKey('creator')) {
+      final l$creator = data['creator'];
+      result$data['creator'] = l$creator == null
+          ? null
+          : Input$user_bool_exp.fromJson((l$creator as Map<String, dynamic>));
+    }
     if (data.containsKey('file_id')) {
       final l$file_id = data['file_id'];
       result$data['file_id'] = l$file_id == null
           ? null
           : Input$String_comparison_exp.fromJson(
               (l$file_id as Map<String, dynamic>));
+    }
+    if (data.containsKey('messages')) {
+      final l$messages = data['messages'];
+      result$data['messages'] = l$messages == null
+          ? null
+          : Input$message_bool_exp.fromJson(
+              (l$messages as Map<String, dynamic>));
+    }
+    if (data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = data['messages_aggregate'];
+      result$data['messages_aggregate'] = l$messages_aggregate == null
+          ? null
+          : Input$message_aggregate_bool_exp.fromJson(
+              (l$messages_aggregate as Map<String, dynamic>));
     }
     if (data.containsKey('name')) {
       final l$name = data['name'];
@@ -5260,12 +11859,40 @@ class Input$file_bool_exp {
           : Input$String_comparison_exp.fromJson(
               (l$name as Map<String, dynamic>));
     }
+    if (data.containsKey('personas')) {
+      final l$personas = data['personas'];
+      result$data['personas'] = l$personas == null
+          ? null
+          : Input$persona_bool_exp.fromJson(
+              (l$personas as Map<String, dynamic>));
+    }
+    if (data.containsKey('personas_aggregate')) {
+      final l$personas_aggregate = data['personas_aggregate'];
+      result$data['personas_aggregate'] = l$personas_aggregate == null
+          ? null
+          : Input$persona_aggregate_bool_exp.fromJson(
+              (l$personas_aggregate as Map<String, dynamic>));
+    }
     if (data.containsKey('public')) {
       final l$public = data['public'];
       result$data['public'] = l$public == null
           ? null
           : Input$Boolean_comparison_exp.fromJson(
               (l$public as Map<String, dynamic>));
+    }
+    if (data.containsKey('public_users')) {
+      final l$public_users = data['public_users'];
+      result$data['public_users'] = l$public_users == null
+          ? null
+          : Input$public_user_bool_exp.fromJson(
+              (l$public_users as Map<String, dynamic>));
+    }
+    if (data.containsKey('public_users_aggregate')) {
+      final l$public_users_aggregate = data['public_users_aggregate'];
+      result$data['public_users_aggregate'] = l$public_users_aggregate == null
+          ? null
+          : Input$public_user_aggregate_bool_exp.fromJson(
+              (l$public_users_aggregate as Map<String, dynamic>));
     }
     if (data.containsKey('signed_url')) {
       final l$signed_url = data['signed_url'];
@@ -5298,12 +11925,27 @@ class Input$file_bool_exp {
   Input$file_bool_exp? get $_not => (_$data['_not'] as Input$file_bool_exp?);
   List<Input$file_bool_exp>? get $_or =>
       (_$data['_or'] as List<Input$file_bool_exp>?);
+  Input$user_bool_exp? get creator =>
+      (_$data['creator'] as Input$user_bool_exp?);
   Input$String_comparison_exp? get file_id =>
       (_$data['file_id'] as Input$String_comparison_exp?);
+  Input$message_bool_exp? get messages =>
+      (_$data['messages'] as Input$message_bool_exp?);
+  Input$message_aggregate_bool_exp? get messages_aggregate =>
+      (_$data['messages_aggregate'] as Input$message_aggregate_bool_exp?);
   Input$String_comparison_exp? get name =>
       (_$data['name'] as Input$String_comparison_exp?);
+  Input$persona_bool_exp? get personas =>
+      (_$data['personas'] as Input$persona_bool_exp?);
+  Input$persona_aggregate_bool_exp? get personas_aggregate =>
+      (_$data['personas_aggregate'] as Input$persona_aggregate_bool_exp?);
   Input$Boolean_comparison_exp? get public =>
       (_$data['public'] as Input$Boolean_comparison_exp?);
+  Input$public_user_bool_exp? get public_users =>
+      (_$data['public_users'] as Input$public_user_bool_exp?);
+  Input$public_user_aggregate_bool_exp? get public_users_aggregate =>
+      (_$data['public_users_aggregate']
+          as Input$public_user_aggregate_bool_exp?);
   Input$String_comparison_exp? get signed_url =>
       (_$data['signed_url'] as Input$String_comparison_exp?);
   Input$String_comparison_exp? get type =>
@@ -5324,17 +11966,46 @@ class Input$file_bool_exp {
       final l$$_or = $_or;
       result$data['_or'] = l$$_or?.map((e) => e.toJson()).toList();
     }
+    if (_$data.containsKey('creator')) {
+      final l$creator = creator;
+      result$data['creator'] = l$creator?.toJson();
+    }
     if (_$data.containsKey('file_id')) {
       final l$file_id = file_id;
       result$data['file_id'] = l$file_id?.toJson();
+    }
+    if (_$data.containsKey('messages')) {
+      final l$messages = messages;
+      result$data['messages'] = l$messages?.toJson();
+    }
+    if (_$data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = messages_aggregate;
+      result$data['messages_aggregate'] = l$messages_aggregate?.toJson();
     }
     if (_$data.containsKey('name')) {
       final l$name = name;
       result$data['name'] = l$name?.toJson();
     }
+    if (_$data.containsKey('personas')) {
+      final l$personas = personas;
+      result$data['personas'] = l$personas?.toJson();
+    }
+    if (_$data.containsKey('personas_aggregate')) {
+      final l$personas_aggregate = personas_aggregate;
+      result$data['personas_aggregate'] = l$personas_aggregate?.toJson();
+    }
     if (_$data.containsKey('public')) {
       final l$public = public;
       result$data['public'] = l$public?.toJson();
+    }
+    if (_$data.containsKey('public_users')) {
+      final l$public_users = public_users;
+      result$data['public_users'] = l$public_users?.toJson();
+    }
+    if (_$data.containsKey('public_users_aggregate')) {
+      final l$public_users_aggregate = public_users_aggregate;
+      result$data['public_users_aggregate'] =
+          l$public_users_aggregate?.toJson();
     }
     if (_$data.containsKey('signed_url')) {
       final l$signed_url = signed_url;
@@ -5410,12 +12081,38 @@ class Input$file_bool_exp {
     } else if (l$$_or != lOther$$_or) {
       return false;
     }
+    final l$creator = creator;
+    final lOther$creator = other.creator;
+    if (_$data.containsKey('creator') != other._$data.containsKey('creator')) {
+      return false;
+    }
+    if (l$creator != lOther$creator) {
+      return false;
+    }
     final l$file_id = file_id;
     final lOther$file_id = other.file_id;
     if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
       return false;
     }
     if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$messages = messages;
+    final lOther$messages = other.messages;
+    if (_$data.containsKey('messages') !=
+        other._$data.containsKey('messages')) {
+      return false;
+    }
+    if (l$messages != lOther$messages) {
+      return false;
+    }
+    final l$messages_aggregate = messages_aggregate;
+    final lOther$messages_aggregate = other.messages_aggregate;
+    if (_$data.containsKey('messages_aggregate') !=
+        other._$data.containsKey('messages_aggregate')) {
+      return false;
+    }
+    if (l$messages_aggregate != lOther$messages_aggregate) {
       return false;
     }
     final l$name = name;
@@ -5426,12 +12123,48 @@ class Input$file_bool_exp {
     if (l$name != lOther$name) {
       return false;
     }
+    final l$personas = personas;
+    final lOther$personas = other.personas;
+    if (_$data.containsKey('personas') !=
+        other._$data.containsKey('personas')) {
+      return false;
+    }
+    if (l$personas != lOther$personas) {
+      return false;
+    }
+    final l$personas_aggregate = personas_aggregate;
+    final lOther$personas_aggregate = other.personas_aggregate;
+    if (_$data.containsKey('personas_aggregate') !=
+        other._$data.containsKey('personas_aggregate')) {
+      return false;
+    }
+    if (l$personas_aggregate != lOther$personas_aggregate) {
+      return false;
+    }
     final l$public = public;
     final lOther$public = other.public;
     if (_$data.containsKey('public') != other._$data.containsKey('public')) {
       return false;
     }
     if (l$public != lOther$public) {
+      return false;
+    }
+    final l$public_users = public_users;
+    final lOther$public_users = other.public_users;
+    if (_$data.containsKey('public_users') !=
+        other._$data.containsKey('public_users')) {
+      return false;
+    }
+    if (l$public_users != lOther$public_users) {
+      return false;
+    }
+    final l$public_users_aggregate = public_users_aggregate;
+    final lOther$public_users_aggregate = other.public_users_aggregate;
+    if (_$data.containsKey('public_users_aggregate') !=
+        other._$data.containsKey('public_users_aggregate')) {
+      return false;
+    }
+    if (l$public_users_aggregate != lOther$public_users_aggregate) {
       return false;
     }
     final l$signed_url = signed_url;
@@ -5467,9 +12200,16 @@ class Input$file_bool_exp {
     final l$$_and = $_and;
     final l$$_not = $_not;
     final l$$_or = $_or;
+    final l$creator = creator;
     final l$file_id = file_id;
+    final l$messages = messages;
+    final l$messages_aggregate = messages_aggregate;
     final l$name = name;
+    final l$personas = personas;
+    final l$personas_aggregate = personas_aggregate;
     final l$public = public;
+    final l$public_users = public_users;
+    final l$public_users_aggregate = public_users_aggregate;
     final l$signed_url = signed_url;
     final l$type = type;
     final l$user_id = user_id;
@@ -5485,9 +12225,22 @@ class Input$file_bool_exp {
               ? null
               : Object.hashAll(l$$_or.map((v) => v))
           : const {},
+      _$data.containsKey('creator') ? l$creator : const {},
       _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('messages') ? l$messages : const {},
+      _$data.containsKey('messages_aggregate')
+          ? l$messages_aggregate
+          : const {},
       _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('personas') ? l$personas : const {},
+      _$data.containsKey('personas_aggregate')
+          ? l$personas_aggregate
+          : const {},
       _$data.containsKey('public') ? l$public : const {},
+      _$data.containsKey('public_users') ? l$public_users : const {},
+      _$data.containsKey('public_users_aggregate')
+          ? l$public_users_aggregate
+          : const {},
       _$data.containsKey('signed_url') ? l$signed_url : const {},
       _$data.containsKey('type') ? l$type : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
@@ -5508,9 +12261,16 @@ abstract class CopyWith$Input$file_bool_exp<TRes> {
     List<Input$file_bool_exp>? $_and,
     Input$file_bool_exp? $_not,
     List<Input$file_bool_exp>? $_or,
+    Input$user_bool_exp? creator,
     Input$String_comparison_exp? file_id,
+    Input$message_bool_exp? messages,
+    Input$message_aggregate_bool_exp? messages_aggregate,
     Input$String_comparison_exp? name,
+    Input$persona_bool_exp? personas,
+    Input$persona_aggregate_bool_exp? personas_aggregate,
     Input$Boolean_comparison_exp? public,
+    Input$public_user_bool_exp? public_users,
+    Input$public_user_aggregate_bool_exp? public_users_aggregate,
     Input$String_comparison_exp? signed_url,
     Input$String_comparison_exp? type,
     Input$String_comparison_exp? user_id,
@@ -5524,9 +12284,17 @@ abstract class CopyWith$Input$file_bool_exp<TRes> {
       Iterable<Input$file_bool_exp>? Function(
               Iterable<CopyWith$Input$file_bool_exp<Input$file_bool_exp>>?)
           _fn);
+  CopyWith$Input$user_bool_exp<TRes> get creator;
   CopyWith$Input$String_comparison_exp<TRes> get file_id;
+  CopyWith$Input$message_bool_exp<TRes> get messages;
+  CopyWith$Input$message_aggregate_bool_exp<TRes> get messages_aggregate;
   CopyWith$Input$String_comparison_exp<TRes> get name;
+  CopyWith$Input$persona_bool_exp<TRes> get personas;
+  CopyWith$Input$persona_aggregate_bool_exp<TRes> get personas_aggregate;
   CopyWith$Input$Boolean_comparison_exp<TRes> get public;
+  CopyWith$Input$public_user_bool_exp<TRes> get public_users;
+  CopyWith$Input$public_user_aggregate_bool_exp<TRes>
+      get public_users_aggregate;
   CopyWith$Input$String_comparison_exp<TRes> get signed_url;
   CopyWith$Input$String_comparison_exp<TRes> get type;
   CopyWith$Input$String_comparison_exp<TRes> get user_id;
@@ -5549,9 +12317,16 @@ class _CopyWithImpl$Input$file_bool_exp<TRes>
     Object? $_and = _undefined,
     Object? $_not = _undefined,
     Object? $_or = _undefined,
+    Object? creator = _undefined,
     Object? file_id = _undefined,
+    Object? messages = _undefined,
+    Object? messages_aggregate = _undefined,
     Object? name = _undefined,
+    Object? personas = _undefined,
+    Object? personas_aggregate = _undefined,
     Object? public = _undefined,
+    Object? public_users = _undefined,
+    Object? public_users_aggregate = _undefined,
     Object? signed_url = _undefined,
     Object? type = _undefined,
     Object? user_id = _undefined,
@@ -5561,11 +12336,27 @@ class _CopyWithImpl$Input$file_bool_exp<TRes>
         if ($_and != _undefined) '_and': ($_and as List<Input$file_bool_exp>?),
         if ($_not != _undefined) '_not': ($_not as Input$file_bool_exp?),
         if ($_or != _undefined) '_or': ($_or as List<Input$file_bool_exp>?),
+        if (creator != _undefined) 'creator': (creator as Input$user_bool_exp?),
         if (file_id != _undefined)
           'file_id': (file_id as Input$String_comparison_exp?),
+        if (messages != _undefined)
+          'messages': (messages as Input$message_bool_exp?),
+        if (messages_aggregate != _undefined)
+          'messages_aggregate':
+              (messages_aggregate as Input$message_aggregate_bool_exp?),
         if (name != _undefined) 'name': (name as Input$String_comparison_exp?),
+        if (personas != _undefined)
+          'personas': (personas as Input$persona_bool_exp?),
+        if (personas_aggregate != _undefined)
+          'personas_aggregate':
+              (personas_aggregate as Input$persona_aggregate_bool_exp?),
         if (public != _undefined)
           'public': (public as Input$Boolean_comparison_exp?),
+        if (public_users != _undefined)
+          'public_users': (public_users as Input$public_user_bool_exp?),
+        if (public_users_aggregate != _undefined)
+          'public_users_aggregate':
+              (public_users_aggregate as Input$public_user_aggregate_bool_exp?),
         if (signed_url != _undefined)
           'signed_url': (signed_url as Input$String_comparison_exp?),
         if (type != _undefined) 'type': (type as Input$String_comparison_exp?),
@@ -5597,12 +12388,35 @@ class _CopyWithImpl$Input$file_bool_exp<TRes>
                 e,
                 (i) => i,
               )))?.toList());
+  CopyWith$Input$user_bool_exp<TRes> get creator {
+    final local$creator = _instance.creator;
+    return local$creator == null
+        ? CopyWith$Input$user_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$user_bool_exp(local$creator, (e) => call(creator: e));
+  }
+
   CopyWith$Input$String_comparison_exp<TRes> get file_id {
     final local$file_id = _instance.file_id;
     return local$file_id == null
         ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
         : CopyWith$Input$String_comparison_exp(
             local$file_id, (e) => call(file_id: e));
+  }
+
+  CopyWith$Input$message_bool_exp<TRes> get messages {
+    final local$messages = _instance.messages;
+    return local$messages == null
+        ? CopyWith$Input$message_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_bool_exp(
+            local$messages, (e) => call(messages: e));
+  }
+
+  CopyWith$Input$message_aggregate_bool_exp<TRes> get messages_aggregate {
+    final local$messages_aggregate = _instance.messages_aggregate;
+    return local$messages_aggregate == null
+        ? CopyWith$Input$message_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_aggregate_bool_exp(
+            local$messages_aggregate, (e) => call(messages_aggregate: e));
   }
 
   CopyWith$Input$String_comparison_exp<TRes> get name {
@@ -5613,12 +12427,46 @@ class _CopyWithImpl$Input$file_bool_exp<TRes>
             local$name, (e) => call(name: e));
   }
 
+  CopyWith$Input$persona_bool_exp<TRes> get personas {
+    final local$personas = _instance.personas;
+    return local$personas == null
+        ? CopyWith$Input$persona_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$persona_bool_exp(
+            local$personas, (e) => call(personas: e));
+  }
+
+  CopyWith$Input$persona_aggregate_bool_exp<TRes> get personas_aggregate {
+    final local$personas_aggregate = _instance.personas_aggregate;
+    return local$personas_aggregate == null
+        ? CopyWith$Input$persona_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$persona_aggregate_bool_exp(
+            local$personas_aggregate, (e) => call(personas_aggregate: e));
+  }
+
   CopyWith$Input$Boolean_comparison_exp<TRes> get public {
     final local$public = _instance.public;
     return local$public == null
         ? CopyWith$Input$Boolean_comparison_exp.stub(_then(_instance))
         : CopyWith$Input$Boolean_comparison_exp(
             local$public, (e) => call(public: e));
+  }
+
+  CopyWith$Input$public_user_bool_exp<TRes> get public_users {
+    final local$public_users = _instance.public_users;
+    return local$public_users == null
+        ? CopyWith$Input$public_user_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$public_user_bool_exp(
+            local$public_users, (e) => call(public_users: e));
+  }
+
+  CopyWith$Input$public_user_aggregate_bool_exp<TRes>
+      get public_users_aggregate {
+    final local$public_users_aggregate = _instance.public_users_aggregate;
+    return local$public_users_aggregate == null
+        ? CopyWith$Input$public_user_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$public_user_aggregate_bool_exp(
+            local$public_users_aggregate,
+            (e) => call(public_users_aggregate: e));
   }
 
   CopyWith$Input$String_comparison_exp<TRes> get signed_url {
@@ -5656,9 +12504,16 @@ class _CopyWithStubImpl$Input$file_bool_exp<TRes>
     List<Input$file_bool_exp>? $_and,
     Input$file_bool_exp? $_not,
     List<Input$file_bool_exp>? $_or,
+    Input$user_bool_exp? creator,
     Input$String_comparison_exp? file_id,
+    Input$message_bool_exp? messages,
+    Input$message_aggregate_bool_exp? messages_aggregate,
     Input$String_comparison_exp? name,
+    Input$persona_bool_exp? personas,
+    Input$persona_aggregate_bool_exp? personas_aggregate,
     Input$Boolean_comparison_exp? public,
+    Input$public_user_bool_exp? public_users,
+    Input$public_user_aggregate_bool_exp? public_users_aggregate,
     Input$String_comparison_exp? signed_url,
     Input$String_comparison_exp? type,
     Input$String_comparison_exp? user_id,
@@ -5668,12 +12523,27 @@ class _CopyWithStubImpl$Input$file_bool_exp<TRes>
   CopyWith$Input$file_bool_exp<TRes> get $_not =>
       CopyWith$Input$file_bool_exp.stub(_res);
   $_or(_fn) => _res;
+  CopyWith$Input$user_bool_exp<TRes> get creator =>
+      CopyWith$Input$user_bool_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get file_id =>
       CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$message_bool_exp<TRes> get messages =>
+      CopyWith$Input$message_bool_exp.stub(_res);
+  CopyWith$Input$message_aggregate_bool_exp<TRes> get messages_aggregate =>
+      CopyWith$Input$message_aggregate_bool_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get name =>
       CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$persona_bool_exp<TRes> get personas =>
+      CopyWith$Input$persona_bool_exp.stub(_res);
+  CopyWith$Input$persona_aggregate_bool_exp<TRes> get personas_aggregate =>
+      CopyWith$Input$persona_aggregate_bool_exp.stub(_res);
   CopyWith$Input$Boolean_comparison_exp<TRes> get public =>
       CopyWith$Input$Boolean_comparison_exp.stub(_res);
+  CopyWith$Input$public_user_bool_exp<TRes> get public_users =>
+      CopyWith$Input$public_user_bool_exp.stub(_res);
+  CopyWith$Input$public_user_aggregate_bool_exp<TRes>
+      get public_users_aggregate =>
+          CopyWith$Input$public_user_aggregate_bool_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get signed_url =>
       CopyWith$Input$String_comparison_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get type =>
@@ -5684,17 +12554,25 @@ class _CopyWithStubImpl$Input$file_bool_exp<TRes>
 
 class Input$file_insert_input {
   factory Input$file_insert_input({
+    Input$user_obj_rel_insert_input? creator,
     String? file_id,
+    Input$message_arr_rel_insert_input? messages,
     String? name,
+    Input$persona_arr_rel_insert_input? personas,
     bool? public,
+    Input$public_user_arr_rel_insert_input? public_users,
     String? signed_url,
     String? type,
     String? user_id,
   }) =>
       Input$file_insert_input._({
+        if (creator != null) r'creator': creator,
         if (file_id != null) r'file_id': file_id,
+        if (messages != null) r'messages': messages,
         if (name != null) r'name': name,
+        if (personas != null) r'personas': personas,
         if (public != null) r'public': public,
+        if (public_users != null) r'public_users': public_users,
         if (signed_url != null) r'signed_url': signed_url,
         if (type != null) r'type': type,
         if (user_id != null) r'user_id': user_id,
@@ -5704,17 +12582,45 @@ class Input$file_insert_input {
 
   factory Input$file_insert_input.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('creator')) {
+      final l$creator = data['creator'];
+      result$data['creator'] = l$creator == null
+          ? null
+          : Input$user_obj_rel_insert_input.fromJson(
+              (l$creator as Map<String, dynamic>));
+    }
     if (data.containsKey('file_id')) {
       final l$file_id = data['file_id'];
       result$data['file_id'] = (l$file_id as String?);
+    }
+    if (data.containsKey('messages')) {
+      final l$messages = data['messages'];
+      result$data['messages'] = l$messages == null
+          ? null
+          : Input$message_arr_rel_insert_input.fromJson(
+              (l$messages as Map<String, dynamic>));
     }
     if (data.containsKey('name')) {
       final l$name = data['name'];
       result$data['name'] = (l$name as String?);
     }
+    if (data.containsKey('personas')) {
+      final l$personas = data['personas'];
+      result$data['personas'] = l$personas == null
+          ? null
+          : Input$persona_arr_rel_insert_input.fromJson(
+              (l$personas as Map<String, dynamic>));
+    }
     if (data.containsKey('public')) {
       final l$public = data['public'];
       result$data['public'] = (l$public as bool?);
+    }
+    if (data.containsKey('public_users')) {
+      final l$public_users = data['public_users'];
+      result$data['public_users'] = l$public_users == null
+          ? null
+          : Input$public_user_arr_rel_insert_input.fromJson(
+              (l$public_users as Map<String, dynamic>));
     }
     if (data.containsKey('signed_url')) {
       final l$signed_url = data['signed_url'];
@@ -5733,25 +12639,49 @@ class Input$file_insert_input {
 
   Map<String, dynamic> _$data;
 
+  Input$user_obj_rel_insert_input? get creator =>
+      (_$data['creator'] as Input$user_obj_rel_insert_input?);
   String? get file_id => (_$data['file_id'] as String?);
+  Input$message_arr_rel_insert_input? get messages =>
+      (_$data['messages'] as Input$message_arr_rel_insert_input?);
   String? get name => (_$data['name'] as String?);
+  Input$persona_arr_rel_insert_input? get personas =>
+      (_$data['personas'] as Input$persona_arr_rel_insert_input?);
   bool? get public => (_$data['public'] as bool?);
+  Input$public_user_arr_rel_insert_input? get public_users =>
+      (_$data['public_users'] as Input$public_user_arr_rel_insert_input?);
   String? get signed_url => (_$data['signed_url'] as String?);
   String? get type => (_$data['type'] as String?);
   String? get user_id => (_$data['user_id'] as String?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('creator')) {
+      final l$creator = creator;
+      result$data['creator'] = l$creator?.toJson();
+    }
     if (_$data.containsKey('file_id')) {
       final l$file_id = file_id;
       result$data['file_id'] = l$file_id;
+    }
+    if (_$data.containsKey('messages')) {
+      final l$messages = messages;
+      result$data['messages'] = l$messages?.toJson();
     }
     if (_$data.containsKey('name')) {
       final l$name = name;
       result$data['name'] = l$name;
     }
+    if (_$data.containsKey('personas')) {
+      final l$personas = personas;
+      result$data['personas'] = l$personas?.toJson();
+    }
     if (_$data.containsKey('public')) {
       final l$public = public;
       result$data['public'] = l$public;
+    }
+    if (_$data.containsKey('public_users')) {
+      final l$public_users = public_users;
+      result$data['public_users'] = l$public_users?.toJson();
     }
     if (_$data.containsKey('signed_url')) {
       final l$signed_url = signed_url;
@@ -5782,6 +12712,354 @@ class Input$file_insert_input {
         runtimeType != other.runtimeType) {
       return false;
     }
+    final l$creator = creator;
+    final lOther$creator = other.creator;
+    if (_$data.containsKey('creator') != other._$data.containsKey('creator')) {
+      return false;
+    }
+    if (l$creator != lOther$creator) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$messages = messages;
+    final lOther$messages = other.messages;
+    if (_$data.containsKey('messages') !=
+        other._$data.containsKey('messages')) {
+      return false;
+    }
+    if (l$messages != lOther$messages) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$personas = personas;
+    final lOther$personas = other.personas;
+    if (_$data.containsKey('personas') !=
+        other._$data.containsKey('personas')) {
+      return false;
+    }
+    if (l$personas != lOther$personas) {
+      return false;
+    }
+    final l$public = public;
+    final lOther$public = other.public;
+    if (_$data.containsKey('public') != other._$data.containsKey('public')) {
+      return false;
+    }
+    if (l$public != lOther$public) {
+      return false;
+    }
+    final l$public_users = public_users;
+    final lOther$public_users = other.public_users;
+    if (_$data.containsKey('public_users') !=
+        other._$data.containsKey('public_users')) {
+      return false;
+    }
+    if (l$public_users != lOther$public_users) {
+      return false;
+    }
+    final l$signed_url = signed_url;
+    final lOther$signed_url = other.signed_url;
+    if (_$data.containsKey('signed_url') !=
+        other._$data.containsKey('signed_url')) {
+      return false;
+    }
+    if (l$signed_url != lOther$signed_url) {
+      return false;
+    }
+    final l$type = type;
+    final lOther$type = other.type;
+    if (_$data.containsKey('type') != other._$data.containsKey('type')) {
+      return false;
+    }
+    if (l$type != lOther$type) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$creator = creator;
+    final l$file_id = file_id;
+    final l$messages = messages;
+    final l$name = name;
+    final l$personas = personas;
+    final l$public = public;
+    final l$public_users = public_users;
+    final l$signed_url = signed_url;
+    final l$type = type;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('creator') ? l$creator : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('messages') ? l$messages : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('personas') ? l$personas : const {},
+      _$data.containsKey('public') ? l$public : const {},
+      _$data.containsKey('public_users') ? l$public_users : const {},
+      _$data.containsKey('signed_url') ? l$signed_url : const {},
+      _$data.containsKey('type') ? l$type : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$file_insert_input<TRes> {
+  factory CopyWith$Input$file_insert_input(
+    Input$file_insert_input instance,
+    TRes Function(Input$file_insert_input) then,
+  ) = _CopyWithImpl$Input$file_insert_input;
+
+  factory CopyWith$Input$file_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$file_insert_input;
+
+  TRes call({
+    Input$user_obj_rel_insert_input? creator,
+    String? file_id,
+    Input$message_arr_rel_insert_input? messages,
+    String? name,
+    Input$persona_arr_rel_insert_input? personas,
+    bool? public,
+    Input$public_user_arr_rel_insert_input? public_users,
+    String? signed_url,
+    String? type,
+    String? user_id,
+  });
+  CopyWith$Input$user_obj_rel_insert_input<TRes> get creator;
+  CopyWith$Input$message_arr_rel_insert_input<TRes> get messages;
+  CopyWith$Input$persona_arr_rel_insert_input<TRes> get personas;
+  CopyWith$Input$public_user_arr_rel_insert_input<TRes> get public_users;
+}
+
+class _CopyWithImpl$Input$file_insert_input<TRes>
+    implements CopyWith$Input$file_insert_input<TRes> {
+  _CopyWithImpl$Input$file_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$file_insert_input _instance;
+
+  final TRes Function(Input$file_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? creator = _undefined,
+    Object? file_id = _undefined,
+    Object? messages = _undefined,
+    Object? name = _undefined,
+    Object? personas = _undefined,
+    Object? public = _undefined,
+    Object? public_users = _undefined,
+    Object? signed_url = _undefined,
+    Object? type = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$file_insert_input._({
+        ..._instance._$data,
+        if (creator != _undefined)
+          'creator': (creator as Input$user_obj_rel_insert_input?),
+        if (file_id != _undefined) 'file_id': (file_id as String?),
+        if (messages != _undefined)
+          'messages': (messages as Input$message_arr_rel_insert_input?),
+        if (name != _undefined) 'name': (name as String?),
+        if (personas != _undefined)
+          'personas': (personas as Input$persona_arr_rel_insert_input?),
+        if (public != _undefined) 'public': (public as bool?),
+        if (public_users != _undefined)
+          'public_users':
+              (public_users as Input$public_user_arr_rel_insert_input?),
+        if (signed_url != _undefined) 'signed_url': (signed_url as String?),
+        if (type != _undefined) 'type': (type as String?),
+        if (user_id != _undefined) 'user_id': (user_id as String?),
+      }));
+  CopyWith$Input$user_obj_rel_insert_input<TRes> get creator {
+    final local$creator = _instance.creator;
+    return local$creator == null
+        ? CopyWith$Input$user_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$user_obj_rel_insert_input(
+            local$creator, (e) => call(creator: e));
+  }
+
+  CopyWith$Input$message_arr_rel_insert_input<TRes> get messages {
+    final local$messages = _instance.messages;
+    return local$messages == null
+        ? CopyWith$Input$message_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$message_arr_rel_insert_input(
+            local$messages, (e) => call(messages: e));
+  }
+
+  CopyWith$Input$persona_arr_rel_insert_input<TRes> get personas {
+    final local$personas = _instance.personas;
+    return local$personas == null
+        ? CopyWith$Input$persona_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$persona_arr_rel_insert_input(
+            local$personas, (e) => call(personas: e));
+  }
+
+  CopyWith$Input$public_user_arr_rel_insert_input<TRes> get public_users {
+    final local$public_users = _instance.public_users;
+    return local$public_users == null
+        ? CopyWith$Input$public_user_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$public_user_arr_rel_insert_input(
+            local$public_users, (e) => call(public_users: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$file_insert_input<TRes>
+    implements CopyWith$Input$file_insert_input<TRes> {
+  _CopyWithStubImpl$Input$file_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$user_obj_rel_insert_input? creator,
+    String? file_id,
+    Input$message_arr_rel_insert_input? messages,
+    String? name,
+    Input$persona_arr_rel_insert_input? personas,
+    bool? public,
+    Input$public_user_arr_rel_insert_input? public_users,
+    String? signed_url,
+    String? type,
+    String? user_id,
+  }) =>
+      _res;
+  CopyWith$Input$user_obj_rel_insert_input<TRes> get creator =>
+      CopyWith$Input$user_obj_rel_insert_input.stub(_res);
+  CopyWith$Input$message_arr_rel_insert_input<TRes> get messages =>
+      CopyWith$Input$message_arr_rel_insert_input.stub(_res);
+  CopyWith$Input$persona_arr_rel_insert_input<TRes> get personas =>
+      CopyWith$Input$persona_arr_rel_insert_input.stub(_res);
+  CopyWith$Input$public_user_arr_rel_insert_input<TRes> get public_users =>
+      CopyWith$Input$public_user_arr_rel_insert_input.stub(_res);
+}
+
+class Input$file_max_order_by {
+  factory Input$file_max_order_by({
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? signed_url,
+    Enum$order_by? type,
+    Enum$order_by? user_id,
+  }) =>
+      Input$file_max_order_by._({
+        if (file_id != null) r'file_id': file_id,
+        if (name != null) r'name': name,
+        if (signed_url != null) r'signed_url': signed_url,
+        if (type != null) r'type': type,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$file_max_order_by._(this._$data);
+
+  factory Input$file_max_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] =
+          l$name == null ? null : fromJson$Enum$order_by((l$name as String));
+    }
+    if (data.containsKey('signed_url')) {
+      final l$signed_url = data['signed_url'];
+      result$data['signed_url'] = l$signed_url == null
+          ? null
+          : fromJson$Enum$order_by((l$signed_url as String));
+    }
+    if (data.containsKey('type')) {
+      final l$type = data['type'];
+      result$data['type'] =
+          l$type == null ? null : fromJson$Enum$order_by((l$type as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    return Input$file_max_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Enum$order_by? get name => (_$data['name'] as Enum$order_by?);
+  Enum$order_by? get signed_url => (_$data['signed_url'] as Enum$order_by?);
+  Enum$order_by? get type => (_$data['type'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] =
+          l$name == null ? null : toJson$Enum$order_by(l$name);
+    }
+    if (_$data.containsKey('signed_url')) {
+      final l$signed_url = signed_url;
+      result$data['signed_url'] =
+          l$signed_url == null ? null : toJson$Enum$order_by(l$signed_url);
+    }
+    if (_$data.containsKey('type')) {
+      final l$type = type;
+      result$data['type'] =
+          l$type == null ? null : toJson$Enum$order_by(l$type);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$file_max_order_by<Input$file_max_order_by> get copyWith =>
+      CopyWith$Input$file_max_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$file_max_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
     final l$file_id = file_id;
     final lOther$file_id = other.file_id;
     if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
@@ -5796,14 +13074,6 @@ class Input$file_insert_input {
       return false;
     }
     if (l$name != lOther$name) {
-      return false;
-    }
-    final l$public = public;
-    final lOther$public = other.public;
-    if (_$data.containsKey('public') != other._$data.containsKey('public')) {
-      return false;
-    }
-    if (l$public != lOther$public) {
       return false;
     }
     final l$signed_url = signed_url;
@@ -5838,14 +13108,12 @@ class Input$file_insert_input {
   int get hashCode {
     final l$file_id = file_id;
     final l$name = name;
-    final l$public = public;
     final l$signed_url = signed_url;
     final l$type = type;
     final l$user_id = user_id;
     return Object.hashAll([
       _$data.containsKey('file_id') ? l$file_id : const {},
       _$data.containsKey('name') ? l$name : const {},
-      _$data.containsKey('public') ? l$public : const {},
       _$data.containsKey('signed_url') ? l$signed_url : const {},
       _$data.containsKey('type') ? l$type : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
@@ -5853,83 +13121,466 @@ class Input$file_insert_input {
   }
 }
 
-abstract class CopyWith$Input$file_insert_input<TRes> {
-  factory CopyWith$Input$file_insert_input(
-    Input$file_insert_input instance,
-    TRes Function(Input$file_insert_input) then,
-  ) = _CopyWithImpl$Input$file_insert_input;
+abstract class CopyWith$Input$file_max_order_by<TRes> {
+  factory CopyWith$Input$file_max_order_by(
+    Input$file_max_order_by instance,
+    TRes Function(Input$file_max_order_by) then,
+  ) = _CopyWithImpl$Input$file_max_order_by;
 
-  factory CopyWith$Input$file_insert_input.stub(TRes res) =
-      _CopyWithStubImpl$Input$file_insert_input;
+  factory CopyWith$Input$file_max_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$file_max_order_by;
 
   TRes call({
-    String? file_id,
-    String? name,
-    bool? public,
-    String? signed_url,
-    String? type,
-    String? user_id,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? signed_url,
+    Enum$order_by? type,
+    Enum$order_by? user_id,
   });
 }
 
-class _CopyWithImpl$Input$file_insert_input<TRes>
-    implements CopyWith$Input$file_insert_input<TRes> {
-  _CopyWithImpl$Input$file_insert_input(
+class _CopyWithImpl$Input$file_max_order_by<TRes>
+    implements CopyWith$Input$file_max_order_by<TRes> {
+  _CopyWithImpl$Input$file_max_order_by(
     this._instance,
     this._then,
   );
 
-  final Input$file_insert_input _instance;
+  final Input$file_max_order_by _instance;
 
-  final TRes Function(Input$file_insert_input) _then;
+  final TRes Function(Input$file_max_order_by) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
     Object? file_id = _undefined,
     Object? name = _undefined,
-    Object? public = _undefined,
     Object? signed_url = _undefined,
     Object? type = _undefined,
     Object? user_id = _undefined,
   }) =>
-      _then(Input$file_insert_input._({
+      _then(Input$file_max_order_by._({
         ..._instance._$data,
-        if (file_id != _undefined) 'file_id': (file_id as String?),
-        if (name != _undefined) 'name': (name as String?),
-        if (public != _undefined) 'public': (public as bool?),
-        if (signed_url != _undefined) 'signed_url': (signed_url as String?),
-        if (type != _undefined) 'type': (type as String?),
-        if (user_id != _undefined) 'user_id': (user_id as String?),
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (name != _undefined) 'name': (name as Enum$order_by?),
+        if (signed_url != _undefined)
+          'signed_url': (signed_url as Enum$order_by?),
+        if (type != _undefined) 'type': (type as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
       }));
 }
 
-class _CopyWithStubImpl$Input$file_insert_input<TRes>
-    implements CopyWith$Input$file_insert_input<TRes> {
-  _CopyWithStubImpl$Input$file_insert_input(this._res);
+class _CopyWithStubImpl$Input$file_max_order_by<TRes>
+    implements CopyWith$Input$file_max_order_by<TRes> {
+  _CopyWithStubImpl$Input$file_max_order_by(this._res);
 
   TRes _res;
 
   call({
-    String? file_id,
-    String? name,
-    bool? public,
-    String? signed_url,
-    String? type,
-    String? user_id,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? signed_url,
+    Enum$order_by? type,
+    Enum$order_by? user_id,
   }) =>
       _res;
+}
+
+class Input$file_min_order_by {
+  factory Input$file_min_order_by({
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? signed_url,
+    Enum$order_by? type,
+    Enum$order_by? user_id,
+  }) =>
+      Input$file_min_order_by._({
+        if (file_id != null) r'file_id': file_id,
+        if (name != null) r'name': name,
+        if (signed_url != null) r'signed_url': signed_url,
+        if (type != null) r'type': type,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$file_min_order_by._(this._$data);
+
+  factory Input$file_min_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] =
+          l$name == null ? null : fromJson$Enum$order_by((l$name as String));
+    }
+    if (data.containsKey('signed_url')) {
+      final l$signed_url = data['signed_url'];
+      result$data['signed_url'] = l$signed_url == null
+          ? null
+          : fromJson$Enum$order_by((l$signed_url as String));
+    }
+    if (data.containsKey('type')) {
+      final l$type = data['type'];
+      result$data['type'] =
+          l$type == null ? null : fromJson$Enum$order_by((l$type as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    return Input$file_min_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Enum$order_by? get name => (_$data['name'] as Enum$order_by?);
+  Enum$order_by? get signed_url => (_$data['signed_url'] as Enum$order_by?);
+  Enum$order_by? get type => (_$data['type'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] =
+          l$name == null ? null : toJson$Enum$order_by(l$name);
+    }
+    if (_$data.containsKey('signed_url')) {
+      final l$signed_url = signed_url;
+      result$data['signed_url'] =
+          l$signed_url == null ? null : toJson$Enum$order_by(l$signed_url);
+    }
+    if (_$data.containsKey('type')) {
+      final l$type = type;
+      result$data['type'] =
+          l$type == null ? null : toJson$Enum$order_by(l$type);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$file_min_order_by<Input$file_min_order_by> get copyWith =>
+      CopyWith$Input$file_min_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$file_min_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$signed_url = signed_url;
+    final lOther$signed_url = other.signed_url;
+    if (_$data.containsKey('signed_url') !=
+        other._$data.containsKey('signed_url')) {
+      return false;
+    }
+    if (l$signed_url != lOther$signed_url) {
+      return false;
+    }
+    final l$type = type;
+    final lOther$type = other.type;
+    if (_$data.containsKey('type') != other._$data.containsKey('type')) {
+      return false;
+    }
+    if (l$type != lOther$type) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$file_id = file_id;
+    final l$name = name;
+    final l$signed_url = signed_url;
+    final l$type = type;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('signed_url') ? l$signed_url : const {},
+      _$data.containsKey('type') ? l$type : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$file_min_order_by<TRes> {
+  factory CopyWith$Input$file_min_order_by(
+    Input$file_min_order_by instance,
+    TRes Function(Input$file_min_order_by) then,
+  ) = _CopyWithImpl$Input$file_min_order_by;
+
+  factory CopyWith$Input$file_min_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$file_min_order_by;
+
+  TRes call({
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? signed_url,
+    Enum$order_by? type,
+    Enum$order_by? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$file_min_order_by<TRes>
+    implements CopyWith$Input$file_min_order_by<TRes> {
+  _CopyWithImpl$Input$file_min_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$file_min_order_by _instance;
+
+  final TRes Function(Input$file_min_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? file_id = _undefined,
+    Object? name = _undefined,
+    Object? signed_url = _undefined,
+    Object? type = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$file_min_order_by._({
+        ..._instance._$data,
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (name != _undefined) 'name': (name as Enum$order_by?),
+        if (signed_url != _undefined)
+          'signed_url': (signed_url as Enum$order_by?),
+        if (type != _undefined) 'type': (type as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$file_min_order_by<TRes>
+    implements CopyWith$Input$file_min_order_by<TRes> {
+  _CopyWithStubImpl$Input$file_min_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? signed_url,
+    Enum$order_by? type,
+    Enum$order_by? user_id,
+  }) =>
+      _res;
+}
+
+class Input$file_obj_rel_insert_input {
+  factory Input$file_obj_rel_insert_input({
+    required Input$file_insert_input data,
+    Input$file_on_conflict? on_conflict,
+  }) =>
+      Input$file_obj_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$file_obj_rel_insert_input._(this._$data);
+
+  factory Input$file_obj_rel_insert_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] =
+        Input$file_insert_input.fromJson((l$data as Map<String, dynamic>));
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$file_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$file_obj_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$file_insert_input get data =>
+      (_$data['data'] as Input$file_insert_input);
+  Input$file_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$file_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.toJson();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$file_obj_rel_insert_input<Input$file_obj_rel_insert_input>
+      get copyWith => CopyWith$Input$file_obj_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$file_obj_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data != lOther$data) {
+      return false;
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      l$data,
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$file_obj_rel_insert_input<TRes> {
+  factory CopyWith$Input$file_obj_rel_insert_input(
+    Input$file_obj_rel_insert_input instance,
+    TRes Function(Input$file_obj_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$file_obj_rel_insert_input;
+
+  factory CopyWith$Input$file_obj_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$file_obj_rel_insert_input;
+
+  TRes call({
+    Input$file_insert_input? data,
+    Input$file_on_conflict? on_conflict,
+  });
+  CopyWith$Input$file_insert_input<TRes> get data;
+  CopyWith$Input$file_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$file_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$file_obj_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$file_obj_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$file_obj_rel_insert_input _instance;
+
+  final TRes Function(Input$file_obj_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$file_obj_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as Input$file_insert_input),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$file_on_conflict?),
+      }));
+  CopyWith$Input$file_insert_input<TRes> get data {
+    final local$data = _instance.data;
+    return CopyWith$Input$file_insert_input(local$data, (e) => call(data: e));
+  }
+
+  CopyWith$Input$file_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$file_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$file_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$file_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$file_obj_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$file_obj_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$file_insert_input? data,
+    Input$file_on_conflict? on_conflict,
+  }) =>
+      _res;
+  CopyWith$Input$file_insert_input<TRes> get data =>
+      CopyWith$Input$file_insert_input.stub(_res);
+  CopyWith$Input$file_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$file_on_conflict.stub(_res);
 }
 
 class Input$file_on_conflict {
   factory Input$file_on_conflict({
     required Enum$file_constraint constraint,
-    required List<Enum$file_update_column> update_columns,
+    List<Enum$file_update_column>? update_columns,
     Input$file_bool_exp? where,
   }) =>
       Input$file_on_conflict._({
         r'constraint': constraint,
-        r'update_columns': update_columns,
+        if (update_columns != null) r'update_columns': update_columns,
         if (where != null) r'where': where,
       });
 
@@ -5940,10 +13591,12 @@ class Input$file_on_conflict {
     final l$constraint = data['constraint'];
     result$data['constraint'] =
         fromJson$Enum$file_constraint((l$constraint as String));
-    final l$update_columns = data['update_columns'];
-    result$data['update_columns'] = (l$update_columns as List<dynamic>)
-        .map((e) => fromJson$Enum$file_update_column((e as String)))
-        .toList();
+    if (data.containsKey('update_columns')) {
+      final l$update_columns = data['update_columns'];
+      result$data['update_columns'] = (l$update_columns as List<dynamic>)
+          .map((e) => fromJson$Enum$file_update_column((e as String)))
+          .toList();
+    }
     if (data.containsKey('where')) {
       final l$where = data['where'];
       result$data['where'] = l$where == null
@@ -5957,16 +13610,20 @@ class Input$file_on_conflict {
 
   Enum$file_constraint get constraint =>
       (_$data['constraint'] as Enum$file_constraint);
-  List<Enum$file_update_column> get update_columns =>
-      (_$data['update_columns'] as List<Enum$file_update_column>);
+  List<Enum$file_update_column>? get update_columns =>
+      (_$data['update_columns'] as List<Enum$file_update_column>?);
   Input$file_bool_exp? get where => (_$data['where'] as Input$file_bool_exp?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$constraint = constraint;
     result$data['constraint'] = toJson$Enum$file_constraint(l$constraint);
-    final l$update_columns = update_columns;
-    result$data['update_columns'] =
-        l$update_columns.map((e) => toJson$Enum$file_update_column(e)).toList();
+    if (_$data.containsKey('update_columns')) {
+      final l$update_columns = update_columns;
+      result$data['update_columns'] =
+          (l$update_columns as List<Enum$file_update_column>)
+              .map((e) => toJson$Enum$file_update_column(e))
+              .toList();
+    }
     if (_$data.containsKey('where')) {
       final l$where = where;
       result$data['where'] = l$where?.toJson();
@@ -5995,15 +13652,23 @@ class Input$file_on_conflict {
     }
     final l$update_columns = update_columns;
     final lOther$update_columns = other.update_columns;
-    if (l$update_columns.length != lOther$update_columns.length) {
+    if (_$data.containsKey('update_columns') !=
+        other._$data.containsKey('update_columns')) {
       return false;
     }
-    for (int i = 0; i < l$update_columns.length; i++) {
-      final l$update_columns$entry = l$update_columns[i];
-      final lOther$update_columns$entry = lOther$update_columns[i];
-      if (l$update_columns$entry != lOther$update_columns$entry) {
+    if (l$update_columns != null && lOther$update_columns != null) {
+      if (l$update_columns.length != lOther$update_columns.length) {
         return false;
       }
+      for (int i = 0; i < l$update_columns.length; i++) {
+        final l$update_columns$entry = l$update_columns[i];
+        final lOther$update_columns$entry = lOther$update_columns[i];
+        if (l$update_columns$entry != lOther$update_columns$entry) {
+          return false;
+        }
+      }
+    } else if (l$update_columns != lOther$update_columns) {
+      return false;
     }
     final l$where = where;
     final lOther$where = other.where;
@@ -6023,7 +13688,11 @@ class Input$file_on_conflict {
     final l$where = where;
     return Object.hashAll([
       l$constraint,
-      Object.hashAll(l$update_columns.map((v) => v)),
+      _$data.containsKey('update_columns')
+          ? l$update_columns == null
+              ? null
+              : Object.hashAll(l$update_columns.map((v) => v))
+          : const {},
       _$data.containsKey('where') ? l$where : const {},
     ]);
   }
@@ -6098,17 +13767,28 @@ class _CopyWithStubImpl$Input$file_on_conflict<TRes>
 
 class Input$file_order_by {
   factory Input$file_order_by({
+    Input$user_order_by? creator,
     Enum$order_by? file_id,
+    Input$message_aggregate_order_by? messages_aggregate,
     Enum$order_by? name,
+    Input$persona_aggregate_order_by? personas_aggregate,
     Enum$order_by? public,
+    Input$public_user_aggregate_order_by? public_users_aggregate,
     Enum$order_by? signed_url,
     Enum$order_by? type,
     Enum$order_by? user_id,
   }) =>
       Input$file_order_by._({
+        if (creator != null) r'creator': creator,
         if (file_id != null) r'file_id': file_id,
+        if (messages_aggregate != null)
+          r'messages_aggregate': messages_aggregate,
         if (name != null) r'name': name,
+        if (personas_aggregate != null)
+          r'personas_aggregate': personas_aggregate,
         if (public != null) r'public': public,
+        if (public_users_aggregate != null)
+          r'public_users_aggregate': public_users_aggregate,
         if (signed_url != null) r'signed_url': signed_url,
         if (type != null) r'type': type,
         if (user_id != null) r'user_id': user_id,
@@ -6118,22 +13798,49 @@ class Input$file_order_by {
 
   factory Input$file_order_by.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('creator')) {
+      final l$creator = data['creator'];
+      result$data['creator'] = l$creator == null
+          ? null
+          : Input$user_order_by.fromJson((l$creator as Map<String, dynamic>));
+    }
     if (data.containsKey('file_id')) {
       final l$file_id = data['file_id'];
       result$data['file_id'] = l$file_id == null
           ? null
           : fromJson$Enum$order_by((l$file_id as String));
     }
+    if (data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = data['messages_aggregate'];
+      result$data['messages_aggregate'] = l$messages_aggregate == null
+          ? null
+          : Input$message_aggregate_order_by.fromJson(
+              (l$messages_aggregate as Map<String, dynamic>));
+    }
     if (data.containsKey('name')) {
       final l$name = data['name'];
       result$data['name'] =
           l$name == null ? null : fromJson$Enum$order_by((l$name as String));
+    }
+    if (data.containsKey('personas_aggregate')) {
+      final l$personas_aggregate = data['personas_aggregate'];
+      result$data['personas_aggregate'] = l$personas_aggregate == null
+          ? null
+          : Input$persona_aggregate_order_by.fromJson(
+              (l$personas_aggregate as Map<String, dynamic>));
     }
     if (data.containsKey('public')) {
       final l$public = data['public'];
       result$data['public'] = l$public == null
           ? null
           : fromJson$Enum$order_by((l$public as String));
+    }
+    if (data.containsKey('public_users_aggregate')) {
+      final l$public_users_aggregate = data['public_users_aggregate'];
+      result$data['public_users_aggregate'] = l$public_users_aggregate == null
+          ? null
+          : Input$public_user_aggregate_order_by.fromJson(
+              (l$public_users_aggregate as Map<String, dynamic>));
     }
     if (data.containsKey('signed_url')) {
       final l$signed_url = data['signed_url'];
@@ -6157,28 +13864,54 @@ class Input$file_order_by {
 
   Map<String, dynamic> _$data;
 
+  Input$user_order_by? get creator =>
+      (_$data['creator'] as Input$user_order_by?);
   Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Input$message_aggregate_order_by? get messages_aggregate =>
+      (_$data['messages_aggregate'] as Input$message_aggregate_order_by?);
   Enum$order_by? get name => (_$data['name'] as Enum$order_by?);
+  Input$persona_aggregate_order_by? get personas_aggregate =>
+      (_$data['personas_aggregate'] as Input$persona_aggregate_order_by?);
   Enum$order_by? get public => (_$data['public'] as Enum$order_by?);
+  Input$public_user_aggregate_order_by? get public_users_aggregate =>
+      (_$data['public_users_aggregate']
+          as Input$public_user_aggregate_order_by?);
   Enum$order_by? get signed_url => (_$data['signed_url'] as Enum$order_by?);
   Enum$order_by? get type => (_$data['type'] as Enum$order_by?);
   Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('creator')) {
+      final l$creator = creator;
+      result$data['creator'] = l$creator?.toJson();
+    }
     if (_$data.containsKey('file_id')) {
       final l$file_id = file_id;
       result$data['file_id'] =
           l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('messages_aggregate')) {
+      final l$messages_aggregate = messages_aggregate;
+      result$data['messages_aggregate'] = l$messages_aggregate?.toJson();
     }
     if (_$data.containsKey('name')) {
       final l$name = name;
       result$data['name'] =
           l$name == null ? null : toJson$Enum$order_by(l$name);
     }
+    if (_$data.containsKey('personas_aggregate')) {
+      final l$personas_aggregate = personas_aggregate;
+      result$data['personas_aggregate'] = l$personas_aggregate?.toJson();
+    }
     if (_$data.containsKey('public')) {
       final l$public = public;
       result$data['public'] =
           l$public == null ? null : toJson$Enum$order_by(l$public);
+    }
+    if (_$data.containsKey('public_users_aggregate')) {
+      final l$public_users_aggregate = public_users_aggregate;
+      result$data['public_users_aggregate'] =
+          l$public_users_aggregate?.toJson();
     }
     if (_$data.containsKey('signed_url')) {
       final l$signed_url = signed_url;
@@ -6211,12 +13944,29 @@ class Input$file_order_by {
     if (!(other is Input$file_order_by) || runtimeType != other.runtimeType) {
       return false;
     }
+    final l$creator = creator;
+    final lOther$creator = other.creator;
+    if (_$data.containsKey('creator') != other._$data.containsKey('creator')) {
+      return false;
+    }
+    if (l$creator != lOther$creator) {
+      return false;
+    }
     final l$file_id = file_id;
     final lOther$file_id = other.file_id;
     if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
       return false;
     }
     if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$messages_aggregate = messages_aggregate;
+    final lOther$messages_aggregate = other.messages_aggregate;
+    if (_$data.containsKey('messages_aggregate') !=
+        other._$data.containsKey('messages_aggregate')) {
+      return false;
+    }
+    if (l$messages_aggregate != lOther$messages_aggregate) {
       return false;
     }
     final l$name = name;
@@ -6227,12 +13977,30 @@ class Input$file_order_by {
     if (l$name != lOther$name) {
       return false;
     }
+    final l$personas_aggregate = personas_aggregate;
+    final lOther$personas_aggregate = other.personas_aggregate;
+    if (_$data.containsKey('personas_aggregate') !=
+        other._$data.containsKey('personas_aggregate')) {
+      return false;
+    }
+    if (l$personas_aggregate != lOther$personas_aggregate) {
+      return false;
+    }
     final l$public = public;
     final lOther$public = other.public;
     if (_$data.containsKey('public') != other._$data.containsKey('public')) {
       return false;
     }
     if (l$public != lOther$public) {
+      return false;
+    }
+    final l$public_users_aggregate = public_users_aggregate;
+    final lOther$public_users_aggregate = other.public_users_aggregate;
+    if (_$data.containsKey('public_users_aggregate') !=
+        other._$data.containsKey('public_users_aggregate')) {
+      return false;
+    }
+    if (l$public_users_aggregate != lOther$public_users_aggregate) {
       return false;
     }
     final l$signed_url = signed_url;
@@ -6265,16 +14033,30 @@ class Input$file_order_by {
 
   @override
   int get hashCode {
+    final l$creator = creator;
     final l$file_id = file_id;
+    final l$messages_aggregate = messages_aggregate;
     final l$name = name;
+    final l$personas_aggregate = personas_aggregate;
     final l$public = public;
+    final l$public_users_aggregate = public_users_aggregate;
     final l$signed_url = signed_url;
     final l$type = type;
     final l$user_id = user_id;
     return Object.hashAll([
+      _$data.containsKey('creator') ? l$creator : const {},
       _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('messages_aggregate')
+          ? l$messages_aggregate
+          : const {},
       _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('personas_aggregate')
+          ? l$personas_aggregate
+          : const {},
       _$data.containsKey('public') ? l$public : const {},
+      _$data.containsKey('public_users_aggregate')
+          ? l$public_users_aggregate
+          : const {},
       _$data.containsKey('signed_url') ? l$signed_url : const {},
       _$data.containsKey('type') ? l$type : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
@@ -6292,13 +14074,22 @@ abstract class CopyWith$Input$file_order_by<TRes> {
       _CopyWithStubImpl$Input$file_order_by;
 
   TRes call({
+    Input$user_order_by? creator,
     Enum$order_by? file_id,
+    Input$message_aggregate_order_by? messages_aggregate,
     Enum$order_by? name,
+    Input$persona_aggregate_order_by? personas_aggregate,
     Enum$order_by? public,
+    Input$public_user_aggregate_order_by? public_users_aggregate,
     Enum$order_by? signed_url,
     Enum$order_by? type,
     Enum$order_by? user_id,
   });
+  CopyWith$Input$user_order_by<TRes> get creator;
+  CopyWith$Input$message_aggregate_order_by<TRes> get messages_aggregate;
+  CopyWith$Input$persona_aggregate_order_by<TRes> get personas_aggregate;
+  CopyWith$Input$public_user_aggregate_order_by<TRes>
+      get public_users_aggregate;
 }
 
 class _CopyWithImpl$Input$file_order_by<TRes>
@@ -6315,23 +14106,69 @@ class _CopyWithImpl$Input$file_order_by<TRes>
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
+    Object? creator = _undefined,
     Object? file_id = _undefined,
+    Object? messages_aggregate = _undefined,
     Object? name = _undefined,
+    Object? personas_aggregate = _undefined,
     Object? public = _undefined,
+    Object? public_users_aggregate = _undefined,
     Object? signed_url = _undefined,
     Object? type = _undefined,
     Object? user_id = _undefined,
   }) =>
       _then(Input$file_order_by._({
         ..._instance._$data,
+        if (creator != _undefined) 'creator': (creator as Input$user_order_by?),
         if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (messages_aggregate != _undefined)
+          'messages_aggregate':
+              (messages_aggregate as Input$message_aggregate_order_by?),
         if (name != _undefined) 'name': (name as Enum$order_by?),
+        if (personas_aggregate != _undefined)
+          'personas_aggregate':
+              (personas_aggregate as Input$persona_aggregate_order_by?),
         if (public != _undefined) 'public': (public as Enum$order_by?),
+        if (public_users_aggregate != _undefined)
+          'public_users_aggregate':
+              (public_users_aggregate as Input$public_user_aggregate_order_by?),
         if (signed_url != _undefined)
           'signed_url': (signed_url as Enum$order_by?),
         if (type != _undefined) 'type': (type as Enum$order_by?),
         if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
       }));
+  CopyWith$Input$user_order_by<TRes> get creator {
+    final local$creator = _instance.creator;
+    return local$creator == null
+        ? CopyWith$Input$user_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_order_by(local$creator, (e) => call(creator: e));
+  }
+
+  CopyWith$Input$message_aggregate_order_by<TRes> get messages_aggregate {
+    final local$messages_aggregate = _instance.messages_aggregate;
+    return local$messages_aggregate == null
+        ? CopyWith$Input$message_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$message_aggregate_order_by(
+            local$messages_aggregate, (e) => call(messages_aggregate: e));
+  }
+
+  CopyWith$Input$persona_aggregate_order_by<TRes> get personas_aggregate {
+    final local$personas_aggregate = _instance.personas_aggregate;
+    return local$personas_aggregate == null
+        ? CopyWith$Input$persona_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$persona_aggregate_order_by(
+            local$personas_aggregate, (e) => call(personas_aggregate: e));
+  }
+
+  CopyWith$Input$public_user_aggregate_order_by<TRes>
+      get public_users_aggregate {
+    final local$public_users_aggregate = _instance.public_users_aggregate;
+    return local$public_users_aggregate == null
+        ? CopyWith$Input$public_user_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_aggregate_order_by(
+            local$public_users_aggregate,
+            (e) => call(public_users_aggregate: e));
+  }
 }
 
 class _CopyWithStubImpl$Input$file_order_by<TRes>
@@ -6341,14 +14178,27 @@ class _CopyWithStubImpl$Input$file_order_by<TRes>
   TRes _res;
 
   call({
+    Input$user_order_by? creator,
     Enum$order_by? file_id,
+    Input$message_aggregate_order_by? messages_aggregate,
     Enum$order_by? name,
+    Input$persona_aggregate_order_by? personas_aggregate,
     Enum$order_by? public,
+    Input$public_user_aggregate_order_by? public_users_aggregate,
     Enum$order_by? signed_url,
     Enum$order_by? type,
     Enum$order_by? user_id,
   }) =>
       _res;
+  CopyWith$Input$user_order_by<TRes> get creator =>
+      CopyWith$Input$user_order_by.stub(_res);
+  CopyWith$Input$message_aggregate_order_by<TRes> get messages_aggregate =>
+      CopyWith$Input$message_aggregate_order_by.stub(_res);
+  CopyWith$Input$persona_aggregate_order_by<TRes> get personas_aggregate =>
+      CopyWith$Input$persona_aggregate_order_by.stub(_res);
+  CopyWith$Input$public_user_aggregate_order_by<TRes>
+      get public_users_aggregate =>
+          CopyWith$Input$public_user_aggregate_order_by.stub(_res);
 }
 
 class Input$file_pk_columns_input {
@@ -7227,21 +15077,10015 @@ class _CopyWithStubImpl$Input$file_updates<TRes>
       CopyWith$Input$file_bool_exp.stub(_res);
 }
 
+class Input$message_aggregate_bool_exp {
+  factory Input$message_aggregate_bool_exp({
+    Input$message_aggregate_bool_exp_bool_and? bool_and,
+    Input$message_aggregate_bool_exp_bool_or? bool_or,
+    Input$message_aggregate_bool_exp_count? count,
+  }) =>
+      Input$message_aggregate_bool_exp._({
+        if (bool_and != null) r'bool_and': bool_and,
+        if (bool_or != null) r'bool_or': bool_or,
+        if (count != null) r'count': count,
+      });
+
+  Input$message_aggregate_bool_exp._(this._$data);
+
+  factory Input$message_aggregate_bool_exp.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('bool_and')) {
+      final l$bool_and = data['bool_and'];
+      result$data['bool_and'] = l$bool_and == null
+          ? null
+          : Input$message_aggregate_bool_exp_bool_and.fromJson(
+              (l$bool_and as Map<String, dynamic>));
+    }
+    if (data.containsKey('bool_or')) {
+      final l$bool_or = data['bool_or'];
+      result$data['bool_or'] = l$bool_or == null
+          ? null
+          : Input$message_aggregate_bool_exp_bool_or.fromJson(
+              (l$bool_or as Map<String, dynamic>));
+    }
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] = l$count == null
+          ? null
+          : Input$message_aggregate_bool_exp_count.fromJson(
+              (l$count as Map<String, dynamic>));
+    }
+    return Input$message_aggregate_bool_exp._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$message_aggregate_bool_exp_bool_and? get bool_and =>
+      (_$data['bool_and'] as Input$message_aggregate_bool_exp_bool_and?);
+  Input$message_aggregate_bool_exp_bool_or? get bool_or =>
+      (_$data['bool_or'] as Input$message_aggregate_bool_exp_bool_or?);
+  Input$message_aggregate_bool_exp_count? get count =>
+      (_$data['count'] as Input$message_aggregate_bool_exp_count?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('bool_and')) {
+      final l$bool_and = bool_and;
+      result$data['bool_and'] = l$bool_and?.toJson();
+    }
+    if (_$data.containsKey('bool_or')) {
+      final l$bool_or = bool_or;
+      result$data['bool_or'] = l$bool_or?.toJson();
+    }
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] = l$count?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_aggregate_bool_exp<Input$message_aggregate_bool_exp>
+      get copyWith => CopyWith$Input$message_aggregate_bool_exp(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_aggregate_bool_exp) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$bool_and = bool_and;
+    final lOther$bool_and = other.bool_and;
+    if (_$data.containsKey('bool_and') !=
+        other._$data.containsKey('bool_and')) {
+      return false;
+    }
+    if (l$bool_and != lOther$bool_and) {
+      return false;
+    }
+    final l$bool_or = bool_or;
+    final lOther$bool_or = other.bool_or;
+    if (_$data.containsKey('bool_or') != other._$data.containsKey('bool_or')) {
+      return false;
+    }
+    if (l$bool_or != lOther$bool_or) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$bool_and = bool_and;
+    final l$bool_or = bool_or;
+    final l$count = count;
+    return Object.hashAll([
+      _$data.containsKey('bool_and') ? l$bool_and : const {},
+      _$data.containsKey('bool_or') ? l$bool_or : const {},
+      _$data.containsKey('count') ? l$count : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_aggregate_bool_exp<TRes> {
+  factory CopyWith$Input$message_aggregate_bool_exp(
+    Input$message_aggregate_bool_exp instance,
+    TRes Function(Input$message_aggregate_bool_exp) then,
+  ) = _CopyWithImpl$Input$message_aggregate_bool_exp;
+
+  factory CopyWith$Input$message_aggregate_bool_exp.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_aggregate_bool_exp;
+
+  TRes call({
+    Input$message_aggregate_bool_exp_bool_and? bool_and,
+    Input$message_aggregate_bool_exp_bool_or? bool_or,
+    Input$message_aggregate_bool_exp_count? count,
+  });
+  CopyWith$Input$message_aggregate_bool_exp_bool_and<TRes> get bool_and;
+  CopyWith$Input$message_aggregate_bool_exp_bool_or<TRes> get bool_or;
+  CopyWith$Input$message_aggregate_bool_exp_count<TRes> get count;
+}
+
+class _CopyWithImpl$Input$message_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$message_aggregate_bool_exp<TRes> {
+  _CopyWithImpl$Input$message_aggregate_bool_exp(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_aggregate_bool_exp _instance;
+
+  final TRes Function(Input$message_aggregate_bool_exp) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? bool_and = _undefined,
+    Object? bool_or = _undefined,
+    Object? count = _undefined,
+  }) =>
+      _then(Input$message_aggregate_bool_exp._({
+        ..._instance._$data,
+        if (bool_and != _undefined)
+          'bool_and': (bool_and as Input$message_aggregate_bool_exp_bool_and?),
+        if (bool_or != _undefined)
+          'bool_or': (bool_or as Input$message_aggregate_bool_exp_bool_or?),
+        if (count != _undefined)
+          'count': (count as Input$message_aggregate_bool_exp_count?),
+      }));
+  CopyWith$Input$message_aggregate_bool_exp_bool_and<TRes> get bool_and {
+    final local$bool_and = _instance.bool_and;
+    return local$bool_and == null
+        ? CopyWith$Input$message_aggregate_bool_exp_bool_and.stub(
+            _then(_instance))
+        : CopyWith$Input$message_aggregate_bool_exp_bool_and(
+            local$bool_and, (e) => call(bool_and: e));
+  }
+
+  CopyWith$Input$message_aggregate_bool_exp_bool_or<TRes> get bool_or {
+    final local$bool_or = _instance.bool_or;
+    return local$bool_or == null
+        ? CopyWith$Input$message_aggregate_bool_exp_bool_or.stub(
+            _then(_instance))
+        : CopyWith$Input$message_aggregate_bool_exp_bool_or(
+            local$bool_or, (e) => call(bool_or: e));
+  }
+
+  CopyWith$Input$message_aggregate_bool_exp_count<TRes> get count {
+    final local$count = _instance.count;
+    return local$count == null
+        ? CopyWith$Input$message_aggregate_bool_exp_count.stub(_then(_instance))
+        : CopyWith$Input$message_aggregate_bool_exp_count(
+            local$count, (e) => call(count: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$message_aggregate_bool_exp<TRes> {
+  _CopyWithStubImpl$Input$message_aggregate_bool_exp(this._res);
+
+  TRes _res;
+
+  call({
+    Input$message_aggregate_bool_exp_bool_and? bool_and,
+    Input$message_aggregate_bool_exp_bool_or? bool_or,
+    Input$message_aggregate_bool_exp_count? count,
+  }) =>
+      _res;
+  CopyWith$Input$message_aggregate_bool_exp_bool_and<TRes> get bool_and =>
+      CopyWith$Input$message_aggregate_bool_exp_bool_and.stub(_res);
+  CopyWith$Input$message_aggregate_bool_exp_bool_or<TRes> get bool_or =>
+      CopyWith$Input$message_aggregate_bool_exp_bool_or.stub(_res);
+  CopyWith$Input$message_aggregate_bool_exp_count<TRes> get count =>
+      CopyWith$Input$message_aggregate_bool_exp_count.stub(_res);
+}
+
+class Input$message_aggregate_bool_exp_bool_and {
+  factory Input$message_aggregate_bool_exp_bool_and({
+    required Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns
+        arguments,
+    bool? distinct,
+    Input$message_bool_exp? filter,
+    required Input$Boolean_comparison_exp predicate,
+  }) =>
+      Input$message_aggregate_bool_exp_bool_and._({
+        r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$message_aggregate_bool_exp_bool_and._(this._$data);
+
+  factory Input$message_aggregate_bool_exp_bool_and.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$arguments = data['arguments'];
+    result$data['arguments'] =
+        fromJson$Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns(
+            (l$arguments as String));
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$message_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Boolean_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$message_aggregate_bool_exp_bool_and._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns
+      get arguments => (_$data['arguments']
+          as Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$message_bool_exp? get filter =>
+      (_$data['filter'] as Input$message_bool_exp?);
+  Input$Boolean_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Boolean_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$arguments = arguments;
+    result$data['arguments'] =
+        toJson$Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns(
+            l$arguments);
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$message_aggregate_bool_exp_bool_and<
+          Input$message_aggregate_bool_exp_bool_and>
+      get copyWith => CopyWith$Input$message_aggregate_bool_exp_bool_and(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_aggregate_bool_exp_bool_and) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      l$arguments,
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_aggregate_bool_exp_bool_and<TRes> {
+  factory CopyWith$Input$message_aggregate_bool_exp_bool_and(
+    Input$message_aggregate_bool_exp_bool_and instance,
+    TRes Function(Input$message_aggregate_bool_exp_bool_and) then,
+  ) = _CopyWithImpl$Input$message_aggregate_bool_exp_bool_and;
+
+  factory CopyWith$Input$message_aggregate_bool_exp_bool_and.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_aggregate_bool_exp_bool_and;
+
+  TRes call({
+    Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$message_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  });
+  CopyWith$Input$message_bool_exp<TRes> get filter;
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$message_aggregate_bool_exp_bool_and<TRes>
+    implements CopyWith$Input$message_aggregate_bool_exp_bool_and<TRes> {
+  _CopyWithImpl$Input$message_aggregate_bool_exp_bool_and(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_aggregate_bool_exp_bool_and _instance;
+
+  final TRes Function(Input$message_aggregate_bool_exp_bool_and) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$message_aggregate_bool_exp_bool_and._({
+        ..._instance._$data,
+        if (arguments != _undefined && arguments != null)
+          'arguments': (arguments
+              as Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$message_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Boolean_comparison_exp),
+      }));
+  CopyWith$Input$message_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$message_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Boolean_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_aggregate_bool_exp_bool_and<TRes>
+    implements CopyWith$Input$message_aggregate_bool_exp_bool_and<TRes> {
+  _CopyWithStubImpl$Input$message_aggregate_bool_exp_bool_and(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$message_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$message_bool_exp<TRes> get filter =>
+      CopyWith$Input$message_bool_exp.stub(_res);
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Boolean_comparison_exp.stub(_res);
+}
+
+class Input$message_aggregate_bool_exp_bool_or {
+  factory Input$message_aggregate_bool_exp_bool_or({
+    required Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns
+        arguments,
+    bool? distinct,
+    Input$message_bool_exp? filter,
+    required Input$Boolean_comparison_exp predicate,
+  }) =>
+      Input$message_aggregate_bool_exp_bool_or._({
+        r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$message_aggregate_bool_exp_bool_or._(this._$data);
+
+  factory Input$message_aggregate_bool_exp_bool_or.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$arguments = data['arguments'];
+    result$data['arguments'] =
+        fromJson$Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns(
+            (l$arguments as String));
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$message_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Boolean_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$message_aggregate_bool_exp_bool_or._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns
+      get arguments => (_$data['arguments']
+          as Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$message_bool_exp? get filter =>
+      (_$data['filter'] as Input$message_bool_exp?);
+  Input$Boolean_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Boolean_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$arguments = arguments;
+    result$data['arguments'] =
+        toJson$Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns(
+            l$arguments);
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$message_aggregate_bool_exp_bool_or<
+          Input$message_aggregate_bool_exp_bool_or>
+      get copyWith => CopyWith$Input$message_aggregate_bool_exp_bool_or(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_aggregate_bool_exp_bool_or) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      l$arguments,
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_aggregate_bool_exp_bool_or<TRes> {
+  factory CopyWith$Input$message_aggregate_bool_exp_bool_or(
+    Input$message_aggregate_bool_exp_bool_or instance,
+    TRes Function(Input$message_aggregate_bool_exp_bool_or) then,
+  ) = _CopyWithImpl$Input$message_aggregate_bool_exp_bool_or;
+
+  factory CopyWith$Input$message_aggregate_bool_exp_bool_or.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_aggregate_bool_exp_bool_or;
+
+  TRes call({
+    Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$message_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  });
+  CopyWith$Input$message_bool_exp<TRes> get filter;
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$message_aggregate_bool_exp_bool_or<TRes>
+    implements CopyWith$Input$message_aggregate_bool_exp_bool_or<TRes> {
+  _CopyWithImpl$Input$message_aggregate_bool_exp_bool_or(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_aggregate_bool_exp_bool_or _instance;
+
+  final TRes Function(Input$message_aggregate_bool_exp_bool_or) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$message_aggregate_bool_exp_bool_or._({
+        ..._instance._$data,
+        if (arguments != _undefined && arguments != null)
+          'arguments': (arguments
+              as Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$message_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Boolean_comparison_exp),
+      }));
+  CopyWith$Input$message_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$message_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Boolean_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_aggregate_bool_exp_bool_or<TRes>
+    implements CopyWith$Input$message_aggregate_bool_exp_bool_or<TRes> {
+  _CopyWithStubImpl$Input$message_aggregate_bool_exp_bool_or(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns?
+        arguments,
+    bool? distinct,
+    Input$message_bool_exp? filter,
+    Input$Boolean_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$message_bool_exp<TRes> get filter =>
+      CopyWith$Input$message_bool_exp.stub(_res);
+  CopyWith$Input$Boolean_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Boolean_comparison_exp.stub(_res);
+}
+
+class Input$message_aggregate_bool_exp_count {
+  factory Input$message_aggregate_bool_exp_count({
+    List<Enum$message_select_column>? arguments,
+    bool? distinct,
+    Input$message_bool_exp? filter,
+    required Input$Int_comparison_exp predicate,
+  }) =>
+      Input$message_aggregate_bool_exp_count._({
+        if (arguments != null) r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$message_aggregate_bool_exp_count._(this._$data);
+
+  factory Input$message_aggregate_bool_exp_count.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('arguments')) {
+      final l$arguments = data['arguments'];
+      result$data['arguments'] = (l$arguments as List<dynamic>?)
+          ?.map((e) => fromJson$Enum$message_select_column((e as String)))
+          .toList();
+    }
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$message_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Int_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$message_aggregate_bool_exp_count._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Enum$message_select_column>? get arguments =>
+      (_$data['arguments'] as List<Enum$message_select_column>?);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$message_bool_exp? get filter =>
+      (_$data['filter'] as Input$message_bool_exp?);
+  Input$Int_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Int_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('arguments')) {
+      final l$arguments = arguments;
+      result$data['arguments'] = l$arguments
+          ?.map((e) => toJson$Enum$message_select_column(e))
+          .toList();
+    }
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$message_aggregate_bool_exp_count<
+          Input$message_aggregate_bool_exp_count>
+      get copyWith => CopyWith$Input$message_aggregate_bool_exp_count(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_aggregate_bool_exp_count) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (_$data.containsKey('arguments') !=
+        other._$data.containsKey('arguments')) {
+      return false;
+    }
+    if (l$arguments != null && lOther$arguments != null) {
+      if (l$arguments.length != lOther$arguments.length) {
+        return false;
+      }
+      for (int i = 0; i < l$arguments.length; i++) {
+        final l$arguments$entry = l$arguments[i];
+        final lOther$arguments$entry = lOther$arguments[i];
+        if (l$arguments$entry != lOther$arguments$entry) {
+          return false;
+        }
+      }
+    } else if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      _$data.containsKey('arguments')
+          ? l$arguments == null
+              ? null
+              : Object.hashAll(l$arguments.map((v) => v))
+          : const {},
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_aggregate_bool_exp_count<TRes> {
+  factory CopyWith$Input$message_aggregate_bool_exp_count(
+    Input$message_aggregate_bool_exp_count instance,
+    TRes Function(Input$message_aggregate_bool_exp_count) then,
+  ) = _CopyWithImpl$Input$message_aggregate_bool_exp_count;
+
+  factory CopyWith$Input$message_aggregate_bool_exp_count.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_aggregate_bool_exp_count;
+
+  TRes call({
+    List<Enum$message_select_column>? arguments,
+    bool? distinct,
+    Input$message_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  });
+  CopyWith$Input$message_bool_exp<TRes> get filter;
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$message_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$message_aggregate_bool_exp_count<TRes> {
+  _CopyWithImpl$Input$message_aggregate_bool_exp_count(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_aggregate_bool_exp_count _instance;
+
+  final TRes Function(Input$message_aggregate_bool_exp_count) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$message_aggregate_bool_exp_count._({
+        ..._instance._$data,
+        if (arguments != _undefined)
+          'arguments': (arguments as List<Enum$message_select_column>?),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$message_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Int_comparison_exp),
+      }));
+  CopyWith$Input$message_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$message_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Int_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$message_aggregate_bool_exp_count<TRes> {
+  _CopyWithStubImpl$Input$message_aggregate_bool_exp_count(this._res);
+
+  TRes _res;
+
+  call({
+    List<Enum$message_select_column>? arguments,
+    bool? distinct,
+    Input$message_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$message_bool_exp<TRes> get filter =>
+      CopyWith$Input$message_bool_exp.stub(_res);
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Int_comparison_exp.stub(_res);
+}
+
+class Input$message_aggregate_order_by {
+  factory Input$message_aggregate_order_by({
+    Enum$order_by? count,
+    Input$message_max_order_by? max,
+    Input$message_min_order_by? min,
+  }) =>
+      Input$message_aggregate_order_by._({
+        if (count != null) r'count': count,
+        if (max != null) r'max': max,
+        if (min != null) r'min': min,
+      });
+
+  Input$message_aggregate_order_by._(this._$data);
+
+  factory Input$message_aggregate_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] =
+          l$count == null ? null : fromJson$Enum$order_by((l$count as String));
+    }
+    if (data.containsKey('max')) {
+      final l$max = data['max'];
+      result$data['max'] = l$max == null
+          ? null
+          : Input$message_max_order_by.fromJson(
+              (l$max as Map<String, dynamic>));
+    }
+    if (data.containsKey('min')) {
+      final l$min = data['min'];
+      result$data['min'] = l$min == null
+          ? null
+          : Input$message_min_order_by.fromJson(
+              (l$min as Map<String, dynamic>));
+    }
+    return Input$message_aggregate_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get count => (_$data['count'] as Enum$order_by?);
+  Input$message_max_order_by? get max =>
+      (_$data['max'] as Input$message_max_order_by?);
+  Input$message_min_order_by? get min =>
+      (_$data['min'] as Input$message_min_order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] =
+          l$count == null ? null : toJson$Enum$order_by(l$count);
+    }
+    if (_$data.containsKey('max')) {
+      final l$max = max;
+      result$data['max'] = l$max?.toJson();
+    }
+    if (_$data.containsKey('min')) {
+      final l$min = min;
+      result$data['min'] = l$min?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_aggregate_order_by<Input$message_aggregate_order_by>
+      get copyWith => CopyWith$Input$message_aggregate_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_aggregate_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    final l$max = max;
+    final lOther$max = other.max;
+    if (_$data.containsKey('max') != other._$data.containsKey('max')) {
+      return false;
+    }
+    if (l$max != lOther$max) {
+      return false;
+    }
+    final l$min = min;
+    final lOther$min = other.min;
+    if (_$data.containsKey('min') != other._$data.containsKey('min')) {
+      return false;
+    }
+    if (l$min != lOther$min) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$count = count;
+    final l$max = max;
+    final l$min = min;
+    return Object.hashAll([
+      _$data.containsKey('count') ? l$count : const {},
+      _$data.containsKey('max') ? l$max : const {},
+      _$data.containsKey('min') ? l$min : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_aggregate_order_by<TRes> {
+  factory CopyWith$Input$message_aggregate_order_by(
+    Input$message_aggregate_order_by instance,
+    TRes Function(Input$message_aggregate_order_by) then,
+  ) = _CopyWithImpl$Input$message_aggregate_order_by;
+
+  factory CopyWith$Input$message_aggregate_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_aggregate_order_by;
+
+  TRes call({
+    Enum$order_by? count,
+    Input$message_max_order_by? max,
+    Input$message_min_order_by? min,
+  });
+  CopyWith$Input$message_max_order_by<TRes> get max;
+  CopyWith$Input$message_min_order_by<TRes> get min;
+}
+
+class _CopyWithImpl$Input$message_aggregate_order_by<TRes>
+    implements CopyWith$Input$message_aggregate_order_by<TRes> {
+  _CopyWithImpl$Input$message_aggregate_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_aggregate_order_by _instance;
+
+  final TRes Function(Input$message_aggregate_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? count = _undefined,
+    Object? max = _undefined,
+    Object? min = _undefined,
+  }) =>
+      _then(Input$message_aggregate_order_by._({
+        ..._instance._$data,
+        if (count != _undefined) 'count': (count as Enum$order_by?),
+        if (max != _undefined) 'max': (max as Input$message_max_order_by?),
+        if (min != _undefined) 'min': (min as Input$message_min_order_by?),
+      }));
+  CopyWith$Input$message_max_order_by<TRes> get max {
+    final local$max = _instance.max;
+    return local$max == null
+        ? CopyWith$Input$message_max_order_by.stub(_then(_instance))
+        : CopyWith$Input$message_max_order_by(local$max, (e) => call(max: e));
+  }
+
+  CopyWith$Input$message_min_order_by<TRes> get min {
+    final local$min = _instance.min;
+    return local$min == null
+        ? CopyWith$Input$message_min_order_by.stub(_then(_instance))
+        : CopyWith$Input$message_min_order_by(local$min, (e) => call(min: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_aggregate_order_by<TRes>
+    implements CopyWith$Input$message_aggregate_order_by<TRes> {
+  _CopyWithStubImpl$Input$message_aggregate_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? count,
+    Input$message_max_order_by? max,
+    Input$message_min_order_by? min,
+  }) =>
+      _res;
+  CopyWith$Input$message_max_order_by<TRes> get max =>
+      CopyWith$Input$message_max_order_by.stub(_res);
+  CopyWith$Input$message_min_order_by<TRes> get min =>
+      CopyWith$Input$message_min_order_by.stub(_res);
+}
+
+class Input$message_arr_rel_insert_input {
+  factory Input$message_arr_rel_insert_input({
+    required List<Input$message_insert_input> data,
+    Input$message_on_conflict? on_conflict,
+  }) =>
+      Input$message_arr_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$message_arr_rel_insert_input._(this._$data);
+
+  factory Input$message_arr_rel_insert_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] = (l$data as List<dynamic>)
+        .map((e) =>
+            Input$message_insert_input.fromJson((e as Map<String, dynamic>)))
+        .toList();
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$message_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$message_arr_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Input$message_insert_input> get data =>
+      (_$data['data'] as List<Input$message_insert_input>);
+  Input$message_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$message_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.map((e) => e.toJson()).toList();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_arr_rel_insert_input<
+          Input$message_arr_rel_insert_input>
+      get copyWith => CopyWith$Input$message_arr_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_arr_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data.length != lOther$data.length) {
+      return false;
+    }
+    for (int i = 0; i < l$data.length; i++) {
+      final l$data$entry = l$data[i];
+      final lOther$data$entry = lOther$data[i];
+      if (l$data$entry != lOther$data$entry) {
+        return false;
+      }
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      Object.hashAll(l$data.map((v) => v)),
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_arr_rel_insert_input<TRes> {
+  factory CopyWith$Input$message_arr_rel_insert_input(
+    Input$message_arr_rel_insert_input instance,
+    TRes Function(Input$message_arr_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$message_arr_rel_insert_input;
+
+  factory CopyWith$Input$message_arr_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_arr_rel_insert_input;
+
+  TRes call({
+    List<Input$message_insert_input>? data,
+    Input$message_on_conflict? on_conflict,
+  });
+  TRes data(
+      Iterable<Input$message_insert_input> Function(
+              Iterable<
+                  CopyWith$Input$message_insert_input<
+                      Input$message_insert_input>>)
+          _fn);
+  CopyWith$Input$message_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$message_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$message_arr_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$message_arr_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_arr_rel_insert_input _instance;
+
+  final TRes Function(Input$message_arr_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$message_arr_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as List<Input$message_insert_input>),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$message_on_conflict?),
+      }));
+  TRes data(
+          Iterable<Input$message_insert_input> Function(
+                  Iterable<
+                      CopyWith$Input$message_insert_input<
+                          Input$message_insert_input>>)
+              _fn) =>
+      call(
+          data:
+              _fn(_instance.data.map((e) => CopyWith$Input$message_insert_input(
+                    e,
+                    (i) => i,
+                  ))).toList());
+  CopyWith$Input$message_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$message_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$message_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$message_arr_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$message_arr_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    List<Input$message_insert_input>? data,
+    Input$message_on_conflict? on_conflict,
+  }) =>
+      _res;
+  data(_fn) => _res;
+  CopyWith$Input$message_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$message_on_conflict.stub(_res);
+}
+
+class Input$message_bool_exp {
+  factory Input$message_bool_exp({
+    Input$ENUM_ROLE_bool_exp? ENUM_ROLE,
+    List<Input$message_bool_exp>? $_and,
+    Input$message_bool_exp? $_not,
+    List<Input$message_bool_exp>? $_or,
+    Input$file_bool_exp? attachment,
+    Input$chat_bool_exp? chat,
+    Input$String_comparison_exp? chat_id,
+    Input$timestamptz_comparison_exp? created_at,
+    Input$String_comparison_exp? file_id,
+    Input$Boolean_comparison_exp? indexed,
+    Input$String_comparison_exp? message_id,
+    Input$ENUM_ROLE_enum_comparison_exp? sender,
+    Input$String_comparison_exp? text,
+    Input$timestamptz_comparison_exp? updated_at,
+  }) =>
+      Input$message_bool_exp._({
+        if (ENUM_ROLE != null) r'ENUM_ROLE': ENUM_ROLE,
+        if ($_and != null) r'_and': $_and,
+        if ($_not != null) r'_not': $_not,
+        if ($_or != null) r'_or': $_or,
+        if (attachment != null) r'attachment': attachment,
+        if (chat != null) r'chat': chat,
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (file_id != null) r'file_id': file_id,
+        if (indexed != null) r'indexed': indexed,
+        if (message_id != null) r'message_id': message_id,
+        if (sender != null) r'sender': sender,
+        if (text != null) r'text': text,
+        if (updated_at != null) r'updated_at': updated_at,
+      });
+
+  Input$message_bool_exp._(this._$data);
+
+  factory Input$message_bool_exp.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('ENUM_ROLE')) {
+      final l$ENUM_ROLE = data['ENUM_ROLE'];
+      result$data['ENUM_ROLE'] = l$ENUM_ROLE == null
+          ? null
+          : Input$ENUM_ROLE_bool_exp.fromJson(
+              (l$ENUM_ROLE as Map<String, dynamic>));
+    }
+    if (data.containsKey('_and')) {
+      final l$$_and = data['_and'];
+      result$data['_and'] = (l$$_and as List<dynamic>?)
+          ?.map((e) =>
+              Input$message_bool_exp.fromJson((e as Map<String, dynamic>)))
+          .toList();
+    }
+    if (data.containsKey('_not')) {
+      final l$$_not = data['_not'];
+      result$data['_not'] = l$$_not == null
+          ? null
+          : Input$message_bool_exp.fromJson((l$$_not as Map<String, dynamic>));
+    }
+    if (data.containsKey('_or')) {
+      final l$$_or = data['_or'];
+      result$data['_or'] = (l$$_or as List<dynamic>?)
+          ?.map((e) =>
+              Input$message_bool_exp.fromJson((e as Map<String, dynamic>)))
+          .toList();
+    }
+    if (data.containsKey('attachment')) {
+      final l$attachment = data['attachment'];
+      result$data['attachment'] = l$attachment == null
+          ? null
+          : Input$file_bool_exp.fromJson(
+              (l$attachment as Map<String, dynamic>));
+    }
+    if (data.containsKey('chat')) {
+      final l$chat = data['chat'];
+      result$data['chat'] = l$chat == null
+          ? null
+          : Input$chat_bool_exp.fromJson((l$chat as Map<String, dynamic>));
+    }
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = l$chat_id == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$chat_id as Map<String, dynamic>));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : Input$timestamptz_comparison_exp.fromJson(
+              (l$created_at as Map<String, dynamic>));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$file_id as Map<String, dynamic>));
+    }
+    if (data.containsKey('indexed')) {
+      final l$indexed = data['indexed'];
+      result$data['indexed'] = l$indexed == null
+          ? null
+          : Input$Boolean_comparison_exp.fromJson(
+              (l$indexed as Map<String, dynamic>));
+    }
+    if (data.containsKey('message_id')) {
+      final l$message_id = data['message_id'];
+      result$data['message_id'] = l$message_id == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$message_id as Map<String, dynamic>));
+    }
+    if (data.containsKey('sender')) {
+      final l$sender = data['sender'];
+      result$data['sender'] = l$sender == null
+          ? null
+          : Input$ENUM_ROLE_enum_comparison_exp.fromJson(
+              (l$sender as Map<String, dynamic>));
+    }
+    if (data.containsKey('text')) {
+      final l$text = data['text'];
+      result$data['text'] = l$text == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$text as Map<String, dynamic>));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : Input$timestamptz_comparison_exp.fromJson(
+              (l$updated_at as Map<String, dynamic>));
+    }
+    return Input$message_bool_exp._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$ENUM_ROLE_bool_exp? get ENUM_ROLE =>
+      (_$data['ENUM_ROLE'] as Input$ENUM_ROLE_bool_exp?);
+  List<Input$message_bool_exp>? get $_and =>
+      (_$data['_and'] as List<Input$message_bool_exp>?);
+  Input$message_bool_exp? get $_not =>
+      (_$data['_not'] as Input$message_bool_exp?);
+  List<Input$message_bool_exp>? get $_or =>
+      (_$data['_or'] as List<Input$message_bool_exp>?);
+  Input$file_bool_exp? get attachment =>
+      (_$data['attachment'] as Input$file_bool_exp?);
+  Input$chat_bool_exp? get chat => (_$data['chat'] as Input$chat_bool_exp?);
+  Input$String_comparison_exp? get chat_id =>
+      (_$data['chat_id'] as Input$String_comparison_exp?);
+  Input$timestamptz_comparison_exp? get created_at =>
+      (_$data['created_at'] as Input$timestamptz_comparison_exp?);
+  Input$String_comparison_exp? get file_id =>
+      (_$data['file_id'] as Input$String_comparison_exp?);
+  Input$Boolean_comparison_exp? get indexed =>
+      (_$data['indexed'] as Input$Boolean_comparison_exp?);
+  Input$String_comparison_exp? get message_id =>
+      (_$data['message_id'] as Input$String_comparison_exp?);
+  Input$ENUM_ROLE_enum_comparison_exp? get sender =>
+      (_$data['sender'] as Input$ENUM_ROLE_enum_comparison_exp?);
+  Input$String_comparison_exp? get text =>
+      (_$data['text'] as Input$String_comparison_exp?);
+  Input$timestamptz_comparison_exp? get updated_at =>
+      (_$data['updated_at'] as Input$timestamptz_comparison_exp?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('ENUM_ROLE')) {
+      final l$ENUM_ROLE = ENUM_ROLE;
+      result$data['ENUM_ROLE'] = l$ENUM_ROLE?.toJson();
+    }
+    if (_$data.containsKey('_and')) {
+      final l$$_and = $_and;
+      result$data['_and'] = l$$_and?.map((e) => e.toJson()).toList();
+    }
+    if (_$data.containsKey('_not')) {
+      final l$$_not = $_not;
+      result$data['_not'] = l$$_not?.toJson();
+    }
+    if (_$data.containsKey('_or')) {
+      final l$$_or = $_or;
+      result$data['_or'] = l$$_or?.map((e) => e.toJson()).toList();
+    }
+    if (_$data.containsKey('attachment')) {
+      final l$attachment = attachment;
+      result$data['attachment'] = l$attachment?.toJson();
+    }
+    if (_$data.containsKey('chat')) {
+      final l$chat = chat;
+      result$data['chat'] = l$chat?.toJson();
+    }
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] = l$chat_id?.toJson();
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at?.toJson();
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id?.toJson();
+    }
+    if (_$data.containsKey('indexed')) {
+      final l$indexed = indexed;
+      result$data['indexed'] = l$indexed?.toJson();
+    }
+    if (_$data.containsKey('message_id')) {
+      final l$message_id = message_id;
+      result$data['message_id'] = l$message_id?.toJson();
+    }
+    if (_$data.containsKey('sender')) {
+      final l$sender = sender;
+      result$data['sender'] = l$sender?.toJson();
+    }
+    if (_$data.containsKey('text')) {
+      final l$text = text;
+      result$data['text'] = l$text?.toJson();
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_bool_exp<Input$message_bool_exp> get copyWith =>
+      CopyWith$Input$message_bool_exp(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_bool_exp) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$ENUM_ROLE = ENUM_ROLE;
+    final lOther$ENUM_ROLE = other.ENUM_ROLE;
+    if (_$data.containsKey('ENUM_ROLE') !=
+        other._$data.containsKey('ENUM_ROLE')) {
+      return false;
+    }
+    if (l$ENUM_ROLE != lOther$ENUM_ROLE) {
+      return false;
+    }
+    final l$$_and = $_and;
+    final lOther$$_and = other.$_and;
+    if (_$data.containsKey('_and') != other._$data.containsKey('_and')) {
+      return false;
+    }
+    if (l$$_and != null && lOther$$_and != null) {
+      if (l$$_and.length != lOther$$_and.length) {
+        return false;
+      }
+      for (int i = 0; i < l$$_and.length; i++) {
+        final l$$_and$entry = l$$_and[i];
+        final lOther$$_and$entry = lOther$$_and[i];
+        if (l$$_and$entry != lOther$$_and$entry) {
+          return false;
+        }
+      }
+    } else if (l$$_and != lOther$$_and) {
+      return false;
+    }
+    final l$$_not = $_not;
+    final lOther$$_not = other.$_not;
+    if (_$data.containsKey('_not') != other._$data.containsKey('_not')) {
+      return false;
+    }
+    if (l$$_not != lOther$$_not) {
+      return false;
+    }
+    final l$$_or = $_or;
+    final lOther$$_or = other.$_or;
+    if (_$data.containsKey('_or') != other._$data.containsKey('_or')) {
+      return false;
+    }
+    if (l$$_or != null && lOther$$_or != null) {
+      if (l$$_or.length != lOther$$_or.length) {
+        return false;
+      }
+      for (int i = 0; i < l$$_or.length; i++) {
+        final l$$_or$entry = l$$_or[i];
+        final lOther$$_or$entry = lOther$$_or[i];
+        if (l$$_or$entry != lOther$$_or$entry) {
+          return false;
+        }
+      }
+    } else if (l$$_or != lOther$$_or) {
+      return false;
+    }
+    final l$attachment = attachment;
+    final lOther$attachment = other.attachment;
+    if (_$data.containsKey('attachment') !=
+        other._$data.containsKey('attachment')) {
+      return false;
+    }
+    if (l$attachment != lOther$attachment) {
+      return false;
+    }
+    final l$chat = chat;
+    final lOther$chat = other.chat;
+    if (_$data.containsKey('chat') != other._$data.containsKey('chat')) {
+      return false;
+    }
+    if (l$chat != lOther$chat) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$indexed = indexed;
+    final lOther$indexed = other.indexed;
+    if (_$data.containsKey('indexed') != other._$data.containsKey('indexed')) {
+      return false;
+    }
+    if (l$indexed != lOther$indexed) {
+      return false;
+    }
+    final l$message_id = message_id;
+    final lOther$message_id = other.message_id;
+    if (_$data.containsKey('message_id') !=
+        other._$data.containsKey('message_id')) {
+      return false;
+    }
+    if (l$message_id != lOther$message_id) {
+      return false;
+    }
+    final l$sender = sender;
+    final lOther$sender = other.sender;
+    if (_$data.containsKey('sender') != other._$data.containsKey('sender')) {
+      return false;
+    }
+    if (l$sender != lOther$sender) {
+      return false;
+    }
+    final l$text = text;
+    final lOther$text = other.text;
+    if (_$data.containsKey('text') != other._$data.containsKey('text')) {
+      return false;
+    }
+    if (l$text != lOther$text) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$ENUM_ROLE = ENUM_ROLE;
+    final l$$_and = $_and;
+    final l$$_not = $_not;
+    final l$$_or = $_or;
+    final l$attachment = attachment;
+    final l$chat = chat;
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$file_id = file_id;
+    final l$indexed = indexed;
+    final l$message_id = message_id;
+    final l$sender = sender;
+    final l$text = text;
+    final l$updated_at = updated_at;
+    return Object.hashAll([
+      _$data.containsKey('ENUM_ROLE') ? l$ENUM_ROLE : const {},
+      _$data.containsKey('_and')
+          ? l$$_and == null
+              ? null
+              : Object.hashAll(l$$_and.map((v) => v))
+          : const {},
+      _$data.containsKey('_not') ? l$$_not : const {},
+      _$data.containsKey('_or')
+          ? l$$_or == null
+              ? null
+              : Object.hashAll(l$$_or.map((v) => v))
+          : const {},
+      _$data.containsKey('attachment') ? l$attachment : const {},
+      _$data.containsKey('chat') ? l$chat : const {},
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('indexed') ? l$indexed : const {},
+      _$data.containsKey('message_id') ? l$message_id : const {},
+      _$data.containsKey('sender') ? l$sender : const {},
+      _$data.containsKey('text') ? l$text : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_bool_exp<TRes> {
+  factory CopyWith$Input$message_bool_exp(
+    Input$message_bool_exp instance,
+    TRes Function(Input$message_bool_exp) then,
+  ) = _CopyWithImpl$Input$message_bool_exp;
+
+  factory CopyWith$Input$message_bool_exp.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_bool_exp;
+
+  TRes call({
+    Input$ENUM_ROLE_bool_exp? ENUM_ROLE,
+    List<Input$message_bool_exp>? $_and,
+    Input$message_bool_exp? $_not,
+    List<Input$message_bool_exp>? $_or,
+    Input$file_bool_exp? attachment,
+    Input$chat_bool_exp? chat,
+    Input$String_comparison_exp? chat_id,
+    Input$timestamptz_comparison_exp? created_at,
+    Input$String_comparison_exp? file_id,
+    Input$Boolean_comparison_exp? indexed,
+    Input$String_comparison_exp? message_id,
+    Input$ENUM_ROLE_enum_comparison_exp? sender,
+    Input$String_comparison_exp? text,
+    Input$timestamptz_comparison_exp? updated_at,
+  });
+  CopyWith$Input$ENUM_ROLE_bool_exp<TRes> get ENUM_ROLE;
+  TRes $_and(
+      Iterable<Input$message_bool_exp>? Function(
+              Iterable<
+                  CopyWith$Input$message_bool_exp<Input$message_bool_exp>>?)
+          _fn);
+  CopyWith$Input$message_bool_exp<TRes> get $_not;
+  TRes $_or(
+      Iterable<Input$message_bool_exp>? Function(
+              Iterable<
+                  CopyWith$Input$message_bool_exp<Input$message_bool_exp>>?)
+          _fn);
+  CopyWith$Input$file_bool_exp<TRes> get attachment;
+  CopyWith$Input$chat_bool_exp<TRes> get chat;
+  CopyWith$Input$String_comparison_exp<TRes> get chat_id;
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at;
+  CopyWith$Input$String_comparison_exp<TRes> get file_id;
+  CopyWith$Input$Boolean_comparison_exp<TRes> get indexed;
+  CopyWith$Input$String_comparison_exp<TRes> get message_id;
+  CopyWith$Input$ENUM_ROLE_enum_comparison_exp<TRes> get sender;
+  CopyWith$Input$String_comparison_exp<TRes> get text;
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at;
+}
+
+class _CopyWithImpl$Input$message_bool_exp<TRes>
+    implements CopyWith$Input$message_bool_exp<TRes> {
+  _CopyWithImpl$Input$message_bool_exp(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_bool_exp _instance;
+
+  final TRes Function(Input$message_bool_exp) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? ENUM_ROLE = _undefined,
+    Object? $_and = _undefined,
+    Object? $_not = _undefined,
+    Object? $_or = _undefined,
+    Object? attachment = _undefined,
+    Object? chat = _undefined,
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? file_id = _undefined,
+    Object? indexed = _undefined,
+    Object? message_id = _undefined,
+    Object? sender = _undefined,
+    Object? text = _undefined,
+    Object? updated_at = _undefined,
+  }) =>
+      _then(Input$message_bool_exp._({
+        ..._instance._$data,
+        if (ENUM_ROLE != _undefined)
+          'ENUM_ROLE': (ENUM_ROLE as Input$ENUM_ROLE_bool_exp?),
+        if ($_and != _undefined)
+          '_and': ($_and as List<Input$message_bool_exp>?),
+        if ($_not != _undefined) '_not': ($_not as Input$message_bool_exp?),
+        if ($_or != _undefined) '_or': ($_or as List<Input$message_bool_exp>?),
+        if (attachment != _undefined)
+          'attachment': (attachment as Input$file_bool_exp?),
+        if (chat != _undefined) 'chat': (chat as Input$chat_bool_exp?),
+        if (chat_id != _undefined)
+          'chat_id': (chat_id as Input$String_comparison_exp?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Input$timestamptz_comparison_exp?),
+        if (file_id != _undefined)
+          'file_id': (file_id as Input$String_comparison_exp?),
+        if (indexed != _undefined)
+          'indexed': (indexed as Input$Boolean_comparison_exp?),
+        if (message_id != _undefined)
+          'message_id': (message_id as Input$String_comparison_exp?),
+        if (sender != _undefined)
+          'sender': (sender as Input$ENUM_ROLE_enum_comparison_exp?),
+        if (text != _undefined) 'text': (text as Input$String_comparison_exp?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Input$timestamptz_comparison_exp?),
+      }));
+  CopyWith$Input$ENUM_ROLE_bool_exp<TRes> get ENUM_ROLE {
+    final local$ENUM_ROLE = _instance.ENUM_ROLE;
+    return local$ENUM_ROLE == null
+        ? CopyWith$Input$ENUM_ROLE_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$ENUM_ROLE_bool_exp(
+            local$ENUM_ROLE, (e) => call(ENUM_ROLE: e));
+  }
+
+  TRes $_and(
+          Iterable<Input$message_bool_exp>? Function(
+                  Iterable<
+                      CopyWith$Input$message_bool_exp<Input$message_bool_exp>>?)
+              _fn) =>
+      call(
+          $_and:
+              _fn(_instance.$_and?.map((e) => CopyWith$Input$message_bool_exp(
+                    e,
+                    (i) => i,
+                  )))?.toList());
+  CopyWith$Input$message_bool_exp<TRes> get $_not {
+    final local$$_not = _instance.$_not;
+    return local$$_not == null
+        ? CopyWith$Input$message_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_bool_exp(local$$_not, (e) => call($_not: e));
+  }
+
+  TRes $_or(
+          Iterable<Input$message_bool_exp>? Function(
+                  Iterable<
+                      CopyWith$Input$message_bool_exp<Input$message_bool_exp>>?)
+              _fn) =>
+      call(
+          $_or: _fn(_instance.$_or?.map((e) => CopyWith$Input$message_bool_exp(
+                e,
+                (i) => i,
+              )))?.toList());
+  CopyWith$Input$file_bool_exp<TRes> get attachment {
+    final local$attachment = _instance.attachment;
+    return local$attachment == null
+        ? CopyWith$Input$file_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$file_bool_exp(
+            local$attachment, (e) => call(attachment: e));
+  }
+
+  CopyWith$Input$chat_bool_exp<TRes> get chat {
+    final local$chat = _instance.chat;
+    return local$chat == null
+        ? CopyWith$Input$chat_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$chat_bool_exp(local$chat, (e) => call(chat: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get chat_id {
+    final local$chat_id = _instance.chat_id;
+    return local$chat_id == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$chat_id, (e) => call(chat_id: e));
+  }
+
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at {
+    final local$created_at = _instance.created_at;
+    return local$created_at == null
+        ? CopyWith$Input$timestamptz_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$timestamptz_comparison_exp(
+            local$created_at, (e) => call(created_at: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get file_id {
+    final local$file_id = _instance.file_id;
+    return local$file_id == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$file_id, (e) => call(file_id: e));
+  }
+
+  CopyWith$Input$Boolean_comparison_exp<TRes> get indexed {
+    final local$indexed = _instance.indexed;
+    return local$indexed == null
+        ? CopyWith$Input$Boolean_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$Boolean_comparison_exp(
+            local$indexed, (e) => call(indexed: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get message_id {
+    final local$message_id = _instance.message_id;
+    return local$message_id == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$message_id, (e) => call(message_id: e));
+  }
+
+  CopyWith$Input$ENUM_ROLE_enum_comparison_exp<TRes> get sender {
+    final local$sender = _instance.sender;
+    return local$sender == null
+        ? CopyWith$Input$ENUM_ROLE_enum_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$ENUM_ROLE_enum_comparison_exp(
+            local$sender, (e) => call(sender: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get text {
+    final local$text = _instance.text;
+    return local$text == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$text, (e) => call(text: e));
+  }
+
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at {
+    final local$updated_at = _instance.updated_at;
+    return local$updated_at == null
+        ? CopyWith$Input$timestamptz_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$timestamptz_comparison_exp(
+            local$updated_at, (e) => call(updated_at: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_bool_exp<TRes>
+    implements CopyWith$Input$message_bool_exp<TRes> {
+  _CopyWithStubImpl$Input$message_bool_exp(this._res);
+
+  TRes _res;
+
+  call({
+    Input$ENUM_ROLE_bool_exp? ENUM_ROLE,
+    List<Input$message_bool_exp>? $_and,
+    Input$message_bool_exp? $_not,
+    List<Input$message_bool_exp>? $_or,
+    Input$file_bool_exp? attachment,
+    Input$chat_bool_exp? chat,
+    Input$String_comparison_exp? chat_id,
+    Input$timestamptz_comparison_exp? created_at,
+    Input$String_comparison_exp? file_id,
+    Input$Boolean_comparison_exp? indexed,
+    Input$String_comparison_exp? message_id,
+    Input$ENUM_ROLE_enum_comparison_exp? sender,
+    Input$String_comparison_exp? text,
+    Input$timestamptz_comparison_exp? updated_at,
+  }) =>
+      _res;
+  CopyWith$Input$ENUM_ROLE_bool_exp<TRes> get ENUM_ROLE =>
+      CopyWith$Input$ENUM_ROLE_bool_exp.stub(_res);
+  $_and(_fn) => _res;
+  CopyWith$Input$message_bool_exp<TRes> get $_not =>
+      CopyWith$Input$message_bool_exp.stub(_res);
+  $_or(_fn) => _res;
+  CopyWith$Input$file_bool_exp<TRes> get attachment =>
+      CopyWith$Input$file_bool_exp.stub(_res);
+  CopyWith$Input$chat_bool_exp<TRes> get chat =>
+      CopyWith$Input$chat_bool_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get chat_id =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at =>
+      CopyWith$Input$timestamptz_comparison_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get file_id =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$Boolean_comparison_exp<TRes> get indexed =>
+      CopyWith$Input$Boolean_comparison_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get message_id =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$ENUM_ROLE_enum_comparison_exp<TRes> get sender =>
+      CopyWith$Input$ENUM_ROLE_enum_comparison_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get text =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at =>
+      CopyWith$Input$timestamptz_comparison_exp.stub(_res);
+}
+
+class Input$message_insert_input {
+  factory Input$message_insert_input({
+    Input$ENUM_ROLE_obj_rel_insert_input? ENUM_ROLE,
+    Input$file_obj_rel_insert_input? attachment,
+    Input$chat_obj_rel_insert_input? chat,
+    String? chat_id,
+    String? created_at,
+    String? file_id,
+    bool? indexed,
+    String? message_id,
+    Enum$ENUM_ROLE_enum? sender,
+    String? text,
+    String? updated_at,
+  }) =>
+      Input$message_insert_input._({
+        if (ENUM_ROLE != null) r'ENUM_ROLE': ENUM_ROLE,
+        if (attachment != null) r'attachment': attachment,
+        if (chat != null) r'chat': chat,
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (file_id != null) r'file_id': file_id,
+        if (indexed != null) r'indexed': indexed,
+        if (message_id != null) r'message_id': message_id,
+        if (sender != null) r'sender': sender,
+        if (text != null) r'text': text,
+        if (updated_at != null) r'updated_at': updated_at,
+      });
+
+  Input$message_insert_input._(this._$data);
+
+  factory Input$message_insert_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('ENUM_ROLE')) {
+      final l$ENUM_ROLE = data['ENUM_ROLE'];
+      result$data['ENUM_ROLE'] = l$ENUM_ROLE == null
+          ? null
+          : Input$ENUM_ROLE_obj_rel_insert_input.fromJson(
+              (l$ENUM_ROLE as Map<String, dynamic>));
+    }
+    if (data.containsKey('attachment')) {
+      final l$attachment = data['attachment'];
+      result$data['attachment'] = l$attachment == null
+          ? null
+          : Input$file_obj_rel_insert_input.fromJson(
+              (l$attachment as Map<String, dynamic>));
+    }
+    if (data.containsKey('chat')) {
+      final l$chat = data['chat'];
+      result$data['chat'] = l$chat == null
+          ? null
+          : Input$chat_obj_rel_insert_input.fromJson(
+              (l$chat as Map<String, dynamic>));
+    }
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = (l$chat_id as String?);
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = (l$created_at as String?);
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = (l$file_id as String?);
+    }
+    if (data.containsKey('indexed')) {
+      final l$indexed = data['indexed'];
+      result$data['indexed'] = (l$indexed as bool?);
+    }
+    if (data.containsKey('message_id')) {
+      final l$message_id = data['message_id'];
+      result$data['message_id'] = (l$message_id as String?);
+    }
+    if (data.containsKey('sender')) {
+      final l$sender = data['sender'];
+      result$data['sender'] = l$sender == null
+          ? null
+          : fromJson$Enum$ENUM_ROLE_enum((l$sender as String));
+    }
+    if (data.containsKey('text')) {
+      final l$text = data['text'];
+      result$data['text'] = (l$text as String?);
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = (l$updated_at as String?);
+    }
+    return Input$message_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$ENUM_ROLE_obj_rel_insert_input? get ENUM_ROLE =>
+      (_$data['ENUM_ROLE'] as Input$ENUM_ROLE_obj_rel_insert_input?);
+  Input$file_obj_rel_insert_input? get attachment =>
+      (_$data['attachment'] as Input$file_obj_rel_insert_input?);
+  Input$chat_obj_rel_insert_input? get chat =>
+      (_$data['chat'] as Input$chat_obj_rel_insert_input?);
+  String? get chat_id => (_$data['chat_id'] as String?);
+  String? get created_at => (_$data['created_at'] as String?);
+  String? get file_id => (_$data['file_id'] as String?);
+  bool? get indexed => (_$data['indexed'] as bool?);
+  String? get message_id => (_$data['message_id'] as String?);
+  Enum$ENUM_ROLE_enum? get sender => (_$data['sender'] as Enum$ENUM_ROLE_enum?);
+  String? get text => (_$data['text'] as String?);
+  String? get updated_at => (_$data['updated_at'] as String?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('ENUM_ROLE')) {
+      final l$ENUM_ROLE = ENUM_ROLE;
+      result$data['ENUM_ROLE'] = l$ENUM_ROLE?.toJson();
+    }
+    if (_$data.containsKey('attachment')) {
+      final l$attachment = attachment;
+      result$data['attachment'] = l$attachment?.toJson();
+    }
+    if (_$data.containsKey('chat')) {
+      final l$chat = chat;
+      result$data['chat'] = l$chat?.toJson();
+    }
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] = l$chat_id;
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at;
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id;
+    }
+    if (_$data.containsKey('indexed')) {
+      final l$indexed = indexed;
+      result$data['indexed'] = l$indexed;
+    }
+    if (_$data.containsKey('message_id')) {
+      final l$message_id = message_id;
+      result$data['message_id'] = l$message_id;
+    }
+    if (_$data.containsKey('sender')) {
+      final l$sender = sender;
+      result$data['sender'] =
+          l$sender == null ? null : toJson$Enum$ENUM_ROLE_enum(l$sender);
+    }
+    if (_$data.containsKey('text')) {
+      final l$text = text;
+      result$data['text'] = l$text;
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at;
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_insert_input<Input$message_insert_input>
+      get copyWith => CopyWith$Input$message_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$ENUM_ROLE = ENUM_ROLE;
+    final lOther$ENUM_ROLE = other.ENUM_ROLE;
+    if (_$data.containsKey('ENUM_ROLE') !=
+        other._$data.containsKey('ENUM_ROLE')) {
+      return false;
+    }
+    if (l$ENUM_ROLE != lOther$ENUM_ROLE) {
+      return false;
+    }
+    final l$attachment = attachment;
+    final lOther$attachment = other.attachment;
+    if (_$data.containsKey('attachment') !=
+        other._$data.containsKey('attachment')) {
+      return false;
+    }
+    if (l$attachment != lOther$attachment) {
+      return false;
+    }
+    final l$chat = chat;
+    final lOther$chat = other.chat;
+    if (_$data.containsKey('chat') != other._$data.containsKey('chat')) {
+      return false;
+    }
+    if (l$chat != lOther$chat) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$indexed = indexed;
+    final lOther$indexed = other.indexed;
+    if (_$data.containsKey('indexed') != other._$data.containsKey('indexed')) {
+      return false;
+    }
+    if (l$indexed != lOther$indexed) {
+      return false;
+    }
+    final l$message_id = message_id;
+    final lOther$message_id = other.message_id;
+    if (_$data.containsKey('message_id') !=
+        other._$data.containsKey('message_id')) {
+      return false;
+    }
+    if (l$message_id != lOther$message_id) {
+      return false;
+    }
+    final l$sender = sender;
+    final lOther$sender = other.sender;
+    if (_$data.containsKey('sender') != other._$data.containsKey('sender')) {
+      return false;
+    }
+    if (l$sender != lOther$sender) {
+      return false;
+    }
+    final l$text = text;
+    final lOther$text = other.text;
+    if (_$data.containsKey('text') != other._$data.containsKey('text')) {
+      return false;
+    }
+    if (l$text != lOther$text) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$ENUM_ROLE = ENUM_ROLE;
+    final l$attachment = attachment;
+    final l$chat = chat;
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$file_id = file_id;
+    final l$indexed = indexed;
+    final l$message_id = message_id;
+    final l$sender = sender;
+    final l$text = text;
+    final l$updated_at = updated_at;
+    return Object.hashAll([
+      _$data.containsKey('ENUM_ROLE') ? l$ENUM_ROLE : const {},
+      _$data.containsKey('attachment') ? l$attachment : const {},
+      _$data.containsKey('chat') ? l$chat : const {},
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('indexed') ? l$indexed : const {},
+      _$data.containsKey('message_id') ? l$message_id : const {},
+      _$data.containsKey('sender') ? l$sender : const {},
+      _$data.containsKey('text') ? l$text : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_insert_input<TRes> {
+  factory CopyWith$Input$message_insert_input(
+    Input$message_insert_input instance,
+    TRes Function(Input$message_insert_input) then,
+  ) = _CopyWithImpl$Input$message_insert_input;
+
+  factory CopyWith$Input$message_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_insert_input;
+
+  TRes call({
+    Input$ENUM_ROLE_obj_rel_insert_input? ENUM_ROLE,
+    Input$file_obj_rel_insert_input? attachment,
+    Input$chat_obj_rel_insert_input? chat,
+    String? chat_id,
+    String? created_at,
+    String? file_id,
+    bool? indexed,
+    String? message_id,
+    Enum$ENUM_ROLE_enum? sender,
+    String? text,
+    String? updated_at,
+  });
+  CopyWith$Input$ENUM_ROLE_obj_rel_insert_input<TRes> get ENUM_ROLE;
+  CopyWith$Input$file_obj_rel_insert_input<TRes> get attachment;
+  CopyWith$Input$chat_obj_rel_insert_input<TRes> get chat;
+}
+
+class _CopyWithImpl$Input$message_insert_input<TRes>
+    implements CopyWith$Input$message_insert_input<TRes> {
+  _CopyWithImpl$Input$message_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_insert_input _instance;
+
+  final TRes Function(Input$message_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? ENUM_ROLE = _undefined,
+    Object? attachment = _undefined,
+    Object? chat = _undefined,
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? file_id = _undefined,
+    Object? indexed = _undefined,
+    Object? message_id = _undefined,
+    Object? sender = _undefined,
+    Object? text = _undefined,
+    Object? updated_at = _undefined,
+  }) =>
+      _then(Input$message_insert_input._({
+        ..._instance._$data,
+        if (ENUM_ROLE != _undefined)
+          'ENUM_ROLE': (ENUM_ROLE as Input$ENUM_ROLE_obj_rel_insert_input?),
+        if (attachment != _undefined)
+          'attachment': (attachment as Input$file_obj_rel_insert_input?),
+        if (chat != _undefined)
+          'chat': (chat as Input$chat_obj_rel_insert_input?),
+        if (chat_id != _undefined) 'chat_id': (chat_id as String?),
+        if (created_at != _undefined) 'created_at': (created_at as String?),
+        if (file_id != _undefined) 'file_id': (file_id as String?),
+        if (indexed != _undefined) 'indexed': (indexed as bool?),
+        if (message_id != _undefined) 'message_id': (message_id as String?),
+        if (sender != _undefined) 'sender': (sender as Enum$ENUM_ROLE_enum?),
+        if (text != _undefined) 'text': (text as String?),
+        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
+      }));
+  CopyWith$Input$ENUM_ROLE_obj_rel_insert_input<TRes> get ENUM_ROLE {
+    final local$ENUM_ROLE = _instance.ENUM_ROLE;
+    return local$ENUM_ROLE == null
+        ? CopyWith$Input$ENUM_ROLE_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$ENUM_ROLE_obj_rel_insert_input(
+            local$ENUM_ROLE, (e) => call(ENUM_ROLE: e));
+  }
+
+  CopyWith$Input$file_obj_rel_insert_input<TRes> get attachment {
+    final local$attachment = _instance.attachment;
+    return local$attachment == null
+        ? CopyWith$Input$file_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$file_obj_rel_insert_input(
+            local$attachment, (e) => call(attachment: e));
+  }
+
+  CopyWith$Input$chat_obj_rel_insert_input<TRes> get chat {
+    final local$chat = _instance.chat;
+    return local$chat == null
+        ? CopyWith$Input$chat_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$chat_obj_rel_insert_input(
+            local$chat, (e) => call(chat: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_insert_input<TRes>
+    implements CopyWith$Input$message_insert_input<TRes> {
+  _CopyWithStubImpl$Input$message_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$ENUM_ROLE_obj_rel_insert_input? ENUM_ROLE,
+    Input$file_obj_rel_insert_input? attachment,
+    Input$chat_obj_rel_insert_input? chat,
+    String? chat_id,
+    String? created_at,
+    String? file_id,
+    bool? indexed,
+    String? message_id,
+    Enum$ENUM_ROLE_enum? sender,
+    String? text,
+    String? updated_at,
+  }) =>
+      _res;
+  CopyWith$Input$ENUM_ROLE_obj_rel_insert_input<TRes> get ENUM_ROLE =>
+      CopyWith$Input$ENUM_ROLE_obj_rel_insert_input.stub(_res);
+  CopyWith$Input$file_obj_rel_insert_input<TRes> get attachment =>
+      CopyWith$Input$file_obj_rel_insert_input.stub(_res);
+  CopyWith$Input$chat_obj_rel_insert_input<TRes> get chat =>
+      CopyWith$Input$chat_obj_rel_insert_input.stub(_res);
+}
+
+class Input$message_max_order_by {
+  factory Input$message_max_order_by({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? file_id,
+    Enum$order_by? message_id,
+    Enum$order_by? text,
+    Enum$order_by? updated_at,
+  }) =>
+      Input$message_max_order_by._({
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (file_id != null) r'file_id': file_id,
+        if (message_id != null) r'message_id': message_id,
+        if (text != null) r'text': text,
+        if (updated_at != null) r'updated_at': updated_at,
+      });
+
+  Input$message_max_order_by._(this._$data);
+
+  factory Input$message_max_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = l$chat_id == null
+          ? null
+          : fromJson$Enum$order_by((l$chat_id as String));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
+    if (data.containsKey('message_id')) {
+      final l$message_id = data['message_id'];
+      result$data['message_id'] = l$message_id == null
+          ? null
+          : fromJson$Enum$order_by((l$message_id as String));
+    }
+    if (data.containsKey('text')) {
+      final l$text = data['text'];
+      result$data['text'] =
+          l$text == null ? null : fromJson$Enum$order_by((l$text as String));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    return Input$message_max_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get chat_id => (_$data['chat_id'] as Enum$order_by?);
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Enum$order_by? get message_id => (_$data['message_id'] as Enum$order_by?);
+  Enum$order_by? get text => (_$data['text'] as Enum$order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] =
+          l$chat_id == null ? null : toJson$Enum$order_by(l$chat_id);
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('message_id')) {
+      final l$message_id = message_id;
+      result$data['message_id'] =
+          l$message_id == null ? null : toJson$Enum$order_by(l$message_id);
+    }
+    if (_$data.containsKey('text')) {
+      final l$text = text;
+      result$data['text'] =
+          l$text == null ? null : toJson$Enum$order_by(l$text);
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_max_order_by<Input$message_max_order_by>
+      get copyWith => CopyWith$Input$message_max_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_max_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$message_id = message_id;
+    final lOther$message_id = other.message_id;
+    if (_$data.containsKey('message_id') !=
+        other._$data.containsKey('message_id')) {
+      return false;
+    }
+    if (l$message_id != lOther$message_id) {
+      return false;
+    }
+    final l$text = text;
+    final lOther$text = other.text;
+    if (_$data.containsKey('text') != other._$data.containsKey('text')) {
+      return false;
+    }
+    if (l$text != lOther$text) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$file_id = file_id;
+    final l$message_id = message_id;
+    final l$text = text;
+    final l$updated_at = updated_at;
+    return Object.hashAll([
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('message_id') ? l$message_id : const {},
+      _$data.containsKey('text') ? l$text : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_max_order_by<TRes> {
+  factory CopyWith$Input$message_max_order_by(
+    Input$message_max_order_by instance,
+    TRes Function(Input$message_max_order_by) then,
+  ) = _CopyWithImpl$Input$message_max_order_by;
+
+  factory CopyWith$Input$message_max_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_max_order_by;
+
+  TRes call({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? file_id,
+    Enum$order_by? message_id,
+    Enum$order_by? text,
+    Enum$order_by? updated_at,
+  });
+}
+
+class _CopyWithImpl$Input$message_max_order_by<TRes>
+    implements CopyWith$Input$message_max_order_by<TRes> {
+  _CopyWithImpl$Input$message_max_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_max_order_by _instance;
+
+  final TRes Function(Input$message_max_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? file_id = _undefined,
+    Object? message_id = _undefined,
+    Object? text = _undefined,
+    Object? updated_at = _undefined,
+  }) =>
+      _then(Input$message_max_order_by._({
+        ..._instance._$data,
+        if (chat_id != _undefined) 'chat_id': (chat_id as Enum$order_by?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (message_id != _undefined)
+          'message_id': (message_id as Enum$order_by?),
+        if (text != _undefined) 'text': (text as Enum$order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$message_max_order_by<TRes>
+    implements CopyWith$Input$message_max_order_by<TRes> {
+  _CopyWithStubImpl$Input$message_max_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? file_id,
+    Enum$order_by? message_id,
+    Enum$order_by? text,
+    Enum$order_by? updated_at,
+  }) =>
+      _res;
+}
+
+class Input$message_min_order_by {
+  factory Input$message_min_order_by({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? file_id,
+    Enum$order_by? message_id,
+    Enum$order_by? text,
+    Enum$order_by? updated_at,
+  }) =>
+      Input$message_min_order_by._({
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (file_id != null) r'file_id': file_id,
+        if (message_id != null) r'message_id': message_id,
+        if (text != null) r'text': text,
+        if (updated_at != null) r'updated_at': updated_at,
+      });
+
+  Input$message_min_order_by._(this._$data);
+
+  factory Input$message_min_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = l$chat_id == null
+          ? null
+          : fromJson$Enum$order_by((l$chat_id as String));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
+    if (data.containsKey('message_id')) {
+      final l$message_id = data['message_id'];
+      result$data['message_id'] = l$message_id == null
+          ? null
+          : fromJson$Enum$order_by((l$message_id as String));
+    }
+    if (data.containsKey('text')) {
+      final l$text = data['text'];
+      result$data['text'] =
+          l$text == null ? null : fromJson$Enum$order_by((l$text as String));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    return Input$message_min_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get chat_id => (_$data['chat_id'] as Enum$order_by?);
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Enum$order_by? get message_id => (_$data['message_id'] as Enum$order_by?);
+  Enum$order_by? get text => (_$data['text'] as Enum$order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] =
+          l$chat_id == null ? null : toJson$Enum$order_by(l$chat_id);
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('message_id')) {
+      final l$message_id = message_id;
+      result$data['message_id'] =
+          l$message_id == null ? null : toJson$Enum$order_by(l$message_id);
+    }
+    if (_$data.containsKey('text')) {
+      final l$text = text;
+      result$data['text'] =
+          l$text == null ? null : toJson$Enum$order_by(l$text);
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_min_order_by<Input$message_min_order_by>
+      get copyWith => CopyWith$Input$message_min_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_min_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$message_id = message_id;
+    final lOther$message_id = other.message_id;
+    if (_$data.containsKey('message_id') !=
+        other._$data.containsKey('message_id')) {
+      return false;
+    }
+    if (l$message_id != lOther$message_id) {
+      return false;
+    }
+    final l$text = text;
+    final lOther$text = other.text;
+    if (_$data.containsKey('text') != other._$data.containsKey('text')) {
+      return false;
+    }
+    if (l$text != lOther$text) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$file_id = file_id;
+    final l$message_id = message_id;
+    final l$text = text;
+    final l$updated_at = updated_at;
+    return Object.hashAll([
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('message_id') ? l$message_id : const {},
+      _$data.containsKey('text') ? l$text : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_min_order_by<TRes> {
+  factory CopyWith$Input$message_min_order_by(
+    Input$message_min_order_by instance,
+    TRes Function(Input$message_min_order_by) then,
+  ) = _CopyWithImpl$Input$message_min_order_by;
+
+  factory CopyWith$Input$message_min_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_min_order_by;
+
+  TRes call({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? file_id,
+    Enum$order_by? message_id,
+    Enum$order_by? text,
+    Enum$order_by? updated_at,
+  });
+}
+
+class _CopyWithImpl$Input$message_min_order_by<TRes>
+    implements CopyWith$Input$message_min_order_by<TRes> {
+  _CopyWithImpl$Input$message_min_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_min_order_by _instance;
+
+  final TRes Function(Input$message_min_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? file_id = _undefined,
+    Object? message_id = _undefined,
+    Object? text = _undefined,
+    Object? updated_at = _undefined,
+  }) =>
+      _then(Input$message_min_order_by._({
+        ..._instance._$data,
+        if (chat_id != _undefined) 'chat_id': (chat_id as Enum$order_by?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (message_id != _undefined)
+          'message_id': (message_id as Enum$order_by?),
+        if (text != _undefined) 'text': (text as Enum$order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$message_min_order_by<TRes>
+    implements CopyWith$Input$message_min_order_by<TRes> {
+  _CopyWithStubImpl$Input$message_min_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? file_id,
+    Enum$order_by? message_id,
+    Enum$order_by? text,
+    Enum$order_by? updated_at,
+  }) =>
+      _res;
+}
+
+class Input$message_on_conflict {
+  factory Input$message_on_conflict({
+    required Enum$message_constraint constraint,
+    List<Enum$message_update_column>? update_columns,
+    Input$message_bool_exp? where,
+  }) =>
+      Input$message_on_conflict._({
+        r'constraint': constraint,
+        if (update_columns != null) r'update_columns': update_columns,
+        if (where != null) r'where': where,
+      });
+
+  Input$message_on_conflict._(this._$data);
+
+  factory Input$message_on_conflict.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$constraint = data['constraint'];
+    result$data['constraint'] =
+        fromJson$Enum$message_constraint((l$constraint as String));
+    if (data.containsKey('update_columns')) {
+      final l$update_columns = data['update_columns'];
+      result$data['update_columns'] = (l$update_columns as List<dynamic>)
+          .map((e) => fromJson$Enum$message_update_column((e as String)))
+          .toList();
+    }
+    if (data.containsKey('where')) {
+      final l$where = data['where'];
+      result$data['where'] = l$where == null
+          ? null
+          : Input$message_bool_exp.fromJson((l$where as Map<String, dynamic>));
+    }
+    return Input$message_on_conflict._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$message_constraint get constraint =>
+      (_$data['constraint'] as Enum$message_constraint);
+  List<Enum$message_update_column>? get update_columns =>
+      (_$data['update_columns'] as List<Enum$message_update_column>?);
+  Input$message_bool_exp? get where =>
+      (_$data['where'] as Input$message_bool_exp?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$constraint = constraint;
+    result$data['constraint'] = toJson$Enum$message_constraint(l$constraint);
+    if (_$data.containsKey('update_columns')) {
+      final l$update_columns = update_columns;
+      result$data['update_columns'] =
+          (l$update_columns as List<Enum$message_update_column>)
+              .map((e) => toJson$Enum$message_update_column(e))
+              .toList();
+    }
+    if (_$data.containsKey('where')) {
+      final l$where = where;
+      result$data['where'] = l$where?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_on_conflict<Input$message_on_conflict> get copyWith =>
+      CopyWith$Input$message_on_conflict(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_on_conflict) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$constraint = constraint;
+    final lOther$constraint = other.constraint;
+    if (l$constraint != lOther$constraint) {
+      return false;
+    }
+    final l$update_columns = update_columns;
+    final lOther$update_columns = other.update_columns;
+    if (_$data.containsKey('update_columns') !=
+        other._$data.containsKey('update_columns')) {
+      return false;
+    }
+    if (l$update_columns != null && lOther$update_columns != null) {
+      if (l$update_columns.length != lOther$update_columns.length) {
+        return false;
+      }
+      for (int i = 0; i < l$update_columns.length; i++) {
+        final l$update_columns$entry = l$update_columns[i];
+        final lOther$update_columns$entry = lOther$update_columns[i];
+        if (l$update_columns$entry != lOther$update_columns$entry) {
+          return false;
+        }
+      }
+    } else if (l$update_columns != lOther$update_columns) {
+      return false;
+    }
+    final l$where = where;
+    final lOther$where = other.where;
+    if (_$data.containsKey('where') != other._$data.containsKey('where')) {
+      return false;
+    }
+    if (l$where != lOther$where) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$constraint = constraint;
+    final l$update_columns = update_columns;
+    final l$where = where;
+    return Object.hashAll([
+      l$constraint,
+      _$data.containsKey('update_columns')
+          ? l$update_columns == null
+              ? null
+              : Object.hashAll(l$update_columns.map((v) => v))
+          : const {},
+      _$data.containsKey('where') ? l$where : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_on_conflict<TRes> {
+  factory CopyWith$Input$message_on_conflict(
+    Input$message_on_conflict instance,
+    TRes Function(Input$message_on_conflict) then,
+  ) = _CopyWithImpl$Input$message_on_conflict;
+
+  factory CopyWith$Input$message_on_conflict.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_on_conflict;
+
+  TRes call({
+    Enum$message_constraint? constraint,
+    List<Enum$message_update_column>? update_columns,
+    Input$message_bool_exp? where,
+  });
+  CopyWith$Input$message_bool_exp<TRes> get where;
+}
+
+class _CopyWithImpl$Input$message_on_conflict<TRes>
+    implements CopyWith$Input$message_on_conflict<TRes> {
+  _CopyWithImpl$Input$message_on_conflict(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_on_conflict _instance;
+
+  final TRes Function(Input$message_on_conflict) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? constraint = _undefined,
+    Object? update_columns = _undefined,
+    Object? where = _undefined,
+  }) =>
+      _then(Input$message_on_conflict._({
+        ..._instance._$data,
+        if (constraint != _undefined && constraint != null)
+          'constraint': (constraint as Enum$message_constraint),
+        if (update_columns != _undefined && update_columns != null)
+          'update_columns':
+              (update_columns as List<Enum$message_update_column>),
+        if (where != _undefined) 'where': (where as Input$message_bool_exp?),
+      }));
+  CopyWith$Input$message_bool_exp<TRes> get where {
+    final local$where = _instance.where;
+    return local$where == null
+        ? CopyWith$Input$message_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$message_bool_exp(local$where, (e) => call(where: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_on_conflict<TRes>
+    implements CopyWith$Input$message_on_conflict<TRes> {
+  _CopyWithStubImpl$Input$message_on_conflict(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$message_constraint? constraint,
+    List<Enum$message_update_column>? update_columns,
+    Input$message_bool_exp? where,
+  }) =>
+      _res;
+  CopyWith$Input$message_bool_exp<TRes> get where =>
+      CopyWith$Input$message_bool_exp.stub(_res);
+}
+
+class Input$message_order_by {
+  factory Input$message_order_by({
+    Input$ENUM_ROLE_order_by? ENUM_ROLE,
+    Input$file_order_by? attachment,
+    Input$chat_order_by? chat,
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? file_id,
+    Enum$order_by? indexed,
+    Enum$order_by? message_id,
+    Enum$order_by? sender,
+    Enum$order_by? text,
+    Enum$order_by? updated_at,
+  }) =>
+      Input$message_order_by._({
+        if (ENUM_ROLE != null) r'ENUM_ROLE': ENUM_ROLE,
+        if (attachment != null) r'attachment': attachment,
+        if (chat != null) r'chat': chat,
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (file_id != null) r'file_id': file_id,
+        if (indexed != null) r'indexed': indexed,
+        if (message_id != null) r'message_id': message_id,
+        if (sender != null) r'sender': sender,
+        if (text != null) r'text': text,
+        if (updated_at != null) r'updated_at': updated_at,
+      });
+
+  Input$message_order_by._(this._$data);
+
+  factory Input$message_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('ENUM_ROLE')) {
+      final l$ENUM_ROLE = data['ENUM_ROLE'];
+      result$data['ENUM_ROLE'] = l$ENUM_ROLE == null
+          ? null
+          : Input$ENUM_ROLE_order_by.fromJson(
+              (l$ENUM_ROLE as Map<String, dynamic>));
+    }
+    if (data.containsKey('attachment')) {
+      final l$attachment = data['attachment'];
+      result$data['attachment'] = l$attachment == null
+          ? null
+          : Input$file_order_by.fromJson(
+              (l$attachment as Map<String, dynamic>));
+    }
+    if (data.containsKey('chat')) {
+      final l$chat = data['chat'];
+      result$data['chat'] = l$chat == null
+          ? null
+          : Input$chat_order_by.fromJson((l$chat as Map<String, dynamic>));
+    }
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = l$chat_id == null
+          ? null
+          : fromJson$Enum$order_by((l$chat_id as String));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
+    if (data.containsKey('indexed')) {
+      final l$indexed = data['indexed'];
+      result$data['indexed'] = l$indexed == null
+          ? null
+          : fromJson$Enum$order_by((l$indexed as String));
+    }
+    if (data.containsKey('message_id')) {
+      final l$message_id = data['message_id'];
+      result$data['message_id'] = l$message_id == null
+          ? null
+          : fromJson$Enum$order_by((l$message_id as String));
+    }
+    if (data.containsKey('sender')) {
+      final l$sender = data['sender'];
+      result$data['sender'] = l$sender == null
+          ? null
+          : fromJson$Enum$order_by((l$sender as String));
+    }
+    if (data.containsKey('text')) {
+      final l$text = data['text'];
+      result$data['text'] =
+          l$text == null ? null : fromJson$Enum$order_by((l$text as String));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    return Input$message_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$ENUM_ROLE_order_by? get ENUM_ROLE =>
+      (_$data['ENUM_ROLE'] as Input$ENUM_ROLE_order_by?);
+  Input$file_order_by? get attachment =>
+      (_$data['attachment'] as Input$file_order_by?);
+  Input$chat_order_by? get chat => (_$data['chat'] as Input$chat_order_by?);
+  Enum$order_by? get chat_id => (_$data['chat_id'] as Enum$order_by?);
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Enum$order_by? get indexed => (_$data['indexed'] as Enum$order_by?);
+  Enum$order_by? get message_id => (_$data['message_id'] as Enum$order_by?);
+  Enum$order_by? get sender => (_$data['sender'] as Enum$order_by?);
+  Enum$order_by? get text => (_$data['text'] as Enum$order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('ENUM_ROLE')) {
+      final l$ENUM_ROLE = ENUM_ROLE;
+      result$data['ENUM_ROLE'] = l$ENUM_ROLE?.toJson();
+    }
+    if (_$data.containsKey('attachment')) {
+      final l$attachment = attachment;
+      result$data['attachment'] = l$attachment?.toJson();
+    }
+    if (_$data.containsKey('chat')) {
+      final l$chat = chat;
+      result$data['chat'] = l$chat?.toJson();
+    }
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] =
+          l$chat_id == null ? null : toJson$Enum$order_by(l$chat_id);
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('indexed')) {
+      final l$indexed = indexed;
+      result$data['indexed'] =
+          l$indexed == null ? null : toJson$Enum$order_by(l$indexed);
+    }
+    if (_$data.containsKey('message_id')) {
+      final l$message_id = message_id;
+      result$data['message_id'] =
+          l$message_id == null ? null : toJson$Enum$order_by(l$message_id);
+    }
+    if (_$data.containsKey('sender')) {
+      final l$sender = sender;
+      result$data['sender'] =
+          l$sender == null ? null : toJson$Enum$order_by(l$sender);
+    }
+    if (_$data.containsKey('text')) {
+      final l$text = text;
+      result$data['text'] =
+          l$text == null ? null : toJson$Enum$order_by(l$text);
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_order_by<Input$message_order_by> get copyWith =>
+      CopyWith$Input$message_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$ENUM_ROLE = ENUM_ROLE;
+    final lOther$ENUM_ROLE = other.ENUM_ROLE;
+    if (_$data.containsKey('ENUM_ROLE') !=
+        other._$data.containsKey('ENUM_ROLE')) {
+      return false;
+    }
+    if (l$ENUM_ROLE != lOther$ENUM_ROLE) {
+      return false;
+    }
+    final l$attachment = attachment;
+    final lOther$attachment = other.attachment;
+    if (_$data.containsKey('attachment') !=
+        other._$data.containsKey('attachment')) {
+      return false;
+    }
+    if (l$attachment != lOther$attachment) {
+      return false;
+    }
+    final l$chat = chat;
+    final lOther$chat = other.chat;
+    if (_$data.containsKey('chat') != other._$data.containsKey('chat')) {
+      return false;
+    }
+    if (l$chat != lOther$chat) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$indexed = indexed;
+    final lOther$indexed = other.indexed;
+    if (_$data.containsKey('indexed') != other._$data.containsKey('indexed')) {
+      return false;
+    }
+    if (l$indexed != lOther$indexed) {
+      return false;
+    }
+    final l$message_id = message_id;
+    final lOther$message_id = other.message_id;
+    if (_$data.containsKey('message_id') !=
+        other._$data.containsKey('message_id')) {
+      return false;
+    }
+    if (l$message_id != lOther$message_id) {
+      return false;
+    }
+    final l$sender = sender;
+    final lOther$sender = other.sender;
+    if (_$data.containsKey('sender') != other._$data.containsKey('sender')) {
+      return false;
+    }
+    if (l$sender != lOther$sender) {
+      return false;
+    }
+    final l$text = text;
+    final lOther$text = other.text;
+    if (_$data.containsKey('text') != other._$data.containsKey('text')) {
+      return false;
+    }
+    if (l$text != lOther$text) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$ENUM_ROLE = ENUM_ROLE;
+    final l$attachment = attachment;
+    final l$chat = chat;
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$file_id = file_id;
+    final l$indexed = indexed;
+    final l$message_id = message_id;
+    final l$sender = sender;
+    final l$text = text;
+    final l$updated_at = updated_at;
+    return Object.hashAll([
+      _$data.containsKey('ENUM_ROLE') ? l$ENUM_ROLE : const {},
+      _$data.containsKey('attachment') ? l$attachment : const {},
+      _$data.containsKey('chat') ? l$chat : const {},
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('indexed') ? l$indexed : const {},
+      _$data.containsKey('message_id') ? l$message_id : const {},
+      _$data.containsKey('sender') ? l$sender : const {},
+      _$data.containsKey('text') ? l$text : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_order_by<TRes> {
+  factory CopyWith$Input$message_order_by(
+    Input$message_order_by instance,
+    TRes Function(Input$message_order_by) then,
+  ) = _CopyWithImpl$Input$message_order_by;
+
+  factory CopyWith$Input$message_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_order_by;
+
+  TRes call({
+    Input$ENUM_ROLE_order_by? ENUM_ROLE,
+    Input$file_order_by? attachment,
+    Input$chat_order_by? chat,
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? file_id,
+    Enum$order_by? indexed,
+    Enum$order_by? message_id,
+    Enum$order_by? sender,
+    Enum$order_by? text,
+    Enum$order_by? updated_at,
+  });
+  CopyWith$Input$ENUM_ROLE_order_by<TRes> get ENUM_ROLE;
+  CopyWith$Input$file_order_by<TRes> get attachment;
+  CopyWith$Input$chat_order_by<TRes> get chat;
+}
+
+class _CopyWithImpl$Input$message_order_by<TRes>
+    implements CopyWith$Input$message_order_by<TRes> {
+  _CopyWithImpl$Input$message_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_order_by _instance;
+
+  final TRes Function(Input$message_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? ENUM_ROLE = _undefined,
+    Object? attachment = _undefined,
+    Object? chat = _undefined,
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? file_id = _undefined,
+    Object? indexed = _undefined,
+    Object? message_id = _undefined,
+    Object? sender = _undefined,
+    Object? text = _undefined,
+    Object? updated_at = _undefined,
+  }) =>
+      _then(Input$message_order_by._({
+        ..._instance._$data,
+        if (ENUM_ROLE != _undefined)
+          'ENUM_ROLE': (ENUM_ROLE as Input$ENUM_ROLE_order_by?),
+        if (attachment != _undefined)
+          'attachment': (attachment as Input$file_order_by?),
+        if (chat != _undefined) 'chat': (chat as Input$chat_order_by?),
+        if (chat_id != _undefined) 'chat_id': (chat_id as Enum$order_by?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (indexed != _undefined) 'indexed': (indexed as Enum$order_by?),
+        if (message_id != _undefined)
+          'message_id': (message_id as Enum$order_by?),
+        if (sender != _undefined) 'sender': (sender as Enum$order_by?),
+        if (text != _undefined) 'text': (text as Enum$order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+      }));
+  CopyWith$Input$ENUM_ROLE_order_by<TRes> get ENUM_ROLE {
+    final local$ENUM_ROLE = _instance.ENUM_ROLE;
+    return local$ENUM_ROLE == null
+        ? CopyWith$Input$ENUM_ROLE_order_by.stub(_then(_instance))
+        : CopyWith$Input$ENUM_ROLE_order_by(
+            local$ENUM_ROLE, (e) => call(ENUM_ROLE: e));
+  }
+
+  CopyWith$Input$file_order_by<TRes> get attachment {
+    final local$attachment = _instance.attachment;
+    return local$attachment == null
+        ? CopyWith$Input$file_order_by.stub(_then(_instance))
+        : CopyWith$Input$file_order_by(
+            local$attachment, (e) => call(attachment: e));
+  }
+
+  CopyWith$Input$chat_order_by<TRes> get chat {
+    final local$chat = _instance.chat;
+    return local$chat == null
+        ? CopyWith$Input$chat_order_by.stub(_then(_instance))
+        : CopyWith$Input$chat_order_by(local$chat, (e) => call(chat: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_order_by<TRes>
+    implements CopyWith$Input$message_order_by<TRes> {
+  _CopyWithStubImpl$Input$message_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Input$ENUM_ROLE_order_by? ENUM_ROLE,
+    Input$file_order_by? attachment,
+    Input$chat_order_by? chat,
+    Enum$order_by? chat_id,
+    Enum$order_by? created_at,
+    Enum$order_by? file_id,
+    Enum$order_by? indexed,
+    Enum$order_by? message_id,
+    Enum$order_by? sender,
+    Enum$order_by? text,
+    Enum$order_by? updated_at,
+  }) =>
+      _res;
+  CopyWith$Input$ENUM_ROLE_order_by<TRes> get ENUM_ROLE =>
+      CopyWith$Input$ENUM_ROLE_order_by.stub(_res);
+  CopyWith$Input$file_order_by<TRes> get attachment =>
+      CopyWith$Input$file_order_by.stub(_res);
+  CopyWith$Input$chat_order_by<TRes> get chat =>
+      CopyWith$Input$chat_order_by.stub(_res);
+}
+
+class Input$message_pk_columns_input {
+  factory Input$message_pk_columns_input({required String message_id}) =>
+      Input$message_pk_columns_input._({
+        r'message_id': message_id,
+      });
+
+  Input$message_pk_columns_input._(this._$data);
+
+  factory Input$message_pk_columns_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$message_id = data['message_id'];
+    result$data['message_id'] = (l$message_id as String);
+    return Input$message_pk_columns_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get message_id => (_$data['message_id'] as String);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$message_id = message_id;
+    result$data['message_id'] = l$message_id;
+    return result$data;
+  }
+
+  CopyWith$Input$message_pk_columns_input<Input$message_pk_columns_input>
+      get copyWith => CopyWith$Input$message_pk_columns_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_pk_columns_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$message_id = message_id;
+    final lOther$message_id = other.message_id;
+    if (l$message_id != lOther$message_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$message_id = message_id;
+    return Object.hashAll([l$message_id]);
+  }
+}
+
+abstract class CopyWith$Input$message_pk_columns_input<TRes> {
+  factory CopyWith$Input$message_pk_columns_input(
+    Input$message_pk_columns_input instance,
+    TRes Function(Input$message_pk_columns_input) then,
+  ) = _CopyWithImpl$Input$message_pk_columns_input;
+
+  factory CopyWith$Input$message_pk_columns_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_pk_columns_input;
+
+  TRes call({String? message_id});
+}
+
+class _CopyWithImpl$Input$message_pk_columns_input<TRes>
+    implements CopyWith$Input$message_pk_columns_input<TRes> {
+  _CopyWithImpl$Input$message_pk_columns_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_pk_columns_input _instance;
+
+  final TRes Function(Input$message_pk_columns_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? message_id = _undefined}) =>
+      _then(Input$message_pk_columns_input._({
+        ..._instance._$data,
+        if (message_id != _undefined && message_id != null)
+          'message_id': (message_id as String),
+      }));
+}
+
+class _CopyWithStubImpl$Input$message_pk_columns_input<TRes>
+    implements CopyWith$Input$message_pk_columns_input<TRes> {
+  _CopyWithStubImpl$Input$message_pk_columns_input(this._res);
+
+  TRes _res;
+
+  call({String? message_id}) => _res;
+}
+
+class Input$message_set_input {
+  factory Input$message_set_input({
+    String? chat_id,
+    String? created_at,
+    String? file_id,
+    bool? indexed,
+    String? message_id,
+    Enum$ENUM_ROLE_enum? sender,
+    String? text,
+    String? updated_at,
+  }) =>
+      Input$message_set_input._({
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (file_id != null) r'file_id': file_id,
+        if (indexed != null) r'indexed': indexed,
+        if (message_id != null) r'message_id': message_id,
+        if (sender != null) r'sender': sender,
+        if (text != null) r'text': text,
+        if (updated_at != null) r'updated_at': updated_at,
+      });
+
+  Input$message_set_input._(this._$data);
+
+  factory Input$message_set_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = (l$chat_id as String?);
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = (l$created_at as String?);
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = (l$file_id as String?);
+    }
+    if (data.containsKey('indexed')) {
+      final l$indexed = data['indexed'];
+      result$data['indexed'] = (l$indexed as bool?);
+    }
+    if (data.containsKey('message_id')) {
+      final l$message_id = data['message_id'];
+      result$data['message_id'] = (l$message_id as String?);
+    }
+    if (data.containsKey('sender')) {
+      final l$sender = data['sender'];
+      result$data['sender'] = l$sender == null
+          ? null
+          : fromJson$Enum$ENUM_ROLE_enum((l$sender as String));
+    }
+    if (data.containsKey('text')) {
+      final l$text = data['text'];
+      result$data['text'] = (l$text as String?);
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = (l$updated_at as String?);
+    }
+    return Input$message_set_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String? get chat_id => (_$data['chat_id'] as String?);
+  String? get created_at => (_$data['created_at'] as String?);
+  String? get file_id => (_$data['file_id'] as String?);
+  bool? get indexed => (_$data['indexed'] as bool?);
+  String? get message_id => (_$data['message_id'] as String?);
+  Enum$ENUM_ROLE_enum? get sender => (_$data['sender'] as Enum$ENUM_ROLE_enum?);
+  String? get text => (_$data['text'] as String?);
+  String? get updated_at => (_$data['updated_at'] as String?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] = l$chat_id;
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at;
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id;
+    }
+    if (_$data.containsKey('indexed')) {
+      final l$indexed = indexed;
+      result$data['indexed'] = l$indexed;
+    }
+    if (_$data.containsKey('message_id')) {
+      final l$message_id = message_id;
+      result$data['message_id'] = l$message_id;
+    }
+    if (_$data.containsKey('sender')) {
+      final l$sender = sender;
+      result$data['sender'] =
+          l$sender == null ? null : toJson$Enum$ENUM_ROLE_enum(l$sender);
+    }
+    if (_$data.containsKey('text')) {
+      final l$text = text;
+      result$data['text'] = l$text;
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at;
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_set_input<Input$message_set_input> get copyWith =>
+      CopyWith$Input$message_set_input(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_set_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$indexed = indexed;
+    final lOther$indexed = other.indexed;
+    if (_$data.containsKey('indexed') != other._$data.containsKey('indexed')) {
+      return false;
+    }
+    if (l$indexed != lOther$indexed) {
+      return false;
+    }
+    final l$message_id = message_id;
+    final lOther$message_id = other.message_id;
+    if (_$data.containsKey('message_id') !=
+        other._$data.containsKey('message_id')) {
+      return false;
+    }
+    if (l$message_id != lOther$message_id) {
+      return false;
+    }
+    final l$sender = sender;
+    final lOther$sender = other.sender;
+    if (_$data.containsKey('sender') != other._$data.containsKey('sender')) {
+      return false;
+    }
+    if (l$sender != lOther$sender) {
+      return false;
+    }
+    final l$text = text;
+    final lOther$text = other.text;
+    if (_$data.containsKey('text') != other._$data.containsKey('text')) {
+      return false;
+    }
+    if (l$text != lOther$text) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$file_id = file_id;
+    final l$indexed = indexed;
+    final l$message_id = message_id;
+    final l$sender = sender;
+    final l$text = text;
+    final l$updated_at = updated_at;
+    return Object.hashAll([
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('indexed') ? l$indexed : const {},
+      _$data.containsKey('message_id') ? l$message_id : const {},
+      _$data.containsKey('sender') ? l$sender : const {},
+      _$data.containsKey('text') ? l$text : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_set_input<TRes> {
+  factory CopyWith$Input$message_set_input(
+    Input$message_set_input instance,
+    TRes Function(Input$message_set_input) then,
+  ) = _CopyWithImpl$Input$message_set_input;
+
+  factory CopyWith$Input$message_set_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_set_input;
+
+  TRes call({
+    String? chat_id,
+    String? created_at,
+    String? file_id,
+    bool? indexed,
+    String? message_id,
+    Enum$ENUM_ROLE_enum? sender,
+    String? text,
+    String? updated_at,
+  });
+}
+
+class _CopyWithImpl$Input$message_set_input<TRes>
+    implements CopyWith$Input$message_set_input<TRes> {
+  _CopyWithImpl$Input$message_set_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_set_input _instance;
+
+  final TRes Function(Input$message_set_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? file_id = _undefined,
+    Object? indexed = _undefined,
+    Object? message_id = _undefined,
+    Object? sender = _undefined,
+    Object? text = _undefined,
+    Object? updated_at = _undefined,
+  }) =>
+      _then(Input$message_set_input._({
+        ..._instance._$data,
+        if (chat_id != _undefined) 'chat_id': (chat_id as String?),
+        if (created_at != _undefined) 'created_at': (created_at as String?),
+        if (file_id != _undefined) 'file_id': (file_id as String?),
+        if (indexed != _undefined) 'indexed': (indexed as bool?),
+        if (message_id != _undefined) 'message_id': (message_id as String?),
+        if (sender != _undefined) 'sender': (sender as Enum$ENUM_ROLE_enum?),
+        if (text != _undefined) 'text': (text as String?),
+        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$message_set_input<TRes>
+    implements CopyWith$Input$message_set_input<TRes> {
+  _CopyWithStubImpl$Input$message_set_input(this._res);
+
+  TRes _res;
+
+  call({
+    String? chat_id,
+    String? created_at,
+    String? file_id,
+    bool? indexed,
+    String? message_id,
+    Enum$ENUM_ROLE_enum? sender,
+    String? text,
+    String? updated_at,
+  }) =>
+      _res;
+}
+
+class Input$message_stream_cursor_input {
+  factory Input$message_stream_cursor_input({
+    required Input$message_stream_cursor_value_input initial_value,
+    Enum$cursor_ordering? ordering,
+  }) =>
+      Input$message_stream_cursor_input._({
+        r'initial_value': initial_value,
+        if (ordering != null) r'ordering': ordering,
+      });
+
+  Input$message_stream_cursor_input._(this._$data);
+
+  factory Input$message_stream_cursor_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$initial_value = data['initial_value'];
+    result$data['initial_value'] =
+        Input$message_stream_cursor_value_input.fromJson(
+            (l$initial_value as Map<String, dynamic>));
+    if (data.containsKey('ordering')) {
+      final l$ordering = data['ordering'];
+      result$data['ordering'] = l$ordering == null
+          ? null
+          : fromJson$Enum$cursor_ordering((l$ordering as String));
+    }
+    return Input$message_stream_cursor_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$message_stream_cursor_value_input get initial_value =>
+      (_$data['initial_value'] as Input$message_stream_cursor_value_input);
+  Enum$cursor_ordering? get ordering =>
+      (_$data['ordering'] as Enum$cursor_ordering?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$initial_value = initial_value;
+    result$data['initial_value'] = l$initial_value.toJson();
+    if (_$data.containsKey('ordering')) {
+      final l$ordering = ordering;
+      result$data['ordering'] =
+          l$ordering == null ? null : toJson$Enum$cursor_ordering(l$ordering);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_stream_cursor_input<Input$message_stream_cursor_input>
+      get copyWith => CopyWith$Input$message_stream_cursor_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_stream_cursor_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$initial_value = initial_value;
+    final lOther$initial_value = other.initial_value;
+    if (l$initial_value != lOther$initial_value) {
+      return false;
+    }
+    final l$ordering = ordering;
+    final lOther$ordering = other.ordering;
+    if (_$data.containsKey('ordering') !=
+        other._$data.containsKey('ordering')) {
+      return false;
+    }
+    if (l$ordering != lOther$ordering) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$initial_value = initial_value;
+    final l$ordering = ordering;
+    return Object.hashAll([
+      l$initial_value,
+      _$data.containsKey('ordering') ? l$ordering : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_stream_cursor_input<TRes> {
+  factory CopyWith$Input$message_stream_cursor_input(
+    Input$message_stream_cursor_input instance,
+    TRes Function(Input$message_stream_cursor_input) then,
+  ) = _CopyWithImpl$Input$message_stream_cursor_input;
+
+  factory CopyWith$Input$message_stream_cursor_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_stream_cursor_input;
+
+  TRes call({
+    Input$message_stream_cursor_value_input? initial_value,
+    Enum$cursor_ordering? ordering,
+  });
+  CopyWith$Input$message_stream_cursor_value_input<TRes> get initial_value;
+}
+
+class _CopyWithImpl$Input$message_stream_cursor_input<TRes>
+    implements CopyWith$Input$message_stream_cursor_input<TRes> {
+  _CopyWithImpl$Input$message_stream_cursor_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_stream_cursor_input _instance;
+
+  final TRes Function(Input$message_stream_cursor_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? initial_value = _undefined,
+    Object? ordering = _undefined,
+  }) =>
+      _then(Input$message_stream_cursor_input._({
+        ..._instance._$data,
+        if (initial_value != _undefined && initial_value != null)
+          'initial_value':
+              (initial_value as Input$message_stream_cursor_value_input),
+        if (ordering != _undefined)
+          'ordering': (ordering as Enum$cursor_ordering?),
+      }));
+  CopyWith$Input$message_stream_cursor_value_input<TRes> get initial_value {
+    final local$initial_value = _instance.initial_value;
+    return CopyWith$Input$message_stream_cursor_value_input(
+        local$initial_value, (e) => call(initial_value: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_stream_cursor_input<TRes>
+    implements CopyWith$Input$message_stream_cursor_input<TRes> {
+  _CopyWithStubImpl$Input$message_stream_cursor_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$message_stream_cursor_value_input? initial_value,
+    Enum$cursor_ordering? ordering,
+  }) =>
+      _res;
+  CopyWith$Input$message_stream_cursor_value_input<TRes> get initial_value =>
+      CopyWith$Input$message_stream_cursor_value_input.stub(_res);
+}
+
+class Input$message_stream_cursor_value_input {
+  factory Input$message_stream_cursor_value_input({
+    String? chat_id,
+    String? created_at,
+    String? file_id,
+    bool? indexed,
+    String? message_id,
+    Enum$ENUM_ROLE_enum? sender,
+    String? text,
+    String? updated_at,
+  }) =>
+      Input$message_stream_cursor_value_input._({
+        if (chat_id != null) r'chat_id': chat_id,
+        if (created_at != null) r'created_at': created_at,
+        if (file_id != null) r'file_id': file_id,
+        if (indexed != null) r'indexed': indexed,
+        if (message_id != null) r'message_id': message_id,
+        if (sender != null) r'sender': sender,
+        if (text != null) r'text': text,
+        if (updated_at != null) r'updated_at': updated_at,
+      });
+
+  Input$message_stream_cursor_value_input._(this._$data);
+
+  factory Input$message_stream_cursor_value_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chat_id')) {
+      final l$chat_id = data['chat_id'];
+      result$data['chat_id'] = (l$chat_id as String?);
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = (l$created_at as String?);
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = (l$file_id as String?);
+    }
+    if (data.containsKey('indexed')) {
+      final l$indexed = data['indexed'];
+      result$data['indexed'] = (l$indexed as bool?);
+    }
+    if (data.containsKey('message_id')) {
+      final l$message_id = data['message_id'];
+      result$data['message_id'] = (l$message_id as String?);
+    }
+    if (data.containsKey('sender')) {
+      final l$sender = data['sender'];
+      result$data['sender'] = l$sender == null
+          ? null
+          : fromJson$Enum$ENUM_ROLE_enum((l$sender as String));
+    }
+    if (data.containsKey('text')) {
+      final l$text = data['text'];
+      result$data['text'] = (l$text as String?);
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = (l$updated_at as String?);
+    }
+    return Input$message_stream_cursor_value_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String? get chat_id => (_$data['chat_id'] as String?);
+  String? get created_at => (_$data['created_at'] as String?);
+  String? get file_id => (_$data['file_id'] as String?);
+  bool? get indexed => (_$data['indexed'] as bool?);
+  String? get message_id => (_$data['message_id'] as String?);
+  Enum$ENUM_ROLE_enum? get sender => (_$data['sender'] as Enum$ENUM_ROLE_enum?);
+  String? get text => (_$data['text'] as String?);
+  String? get updated_at => (_$data['updated_at'] as String?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chat_id')) {
+      final l$chat_id = chat_id;
+      result$data['chat_id'] = l$chat_id;
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at;
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id;
+    }
+    if (_$data.containsKey('indexed')) {
+      final l$indexed = indexed;
+      result$data['indexed'] = l$indexed;
+    }
+    if (_$data.containsKey('message_id')) {
+      final l$message_id = message_id;
+      result$data['message_id'] = l$message_id;
+    }
+    if (_$data.containsKey('sender')) {
+      final l$sender = sender;
+      result$data['sender'] =
+          l$sender == null ? null : toJson$Enum$ENUM_ROLE_enum(l$sender);
+    }
+    if (_$data.containsKey('text')) {
+      final l$text = text;
+      result$data['text'] = l$text;
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at;
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$message_stream_cursor_value_input<
+          Input$message_stream_cursor_value_input>
+      get copyWith => CopyWith$Input$message_stream_cursor_value_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_stream_cursor_value_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chat_id = chat_id;
+    final lOther$chat_id = other.chat_id;
+    if (_$data.containsKey('chat_id') != other._$data.containsKey('chat_id')) {
+      return false;
+    }
+    if (l$chat_id != lOther$chat_id) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$indexed = indexed;
+    final lOther$indexed = other.indexed;
+    if (_$data.containsKey('indexed') != other._$data.containsKey('indexed')) {
+      return false;
+    }
+    if (l$indexed != lOther$indexed) {
+      return false;
+    }
+    final l$message_id = message_id;
+    final lOther$message_id = other.message_id;
+    if (_$data.containsKey('message_id') !=
+        other._$data.containsKey('message_id')) {
+      return false;
+    }
+    if (l$message_id != lOther$message_id) {
+      return false;
+    }
+    final l$sender = sender;
+    final lOther$sender = other.sender;
+    if (_$data.containsKey('sender') != other._$data.containsKey('sender')) {
+      return false;
+    }
+    if (l$sender != lOther$sender) {
+      return false;
+    }
+    final l$text = text;
+    final lOther$text = other.text;
+    if (_$data.containsKey('text') != other._$data.containsKey('text')) {
+      return false;
+    }
+    if (l$text != lOther$text) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chat_id = chat_id;
+    final l$created_at = created_at;
+    final l$file_id = file_id;
+    final l$indexed = indexed;
+    final l$message_id = message_id;
+    final l$sender = sender;
+    final l$text = text;
+    final l$updated_at = updated_at;
+    return Object.hashAll([
+      _$data.containsKey('chat_id') ? l$chat_id : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('indexed') ? l$indexed : const {},
+      _$data.containsKey('message_id') ? l$message_id : const {},
+      _$data.containsKey('sender') ? l$sender : const {},
+      _$data.containsKey('text') ? l$text : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_stream_cursor_value_input<TRes> {
+  factory CopyWith$Input$message_stream_cursor_value_input(
+    Input$message_stream_cursor_value_input instance,
+    TRes Function(Input$message_stream_cursor_value_input) then,
+  ) = _CopyWithImpl$Input$message_stream_cursor_value_input;
+
+  factory CopyWith$Input$message_stream_cursor_value_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_stream_cursor_value_input;
+
+  TRes call({
+    String? chat_id,
+    String? created_at,
+    String? file_id,
+    bool? indexed,
+    String? message_id,
+    Enum$ENUM_ROLE_enum? sender,
+    String? text,
+    String? updated_at,
+  });
+}
+
+class _CopyWithImpl$Input$message_stream_cursor_value_input<TRes>
+    implements CopyWith$Input$message_stream_cursor_value_input<TRes> {
+  _CopyWithImpl$Input$message_stream_cursor_value_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_stream_cursor_value_input _instance;
+
+  final TRes Function(Input$message_stream_cursor_value_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chat_id = _undefined,
+    Object? created_at = _undefined,
+    Object? file_id = _undefined,
+    Object? indexed = _undefined,
+    Object? message_id = _undefined,
+    Object? sender = _undefined,
+    Object? text = _undefined,
+    Object? updated_at = _undefined,
+  }) =>
+      _then(Input$message_stream_cursor_value_input._({
+        ..._instance._$data,
+        if (chat_id != _undefined) 'chat_id': (chat_id as String?),
+        if (created_at != _undefined) 'created_at': (created_at as String?),
+        if (file_id != _undefined) 'file_id': (file_id as String?),
+        if (indexed != _undefined) 'indexed': (indexed as bool?),
+        if (message_id != _undefined) 'message_id': (message_id as String?),
+        if (sender != _undefined) 'sender': (sender as Enum$ENUM_ROLE_enum?),
+        if (text != _undefined) 'text': (text as String?),
+        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$message_stream_cursor_value_input<TRes>
+    implements CopyWith$Input$message_stream_cursor_value_input<TRes> {
+  _CopyWithStubImpl$Input$message_stream_cursor_value_input(this._res);
+
+  TRes _res;
+
+  call({
+    String? chat_id,
+    String? created_at,
+    String? file_id,
+    bool? indexed,
+    String? message_id,
+    Enum$ENUM_ROLE_enum? sender,
+    String? text,
+    String? updated_at,
+  }) =>
+      _res;
+}
+
+class Input$message_updates {
+  factory Input$message_updates({
+    Input$message_set_input? $_set,
+    required Input$message_bool_exp where,
+  }) =>
+      Input$message_updates._({
+        if ($_set != null) r'_set': $_set,
+        r'where': where,
+      });
+
+  Input$message_updates._(this._$data);
+
+  factory Input$message_updates.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('_set')) {
+      final l$$_set = data['_set'];
+      result$data['_set'] = l$$_set == null
+          ? null
+          : Input$message_set_input.fromJson((l$$_set as Map<String, dynamic>));
+    }
+    final l$where = data['where'];
+    result$data['where'] =
+        Input$message_bool_exp.fromJson((l$where as Map<String, dynamic>));
+    return Input$message_updates._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$message_set_input? get $_set =>
+      (_$data['_set'] as Input$message_set_input?);
+  Input$message_bool_exp get where =>
+      (_$data['where'] as Input$message_bool_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('_set')) {
+      final l$$_set = $_set;
+      result$data['_set'] = l$$_set?.toJson();
+    }
+    final l$where = where;
+    result$data['where'] = l$where.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$message_updates<Input$message_updates> get copyWith =>
+      CopyWith$Input$message_updates(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$message_updates) || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$_set = $_set;
+    final lOther$$_set = other.$_set;
+    if (_$data.containsKey('_set') != other._$data.containsKey('_set')) {
+      return false;
+    }
+    if (l$$_set != lOther$$_set) {
+      return false;
+    }
+    final l$where = where;
+    final lOther$where = other.where;
+    if (l$where != lOther$where) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$$_set = $_set;
+    final l$where = where;
+    return Object.hashAll([
+      _$data.containsKey('_set') ? l$$_set : const {},
+      l$where,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$message_updates<TRes> {
+  factory CopyWith$Input$message_updates(
+    Input$message_updates instance,
+    TRes Function(Input$message_updates) then,
+  ) = _CopyWithImpl$Input$message_updates;
+
+  factory CopyWith$Input$message_updates.stub(TRes res) =
+      _CopyWithStubImpl$Input$message_updates;
+
+  TRes call({
+    Input$message_set_input? $_set,
+    Input$message_bool_exp? where,
+  });
+  CopyWith$Input$message_set_input<TRes> get $_set;
+  CopyWith$Input$message_bool_exp<TRes> get where;
+}
+
+class _CopyWithImpl$Input$message_updates<TRes>
+    implements CopyWith$Input$message_updates<TRes> {
+  _CopyWithImpl$Input$message_updates(
+    this._instance,
+    this._then,
+  );
+
+  final Input$message_updates _instance;
+
+  final TRes Function(Input$message_updates) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? $_set = _undefined,
+    Object? where = _undefined,
+  }) =>
+      _then(Input$message_updates._({
+        ..._instance._$data,
+        if ($_set != _undefined) '_set': ($_set as Input$message_set_input?),
+        if (where != _undefined && where != null)
+          'where': (where as Input$message_bool_exp),
+      }));
+  CopyWith$Input$message_set_input<TRes> get $_set {
+    final local$$_set = _instance.$_set;
+    return local$$_set == null
+        ? CopyWith$Input$message_set_input.stub(_then(_instance))
+        : CopyWith$Input$message_set_input(local$$_set, (e) => call($_set: e));
+  }
+
+  CopyWith$Input$message_bool_exp<TRes> get where {
+    final local$where = _instance.where;
+    return CopyWith$Input$message_bool_exp(local$where, (e) => call(where: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$message_updates<TRes>
+    implements CopyWith$Input$message_updates<TRes> {
+  _CopyWithStubImpl$Input$message_updates(this._res);
+
+  TRes _res;
+
+  call({
+    Input$message_set_input? $_set,
+    Input$message_bool_exp? where,
+  }) =>
+      _res;
+  CopyWith$Input$message_set_input<TRes> get $_set =>
+      CopyWith$Input$message_set_input.stub(_res);
+  CopyWith$Input$message_bool_exp<TRes> get where =>
+      CopyWith$Input$message_bool_exp.stub(_res);
+}
+
+class Input$persona_aggregate_bool_exp {
+  factory Input$persona_aggregate_bool_exp(
+          {Input$persona_aggregate_bool_exp_count? count}) =>
+      Input$persona_aggregate_bool_exp._({
+        if (count != null) r'count': count,
+      });
+
+  Input$persona_aggregate_bool_exp._(this._$data);
+
+  factory Input$persona_aggregate_bool_exp.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] = l$count == null
+          ? null
+          : Input$persona_aggregate_bool_exp_count.fromJson(
+              (l$count as Map<String, dynamic>));
+    }
+    return Input$persona_aggregate_bool_exp._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$persona_aggregate_bool_exp_count? get count =>
+      (_$data['count'] as Input$persona_aggregate_bool_exp_count?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] = l$count?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_aggregate_bool_exp<Input$persona_aggregate_bool_exp>
+      get copyWith => CopyWith$Input$persona_aggregate_bool_exp(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_aggregate_bool_exp) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$count = count;
+    return Object.hashAll([_$data.containsKey('count') ? l$count : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$persona_aggregate_bool_exp<TRes> {
+  factory CopyWith$Input$persona_aggregate_bool_exp(
+    Input$persona_aggregate_bool_exp instance,
+    TRes Function(Input$persona_aggregate_bool_exp) then,
+  ) = _CopyWithImpl$Input$persona_aggregate_bool_exp;
+
+  factory CopyWith$Input$persona_aggregate_bool_exp.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_aggregate_bool_exp;
+
+  TRes call({Input$persona_aggregate_bool_exp_count? count});
+  CopyWith$Input$persona_aggregate_bool_exp_count<TRes> get count;
+}
+
+class _CopyWithImpl$Input$persona_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$persona_aggregate_bool_exp<TRes> {
+  _CopyWithImpl$Input$persona_aggregate_bool_exp(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_aggregate_bool_exp _instance;
+
+  final TRes Function(Input$persona_aggregate_bool_exp) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? count = _undefined}) =>
+      _then(Input$persona_aggregate_bool_exp._({
+        ..._instance._$data,
+        if (count != _undefined)
+          'count': (count as Input$persona_aggregate_bool_exp_count?),
+      }));
+  CopyWith$Input$persona_aggregate_bool_exp_count<TRes> get count {
+    final local$count = _instance.count;
+    return local$count == null
+        ? CopyWith$Input$persona_aggregate_bool_exp_count.stub(_then(_instance))
+        : CopyWith$Input$persona_aggregate_bool_exp_count(
+            local$count, (e) => call(count: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$persona_aggregate_bool_exp<TRes> {
+  _CopyWithStubImpl$Input$persona_aggregate_bool_exp(this._res);
+
+  TRes _res;
+
+  call({Input$persona_aggregate_bool_exp_count? count}) => _res;
+  CopyWith$Input$persona_aggregate_bool_exp_count<TRes> get count =>
+      CopyWith$Input$persona_aggregate_bool_exp_count.stub(_res);
+}
+
+class Input$persona_aggregate_bool_exp_count {
+  factory Input$persona_aggregate_bool_exp_count({
+    List<Enum$persona_select_column>? arguments,
+    bool? distinct,
+    Input$persona_bool_exp? filter,
+    required Input$Int_comparison_exp predicate,
+  }) =>
+      Input$persona_aggregate_bool_exp_count._({
+        if (arguments != null) r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$persona_aggregate_bool_exp_count._(this._$data);
+
+  factory Input$persona_aggregate_bool_exp_count.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('arguments')) {
+      final l$arguments = data['arguments'];
+      result$data['arguments'] = (l$arguments as List<dynamic>?)
+          ?.map((e) => fromJson$Enum$persona_select_column((e as String)))
+          .toList();
+    }
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$persona_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Int_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$persona_aggregate_bool_exp_count._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Enum$persona_select_column>? get arguments =>
+      (_$data['arguments'] as List<Enum$persona_select_column>?);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$persona_bool_exp? get filter =>
+      (_$data['filter'] as Input$persona_bool_exp?);
+  Input$Int_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Int_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('arguments')) {
+      final l$arguments = arguments;
+      result$data['arguments'] = l$arguments
+          ?.map((e) => toJson$Enum$persona_select_column(e))
+          .toList();
+    }
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$persona_aggregate_bool_exp_count<
+          Input$persona_aggregate_bool_exp_count>
+      get copyWith => CopyWith$Input$persona_aggregate_bool_exp_count(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_aggregate_bool_exp_count) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (_$data.containsKey('arguments') !=
+        other._$data.containsKey('arguments')) {
+      return false;
+    }
+    if (l$arguments != null && lOther$arguments != null) {
+      if (l$arguments.length != lOther$arguments.length) {
+        return false;
+      }
+      for (int i = 0; i < l$arguments.length; i++) {
+        final l$arguments$entry = l$arguments[i];
+        final lOther$arguments$entry = lOther$arguments[i];
+        if (l$arguments$entry != lOther$arguments$entry) {
+          return false;
+        }
+      }
+    } else if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      _$data.containsKey('arguments')
+          ? l$arguments == null
+              ? null
+              : Object.hashAll(l$arguments.map((v) => v))
+          : const {},
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_aggregate_bool_exp_count<TRes> {
+  factory CopyWith$Input$persona_aggregate_bool_exp_count(
+    Input$persona_aggregate_bool_exp_count instance,
+    TRes Function(Input$persona_aggregate_bool_exp_count) then,
+  ) = _CopyWithImpl$Input$persona_aggregate_bool_exp_count;
+
+  factory CopyWith$Input$persona_aggregate_bool_exp_count.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_aggregate_bool_exp_count;
+
+  TRes call({
+    List<Enum$persona_select_column>? arguments,
+    bool? distinct,
+    Input$persona_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  });
+  CopyWith$Input$persona_bool_exp<TRes> get filter;
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$persona_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$persona_aggregate_bool_exp_count<TRes> {
+  _CopyWithImpl$Input$persona_aggregate_bool_exp_count(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_aggregate_bool_exp_count _instance;
+
+  final TRes Function(Input$persona_aggregate_bool_exp_count) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$persona_aggregate_bool_exp_count._({
+        ..._instance._$data,
+        if (arguments != _undefined)
+          'arguments': (arguments as List<Enum$persona_select_column>?),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$persona_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Int_comparison_exp),
+      }));
+  CopyWith$Input$persona_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$persona_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$persona_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Int_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$persona_aggregate_bool_exp_count<TRes> {
+  _CopyWithStubImpl$Input$persona_aggregate_bool_exp_count(this._res);
+
+  TRes _res;
+
+  call({
+    List<Enum$persona_select_column>? arguments,
+    bool? distinct,
+    Input$persona_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$persona_bool_exp<TRes> get filter =>
+      CopyWith$Input$persona_bool_exp.stub(_res);
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Int_comparison_exp.stub(_res);
+}
+
+class Input$persona_aggregate_order_by {
+  factory Input$persona_aggregate_order_by({
+    Enum$order_by? count,
+    Input$persona_max_order_by? max,
+    Input$persona_min_order_by? min,
+  }) =>
+      Input$persona_aggregate_order_by._({
+        if (count != null) r'count': count,
+        if (max != null) r'max': max,
+        if (min != null) r'min': min,
+      });
+
+  Input$persona_aggregate_order_by._(this._$data);
+
+  factory Input$persona_aggregate_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] =
+          l$count == null ? null : fromJson$Enum$order_by((l$count as String));
+    }
+    if (data.containsKey('max')) {
+      final l$max = data['max'];
+      result$data['max'] = l$max == null
+          ? null
+          : Input$persona_max_order_by.fromJson(
+              (l$max as Map<String, dynamic>));
+    }
+    if (data.containsKey('min')) {
+      final l$min = data['min'];
+      result$data['min'] = l$min == null
+          ? null
+          : Input$persona_min_order_by.fromJson(
+              (l$min as Map<String, dynamic>));
+    }
+    return Input$persona_aggregate_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get count => (_$data['count'] as Enum$order_by?);
+  Input$persona_max_order_by? get max =>
+      (_$data['max'] as Input$persona_max_order_by?);
+  Input$persona_min_order_by? get min =>
+      (_$data['min'] as Input$persona_min_order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] =
+          l$count == null ? null : toJson$Enum$order_by(l$count);
+    }
+    if (_$data.containsKey('max')) {
+      final l$max = max;
+      result$data['max'] = l$max?.toJson();
+    }
+    if (_$data.containsKey('min')) {
+      final l$min = min;
+      result$data['min'] = l$min?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_aggregate_order_by<Input$persona_aggregate_order_by>
+      get copyWith => CopyWith$Input$persona_aggregate_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_aggregate_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    final l$max = max;
+    final lOther$max = other.max;
+    if (_$data.containsKey('max') != other._$data.containsKey('max')) {
+      return false;
+    }
+    if (l$max != lOther$max) {
+      return false;
+    }
+    final l$min = min;
+    final lOther$min = other.min;
+    if (_$data.containsKey('min') != other._$data.containsKey('min')) {
+      return false;
+    }
+    if (l$min != lOther$min) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$count = count;
+    final l$max = max;
+    final l$min = min;
+    return Object.hashAll([
+      _$data.containsKey('count') ? l$count : const {},
+      _$data.containsKey('max') ? l$max : const {},
+      _$data.containsKey('min') ? l$min : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_aggregate_order_by<TRes> {
+  factory CopyWith$Input$persona_aggregate_order_by(
+    Input$persona_aggregate_order_by instance,
+    TRes Function(Input$persona_aggregate_order_by) then,
+  ) = _CopyWithImpl$Input$persona_aggregate_order_by;
+
+  factory CopyWith$Input$persona_aggregate_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_aggregate_order_by;
+
+  TRes call({
+    Enum$order_by? count,
+    Input$persona_max_order_by? max,
+    Input$persona_min_order_by? min,
+  });
+  CopyWith$Input$persona_max_order_by<TRes> get max;
+  CopyWith$Input$persona_min_order_by<TRes> get min;
+}
+
+class _CopyWithImpl$Input$persona_aggregate_order_by<TRes>
+    implements CopyWith$Input$persona_aggregate_order_by<TRes> {
+  _CopyWithImpl$Input$persona_aggregate_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_aggregate_order_by _instance;
+
+  final TRes Function(Input$persona_aggregate_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? count = _undefined,
+    Object? max = _undefined,
+    Object? min = _undefined,
+  }) =>
+      _then(Input$persona_aggregate_order_by._({
+        ..._instance._$data,
+        if (count != _undefined) 'count': (count as Enum$order_by?),
+        if (max != _undefined) 'max': (max as Input$persona_max_order_by?),
+        if (min != _undefined) 'min': (min as Input$persona_min_order_by?),
+      }));
+  CopyWith$Input$persona_max_order_by<TRes> get max {
+    final local$max = _instance.max;
+    return local$max == null
+        ? CopyWith$Input$persona_max_order_by.stub(_then(_instance))
+        : CopyWith$Input$persona_max_order_by(local$max, (e) => call(max: e));
+  }
+
+  CopyWith$Input$persona_min_order_by<TRes> get min {
+    final local$min = _instance.min;
+    return local$min == null
+        ? CopyWith$Input$persona_min_order_by.stub(_then(_instance))
+        : CopyWith$Input$persona_min_order_by(local$min, (e) => call(min: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_aggregate_order_by<TRes>
+    implements CopyWith$Input$persona_aggregate_order_by<TRes> {
+  _CopyWithStubImpl$Input$persona_aggregate_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? count,
+    Input$persona_max_order_by? max,
+    Input$persona_min_order_by? min,
+  }) =>
+      _res;
+  CopyWith$Input$persona_max_order_by<TRes> get max =>
+      CopyWith$Input$persona_max_order_by.stub(_res);
+  CopyWith$Input$persona_min_order_by<TRes> get min =>
+      CopyWith$Input$persona_min_order_by.stub(_res);
+}
+
+class Input$persona_arr_rel_insert_input {
+  factory Input$persona_arr_rel_insert_input({
+    required List<Input$persona_insert_input> data,
+    Input$persona_on_conflict? on_conflict,
+  }) =>
+      Input$persona_arr_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$persona_arr_rel_insert_input._(this._$data);
+
+  factory Input$persona_arr_rel_insert_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] = (l$data as List<dynamic>)
+        .map((e) =>
+            Input$persona_insert_input.fromJson((e as Map<String, dynamic>)))
+        .toList();
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$persona_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$persona_arr_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Input$persona_insert_input> get data =>
+      (_$data['data'] as List<Input$persona_insert_input>);
+  Input$persona_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$persona_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.map((e) => e.toJson()).toList();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_arr_rel_insert_input<
+          Input$persona_arr_rel_insert_input>
+      get copyWith => CopyWith$Input$persona_arr_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_arr_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data.length != lOther$data.length) {
+      return false;
+    }
+    for (int i = 0; i < l$data.length; i++) {
+      final l$data$entry = l$data[i];
+      final lOther$data$entry = lOther$data[i];
+      if (l$data$entry != lOther$data$entry) {
+        return false;
+      }
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      Object.hashAll(l$data.map((v) => v)),
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_arr_rel_insert_input<TRes> {
+  factory CopyWith$Input$persona_arr_rel_insert_input(
+    Input$persona_arr_rel_insert_input instance,
+    TRes Function(Input$persona_arr_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$persona_arr_rel_insert_input;
+
+  factory CopyWith$Input$persona_arr_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_arr_rel_insert_input;
+
+  TRes call({
+    List<Input$persona_insert_input>? data,
+    Input$persona_on_conflict? on_conflict,
+  });
+  TRes data(
+      Iterable<Input$persona_insert_input> Function(
+              Iterable<
+                  CopyWith$Input$persona_insert_input<
+                      Input$persona_insert_input>>)
+          _fn);
+  CopyWith$Input$persona_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$persona_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$persona_arr_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$persona_arr_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_arr_rel_insert_input _instance;
+
+  final TRes Function(Input$persona_arr_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$persona_arr_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as List<Input$persona_insert_input>),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$persona_on_conflict?),
+      }));
+  TRes data(
+          Iterable<Input$persona_insert_input> Function(
+                  Iterable<
+                      CopyWith$Input$persona_insert_input<
+                          Input$persona_insert_input>>)
+              _fn) =>
+      call(
+          data:
+              _fn(_instance.data.map((e) => CopyWith$Input$persona_insert_input(
+                    e,
+                    (i) => i,
+                  ))).toList());
+  CopyWith$Input$persona_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$persona_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$persona_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$persona_arr_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$persona_arr_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    List<Input$persona_insert_input>? data,
+    Input$persona_on_conflict? on_conflict,
+  }) =>
+      _res;
+  data(_fn) => _res;
+  CopyWith$Input$persona_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$persona_on_conflict.stub(_res);
+}
+
+class Input$persona_bool_exp {
+  factory Input$persona_bool_exp({
+    List<Input$persona_bool_exp>? $_and,
+    Input$persona_bool_exp? $_not,
+    List<Input$persona_bool_exp>? $_or,
+    Input$chat_bool_exp? chats,
+    Input$chat_aggregate_bool_exp? chats_aggregate,
+    Input$timestamptz_comparison_exp? created_at,
+    Input$String_comparison_exp? description,
+    Input$String_comparison_exp? file_id,
+    Input$String_comparison_exp? name,
+    Input$String_comparison_exp? persona_id,
+    Input$public_user_bool_exp? persona_owner,
+    Input$file_bool_exp? photo,
+    Input$String_comparison_exp? system_prompt,
+    Input$timestamptz_comparison_exp? updated_at,
+    Input$String_comparison_exp? user_id,
+  }) =>
+      Input$persona_bool_exp._({
+        if ($_and != null) r'_and': $_and,
+        if ($_not != null) r'_not': $_not,
+        if ($_or != null) r'_or': $_or,
+        if (chats != null) r'chats': chats,
+        if (chats_aggregate != null) r'chats_aggregate': chats_aggregate,
+        if (created_at != null) r'created_at': created_at,
+        if (description != null) r'description': description,
+        if (file_id != null) r'file_id': file_id,
+        if (name != null) r'name': name,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (persona_owner != null) r'persona_owner': persona_owner,
+        if (photo != null) r'photo': photo,
+        if (system_prompt != null) r'system_prompt': system_prompt,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$persona_bool_exp._(this._$data);
+
+  factory Input$persona_bool_exp.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('_and')) {
+      final l$$_and = data['_and'];
+      result$data['_and'] = (l$$_and as List<dynamic>?)
+          ?.map((e) =>
+              Input$persona_bool_exp.fromJson((e as Map<String, dynamic>)))
+          .toList();
+    }
+    if (data.containsKey('_not')) {
+      final l$$_not = data['_not'];
+      result$data['_not'] = l$$_not == null
+          ? null
+          : Input$persona_bool_exp.fromJson((l$$_not as Map<String, dynamic>));
+    }
+    if (data.containsKey('_or')) {
+      final l$$_or = data['_or'];
+      result$data['_or'] = (l$$_or as List<dynamic>?)
+          ?.map((e) =>
+              Input$persona_bool_exp.fromJson((e as Map<String, dynamic>)))
+          .toList();
+    }
+    if (data.containsKey('chats')) {
+      final l$chats = data['chats'];
+      result$data['chats'] = l$chats == null
+          ? null
+          : Input$chat_bool_exp.fromJson((l$chats as Map<String, dynamic>));
+    }
+    if (data.containsKey('chats_aggregate')) {
+      final l$chats_aggregate = data['chats_aggregate'];
+      result$data['chats_aggregate'] = l$chats_aggregate == null
+          ? null
+          : Input$chat_aggregate_bool_exp.fromJson(
+              (l$chats_aggregate as Map<String, dynamic>));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : Input$timestamptz_comparison_exp.fromJson(
+              (l$created_at as Map<String, dynamic>));
+    }
+    if (data.containsKey('description')) {
+      final l$description = data['description'];
+      result$data['description'] = l$description == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$description as Map<String, dynamic>));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$file_id as Map<String, dynamic>));
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] = l$name == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$name as Map<String, dynamic>));
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = l$persona_id == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$persona_id as Map<String, dynamic>));
+    }
+    if (data.containsKey('persona_owner')) {
+      final l$persona_owner = data['persona_owner'];
+      result$data['persona_owner'] = l$persona_owner == null
+          ? null
+          : Input$public_user_bool_exp.fromJson(
+              (l$persona_owner as Map<String, dynamic>));
+    }
+    if (data.containsKey('photo')) {
+      final l$photo = data['photo'];
+      result$data['photo'] = l$photo == null
+          ? null
+          : Input$file_bool_exp.fromJson((l$photo as Map<String, dynamic>));
+    }
+    if (data.containsKey('system_prompt')) {
+      final l$system_prompt = data['system_prompt'];
+      result$data['system_prompt'] = l$system_prompt == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$system_prompt as Map<String, dynamic>));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : Input$timestamptz_comparison_exp.fromJson(
+              (l$updated_at as Map<String, dynamic>));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$user_id as Map<String, dynamic>));
+    }
+    return Input$persona_bool_exp._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Input$persona_bool_exp>? get $_and =>
+      (_$data['_and'] as List<Input$persona_bool_exp>?);
+  Input$persona_bool_exp? get $_not =>
+      (_$data['_not'] as Input$persona_bool_exp?);
+  List<Input$persona_bool_exp>? get $_or =>
+      (_$data['_or'] as List<Input$persona_bool_exp>?);
+  Input$chat_bool_exp? get chats => (_$data['chats'] as Input$chat_bool_exp?);
+  Input$chat_aggregate_bool_exp? get chats_aggregate =>
+      (_$data['chats_aggregate'] as Input$chat_aggregate_bool_exp?);
+  Input$timestamptz_comparison_exp? get created_at =>
+      (_$data['created_at'] as Input$timestamptz_comparison_exp?);
+  Input$String_comparison_exp? get description =>
+      (_$data['description'] as Input$String_comparison_exp?);
+  Input$String_comparison_exp? get file_id =>
+      (_$data['file_id'] as Input$String_comparison_exp?);
+  Input$String_comparison_exp? get name =>
+      (_$data['name'] as Input$String_comparison_exp?);
+  Input$String_comparison_exp? get persona_id =>
+      (_$data['persona_id'] as Input$String_comparison_exp?);
+  Input$public_user_bool_exp? get persona_owner =>
+      (_$data['persona_owner'] as Input$public_user_bool_exp?);
+  Input$file_bool_exp? get photo => (_$data['photo'] as Input$file_bool_exp?);
+  Input$String_comparison_exp? get system_prompt =>
+      (_$data['system_prompt'] as Input$String_comparison_exp?);
+  Input$timestamptz_comparison_exp? get updated_at =>
+      (_$data['updated_at'] as Input$timestamptz_comparison_exp?);
+  Input$String_comparison_exp? get user_id =>
+      (_$data['user_id'] as Input$String_comparison_exp?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('_and')) {
+      final l$$_and = $_and;
+      result$data['_and'] = l$$_and?.map((e) => e.toJson()).toList();
+    }
+    if (_$data.containsKey('_not')) {
+      final l$$_not = $_not;
+      result$data['_not'] = l$$_not?.toJson();
+    }
+    if (_$data.containsKey('_or')) {
+      final l$$_or = $_or;
+      result$data['_or'] = l$$_or?.map((e) => e.toJson()).toList();
+    }
+    if (_$data.containsKey('chats')) {
+      final l$chats = chats;
+      result$data['chats'] = l$chats?.toJson();
+    }
+    if (_$data.containsKey('chats_aggregate')) {
+      final l$chats_aggregate = chats_aggregate;
+      result$data['chats_aggregate'] = l$chats_aggregate?.toJson();
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at?.toJson();
+    }
+    if (_$data.containsKey('description')) {
+      final l$description = description;
+      result$data['description'] = l$description?.toJson();
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id?.toJson();
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] = l$name?.toJson();
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] = l$persona_id?.toJson();
+    }
+    if (_$data.containsKey('persona_owner')) {
+      final l$persona_owner = persona_owner;
+      result$data['persona_owner'] = l$persona_owner?.toJson();
+    }
+    if (_$data.containsKey('photo')) {
+      final l$photo = photo;
+      result$data['photo'] = l$photo?.toJson();
+    }
+    if (_$data.containsKey('system_prompt')) {
+      final l$system_prompt = system_prompt;
+      result$data['system_prompt'] = l$system_prompt?.toJson();
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at?.toJson();
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] = l$user_id?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_bool_exp<Input$persona_bool_exp> get copyWith =>
+      CopyWith$Input$persona_bool_exp(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_bool_exp) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$_and = $_and;
+    final lOther$$_and = other.$_and;
+    if (_$data.containsKey('_and') != other._$data.containsKey('_and')) {
+      return false;
+    }
+    if (l$$_and != null && lOther$$_and != null) {
+      if (l$$_and.length != lOther$$_and.length) {
+        return false;
+      }
+      for (int i = 0; i < l$$_and.length; i++) {
+        final l$$_and$entry = l$$_and[i];
+        final lOther$$_and$entry = lOther$$_and[i];
+        if (l$$_and$entry != lOther$$_and$entry) {
+          return false;
+        }
+      }
+    } else if (l$$_and != lOther$$_and) {
+      return false;
+    }
+    final l$$_not = $_not;
+    final lOther$$_not = other.$_not;
+    if (_$data.containsKey('_not') != other._$data.containsKey('_not')) {
+      return false;
+    }
+    if (l$$_not != lOther$$_not) {
+      return false;
+    }
+    final l$$_or = $_or;
+    final lOther$$_or = other.$_or;
+    if (_$data.containsKey('_or') != other._$data.containsKey('_or')) {
+      return false;
+    }
+    if (l$$_or != null && lOther$$_or != null) {
+      if (l$$_or.length != lOther$$_or.length) {
+        return false;
+      }
+      for (int i = 0; i < l$$_or.length; i++) {
+        final l$$_or$entry = l$$_or[i];
+        final lOther$$_or$entry = lOther$$_or[i];
+        if (l$$_or$entry != lOther$$_or$entry) {
+          return false;
+        }
+      }
+    } else if (l$$_or != lOther$$_or) {
+      return false;
+    }
+    final l$chats = chats;
+    final lOther$chats = other.chats;
+    if (_$data.containsKey('chats') != other._$data.containsKey('chats')) {
+      return false;
+    }
+    if (l$chats != lOther$chats) {
+      return false;
+    }
+    final l$chats_aggregate = chats_aggregate;
+    final lOther$chats_aggregate = other.chats_aggregate;
+    if (_$data.containsKey('chats_aggregate') !=
+        other._$data.containsKey('chats_aggregate')) {
+      return false;
+    }
+    if (l$chats_aggregate != lOther$chats_aggregate) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$description = description;
+    final lOther$description = other.description;
+    if (_$data.containsKey('description') !=
+        other._$data.containsKey('description')) {
+      return false;
+    }
+    if (l$description != lOther$description) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$persona_owner = persona_owner;
+    final lOther$persona_owner = other.persona_owner;
+    if (_$data.containsKey('persona_owner') !=
+        other._$data.containsKey('persona_owner')) {
+      return false;
+    }
+    if (l$persona_owner != lOther$persona_owner) {
+      return false;
+    }
+    final l$photo = photo;
+    final lOther$photo = other.photo;
+    if (_$data.containsKey('photo') != other._$data.containsKey('photo')) {
+      return false;
+    }
+    if (l$photo != lOther$photo) {
+      return false;
+    }
+    final l$system_prompt = system_prompt;
+    final lOther$system_prompt = other.system_prompt;
+    if (_$data.containsKey('system_prompt') !=
+        other._$data.containsKey('system_prompt')) {
+      return false;
+    }
+    if (l$system_prompt != lOther$system_prompt) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$$_and = $_and;
+    final l$$_not = $_not;
+    final l$$_or = $_or;
+    final l$chats = chats;
+    final l$chats_aggregate = chats_aggregate;
+    final l$created_at = created_at;
+    final l$description = description;
+    final l$file_id = file_id;
+    final l$name = name;
+    final l$persona_id = persona_id;
+    final l$persona_owner = persona_owner;
+    final l$photo = photo;
+    final l$system_prompt = system_prompt;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('_and')
+          ? l$$_and == null
+              ? null
+              : Object.hashAll(l$$_and.map((v) => v))
+          : const {},
+      _$data.containsKey('_not') ? l$$_not : const {},
+      _$data.containsKey('_or')
+          ? l$$_or == null
+              ? null
+              : Object.hashAll(l$$_or.map((v) => v))
+          : const {},
+      _$data.containsKey('chats') ? l$chats : const {},
+      _$data.containsKey('chats_aggregate') ? l$chats_aggregate : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('description') ? l$description : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('persona_owner') ? l$persona_owner : const {},
+      _$data.containsKey('photo') ? l$photo : const {},
+      _$data.containsKey('system_prompt') ? l$system_prompt : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_bool_exp<TRes> {
+  factory CopyWith$Input$persona_bool_exp(
+    Input$persona_bool_exp instance,
+    TRes Function(Input$persona_bool_exp) then,
+  ) = _CopyWithImpl$Input$persona_bool_exp;
+
+  factory CopyWith$Input$persona_bool_exp.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_bool_exp;
+
+  TRes call({
+    List<Input$persona_bool_exp>? $_and,
+    Input$persona_bool_exp? $_not,
+    List<Input$persona_bool_exp>? $_or,
+    Input$chat_bool_exp? chats,
+    Input$chat_aggregate_bool_exp? chats_aggregate,
+    Input$timestamptz_comparison_exp? created_at,
+    Input$String_comparison_exp? description,
+    Input$String_comparison_exp? file_id,
+    Input$String_comparison_exp? name,
+    Input$String_comparison_exp? persona_id,
+    Input$public_user_bool_exp? persona_owner,
+    Input$file_bool_exp? photo,
+    Input$String_comparison_exp? system_prompt,
+    Input$timestamptz_comparison_exp? updated_at,
+    Input$String_comparison_exp? user_id,
+  });
+  TRes $_and(
+      Iterable<Input$persona_bool_exp>? Function(
+              Iterable<
+                  CopyWith$Input$persona_bool_exp<Input$persona_bool_exp>>?)
+          _fn);
+  CopyWith$Input$persona_bool_exp<TRes> get $_not;
+  TRes $_or(
+      Iterable<Input$persona_bool_exp>? Function(
+              Iterable<
+                  CopyWith$Input$persona_bool_exp<Input$persona_bool_exp>>?)
+          _fn);
+  CopyWith$Input$chat_bool_exp<TRes> get chats;
+  CopyWith$Input$chat_aggregate_bool_exp<TRes> get chats_aggregate;
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at;
+  CopyWith$Input$String_comparison_exp<TRes> get description;
+  CopyWith$Input$String_comparison_exp<TRes> get file_id;
+  CopyWith$Input$String_comparison_exp<TRes> get name;
+  CopyWith$Input$String_comparison_exp<TRes> get persona_id;
+  CopyWith$Input$public_user_bool_exp<TRes> get persona_owner;
+  CopyWith$Input$file_bool_exp<TRes> get photo;
+  CopyWith$Input$String_comparison_exp<TRes> get system_prompt;
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at;
+  CopyWith$Input$String_comparison_exp<TRes> get user_id;
+}
+
+class _CopyWithImpl$Input$persona_bool_exp<TRes>
+    implements CopyWith$Input$persona_bool_exp<TRes> {
+  _CopyWithImpl$Input$persona_bool_exp(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_bool_exp _instance;
+
+  final TRes Function(Input$persona_bool_exp) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? $_and = _undefined,
+    Object? $_not = _undefined,
+    Object? $_or = _undefined,
+    Object? chats = _undefined,
+    Object? chats_aggregate = _undefined,
+    Object? created_at = _undefined,
+    Object? description = _undefined,
+    Object? file_id = _undefined,
+    Object? name = _undefined,
+    Object? persona_id = _undefined,
+    Object? persona_owner = _undefined,
+    Object? photo = _undefined,
+    Object? system_prompt = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$persona_bool_exp._({
+        ..._instance._$data,
+        if ($_and != _undefined)
+          '_and': ($_and as List<Input$persona_bool_exp>?),
+        if ($_not != _undefined) '_not': ($_not as Input$persona_bool_exp?),
+        if ($_or != _undefined) '_or': ($_or as List<Input$persona_bool_exp>?),
+        if (chats != _undefined) 'chats': (chats as Input$chat_bool_exp?),
+        if (chats_aggregate != _undefined)
+          'chats_aggregate':
+              (chats_aggregate as Input$chat_aggregate_bool_exp?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Input$timestamptz_comparison_exp?),
+        if (description != _undefined)
+          'description': (description as Input$String_comparison_exp?),
+        if (file_id != _undefined)
+          'file_id': (file_id as Input$String_comparison_exp?),
+        if (name != _undefined) 'name': (name as Input$String_comparison_exp?),
+        if (persona_id != _undefined)
+          'persona_id': (persona_id as Input$String_comparison_exp?),
+        if (persona_owner != _undefined)
+          'persona_owner': (persona_owner as Input$public_user_bool_exp?),
+        if (photo != _undefined) 'photo': (photo as Input$file_bool_exp?),
+        if (system_prompt != _undefined)
+          'system_prompt': (system_prompt as Input$String_comparison_exp?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Input$timestamptz_comparison_exp?),
+        if (user_id != _undefined)
+          'user_id': (user_id as Input$String_comparison_exp?),
+      }));
+  TRes $_and(
+          Iterable<Input$persona_bool_exp>? Function(
+                  Iterable<
+                      CopyWith$Input$persona_bool_exp<Input$persona_bool_exp>>?)
+              _fn) =>
+      call(
+          $_and:
+              _fn(_instance.$_and?.map((e) => CopyWith$Input$persona_bool_exp(
+                    e,
+                    (i) => i,
+                  )))?.toList());
+  CopyWith$Input$persona_bool_exp<TRes> get $_not {
+    final local$$_not = _instance.$_not;
+    return local$$_not == null
+        ? CopyWith$Input$persona_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$persona_bool_exp(local$$_not, (e) => call($_not: e));
+  }
+
+  TRes $_or(
+          Iterable<Input$persona_bool_exp>? Function(
+                  Iterable<
+                      CopyWith$Input$persona_bool_exp<Input$persona_bool_exp>>?)
+              _fn) =>
+      call(
+          $_or: _fn(_instance.$_or?.map((e) => CopyWith$Input$persona_bool_exp(
+                e,
+                (i) => i,
+              )))?.toList());
+  CopyWith$Input$chat_bool_exp<TRes> get chats {
+    final local$chats = _instance.chats;
+    return local$chats == null
+        ? CopyWith$Input$chat_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$chat_bool_exp(local$chats, (e) => call(chats: e));
+  }
+
+  CopyWith$Input$chat_aggregate_bool_exp<TRes> get chats_aggregate {
+    final local$chats_aggregate = _instance.chats_aggregate;
+    return local$chats_aggregate == null
+        ? CopyWith$Input$chat_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$chat_aggregate_bool_exp(
+            local$chats_aggregate, (e) => call(chats_aggregate: e));
+  }
+
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at {
+    final local$created_at = _instance.created_at;
+    return local$created_at == null
+        ? CopyWith$Input$timestamptz_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$timestamptz_comparison_exp(
+            local$created_at, (e) => call(created_at: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get description {
+    final local$description = _instance.description;
+    return local$description == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$description, (e) => call(description: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get file_id {
+    final local$file_id = _instance.file_id;
+    return local$file_id == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$file_id, (e) => call(file_id: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get name {
+    final local$name = _instance.name;
+    return local$name == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$name, (e) => call(name: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get persona_id {
+    final local$persona_id = _instance.persona_id;
+    return local$persona_id == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$persona_id, (e) => call(persona_id: e));
+  }
+
+  CopyWith$Input$public_user_bool_exp<TRes> get persona_owner {
+    final local$persona_owner = _instance.persona_owner;
+    return local$persona_owner == null
+        ? CopyWith$Input$public_user_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$public_user_bool_exp(
+            local$persona_owner, (e) => call(persona_owner: e));
+  }
+
+  CopyWith$Input$file_bool_exp<TRes> get photo {
+    final local$photo = _instance.photo;
+    return local$photo == null
+        ? CopyWith$Input$file_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$file_bool_exp(local$photo, (e) => call(photo: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get system_prompt {
+    final local$system_prompt = _instance.system_prompt;
+    return local$system_prompt == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$system_prompt, (e) => call(system_prompt: e));
+  }
+
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at {
+    final local$updated_at = _instance.updated_at;
+    return local$updated_at == null
+        ? CopyWith$Input$timestamptz_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$timestamptz_comparison_exp(
+            local$updated_at, (e) => call(updated_at: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get user_id {
+    final local$user_id = _instance.user_id;
+    return local$user_id == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$user_id, (e) => call(user_id: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_bool_exp<TRes>
+    implements CopyWith$Input$persona_bool_exp<TRes> {
+  _CopyWithStubImpl$Input$persona_bool_exp(this._res);
+
+  TRes _res;
+
+  call({
+    List<Input$persona_bool_exp>? $_and,
+    Input$persona_bool_exp? $_not,
+    List<Input$persona_bool_exp>? $_or,
+    Input$chat_bool_exp? chats,
+    Input$chat_aggregate_bool_exp? chats_aggregate,
+    Input$timestamptz_comparison_exp? created_at,
+    Input$String_comparison_exp? description,
+    Input$String_comparison_exp? file_id,
+    Input$String_comparison_exp? name,
+    Input$String_comparison_exp? persona_id,
+    Input$public_user_bool_exp? persona_owner,
+    Input$file_bool_exp? photo,
+    Input$String_comparison_exp? system_prompt,
+    Input$timestamptz_comparison_exp? updated_at,
+    Input$String_comparison_exp? user_id,
+  }) =>
+      _res;
+  $_and(_fn) => _res;
+  CopyWith$Input$persona_bool_exp<TRes> get $_not =>
+      CopyWith$Input$persona_bool_exp.stub(_res);
+  $_or(_fn) => _res;
+  CopyWith$Input$chat_bool_exp<TRes> get chats =>
+      CopyWith$Input$chat_bool_exp.stub(_res);
+  CopyWith$Input$chat_aggregate_bool_exp<TRes> get chats_aggregate =>
+      CopyWith$Input$chat_aggregate_bool_exp.stub(_res);
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at =>
+      CopyWith$Input$timestamptz_comparison_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get description =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get file_id =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get name =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get persona_id =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$public_user_bool_exp<TRes> get persona_owner =>
+      CopyWith$Input$public_user_bool_exp.stub(_res);
+  CopyWith$Input$file_bool_exp<TRes> get photo =>
+      CopyWith$Input$file_bool_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get system_prompt =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at =>
+      CopyWith$Input$timestamptz_comparison_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get user_id =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+}
+
+class Input$persona_insert_input {
+  factory Input$persona_insert_input({
+    Input$chat_arr_rel_insert_input? chats,
+    String? created_at,
+    String? description,
+    String? file_id,
+    String? name,
+    String? persona_id,
+    Input$public_user_obj_rel_insert_input? persona_owner,
+    Input$file_obj_rel_insert_input? photo,
+    String? system_prompt,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      Input$persona_insert_input._({
+        if (chats != null) r'chats': chats,
+        if (created_at != null) r'created_at': created_at,
+        if (description != null) r'description': description,
+        if (file_id != null) r'file_id': file_id,
+        if (name != null) r'name': name,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (persona_owner != null) r'persona_owner': persona_owner,
+        if (photo != null) r'photo': photo,
+        if (system_prompt != null) r'system_prompt': system_prompt,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$persona_insert_input._(this._$data);
+
+  factory Input$persona_insert_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chats')) {
+      final l$chats = data['chats'];
+      result$data['chats'] = l$chats == null
+          ? null
+          : Input$chat_arr_rel_insert_input.fromJson(
+              (l$chats as Map<String, dynamic>));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = (l$created_at as String?);
+    }
+    if (data.containsKey('description')) {
+      final l$description = data['description'];
+      result$data['description'] = (l$description as String?);
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = (l$file_id as String?);
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] = (l$name as String?);
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = (l$persona_id as String?);
+    }
+    if (data.containsKey('persona_owner')) {
+      final l$persona_owner = data['persona_owner'];
+      result$data['persona_owner'] = l$persona_owner == null
+          ? null
+          : Input$public_user_obj_rel_insert_input.fromJson(
+              (l$persona_owner as Map<String, dynamic>));
+    }
+    if (data.containsKey('photo')) {
+      final l$photo = data['photo'];
+      result$data['photo'] = l$photo == null
+          ? null
+          : Input$file_obj_rel_insert_input.fromJson(
+              (l$photo as Map<String, dynamic>));
+    }
+    if (data.containsKey('system_prompt')) {
+      final l$system_prompt = data['system_prompt'];
+      result$data['system_prompt'] = (l$system_prompt as String?);
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = (l$updated_at as String?);
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = (l$user_id as String?);
+    }
+    return Input$persona_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$chat_arr_rel_insert_input? get chats =>
+      (_$data['chats'] as Input$chat_arr_rel_insert_input?);
+  String? get created_at => (_$data['created_at'] as String?);
+  String? get description => (_$data['description'] as String?);
+  String? get file_id => (_$data['file_id'] as String?);
+  String? get name => (_$data['name'] as String?);
+  String? get persona_id => (_$data['persona_id'] as String?);
+  Input$public_user_obj_rel_insert_input? get persona_owner =>
+      (_$data['persona_owner'] as Input$public_user_obj_rel_insert_input?);
+  Input$file_obj_rel_insert_input? get photo =>
+      (_$data['photo'] as Input$file_obj_rel_insert_input?);
+  String? get system_prompt => (_$data['system_prompt'] as String?);
+  String? get updated_at => (_$data['updated_at'] as String?);
+  String? get user_id => (_$data['user_id'] as String?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chats')) {
+      final l$chats = chats;
+      result$data['chats'] = l$chats?.toJson();
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at;
+    }
+    if (_$data.containsKey('description')) {
+      final l$description = description;
+      result$data['description'] = l$description;
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id;
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] = l$name;
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] = l$persona_id;
+    }
+    if (_$data.containsKey('persona_owner')) {
+      final l$persona_owner = persona_owner;
+      result$data['persona_owner'] = l$persona_owner?.toJson();
+    }
+    if (_$data.containsKey('photo')) {
+      final l$photo = photo;
+      result$data['photo'] = l$photo?.toJson();
+    }
+    if (_$data.containsKey('system_prompt')) {
+      final l$system_prompt = system_prompt;
+      result$data['system_prompt'] = l$system_prompt;
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at;
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] = l$user_id;
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_insert_input<Input$persona_insert_input>
+      get copyWith => CopyWith$Input$persona_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chats = chats;
+    final lOther$chats = other.chats;
+    if (_$data.containsKey('chats') != other._$data.containsKey('chats')) {
+      return false;
+    }
+    if (l$chats != lOther$chats) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$description = description;
+    final lOther$description = other.description;
+    if (_$data.containsKey('description') !=
+        other._$data.containsKey('description')) {
+      return false;
+    }
+    if (l$description != lOther$description) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$persona_owner = persona_owner;
+    final lOther$persona_owner = other.persona_owner;
+    if (_$data.containsKey('persona_owner') !=
+        other._$data.containsKey('persona_owner')) {
+      return false;
+    }
+    if (l$persona_owner != lOther$persona_owner) {
+      return false;
+    }
+    final l$photo = photo;
+    final lOther$photo = other.photo;
+    if (_$data.containsKey('photo') != other._$data.containsKey('photo')) {
+      return false;
+    }
+    if (l$photo != lOther$photo) {
+      return false;
+    }
+    final l$system_prompt = system_prompt;
+    final lOther$system_prompt = other.system_prompt;
+    if (_$data.containsKey('system_prompt') !=
+        other._$data.containsKey('system_prompt')) {
+      return false;
+    }
+    if (l$system_prompt != lOther$system_prompt) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chats = chats;
+    final l$created_at = created_at;
+    final l$description = description;
+    final l$file_id = file_id;
+    final l$name = name;
+    final l$persona_id = persona_id;
+    final l$persona_owner = persona_owner;
+    final l$photo = photo;
+    final l$system_prompt = system_prompt;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('chats') ? l$chats : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('description') ? l$description : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('persona_owner') ? l$persona_owner : const {},
+      _$data.containsKey('photo') ? l$photo : const {},
+      _$data.containsKey('system_prompt') ? l$system_prompt : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_insert_input<TRes> {
+  factory CopyWith$Input$persona_insert_input(
+    Input$persona_insert_input instance,
+    TRes Function(Input$persona_insert_input) then,
+  ) = _CopyWithImpl$Input$persona_insert_input;
+
+  factory CopyWith$Input$persona_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_insert_input;
+
+  TRes call({
+    Input$chat_arr_rel_insert_input? chats,
+    String? created_at,
+    String? description,
+    String? file_id,
+    String? name,
+    String? persona_id,
+    Input$public_user_obj_rel_insert_input? persona_owner,
+    Input$file_obj_rel_insert_input? photo,
+    String? system_prompt,
+    String? updated_at,
+    String? user_id,
+  });
+  CopyWith$Input$chat_arr_rel_insert_input<TRes> get chats;
+  CopyWith$Input$public_user_obj_rel_insert_input<TRes> get persona_owner;
+  CopyWith$Input$file_obj_rel_insert_input<TRes> get photo;
+}
+
+class _CopyWithImpl$Input$persona_insert_input<TRes>
+    implements CopyWith$Input$persona_insert_input<TRes> {
+  _CopyWithImpl$Input$persona_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_insert_input _instance;
+
+  final TRes Function(Input$persona_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chats = _undefined,
+    Object? created_at = _undefined,
+    Object? description = _undefined,
+    Object? file_id = _undefined,
+    Object? name = _undefined,
+    Object? persona_id = _undefined,
+    Object? persona_owner = _undefined,
+    Object? photo = _undefined,
+    Object? system_prompt = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$persona_insert_input._({
+        ..._instance._$data,
+        if (chats != _undefined)
+          'chats': (chats as Input$chat_arr_rel_insert_input?),
+        if (created_at != _undefined) 'created_at': (created_at as String?),
+        if (description != _undefined) 'description': (description as String?),
+        if (file_id != _undefined) 'file_id': (file_id as String?),
+        if (name != _undefined) 'name': (name as String?),
+        if (persona_id != _undefined) 'persona_id': (persona_id as String?),
+        if (persona_owner != _undefined)
+          'persona_owner':
+              (persona_owner as Input$public_user_obj_rel_insert_input?),
+        if (photo != _undefined)
+          'photo': (photo as Input$file_obj_rel_insert_input?),
+        if (system_prompt != _undefined)
+          'system_prompt': (system_prompt as String?),
+        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
+        if (user_id != _undefined) 'user_id': (user_id as String?),
+      }));
+  CopyWith$Input$chat_arr_rel_insert_input<TRes> get chats {
+    final local$chats = _instance.chats;
+    return local$chats == null
+        ? CopyWith$Input$chat_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$chat_arr_rel_insert_input(
+            local$chats, (e) => call(chats: e));
+  }
+
+  CopyWith$Input$public_user_obj_rel_insert_input<TRes> get persona_owner {
+    final local$persona_owner = _instance.persona_owner;
+    return local$persona_owner == null
+        ? CopyWith$Input$public_user_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$public_user_obj_rel_insert_input(
+            local$persona_owner, (e) => call(persona_owner: e));
+  }
+
+  CopyWith$Input$file_obj_rel_insert_input<TRes> get photo {
+    final local$photo = _instance.photo;
+    return local$photo == null
+        ? CopyWith$Input$file_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$file_obj_rel_insert_input(
+            local$photo, (e) => call(photo: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_insert_input<TRes>
+    implements CopyWith$Input$persona_insert_input<TRes> {
+  _CopyWithStubImpl$Input$persona_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$chat_arr_rel_insert_input? chats,
+    String? created_at,
+    String? description,
+    String? file_id,
+    String? name,
+    String? persona_id,
+    Input$public_user_obj_rel_insert_input? persona_owner,
+    Input$file_obj_rel_insert_input? photo,
+    String? system_prompt,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      _res;
+  CopyWith$Input$chat_arr_rel_insert_input<TRes> get chats =>
+      CopyWith$Input$chat_arr_rel_insert_input.stub(_res);
+  CopyWith$Input$public_user_obj_rel_insert_input<TRes> get persona_owner =>
+      CopyWith$Input$public_user_obj_rel_insert_input.stub(_res);
+  CopyWith$Input$file_obj_rel_insert_input<TRes> get photo =>
+      CopyWith$Input$file_obj_rel_insert_input.stub(_res);
+}
+
+class Input$persona_max_order_by {
+  factory Input$persona_max_order_by({
+    Enum$order_by? created_at,
+    Enum$order_by? description,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? persona_id,
+    Enum$order_by? system_prompt,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      Input$persona_max_order_by._({
+        if (created_at != null) r'created_at': created_at,
+        if (description != null) r'description': description,
+        if (file_id != null) r'file_id': file_id,
+        if (name != null) r'name': name,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (system_prompt != null) r'system_prompt': system_prompt,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$persona_max_order_by._(this._$data);
+
+  factory Input$persona_max_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('description')) {
+      final l$description = data['description'];
+      result$data['description'] = l$description == null
+          ? null
+          : fromJson$Enum$order_by((l$description as String));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] =
+          l$name == null ? null : fromJson$Enum$order_by((l$name as String));
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = l$persona_id == null
+          ? null
+          : fromJson$Enum$order_by((l$persona_id as String));
+    }
+    if (data.containsKey('system_prompt')) {
+      final l$system_prompt = data['system_prompt'];
+      result$data['system_prompt'] = l$system_prompt == null
+          ? null
+          : fromJson$Enum$order_by((l$system_prompt as String));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    return Input$persona_max_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get description => (_$data['description'] as Enum$order_by?);
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Enum$order_by? get name => (_$data['name'] as Enum$order_by?);
+  Enum$order_by? get persona_id => (_$data['persona_id'] as Enum$order_by?);
+  Enum$order_by? get system_prompt =>
+      (_$data['system_prompt'] as Enum$order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('description')) {
+      final l$description = description;
+      result$data['description'] =
+          l$description == null ? null : toJson$Enum$order_by(l$description);
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] =
+          l$name == null ? null : toJson$Enum$order_by(l$name);
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] =
+          l$persona_id == null ? null : toJson$Enum$order_by(l$persona_id);
+    }
+    if (_$data.containsKey('system_prompt')) {
+      final l$system_prompt = system_prompt;
+      result$data['system_prompt'] = l$system_prompt == null
+          ? null
+          : toJson$Enum$order_by(l$system_prompt);
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_max_order_by<Input$persona_max_order_by>
+      get copyWith => CopyWith$Input$persona_max_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_max_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$description = description;
+    final lOther$description = other.description;
+    if (_$data.containsKey('description') !=
+        other._$data.containsKey('description')) {
+      return false;
+    }
+    if (l$description != lOther$description) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$system_prompt = system_prompt;
+    final lOther$system_prompt = other.system_prompt;
+    if (_$data.containsKey('system_prompt') !=
+        other._$data.containsKey('system_prompt')) {
+      return false;
+    }
+    if (l$system_prompt != lOther$system_prompt) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$created_at = created_at;
+    final l$description = description;
+    final l$file_id = file_id;
+    final l$name = name;
+    final l$persona_id = persona_id;
+    final l$system_prompt = system_prompt;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('description') ? l$description : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('system_prompt') ? l$system_prompt : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_max_order_by<TRes> {
+  factory CopyWith$Input$persona_max_order_by(
+    Input$persona_max_order_by instance,
+    TRes Function(Input$persona_max_order_by) then,
+  ) = _CopyWithImpl$Input$persona_max_order_by;
+
+  factory CopyWith$Input$persona_max_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_max_order_by;
+
+  TRes call({
+    Enum$order_by? created_at,
+    Enum$order_by? description,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? persona_id,
+    Enum$order_by? system_prompt,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$persona_max_order_by<TRes>
+    implements CopyWith$Input$persona_max_order_by<TRes> {
+  _CopyWithImpl$Input$persona_max_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_max_order_by _instance;
+
+  final TRes Function(Input$persona_max_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? created_at = _undefined,
+    Object? description = _undefined,
+    Object? file_id = _undefined,
+    Object? name = _undefined,
+    Object? persona_id = _undefined,
+    Object? system_prompt = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$persona_max_order_by._({
+        ..._instance._$data,
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (description != _undefined)
+          'description': (description as Enum$order_by?),
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (name != _undefined) 'name': (name as Enum$order_by?),
+        if (persona_id != _undefined)
+          'persona_id': (persona_id as Enum$order_by?),
+        if (system_prompt != _undefined)
+          'system_prompt': (system_prompt as Enum$order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$persona_max_order_by<TRes>
+    implements CopyWith$Input$persona_max_order_by<TRes> {
+  _CopyWithStubImpl$Input$persona_max_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? created_at,
+    Enum$order_by? description,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? persona_id,
+    Enum$order_by? system_prompt,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      _res;
+}
+
+class Input$persona_min_order_by {
+  factory Input$persona_min_order_by({
+    Enum$order_by? created_at,
+    Enum$order_by? description,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? persona_id,
+    Enum$order_by? system_prompt,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      Input$persona_min_order_by._({
+        if (created_at != null) r'created_at': created_at,
+        if (description != null) r'description': description,
+        if (file_id != null) r'file_id': file_id,
+        if (name != null) r'name': name,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (system_prompt != null) r'system_prompt': system_prompt,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$persona_min_order_by._(this._$data);
+
+  factory Input$persona_min_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('description')) {
+      final l$description = data['description'];
+      result$data['description'] = l$description == null
+          ? null
+          : fromJson$Enum$order_by((l$description as String));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] =
+          l$name == null ? null : fromJson$Enum$order_by((l$name as String));
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = l$persona_id == null
+          ? null
+          : fromJson$Enum$order_by((l$persona_id as String));
+    }
+    if (data.containsKey('system_prompt')) {
+      final l$system_prompt = data['system_prompt'];
+      result$data['system_prompt'] = l$system_prompt == null
+          ? null
+          : fromJson$Enum$order_by((l$system_prompt as String));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    return Input$persona_min_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get description => (_$data['description'] as Enum$order_by?);
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Enum$order_by? get name => (_$data['name'] as Enum$order_by?);
+  Enum$order_by? get persona_id => (_$data['persona_id'] as Enum$order_by?);
+  Enum$order_by? get system_prompt =>
+      (_$data['system_prompt'] as Enum$order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('description')) {
+      final l$description = description;
+      result$data['description'] =
+          l$description == null ? null : toJson$Enum$order_by(l$description);
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] =
+          l$name == null ? null : toJson$Enum$order_by(l$name);
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] =
+          l$persona_id == null ? null : toJson$Enum$order_by(l$persona_id);
+    }
+    if (_$data.containsKey('system_prompt')) {
+      final l$system_prompt = system_prompt;
+      result$data['system_prompt'] = l$system_prompt == null
+          ? null
+          : toJson$Enum$order_by(l$system_prompt);
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_min_order_by<Input$persona_min_order_by>
+      get copyWith => CopyWith$Input$persona_min_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_min_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$description = description;
+    final lOther$description = other.description;
+    if (_$data.containsKey('description') !=
+        other._$data.containsKey('description')) {
+      return false;
+    }
+    if (l$description != lOther$description) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$system_prompt = system_prompt;
+    final lOther$system_prompt = other.system_prompt;
+    if (_$data.containsKey('system_prompt') !=
+        other._$data.containsKey('system_prompt')) {
+      return false;
+    }
+    if (l$system_prompt != lOther$system_prompt) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$created_at = created_at;
+    final l$description = description;
+    final l$file_id = file_id;
+    final l$name = name;
+    final l$persona_id = persona_id;
+    final l$system_prompt = system_prompt;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('description') ? l$description : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('system_prompt') ? l$system_prompt : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_min_order_by<TRes> {
+  factory CopyWith$Input$persona_min_order_by(
+    Input$persona_min_order_by instance,
+    TRes Function(Input$persona_min_order_by) then,
+  ) = _CopyWithImpl$Input$persona_min_order_by;
+
+  factory CopyWith$Input$persona_min_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_min_order_by;
+
+  TRes call({
+    Enum$order_by? created_at,
+    Enum$order_by? description,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? persona_id,
+    Enum$order_by? system_prompt,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$persona_min_order_by<TRes>
+    implements CopyWith$Input$persona_min_order_by<TRes> {
+  _CopyWithImpl$Input$persona_min_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_min_order_by _instance;
+
+  final TRes Function(Input$persona_min_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? created_at = _undefined,
+    Object? description = _undefined,
+    Object? file_id = _undefined,
+    Object? name = _undefined,
+    Object? persona_id = _undefined,
+    Object? system_prompt = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$persona_min_order_by._({
+        ..._instance._$data,
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (description != _undefined)
+          'description': (description as Enum$order_by?),
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (name != _undefined) 'name': (name as Enum$order_by?),
+        if (persona_id != _undefined)
+          'persona_id': (persona_id as Enum$order_by?),
+        if (system_prompt != _undefined)
+          'system_prompt': (system_prompt as Enum$order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$persona_min_order_by<TRes>
+    implements CopyWith$Input$persona_min_order_by<TRes> {
+  _CopyWithStubImpl$Input$persona_min_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? created_at,
+    Enum$order_by? description,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? persona_id,
+    Enum$order_by? system_prompt,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      _res;
+}
+
+class Input$persona_obj_rel_insert_input {
+  factory Input$persona_obj_rel_insert_input({
+    required Input$persona_insert_input data,
+    Input$persona_on_conflict? on_conflict,
+  }) =>
+      Input$persona_obj_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$persona_obj_rel_insert_input._(this._$data);
+
+  factory Input$persona_obj_rel_insert_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] =
+        Input$persona_insert_input.fromJson((l$data as Map<String, dynamic>));
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$persona_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$persona_obj_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$persona_insert_input get data =>
+      (_$data['data'] as Input$persona_insert_input);
+  Input$persona_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$persona_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.toJson();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_obj_rel_insert_input<
+          Input$persona_obj_rel_insert_input>
+      get copyWith => CopyWith$Input$persona_obj_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_obj_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data != lOther$data) {
+      return false;
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      l$data,
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_obj_rel_insert_input<TRes> {
+  factory CopyWith$Input$persona_obj_rel_insert_input(
+    Input$persona_obj_rel_insert_input instance,
+    TRes Function(Input$persona_obj_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$persona_obj_rel_insert_input;
+
+  factory CopyWith$Input$persona_obj_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_obj_rel_insert_input;
+
+  TRes call({
+    Input$persona_insert_input? data,
+    Input$persona_on_conflict? on_conflict,
+  });
+  CopyWith$Input$persona_insert_input<TRes> get data;
+  CopyWith$Input$persona_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$persona_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$persona_obj_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$persona_obj_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_obj_rel_insert_input _instance;
+
+  final TRes Function(Input$persona_obj_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$persona_obj_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as Input$persona_insert_input),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$persona_on_conflict?),
+      }));
+  CopyWith$Input$persona_insert_input<TRes> get data {
+    final local$data = _instance.data;
+    return CopyWith$Input$persona_insert_input(
+        local$data, (e) => call(data: e));
+  }
+
+  CopyWith$Input$persona_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$persona_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$persona_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$persona_obj_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$persona_obj_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$persona_insert_input? data,
+    Input$persona_on_conflict? on_conflict,
+  }) =>
+      _res;
+  CopyWith$Input$persona_insert_input<TRes> get data =>
+      CopyWith$Input$persona_insert_input.stub(_res);
+  CopyWith$Input$persona_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$persona_on_conflict.stub(_res);
+}
+
+class Input$persona_on_conflict {
+  factory Input$persona_on_conflict({
+    required Enum$persona_constraint constraint,
+    List<Enum$persona_update_column>? update_columns,
+    Input$persona_bool_exp? where,
+  }) =>
+      Input$persona_on_conflict._({
+        r'constraint': constraint,
+        if (update_columns != null) r'update_columns': update_columns,
+        if (where != null) r'where': where,
+      });
+
+  Input$persona_on_conflict._(this._$data);
+
+  factory Input$persona_on_conflict.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$constraint = data['constraint'];
+    result$data['constraint'] =
+        fromJson$Enum$persona_constraint((l$constraint as String));
+    if (data.containsKey('update_columns')) {
+      final l$update_columns = data['update_columns'];
+      result$data['update_columns'] = (l$update_columns as List<dynamic>)
+          .map((e) => fromJson$Enum$persona_update_column((e as String)))
+          .toList();
+    }
+    if (data.containsKey('where')) {
+      final l$where = data['where'];
+      result$data['where'] = l$where == null
+          ? null
+          : Input$persona_bool_exp.fromJson((l$where as Map<String, dynamic>));
+    }
+    return Input$persona_on_conflict._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$persona_constraint get constraint =>
+      (_$data['constraint'] as Enum$persona_constraint);
+  List<Enum$persona_update_column>? get update_columns =>
+      (_$data['update_columns'] as List<Enum$persona_update_column>?);
+  Input$persona_bool_exp? get where =>
+      (_$data['where'] as Input$persona_bool_exp?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$constraint = constraint;
+    result$data['constraint'] = toJson$Enum$persona_constraint(l$constraint);
+    if (_$data.containsKey('update_columns')) {
+      final l$update_columns = update_columns;
+      result$data['update_columns'] =
+          (l$update_columns as List<Enum$persona_update_column>)
+              .map((e) => toJson$Enum$persona_update_column(e))
+              .toList();
+    }
+    if (_$data.containsKey('where')) {
+      final l$where = where;
+      result$data['where'] = l$where?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_on_conflict<Input$persona_on_conflict> get copyWith =>
+      CopyWith$Input$persona_on_conflict(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_on_conflict) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$constraint = constraint;
+    final lOther$constraint = other.constraint;
+    if (l$constraint != lOther$constraint) {
+      return false;
+    }
+    final l$update_columns = update_columns;
+    final lOther$update_columns = other.update_columns;
+    if (_$data.containsKey('update_columns') !=
+        other._$data.containsKey('update_columns')) {
+      return false;
+    }
+    if (l$update_columns != null && lOther$update_columns != null) {
+      if (l$update_columns.length != lOther$update_columns.length) {
+        return false;
+      }
+      for (int i = 0; i < l$update_columns.length; i++) {
+        final l$update_columns$entry = l$update_columns[i];
+        final lOther$update_columns$entry = lOther$update_columns[i];
+        if (l$update_columns$entry != lOther$update_columns$entry) {
+          return false;
+        }
+      }
+    } else if (l$update_columns != lOther$update_columns) {
+      return false;
+    }
+    final l$where = where;
+    final lOther$where = other.where;
+    if (_$data.containsKey('where') != other._$data.containsKey('where')) {
+      return false;
+    }
+    if (l$where != lOther$where) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$constraint = constraint;
+    final l$update_columns = update_columns;
+    final l$where = where;
+    return Object.hashAll([
+      l$constraint,
+      _$data.containsKey('update_columns')
+          ? l$update_columns == null
+              ? null
+              : Object.hashAll(l$update_columns.map((v) => v))
+          : const {},
+      _$data.containsKey('where') ? l$where : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_on_conflict<TRes> {
+  factory CopyWith$Input$persona_on_conflict(
+    Input$persona_on_conflict instance,
+    TRes Function(Input$persona_on_conflict) then,
+  ) = _CopyWithImpl$Input$persona_on_conflict;
+
+  factory CopyWith$Input$persona_on_conflict.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_on_conflict;
+
+  TRes call({
+    Enum$persona_constraint? constraint,
+    List<Enum$persona_update_column>? update_columns,
+    Input$persona_bool_exp? where,
+  });
+  CopyWith$Input$persona_bool_exp<TRes> get where;
+}
+
+class _CopyWithImpl$Input$persona_on_conflict<TRes>
+    implements CopyWith$Input$persona_on_conflict<TRes> {
+  _CopyWithImpl$Input$persona_on_conflict(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_on_conflict _instance;
+
+  final TRes Function(Input$persona_on_conflict) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? constraint = _undefined,
+    Object? update_columns = _undefined,
+    Object? where = _undefined,
+  }) =>
+      _then(Input$persona_on_conflict._({
+        ..._instance._$data,
+        if (constraint != _undefined && constraint != null)
+          'constraint': (constraint as Enum$persona_constraint),
+        if (update_columns != _undefined && update_columns != null)
+          'update_columns':
+              (update_columns as List<Enum$persona_update_column>),
+        if (where != _undefined) 'where': (where as Input$persona_bool_exp?),
+      }));
+  CopyWith$Input$persona_bool_exp<TRes> get where {
+    final local$where = _instance.where;
+    return local$where == null
+        ? CopyWith$Input$persona_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$persona_bool_exp(local$where, (e) => call(where: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_on_conflict<TRes>
+    implements CopyWith$Input$persona_on_conflict<TRes> {
+  _CopyWithStubImpl$Input$persona_on_conflict(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$persona_constraint? constraint,
+    List<Enum$persona_update_column>? update_columns,
+    Input$persona_bool_exp? where,
+  }) =>
+      _res;
+  CopyWith$Input$persona_bool_exp<TRes> get where =>
+      CopyWith$Input$persona_bool_exp.stub(_res);
+}
+
+class Input$persona_order_by {
+  factory Input$persona_order_by({
+    Input$chat_aggregate_order_by? chats_aggregate,
+    Enum$order_by? created_at,
+    Enum$order_by? description,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? persona_id,
+    Input$public_user_order_by? persona_owner,
+    Input$file_order_by? photo,
+    Enum$order_by? system_prompt,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      Input$persona_order_by._({
+        if (chats_aggregate != null) r'chats_aggregate': chats_aggregate,
+        if (created_at != null) r'created_at': created_at,
+        if (description != null) r'description': description,
+        if (file_id != null) r'file_id': file_id,
+        if (name != null) r'name': name,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (persona_owner != null) r'persona_owner': persona_owner,
+        if (photo != null) r'photo': photo,
+        if (system_prompt != null) r'system_prompt': system_prompt,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$persona_order_by._(this._$data);
+
+  factory Input$persona_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('chats_aggregate')) {
+      final l$chats_aggregate = data['chats_aggregate'];
+      result$data['chats_aggregate'] = l$chats_aggregate == null
+          ? null
+          : Input$chat_aggregate_order_by.fromJson(
+              (l$chats_aggregate as Map<String, dynamic>));
+    }
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('description')) {
+      final l$description = data['description'];
+      result$data['description'] = l$description == null
+          ? null
+          : fromJson$Enum$order_by((l$description as String));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] =
+          l$name == null ? null : fromJson$Enum$order_by((l$name as String));
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = l$persona_id == null
+          ? null
+          : fromJson$Enum$order_by((l$persona_id as String));
+    }
+    if (data.containsKey('persona_owner')) {
+      final l$persona_owner = data['persona_owner'];
+      result$data['persona_owner'] = l$persona_owner == null
+          ? null
+          : Input$public_user_order_by.fromJson(
+              (l$persona_owner as Map<String, dynamic>));
+    }
+    if (data.containsKey('photo')) {
+      final l$photo = data['photo'];
+      result$data['photo'] = l$photo == null
+          ? null
+          : Input$file_order_by.fromJson((l$photo as Map<String, dynamic>));
+    }
+    if (data.containsKey('system_prompt')) {
+      final l$system_prompt = data['system_prompt'];
+      result$data['system_prompt'] = l$system_prompt == null
+          ? null
+          : fromJson$Enum$order_by((l$system_prompt as String));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    return Input$persona_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$chat_aggregate_order_by? get chats_aggregate =>
+      (_$data['chats_aggregate'] as Input$chat_aggregate_order_by?);
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get description => (_$data['description'] as Enum$order_by?);
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Enum$order_by? get name => (_$data['name'] as Enum$order_by?);
+  Enum$order_by? get persona_id => (_$data['persona_id'] as Enum$order_by?);
+  Input$public_user_order_by? get persona_owner =>
+      (_$data['persona_owner'] as Input$public_user_order_by?);
+  Input$file_order_by? get photo => (_$data['photo'] as Input$file_order_by?);
+  Enum$order_by? get system_prompt =>
+      (_$data['system_prompt'] as Enum$order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chats_aggregate')) {
+      final l$chats_aggregate = chats_aggregate;
+      result$data['chats_aggregate'] = l$chats_aggregate?.toJson();
+    }
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('description')) {
+      final l$description = description;
+      result$data['description'] =
+          l$description == null ? null : toJson$Enum$order_by(l$description);
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] =
+          l$name == null ? null : toJson$Enum$order_by(l$name);
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] =
+          l$persona_id == null ? null : toJson$Enum$order_by(l$persona_id);
+    }
+    if (_$data.containsKey('persona_owner')) {
+      final l$persona_owner = persona_owner;
+      result$data['persona_owner'] = l$persona_owner?.toJson();
+    }
+    if (_$data.containsKey('photo')) {
+      final l$photo = photo;
+      result$data['photo'] = l$photo?.toJson();
+    }
+    if (_$data.containsKey('system_prompt')) {
+      final l$system_prompt = system_prompt;
+      result$data['system_prompt'] = l$system_prompt == null
+          ? null
+          : toJson$Enum$order_by(l$system_prompt);
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_order_by<Input$persona_order_by> get copyWith =>
+      CopyWith$Input$persona_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$chats_aggregate = chats_aggregate;
+    final lOther$chats_aggregate = other.chats_aggregate;
+    if (_$data.containsKey('chats_aggregate') !=
+        other._$data.containsKey('chats_aggregate')) {
+      return false;
+    }
+    if (l$chats_aggregate != lOther$chats_aggregate) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$description = description;
+    final lOther$description = other.description;
+    if (_$data.containsKey('description') !=
+        other._$data.containsKey('description')) {
+      return false;
+    }
+    if (l$description != lOther$description) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$persona_owner = persona_owner;
+    final lOther$persona_owner = other.persona_owner;
+    if (_$data.containsKey('persona_owner') !=
+        other._$data.containsKey('persona_owner')) {
+      return false;
+    }
+    if (l$persona_owner != lOther$persona_owner) {
+      return false;
+    }
+    final l$photo = photo;
+    final lOther$photo = other.photo;
+    if (_$data.containsKey('photo') != other._$data.containsKey('photo')) {
+      return false;
+    }
+    if (l$photo != lOther$photo) {
+      return false;
+    }
+    final l$system_prompt = system_prompt;
+    final lOther$system_prompt = other.system_prompt;
+    if (_$data.containsKey('system_prompt') !=
+        other._$data.containsKey('system_prompt')) {
+      return false;
+    }
+    if (l$system_prompt != lOther$system_prompt) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chats_aggregate = chats_aggregate;
+    final l$created_at = created_at;
+    final l$description = description;
+    final l$file_id = file_id;
+    final l$name = name;
+    final l$persona_id = persona_id;
+    final l$persona_owner = persona_owner;
+    final l$photo = photo;
+    final l$system_prompt = system_prompt;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('chats_aggregate') ? l$chats_aggregate : const {},
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('description') ? l$description : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('persona_owner') ? l$persona_owner : const {},
+      _$data.containsKey('photo') ? l$photo : const {},
+      _$data.containsKey('system_prompt') ? l$system_prompt : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_order_by<TRes> {
+  factory CopyWith$Input$persona_order_by(
+    Input$persona_order_by instance,
+    TRes Function(Input$persona_order_by) then,
+  ) = _CopyWithImpl$Input$persona_order_by;
+
+  factory CopyWith$Input$persona_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_order_by;
+
+  TRes call({
+    Input$chat_aggregate_order_by? chats_aggregate,
+    Enum$order_by? created_at,
+    Enum$order_by? description,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? persona_id,
+    Input$public_user_order_by? persona_owner,
+    Input$file_order_by? photo,
+    Enum$order_by? system_prompt,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  });
+  CopyWith$Input$chat_aggregate_order_by<TRes> get chats_aggregate;
+  CopyWith$Input$public_user_order_by<TRes> get persona_owner;
+  CopyWith$Input$file_order_by<TRes> get photo;
+}
+
+class _CopyWithImpl$Input$persona_order_by<TRes>
+    implements CopyWith$Input$persona_order_by<TRes> {
+  _CopyWithImpl$Input$persona_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_order_by _instance;
+
+  final TRes Function(Input$persona_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chats_aggregate = _undefined,
+    Object? created_at = _undefined,
+    Object? description = _undefined,
+    Object? file_id = _undefined,
+    Object? name = _undefined,
+    Object? persona_id = _undefined,
+    Object? persona_owner = _undefined,
+    Object? photo = _undefined,
+    Object? system_prompt = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$persona_order_by._({
+        ..._instance._$data,
+        if (chats_aggregate != _undefined)
+          'chats_aggregate':
+              (chats_aggregate as Input$chat_aggregate_order_by?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (description != _undefined)
+          'description': (description as Enum$order_by?),
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (name != _undefined) 'name': (name as Enum$order_by?),
+        if (persona_id != _undefined)
+          'persona_id': (persona_id as Enum$order_by?),
+        if (persona_owner != _undefined)
+          'persona_owner': (persona_owner as Input$public_user_order_by?),
+        if (photo != _undefined) 'photo': (photo as Input$file_order_by?),
+        if (system_prompt != _undefined)
+          'system_prompt': (system_prompt as Enum$order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
+      }));
+  CopyWith$Input$chat_aggregate_order_by<TRes> get chats_aggregate {
+    final local$chats_aggregate = _instance.chats_aggregate;
+    return local$chats_aggregate == null
+        ? CopyWith$Input$chat_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$chat_aggregate_order_by(
+            local$chats_aggregate, (e) => call(chats_aggregate: e));
+  }
+
+  CopyWith$Input$public_user_order_by<TRes> get persona_owner {
+    final local$persona_owner = _instance.persona_owner;
+    return local$persona_owner == null
+        ? CopyWith$Input$public_user_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_order_by(
+            local$persona_owner, (e) => call(persona_owner: e));
+  }
+
+  CopyWith$Input$file_order_by<TRes> get photo {
+    final local$photo = _instance.photo;
+    return local$photo == null
+        ? CopyWith$Input$file_order_by.stub(_then(_instance))
+        : CopyWith$Input$file_order_by(local$photo, (e) => call(photo: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_order_by<TRes>
+    implements CopyWith$Input$persona_order_by<TRes> {
+  _CopyWithStubImpl$Input$persona_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Input$chat_aggregate_order_by? chats_aggregate,
+    Enum$order_by? created_at,
+    Enum$order_by? description,
+    Enum$order_by? file_id,
+    Enum$order_by? name,
+    Enum$order_by? persona_id,
+    Input$public_user_order_by? persona_owner,
+    Input$file_order_by? photo,
+    Enum$order_by? system_prompt,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+  }) =>
+      _res;
+  CopyWith$Input$chat_aggregate_order_by<TRes> get chats_aggregate =>
+      CopyWith$Input$chat_aggregate_order_by.stub(_res);
+  CopyWith$Input$public_user_order_by<TRes> get persona_owner =>
+      CopyWith$Input$public_user_order_by.stub(_res);
+  CopyWith$Input$file_order_by<TRes> get photo =>
+      CopyWith$Input$file_order_by.stub(_res);
+}
+
+class Input$persona_pk_columns_input {
+  factory Input$persona_pk_columns_input({required String persona_id}) =>
+      Input$persona_pk_columns_input._({
+        r'persona_id': persona_id,
+      });
+
+  Input$persona_pk_columns_input._(this._$data);
+
+  factory Input$persona_pk_columns_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$persona_id = data['persona_id'];
+    result$data['persona_id'] = (l$persona_id as String);
+    return Input$persona_pk_columns_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get persona_id => (_$data['persona_id'] as String);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$persona_id = persona_id;
+    result$data['persona_id'] = l$persona_id;
+    return result$data;
+  }
+
+  CopyWith$Input$persona_pk_columns_input<Input$persona_pk_columns_input>
+      get copyWith => CopyWith$Input$persona_pk_columns_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_pk_columns_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$persona_id = persona_id;
+    return Object.hashAll([l$persona_id]);
+  }
+}
+
+abstract class CopyWith$Input$persona_pk_columns_input<TRes> {
+  factory CopyWith$Input$persona_pk_columns_input(
+    Input$persona_pk_columns_input instance,
+    TRes Function(Input$persona_pk_columns_input) then,
+  ) = _CopyWithImpl$Input$persona_pk_columns_input;
+
+  factory CopyWith$Input$persona_pk_columns_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_pk_columns_input;
+
+  TRes call({String? persona_id});
+}
+
+class _CopyWithImpl$Input$persona_pk_columns_input<TRes>
+    implements CopyWith$Input$persona_pk_columns_input<TRes> {
+  _CopyWithImpl$Input$persona_pk_columns_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_pk_columns_input _instance;
+
+  final TRes Function(Input$persona_pk_columns_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? persona_id = _undefined}) =>
+      _then(Input$persona_pk_columns_input._({
+        ..._instance._$data,
+        if (persona_id != _undefined && persona_id != null)
+          'persona_id': (persona_id as String),
+      }));
+}
+
+class _CopyWithStubImpl$Input$persona_pk_columns_input<TRes>
+    implements CopyWith$Input$persona_pk_columns_input<TRes> {
+  _CopyWithStubImpl$Input$persona_pk_columns_input(this._res);
+
+  TRes _res;
+
+  call({String? persona_id}) => _res;
+}
+
+class Input$persona_set_input {
+  factory Input$persona_set_input({
+    String? created_at,
+    String? description,
+    String? file_id,
+    String? name,
+    String? persona_id,
+    String? system_prompt,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      Input$persona_set_input._({
+        if (created_at != null) r'created_at': created_at,
+        if (description != null) r'description': description,
+        if (file_id != null) r'file_id': file_id,
+        if (name != null) r'name': name,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (system_prompt != null) r'system_prompt': system_prompt,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$persona_set_input._(this._$data);
+
+  factory Input$persona_set_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = (l$created_at as String?);
+    }
+    if (data.containsKey('description')) {
+      final l$description = data['description'];
+      result$data['description'] = (l$description as String?);
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = (l$file_id as String?);
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] = (l$name as String?);
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = (l$persona_id as String?);
+    }
+    if (data.containsKey('system_prompt')) {
+      final l$system_prompt = data['system_prompt'];
+      result$data['system_prompt'] = (l$system_prompt as String?);
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = (l$updated_at as String?);
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = (l$user_id as String?);
+    }
+    return Input$persona_set_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String? get created_at => (_$data['created_at'] as String?);
+  String? get description => (_$data['description'] as String?);
+  String? get file_id => (_$data['file_id'] as String?);
+  String? get name => (_$data['name'] as String?);
+  String? get persona_id => (_$data['persona_id'] as String?);
+  String? get system_prompt => (_$data['system_prompt'] as String?);
+  String? get updated_at => (_$data['updated_at'] as String?);
+  String? get user_id => (_$data['user_id'] as String?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at;
+    }
+    if (_$data.containsKey('description')) {
+      final l$description = description;
+      result$data['description'] = l$description;
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id;
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] = l$name;
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] = l$persona_id;
+    }
+    if (_$data.containsKey('system_prompt')) {
+      final l$system_prompt = system_prompt;
+      result$data['system_prompt'] = l$system_prompt;
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at;
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] = l$user_id;
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_set_input<Input$persona_set_input> get copyWith =>
+      CopyWith$Input$persona_set_input(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_set_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$description = description;
+    final lOther$description = other.description;
+    if (_$data.containsKey('description') !=
+        other._$data.containsKey('description')) {
+      return false;
+    }
+    if (l$description != lOther$description) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$system_prompt = system_prompt;
+    final lOther$system_prompt = other.system_prompt;
+    if (_$data.containsKey('system_prompt') !=
+        other._$data.containsKey('system_prompt')) {
+      return false;
+    }
+    if (l$system_prompt != lOther$system_prompt) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$created_at = created_at;
+    final l$description = description;
+    final l$file_id = file_id;
+    final l$name = name;
+    final l$persona_id = persona_id;
+    final l$system_prompt = system_prompt;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('description') ? l$description : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('system_prompt') ? l$system_prompt : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_set_input<TRes> {
+  factory CopyWith$Input$persona_set_input(
+    Input$persona_set_input instance,
+    TRes Function(Input$persona_set_input) then,
+  ) = _CopyWithImpl$Input$persona_set_input;
+
+  factory CopyWith$Input$persona_set_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_set_input;
+
+  TRes call({
+    String? created_at,
+    String? description,
+    String? file_id,
+    String? name,
+    String? persona_id,
+    String? system_prompt,
+    String? updated_at,
+    String? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$persona_set_input<TRes>
+    implements CopyWith$Input$persona_set_input<TRes> {
+  _CopyWithImpl$Input$persona_set_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_set_input _instance;
+
+  final TRes Function(Input$persona_set_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? created_at = _undefined,
+    Object? description = _undefined,
+    Object? file_id = _undefined,
+    Object? name = _undefined,
+    Object? persona_id = _undefined,
+    Object? system_prompt = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$persona_set_input._({
+        ..._instance._$data,
+        if (created_at != _undefined) 'created_at': (created_at as String?),
+        if (description != _undefined) 'description': (description as String?),
+        if (file_id != _undefined) 'file_id': (file_id as String?),
+        if (name != _undefined) 'name': (name as String?),
+        if (persona_id != _undefined) 'persona_id': (persona_id as String?),
+        if (system_prompt != _undefined)
+          'system_prompt': (system_prompt as String?),
+        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
+        if (user_id != _undefined) 'user_id': (user_id as String?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$persona_set_input<TRes>
+    implements CopyWith$Input$persona_set_input<TRes> {
+  _CopyWithStubImpl$Input$persona_set_input(this._res);
+
+  TRes _res;
+
+  call({
+    String? created_at,
+    String? description,
+    String? file_id,
+    String? name,
+    String? persona_id,
+    String? system_prompt,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      _res;
+}
+
+class Input$persona_stream_cursor_input {
+  factory Input$persona_stream_cursor_input({
+    required Input$persona_stream_cursor_value_input initial_value,
+    Enum$cursor_ordering? ordering,
+  }) =>
+      Input$persona_stream_cursor_input._({
+        r'initial_value': initial_value,
+        if (ordering != null) r'ordering': ordering,
+      });
+
+  Input$persona_stream_cursor_input._(this._$data);
+
+  factory Input$persona_stream_cursor_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$initial_value = data['initial_value'];
+    result$data['initial_value'] =
+        Input$persona_stream_cursor_value_input.fromJson(
+            (l$initial_value as Map<String, dynamic>));
+    if (data.containsKey('ordering')) {
+      final l$ordering = data['ordering'];
+      result$data['ordering'] = l$ordering == null
+          ? null
+          : fromJson$Enum$cursor_ordering((l$ordering as String));
+    }
+    return Input$persona_stream_cursor_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$persona_stream_cursor_value_input get initial_value =>
+      (_$data['initial_value'] as Input$persona_stream_cursor_value_input);
+  Enum$cursor_ordering? get ordering =>
+      (_$data['ordering'] as Enum$cursor_ordering?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$initial_value = initial_value;
+    result$data['initial_value'] = l$initial_value.toJson();
+    if (_$data.containsKey('ordering')) {
+      final l$ordering = ordering;
+      result$data['ordering'] =
+          l$ordering == null ? null : toJson$Enum$cursor_ordering(l$ordering);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_stream_cursor_input<Input$persona_stream_cursor_input>
+      get copyWith => CopyWith$Input$persona_stream_cursor_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_stream_cursor_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$initial_value = initial_value;
+    final lOther$initial_value = other.initial_value;
+    if (l$initial_value != lOther$initial_value) {
+      return false;
+    }
+    final l$ordering = ordering;
+    final lOther$ordering = other.ordering;
+    if (_$data.containsKey('ordering') !=
+        other._$data.containsKey('ordering')) {
+      return false;
+    }
+    if (l$ordering != lOther$ordering) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$initial_value = initial_value;
+    final l$ordering = ordering;
+    return Object.hashAll([
+      l$initial_value,
+      _$data.containsKey('ordering') ? l$ordering : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_stream_cursor_input<TRes> {
+  factory CopyWith$Input$persona_stream_cursor_input(
+    Input$persona_stream_cursor_input instance,
+    TRes Function(Input$persona_stream_cursor_input) then,
+  ) = _CopyWithImpl$Input$persona_stream_cursor_input;
+
+  factory CopyWith$Input$persona_stream_cursor_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_stream_cursor_input;
+
+  TRes call({
+    Input$persona_stream_cursor_value_input? initial_value,
+    Enum$cursor_ordering? ordering,
+  });
+  CopyWith$Input$persona_stream_cursor_value_input<TRes> get initial_value;
+}
+
+class _CopyWithImpl$Input$persona_stream_cursor_input<TRes>
+    implements CopyWith$Input$persona_stream_cursor_input<TRes> {
+  _CopyWithImpl$Input$persona_stream_cursor_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_stream_cursor_input _instance;
+
+  final TRes Function(Input$persona_stream_cursor_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? initial_value = _undefined,
+    Object? ordering = _undefined,
+  }) =>
+      _then(Input$persona_stream_cursor_input._({
+        ..._instance._$data,
+        if (initial_value != _undefined && initial_value != null)
+          'initial_value':
+              (initial_value as Input$persona_stream_cursor_value_input),
+        if (ordering != _undefined)
+          'ordering': (ordering as Enum$cursor_ordering?),
+      }));
+  CopyWith$Input$persona_stream_cursor_value_input<TRes> get initial_value {
+    final local$initial_value = _instance.initial_value;
+    return CopyWith$Input$persona_stream_cursor_value_input(
+        local$initial_value, (e) => call(initial_value: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_stream_cursor_input<TRes>
+    implements CopyWith$Input$persona_stream_cursor_input<TRes> {
+  _CopyWithStubImpl$Input$persona_stream_cursor_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$persona_stream_cursor_value_input? initial_value,
+    Enum$cursor_ordering? ordering,
+  }) =>
+      _res;
+  CopyWith$Input$persona_stream_cursor_value_input<TRes> get initial_value =>
+      CopyWith$Input$persona_stream_cursor_value_input.stub(_res);
+}
+
+class Input$persona_stream_cursor_value_input {
+  factory Input$persona_stream_cursor_value_input({
+    String? created_at,
+    String? description,
+    String? file_id,
+    String? name,
+    String? persona_id,
+    String? system_prompt,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      Input$persona_stream_cursor_value_input._({
+        if (created_at != null) r'created_at': created_at,
+        if (description != null) r'description': description,
+        if (file_id != null) r'file_id': file_id,
+        if (name != null) r'name': name,
+        if (persona_id != null) r'persona_id': persona_id,
+        if (system_prompt != null) r'system_prompt': system_prompt,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$persona_stream_cursor_value_input._(this._$data);
+
+  factory Input$persona_stream_cursor_value_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = (l$created_at as String?);
+    }
+    if (data.containsKey('description')) {
+      final l$description = data['description'];
+      result$data['description'] = (l$description as String?);
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = (l$file_id as String?);
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] = (l$name as String?);
+    }
+    if (data.containsKey('persona_id')) {
+      final l$persona_id = data['persona_id'];
+      result$data['persona_id'] = (l$persona_id as String?);
+    }
+    if (data.containsKey('system_prompt')) {
+      final l$system_prompt = data['system_prompt'];
+      result$data['system_prompt'] = (l$system_prompt as String?);
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = (l$updated_at as String?);
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = (l$user_id as String?);
+    }
+    return Input$persona_stream_cursor_value_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String? get created_at => (_$data['created_at'] as String?);
+  String? get description => (_$data['description'] as String?);
+  String? get file_id => (_$data['file_id'] as String?);
+  String? get name => (_$data['name'] as String?);
+  String? get persona_id => (_$data['persona_id'] as String?);
+  String? get system_prompt => (_$data['system_prompt'] as String?);
+  String? get updated_at => (_$data['updated_at'] as String?);
+  String? get user_id => (_$data['user_id'] as String?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] = l$created_at;
+    }
+    if (_$data.containsKey('description')) {
+      final l$description = description;
+      result$data['description'] = l$description;
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id;
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] = l$name;
+    }
+    if (_$data.containsKey('persona_id')) {
+      final l$persona_id = persona_id;
+      result$data['persona_id'] = l$persona_id;
+    }
+    if (_$data.containsKey('system_prompt')) {
+      final l$system_prompt = system_prompt;
+      result$data['system_prompt'] = l$system_prompt;
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] = l$updated_at;
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] = l$user_id;
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$persona_stream_cursor_value_input<
+          Input$persona_stream_cursor_value_input>
+      get copyWith => CopyWith$Input$persona_stream_cursor_value_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_stream_cursor_value_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$description = description;
+    final lOther$description = other.description;
+    if (_$data.containsKey('description') !=
+        other._$data.containsKey('description')) {
+      return false;
+    }
+    if (l$description != lOther$description) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$persona_id = persona_id;
+    final lOther$persona_id = other.persona_id;
+    if (_$data.containsKey('persona_id') !=
+        other._$data.containsKey('persona_id')) {
+      return false;
+    }
+    if (l$persona_id != lOther$persona_id) {
+      return false;
+    }
+    final l$system_prompt = system_prompt;
+    final lOther$system_prompt = other.system_prompt;
+    if (_$data.containsKey('system_prompt') !=
+        other._$data.containsKey('system_prompt')) {
+      return false;
+    }
+    if (l$system_prompt != lOther$system_prompt) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$created_at = created_at;
+    final l$description = description;
+    final l$file_id = file_id;
+    final l$name = name;
+    final l$persona_id = persona_id;
+    final l$system_prompt = system_prompt;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('description') ? l$description : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('persona_id') ? l$persona_id : const {},
+      _$data.containsKey('system_prompt') ? l$system_prompt : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_stream_cursor_value_input<TRes> {
+  factory CopyWith$Input$persona_stream_cursor_value_input(
+    Input$persona_stream_cursor_value_input instance,
+    TRes Function(Input$persona_stream_cursor_value_input) then,
+  ) = _CopyWithImpl$Input$persona_stream_cursor_value_input;
+
+  factory CopyWith$Input$persona_stream_cursor_value_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_stream_cursor_value_input;
+
+  TRes call({
+    String? created_at,
+    String? description,
+    String? file_id,
+    String? name,
+    String? persona_id,
+    String? system_prompt,
+    String? updated_at,
+    String? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$persona_stream_cursor_value_input<TRes>
+    implements CopyWith$Input$persona_stream_cursor_value_input<TRes> {
+  _CopyWithImpl$Input$persona_stream_cursor_value_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_stream_cursor_value_input _instance;
+
+  final TRes Function(Input$persona_stream_cursor_value_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? created_at = _undefined,
+    Object? description = _undefined,
+    Object? file_id = _undefined,
+    Object? name = _undefined,
+    Object? persona_id = _undefined,
+    Object? system_prompt = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$persona_stream_cursor_value_input._({
+        ..._instance._$data,
+        if (created_at != _undefined) 'created_at': (created_at as String?),
+        if (description != _undefined) 'description': (description as String?),
+        if (file_id != _undefined) 'file_id': (file_id as String?),
+        if (name != _undefined) 'name': (name as String?),
+        if (persona_id != _undefined) 'persona_id': (persona_id as String?),
+        if (system_prompt != _undefined)
+          'system_prompt': (system_prompt as String?),
+        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
+        if (user_id != _undefined) 'user_id': (user_id as String?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$persona_stream_cursor_value_input<TRes>
+    implements CopyWith$Input$persona_stream_cursor_value_input<TRes> {
+  _CopyWithStubImpl$Input$persona_stream_cursor_value_input(this._res);
+
+  TRes _res;
+
+  call({
+    String? created_at,
+    String? description,
+    String? file_id,
+    String? name,
+    String? persona_id,
+    String? system_prompt,
+    String? updated_at,
+    String? user_id,
+  }) =>
+      _res;
+}
+
+class Input$persona_updates {
+  factory Input$persona_updates({
+    Input$persona_set_input? $_set,
+    required Input$persona_bool_exp where,
+  }) =>
+      Input$persona_updates._({
+        if ($_set != null) r'_set': $_set,
+        r'where': where,
+      });
+
+  Input$persona_updates._(this._$data);
+
+  factory Input$persona_updates.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('_set')) {
+      final l$$_set = data['_set'];
+      result$data['_set'] = l$$_set == null
+          ? null
+          : Input$persona_set_input.fromJson((l$$_set as Map<String, dynamic>));
+    }
+    final l$where = data['where'];
+    result$data['where'] =
+        Input$persona_bool_exp.fromJson((l$where as Map<String, dynamic>));
+    return Input$persona_updates._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$persona_set_input? get $_set =>
+      (_$data['_set'] as Input$persona_set_input?);
+  Input$persona_bool_exp get where =>
+      (_$data['where'] as Input$persona_bool_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('_set')) {
+      final l$$_set = $_set;
+      result$data['_set'] = l$$_set?.toJson();
+    }
+    final l$where = where;
+    result$data['where'] = l$where.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$persona_updates<Input$persona_updates> get copyWith =>
+      CopyWith$Input$persona_updates(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$persona_updates) || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$_set = $_set;
+    final lOther$$_set = other.$_set;
+    if (_$data.containsKey('_set') != other._$data.containsKey('_set')) {
+      return false;
+    }
+    if (l$$_set != lOther$$_set) {
+      return false;
+    }
+    final l$where = where;
+    final lOther$where = other.where;
+    if (l$where != lOther$where) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$$_set = $_set;
+    final l$where = where;
+    return Object.hashAll([
+      _$data.containsKey('_set') ? l$$_set : const {},
+      l$where,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$persona_updates<TRes> {
+  factory CopyWith$Input$persona_updates(
+    Input$persona_updates instance,
+    TRes Function(Input$persona_updates) then,
+  ) = _CopyWithImpl$Input$persona_updates;
+
+  factory CopyWith$Input$persona_updates.stub(TRes res) =
+      _CopyWithStubImpl$Input$persona_updates;
+
+  TRes call({
+    Input$persona_set_input? $_set,
+    Input$persona_bool_exp? where,
+  });
+  CopyWith$Input$persona_set_input<TRes> get $_set;
+  CopyWith$Input$persona_bool_exp<TRes> get where;
+}
+
+class _CopyWithImpl$Input$persona_updates<TRes>
+    implements CopyWith$Input$persona_updates<TRes> {
+  _CopyWithImpl$Input$persona_updates(
+    this._instance,
+    this._then,
+  );
+
+  final Input$persona_updates _instance;
+
+  final TRes Function(Input$persona_updates) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? $_set = _undefined,
+    Object? where = _undefined,
+  }) =>
+      _then(Input$persona_updates._({
+        ..._instance._$data,
+        if ($_set != _undefined) '_set': ($_set as Input$persona_set_input?),
+        if (where != _undefined && where != null)
+          'where': (where as Input$persona_bool_exp),
+      }));
+  CopyWith$Input$persona_set_input<TRes> get $_set {
+    final local$$_set = _instance.$_set;
+    return local$$_set == null
+        ? CopyWith$Input$persona_set_input.stub(_then(_instance))
+        : CopyWith$Input$persona_set_input(local$$_set, (e) => call($_set: e));
+  }
+
+  CopyWith$Input$persona_bool_exp<TRes> get where {
+    final local$where = _instance.where;
+    return CopyWith$Input$persona_bool_exp(local$where, (e) => call(where: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$persona_updates<TRes>
+    implements CopyWith$Input$persona_updates<TRes> {
+  _CopyWithStubImpl$Input$persona_updates(this._res);
+
+  TRes _res;
+
+  call({
+    Input$persona_set_input? $_set,
+    Input$persona_bool_exp? where,
+  }) =>
+      _res;
+  CopyWith$Input$persona_set_input<TRes> get $_set =>
+      CopyWith$Input$persona_set_input.stub(_res);
+  CopyWith$Input$persona_bool_exp<TRes> get where =>
+      CopyWith$Input$persona_bool_exp.stub(_res);
+}
+
+class Input$public_user_aggregate_bool_exp {
+  factory Input$public_user_aggregate_bool_exp(
+          {Input$public_user_aggregate_bool_exp_count? count}) =>
+      Input$public_user_aggregate_bool_exp._({
+        if (count != null) r'count': count,
+      });
+
+  Input$public_user_aggregate_bool_exp._(this._$data);
+
+  factory Input$public_user_aggregate_bool_exp.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] = l$count == null
+          ? null
+          : Input$public_user_aggregate_bool_exp_count.fromJson(
+              (l$count as Map<String, dynamic>));
+    }
+    return Input$public_user_aggregate_bool_exp._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$public_user_aggregate_bool_exp_count? get count =>
+      (_$data['count'] as Input$public_user_aggregate_bool_exp_count?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] = l$count?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_aggregate_bool_exp<
+          Input$public_user_aggregate_bool_exp>
+      get copyWith => CopyWith$Input$public_user_aggregate_bool_exp(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_aggregate_bool_exp) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$count = count;
+    return Object.hashAll([_$data.containsKey('count') ? l$count : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_aggregate_bool_exp<TRes> {
+  factory CopyWith$Input$public_user_aggregate_bool_exp(
+    Input$public_user_aggregate_bool_exp instance,
+    TRes Function(Input$public_user_aggregate_bool_exp) then,
+  ) = _CopyWithImpl$Input$public_user_aggregate_bool_exp;
+
+  factory CopyWith$Input$public_user_aggregate_bool_exp.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_aggregate_bool_exp;
+
+  TRes call({Input$public_user_aggregate_bool_exp_count? count});
+  CopyWith$Input$public_user_aggregate_bool_exp_count<TRes> get count;
+}
+
+class _CopyWithImpl$Input$public_user_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$public_user_aggregate_bool_exp<TRes> {
+  _CopyWithImpl$Input$public_user_aggregate_bool_exp(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_aggregate_bool_exp _instance;
+
+  final TRes Function(Input$public_user_aggregate_bool_exp) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? count = _undefined}) =>
+      _then(Input$public_user_aggregate_bool_exp._({
+        ..._instance._$data,
+        if (count != _undefined)
+          'count': (count as Input$public_user_aggregate_bool_exp_count?),
+      }));
+  CopyWith$Input$public_user_aggregate_bool_exp_count<TRes> get count {
+    final local$count = _instance.count;
+    return local$count == null
+        ? CopyWith$Input$public_user_aggregate_bool_exp_count.stub(
+            _then(_instance))
+        : CopyWith$Input$public_user_aggregate_bool_exp_count(
+            local$count, (e) => call(count: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$public_user_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$public_user_aggregate_bool_exp<TRes> {
+  _CopyWithStubImpl$Input$public_user_aggregate_bool_exp(this._res);
+
+  TRes _res;
+
+  call({Input$public_user_aggregate_bool_exp_count? count}) => _res;
+  CopyWith$Input$public_user_aggregate_bool_exp_count<TRes> get count =>
+      CopyWith$Input$public_user_aggregate_bool_exp_count.stub(_res);
+}
+
+class Input$public_user_aggregate_bool_exp_count {
+  factory Input$public_user_aggregate_bool_exp_count({
+    List<Enum$public_user_select_column>? arguments,
+    bool? distinct,
+    Input$public_user_bool_exp? filter,
+    required Input$Int_comparison_exp predicate,
+  }) =>
+      Input$public_user_aggregate_bool_exp_count._({
+        if (arguments != null) r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$public_user_aggregate_bool_exp_count._(this._$data);
+
+  factory Input$public_user_aggregate_bool_exp_count.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('arguments')) {
+      final l$arguments = data['arguments'];
+      result$data['arguments'] = (l$arguments as List<dynamic>?)
+          ?.map((e) => fromJson$Enum$public_user_select_column((e as String)))
+          .toList();
+    }
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$public_user_bool_exp.fromJson(
+              (l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Int_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$public_user_aggregate_bool_exp_count._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Enum$public_user_select_column>? get arguments =>
+      (_$data['arguments'] as List<Enum$public_user_select_column>?);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$public_user_bool_exp? get filter =>
+      (_$data['filter'] as Input$public_user_bool_exp?);
+  Input$Int_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Int_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('arguments')) {
+      final l$arguments = arguments;
+      result$data['arguments'] = l$arguments
+          ?.map((e) => toJson$Enum$public_user_select_column(e))
+          .toList();
+    }
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_aggregate_bool_exp_count<
+          Input$public_user_aggregate_bool_exp_count>
+      get copyWith => CopyWith$Input$public_user_aggregate_bool_exp_count(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_aggregate_bool_exp_count) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (_$data.containsKey('arguments') !=
+        other._$data.containsKey('arguments')) {
+      return false;
+    }
+    if (l$arguments != null && lOther$arguments != null) {
+      if (l$arguments.length != lOther$arguments.length) {
+        return false;
+      }
+      for (int i = 0; i < l$arguments.length; i++) {
+        final l$arguments$entry = l$arguments[i];
+        final lOther$arguments$entry = lOther$arguments[i];
+        if (l$arguments$entry != lOther$arguments$entry) {
+          return false;
+        }
+      }
+    } else if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      _$data.containsKey('arguments')
+          ? l$arguments == null
+              ? null
+              : Object.hashAll(l$arguments.map((v) => v))
+          : const {},
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_aggregate_bool_exp_count<TRes> {
+  factory CopyWith$Input$public_user_aggregate_bool_exp_count(
+    Input$public_user_aggregate_bool_exp_count instance,
+    TRes Function(Input$public_user_aggregate_bool_exp_count) then,
+  ) = _CopyWithImpl$Input$public_user_aggregate_bool_exp_count;
+
+  factory CopyWith$Input$public_user_aggregate_bool_exp_count.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_aggregate_bool_exp_count;
+
+  TRes call({
+    List<Enum$public_user_select_column>? arguments,
+    bool? distinct,
+    Input$public_user_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  });
+  CopyWith$Input$public_user_bool_exp<TRes> get filter;
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$public_user_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$public_user_aggregate_bool_exp_count<TRes> {
+  _CopyWithImpl$Input$public_user_aggregate_bool_exp_count(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_aggregate_bool_exp_count _instance;
+
+  final TRes Function(Input$public_user_aggregate_bool_exp_count) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$public_user_aggregate_bool_exp_count._({
+        ..._instance._$data,
+        if (arguments != _undefined)
+          'arguments': (arguments as List<Enum$public_user_select_column>?),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined)
+          'filter': (filter as Input$public_user_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Int_comparison_exp),
+      }));
+  CopyWith$Input$public_user_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$public_user_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$public_user_bool_exp(
+            local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Int_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$public_user_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$public_user_aggregate_bool_exp_count<TRes> {
+  _CopyWithStubImpl$Input$public_user_aggregate_bool_exp_count(this._res);
+
+  TRes _res;
+
+  call({
+    List<Enum$public_user_select_column>? arguments,
+    bool? distinct,
+    Input$public_user_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$public_user_bool_exp<TRes> get filter =>
+      CopyWith$Input$public_user_bool_exp.stub(_res);
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Int_comparison_exp.stub(_res);
+}
+
+class Input$public_user_aggregate_order_by {
+  factory Input$public_user_aggregate_order_by({
+    Input$public_user_avg_order_by? avg,
+    Enum$order_by? count,
+    Input$public_user_max_order_by? max,
+    Input$public_user_min_order_by? min,
+    Input$public_user_stddev_order_by? stddev,
+    Input$public_user_stddev_pop_order_by? stddev_pop,
+    Input$public_user_stddev_samp_order_by? stddev_samp,
+    Input$public_user_sum_order_by? sum,
+    Input$public_user_var_pop_order_by? var_pop,
+    Input$public_user_var_samp_order_by? var_samp,
+    Input$public_user_variance_order_by? variance,
+  }) =>
+      Input$public_user_aggregate_order_by._({
+        if (avg != null) r'avg': avg,
+        if (count != null) r'count': count,
+        if (max != null) r'max': max,
+        if (min != null) r'min': min,
+        if (stddev != null) r'stddev': stddev,
+        if (stddev_pop != null) r'stddev_pop': stddev_pop,
+        if (stddev_samp != null) r'stddev_samp': stddev_samp,
+        if (sum != null) r'sum': sum,
+        if (var_pop != null) r'var_pop': var_pop,
+        if (var_samp != null) r'var_samp': var_samp,
+        if (variance != null) r'variance': variance,
+      });
+
+  Input$public_user_aggregate_order_by._(this._$data);
+
+  factory Input$public_user_aggregate_order_by.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('avg')) {
+      final l$avg = data['avg'];
+      result$data['avg'] = l$avg == null
+          ? null
+          : Input$public_user_avg_order_by.fromJson(
+              (l$avg as Map<String, dynamic>));
+    }
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] =
+          l$count == null ? null : fromJson$Enum$order_by((l$count as String));
+    }
+    if (data.containsKey('max')) {
+      final l$max = data['max'];
+      result$data['max'] = l$max == null
+          ? null
+          : Input$public_user_max_order_by.fromJson(
+              (l$max as Map<String, dynamic>));
+    }
+    if (data.containsKey('min')) {
+      final l$min = data['min'];
+      result$data['min'] = l$min == null
+          ? null
+          : Input$public_user_min_order_by.fromJson(
+              (l$min as Map<String, dynamic>));
+    }
+    if (data.containsKey('stddev')) {
+      final l$stddev = data['stddev'];
+      result$data['stddev'] = l$stddev == null
+          ? null
+          : Input$public_user_stddev_order_by.fromJson(
+              (l$stddev as Map<String, dynamic>));
+    }
+    if (data.containsKey('stddev_pop')) {
+      final l$stddev_pop = data['stddev_pop'];
+      result$data['stddev_pop'] = l$stddev_pop == null
+          ? null
+          : Input$public_user_stddev_pop_order_by.fromJson(
+              (l$stddev_pop as Map<String, dynamic>));
+    }
+    if (data.containsKey('stddev_samp')) {
+      final l$stddev_samp = data['stddev_samp'];
+      result$data['stddev_samp'] = l$stddev_samp == null
+          ? null
+          : Input$public_user_stddev_samp_order_by.fromJson(
+              (l$stddev_samp as Map<String, dynamic>));
+    }
+    if (data.containsKey('sum')) {
+      final l$sum = data['sum'];
+      result$data['sum'] = l$sum == null
+          ? null
+          : Input$public_user_sum_order_by.fromJson(
+              (l$sum as Map<String, dynamic>));
+    }
+    if (data.containsKey('var_pop')) {
+      final l$var_pop = data['var_pop'];
+      result$data['var_pop'] = l$var_pop == null
+          ? null
+          : Input$public_user_var_pop_order_by.fromJson(
+              (l$var_pop as Map<String, dynamic>));
+    }
+    if (data.containsKey('var_samp')) {
+      final l$var_samp = data['var_samp'];
+      result$data['var_samp'] = l$var_samp == null
+          ? null
+          : Input$public_user_var_samp_order_by.fromJson(
+              (l$var_samp as Map<String, dynamic>));
+    }
+    if (data.containsKey('variance')) {
+      final l$variance = data['variance'];
+      result$data['variance'] = l$variance == null
+          ? null
+          : Input$public_user_variance_order_by.fromJson(
+              (l$variance as Map<String, dynamic>));
+    }
+    return Input$public_user_aggregate_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$public_user_avg_order_by? get avg =>
+      (_$data['avg'] as Input$public_user_avg_order_by?);
+  Enum$order_by? get count => (_$data['count'] as Enum$order_by?);
+  Input$public_user_max_order_by? get max =>
+      (_$data['max'] as Input$public_user_max_order_by?);
+  Input$public_user_min_order_by? get min =>
+      (_$data['min'] as Input$public_user_min_order_by?);
+  Input$public_user_stddev_order_by? get stddev =>
+      (_$data['stddev'] as Input$public_user_stddev_order_by?);
+  Input$public_user_stddev_pop_order_by? get stddev_pop =>
+      (_$data['stddev_pop'] as Input$public_user_stddev_pop_order_by?);
+  Input$public_user_stddev_samp_order_by? get stddev_samp =>
+      (_$data['stddev_samp'] as Input$public_user_stddev_samp_order_by?);
+  Input$public_user_sum_order_by? get sum =>
+      (_$data['sum'] as Input$public_user_sum_order_by?);
+  Input$public_user_var_pop_order_by? get var_pop =>
+      (_$data['var_pop'] as Input$public_user_var_pop_order_by?);
+  Input$public_user_var_samp_order_by? get var_samp =>
+      (_$data['var_samp'] as Input$public_user_var_samp_order_by?);
+  Input$public_user_variance_order_by? get variance =>
+      (_$data['variance'] as Input$public_user_variance_order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('avg')) {
+      final l$avg = avg;
+      result$data['avg'] = l$avg?.toJson();
+    }
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] =
+          l$count == null ? null : toJson$Enum$order_by(l$count);
+    }
+    if (_$data.containsKey('max')) {
+      final l$max = max;
+      result$data['max'] = l$max?.toJson();
+    }
+    if (_$data.containsKey('min')) {
+      final l$min = min;
+      result$data['min'] = l$min?.toJson();
+    }
+    if (_$data.containsKey('stddev')) {
+      final l$stddev = stddev;
+      result$data['stddev'] = l$stddev?.toJson();
+    }
+    if (_$data.containsKey('stddev_pop')) {
+      final l$stddev_pop = stddev_pop;
+      result$data['stddev_pop'] = l$stddev_pop?.toJson();
+    }
+    if (_$data.containsKey('stddev_samp')) {
+      final l$stddev_samp = stddev_samp;
+      result$data['stddev_samp'] = l$stddev_samp?.toJson();
+    }
+    if (_$data.containsKey('sum')) {
+      final l$sum = sum;
+      result$data['sum'] = l$sum?.toJson();
+    }
+    if (_$data.containsKey('var_pop')) {
+      final l$var_pop = var_pop;
+      result$data['var_pop'] = l$var_pop?.toJson();
+    }
+    if (_$data.containsKey('var_samp')) {
+      final l$var_samp = var_samp;
+      result$data['var_samp'] = l$var_samp?.toJson();
+    }
+    if (_$data.containsKey('variance')) {
+      final l$variance = variance;
+      result$data['variance'] = l$variance?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_aggregate_order_by<
+          Input$public_user_aggregate_order_by>
+      get copyWith => CopyWith$Input$public_user_aggregate_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_aggregate_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$avg = avg;
+    final lOther$avg = other.avg;
+    if (_$data.containsKey('avg') != other._$data.containsKey('avg')) {
+      return false;
+    }
+    if (l$avg != lOther$avg) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    final l$max = max;
+    final lOther$max = other.max;
+    if (_$data.containsKey('max') != other._$data.containsKey('max')) {
+      return false;
+    }
+    if (l$max != lOther$max) {
+      return false;
+    }
+    final l$min = min;
+    final lOther$min = other.min;
+    if (_$data.containsKey('min') != other._$data.containsKey('min')) {
+      return false;
+    }
+    if (l$min != lOther$min) {
+      return false;
+    }
+    final l$stddev = stddev;
+    final lOther$stddev = other.stddev;
+    if (_$data.containsKey('stddev') != other._$data.containsKey('stddev')) {
+      return false;
+    }
+    if (l$stddev != lOther$stddev) {
+      return false;
+    }
+    final l$stddev_pop = stddev_pop;
+    final lOther$stddev_pop = other.stddev_pop;
+    if (_$data.containsKey('stddev_pop') !=
+        other._$data.containsKey('stddev_pop')) {
+      return false;
+    }
+    if (l$stddev_pop != lOther$stddev_pop) {
+      return false;
+    }
+    final l$stddev_samp = stddev_samp;
+    final lOther$stddev_samp = other.stddev_samp;
+    if (_$data.containsKey('stddev_samp') !=
+        other._$data.containsKey('stddev_samp')) {
+      return false;
+    }
+    if (l$stddev_samp != lOther$stddev_samp) {
+      return false;
+    }
+    final l$sum = sum;
+    final lOther$sum = other.sum;
+    if (_$data.containsKey('sum') != other._$data.containsKey('sum')) {
+      return false;
+    }
+    if (l$sum != lOther$sum) {
+      return false;
+    }
+    final l$var_pop = var_pop;
+    final lOther$var_pop = other.var_pop;
+    if (_$data.containsKey('var_pop') != other._$data.containsKey('var_pop')) {
+      return false;
+    }
+    if (l$var_pop != lOther$var_pop) {
+      return false;
+    }
+    final l$var_samp = var_samp;
+    final lOther$var_samp = other.var_samp;
+    if (_$data.containsKey('var_samp') !=
+        other._$data.containsKey('var_samp')) {
+      return false;
+    }
+    if (l$var_samp != lOther$var_samp) {
+      return false;
+    }
+    final l$variance = variance;
+    final lOther$variance = other.variance;
+    if (_$data.containsKey('variance') !=
+        other._$data.containsKey('variance')) {
+      return false;
+    }
+    if (l$variance != lOther$variance) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$avg = avg;
+    final l$count = count;
+    final l$max = max;
+    final l$min = min;
+    final l$stddev = stddev;
+    final l$stddev_pop = stddev_pop;
+    final l$stddev_samp = stddev_samp;
+    final l$sum = sum;
+    final l$var_pop = var_pop;
+    final l$var_samp = var_samp;
+    final l$variance = variance;
+    return Object.hashAll([
+      _$data.containsKey('avg') ? l$avg : const {},
+      _$data.containsKey('count') ? l$count : const {},
+      _$data.containsKey('max') ? l$max : const {},
+      _$data.containsKey('min') ? l$min : const {},
+      _$data.containsKey('stddev') ? l$stddev : const {},
+      _$data.containsKey('stddev_pop') ? l$stddev_pop : const {},
+      _$data.containsKey('stddev_samp') ? l$stddev_samp : const {},
+      _$data.containsKey('sum') ? l$sum : const {},
+      _$data.containsKey('var_pop') ? l$var_pop : const {},
+      _$data.containsKey('var_samp') ? l$var_samp : const {},
+      _$data.containsKey('variance') ? l$variance : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_aggregate_order_by<TRes> {
+  factory CopyWith$Input$public_user_aggregate_order_by(
+    Input$public_user_aggregate_order_by instance,
+    TRes Function(Input$public_user_aggregate_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_aggregate_order_by;
+
+  factory CopyWith$Input$public_user_aggregate_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_aggregate_order_by;
+
+  TRes call({
+    Input$public_user_avg_order_by? avg,
+    Enum$order_by? count,
+    Input$public_user_max_order_by? max,
+    Input$public_user_min_order_by? min,
+    Input$public_user_stddev_order_by? stddev,
+    Input$public_user_stddev_pop_order_by? stddev_pop,
+    Input$public_user_stddev_samp_order_by? stddev_samp,
+    Input$public_user_sum_order_by? sum,
+    Input$public_user_var_pop_order_by? var_pop,
+    Input$public_user_var_samp_order_by? var_samp,
+    Input$public_user_variance_order_by? variance,
+  });
+  CopyWith$Input$public_user_avg_order_by<TRes> get avg;
+  CopyWith$Input$public_user_max_order_by<TRes> get max;
+  CopyWith$Input$public_user_min_order_by<TRes> get min;
+  CopyWith$Input$public_user_stddev_order_by<TRes> get stddev;
+  CopyWith$Input$public_user_stddev_pop_order_by<TRes> get stddev_pop;
+  CopyWith$Input$public_user_stddev_samp_order_by<TRes> get stddev_samp;
+  CopyWith$Input$public_user_sum_order_by<TRes> get sum;
+  CopyWith$Input$public_user_var_pop_order_by<TRes> get var_pop;
+  CopyWith$Input$public_user_var_samp_order_by<TRes> get var_samp;
+  CopyWith$Input$public_user_variance_order_by<TRes> get variance;
+}
+
+class _CopyWithImpl$Input$public_user_aggregate_order_by<TRes>
+    implements CopyWith$Input$public_user_aggregate_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_aggregate_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_aggregate_order_by _instance;
+
+  final TRes Function(Input$public_user_aggregate_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? avg = _undefined,
+    Object? count = _undefined,
+    Object? max = _undefined,
+    Object? min = _undefined,
+    Object? stddev = _undefined,
+    Object? stddev_pop = _undefined,
+    Object? stddev_samp = _undefined,
+    Object? sum = _undefined,
+    Object? var_pop = _undefined,
+    Object? var_samp = _undefined,
+    Object? variance = _undefined,
+  }) =>
+      _then(Input$public_user_aggregate_order_by._({
+        ..._instance._$data,
+        if (avg != _undefined) 'avg': (avg as Input$public_user_avg_order_by?),
+        if (count != _undefined) 'count': (count as Enum$order_by?),
+        if (max != _undefined) 'max': (max as Input$public_user_max_order_by?),
+        if (min != _undefined) 'min': (min as Input$public_user_min_order_by?),
+        if (stddev != _undefined)
+          'stddev': (stddev as Input$public_user_stddev_order_by?),
+        if (stddev_pop != _undefined)
+          'stddev_pop': (stddev_pop as Input$public_user_stddev_pop_order_by?),
+        if (stddev_samp != _undefined)
+          'stddev_samp':
+              (stddev_samp as Input$public_user_stddev_samp_order_by?),
+        if (sum != _undefined) 'sum': (sum as Input$public_user_sum_order_by?),
+        if (var_pop != _undefined)
+          'var_pop': (var_pop as Input$public_user_var_pop_order_by?),
+        if (var_samp != _undefined)
+          'var_samp': (var_samp as Input$public_user_var_samp_order_by?),
+        if (variance != _undefined)
+          'variance': (variance as Input$public_user_variance_order_by?),
+      }));
+  CopyWith$Input$public_user_avg_order_by<TRes> get avg {
+    final local$avg = _instance.avg;
+    return local$avg == null
+        ? CopyWith$Input$public_user_avg_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_avg_order_by(
+            local$avg, (e) => call(avg: e));
+  }
+
+  CopyWith$Input$public_user_max_order_by<TRes> get max {
+    final local$max = _instance.max;
+    return local$max == null
+        ? CopyWith$Input$public_user_max_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_max_order_by(
+            local$max, (e) => call(max: e));
+  }
+
+  CopyWith$Input$public_user_min_order_by<TRes> get min {
+    final local$min = _instance.min;
+    return local$min == null
+        ? CopyWith$Input$public_user_min_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_min_order_by(
+            local$min, (e) => call(min: e));
+  }
+
+  CopyWith$Input$public_user_stddev_order_by<TRes> get stddev {
+    final local$stddev = _instance.stddev;
+    return local$stddev == null
+        ? CopyWith$Input$public_user_stddev_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_stddev_order_by(
+            local$stddev, (e) => call(stddev: e));
+  }
+
+  CopyWith$Input$public_user_stddev_pop_order_by<TRes> get stddev_pop {
+    final local$stddev_pop = _instance.stddev_pop;
+    return local$stddev_pop == null
+        ? CopyWith$Input$public_user_stddev_pop_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_stddev_pop_order_by(
+            local$stddev_pop, (e) => call(stddev_pop: e));
+  }
+
+  CopyWith$Input$public_user_stddev_samp_order_by<TRes> get stddev_samp {
+    final local$stddev_samp = _instance.stddev_samp;
+    return local$stddev_samp == null
+        ? CopyWith$Input$public_user_stddev_samp_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_stddev_samp_order_by(
+            local$stddev_samp, (e) => call(stddev_samp: e));
+  }
+
+  CopyWith$Input$public_user_sum_order_by<TRes> get sum {
+    final local$sum = _instance.sum;
+    return local$sum == null
+        ? CopyWith$Input$public_user_sum_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_sum_order_by(
+            local$sum, (e) => call(sum: e));
+  }
+
+  CopyWith$Input$public_user_var_pop_order_by<TRes> get var_pop {
+    final local$var_pop = _instance.var_pop;
+    return local$var_pop == null
+        ? CopyWith$Input$public_user_var_pop_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_var_pop_order_by(
+            local$var_pop, (e) => call(var_pop: e));
+  }
+
+  CopyWith$Input$public_user_var_samp_order_by<TRes> get var_samp {
+    final local$var_samp = _instance.var_samp;
+    return local$var_samp == null
+        ? CopyWith$Input$public_user_var_samp_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_var_samp_order_by(
+            local$var_samp, (e) => call(var_samp: e));
+  }
+
+  CopyWith$Input$public_user_variance_order_by<TRes> get variance {
+    final local$variance = _instance.variance;
+    return local$variance == null
+        ? CopyWith$Input$public_user_variance_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_variance_order_by(
+            local$variance, (e) => call(variance: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$public_user_aggregate_order_by<TRes>
+    implements CopyWith$Input$public_user_aggregate_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_aggregate_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Input$public_user_avg_order_by? avg,
+    Enum$order_by? count,
+    Input$public_user_max_order_by? max,
+    Input$public_user_min_order_by? min,
+    Input$public_user_stddev_order_by? stddev,
+    Input$public_user_stddev_pop_order_by? stddev_pop,
+    Input$public_user_stddev_samp_order_by? stddev_samp,
+    Input$public_user_sum_order_by? sum,
+    Input$public_user_var_pop_order_by? var_pop,
+    Input$public_user_var_samp_order_by? var_samp,
+    Input$public_user_variance_order_by? variance,
+  }) =>
+      _res;
+  CopyWith$Input$public_user_avg_order_by<TRes> get avg =>
+      CopyWith$Input$public_user_avg_order_by.stub(_res);
+  CopyWith$Input$public_user_max_order_by<TRes> get max =>
+      CopyWith$Input$public_user_max_order_by.stub(_res);
+  CopyWith$Input$public_user_min_order_by<TRes> get min =>
+      CopyWith$Input$public_user_min_order_by.stub(_res);
+  CopyWith$Input$public_user_stddev_order_by<TRes> get stddev =>
+      CopyWith$Input$public_user_stddev_order_by.stub(_res);
+  CopyWith$Input$public_user_stddev_pop_order_by<TRes> get stddev_pop =>
+      CopyWith$Input$public_user_stddev_pop_order_by.stub(_res);
+  CopyWith$Input$public_user_stddev_samp_order_by<TRes> get stddev_samp =>
+      CopyWith$Input$public_user_stddev_samp_order_by.stub(_res);
+  CopyWith$Input$public_user_sum_order_by<TRes> get sum =>
+      CopyWith$Input$public_user_sum_order_by.stub(_res);
+  CopyWith$Input$public_user_var_pop_order_by<TRes> get var_pop =>
+      CopyWith$Input$public_user_var_pop_order_by.stub(_res);
+  CopyWith$Input$public_user_var_samp_order_by<TRes> get var_samp =>
+      CopyWith$Input$public_user_var_samp_order_by.stub(_res);
+  CopyWith$Input$public_user_variance_order_by<TRes> get variance =>
+      CopyWith$Input$public_user_variance_order_by.stub(_res);
+}
+
+class Input$public_user_arr_rel_insert_input {
+  factory Input$public_user_arr_rel_insert_input({
+    required List<Input$public_user_insert_input> data,
+    Input$public_user_on_conflict? on_conflict,
+  }) =>
+      Input$public_user_arr_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$public_user_arr_rel_insert_input._(this._$data);
+
+  factory Input$public_user_arr_rel_insert_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] = (l$data as List<dynamic>)
+        .map((e) => Input$public_user_insert_input.fromJson(
+            (e as Map<String, dynamic>)))
+        .toList();
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$public_user_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$public_user_arr_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Input$public_user_insert_input> get data =>
+      (_$data['data'] as List<Input$public_user_insert_input>);
+  Input$public_user_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$public_user_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.map((e) => e.toJson()).toList();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_arr_rel_insert_input<
+          Input$public_user_arr_rel_insert_input>
+      get copyWith => CopyWith$Input$public_user_arr_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_arr_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data.length != lOther$data.length) {
+      return false;
+    }
+    for (int i = 0; i < l$data.length; i++) {
+      final l$data$entry = l$data[i];
+      final lOther$data$entry = lOther$data[i];
+      if (l$data$entry != lOther$data$entry) {
+        return false;
+      }
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      Object.hashAll(l$data.map((v) => v)),
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_arr_rel_insert_input<TRes> {
+  factory CopyWith$Input$public_user_arr_rel_insert_input(
+    Input$public_user_arr_rel_insert_input instance,
+    TRes Function(Input$public_user_arr_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$public_user_arr_rel_insert_input;
+
+  factory CopyWith$Input$public_user_arr_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_arr_rel_insert_input;
+
+  TRes call({
+    List<Input$public_user_insert_input>? data,
+    Input$public_user_on_conflict? on_conflict,
+  });
+  TRes data(
+      Iterable<Input$public_user_insert_input> Function(
+              Iterable<
+                  CopyWith$Input$public_user_insert_input<
+                      Input$public_user_insert_input>>)
+          _fn);
+  CopyWith$Input$public_user_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$public_user_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$public_user_arr_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$public_user_arr_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_arr_rel_insert_input _instance;
+
+  final TRes Function(Input$public_user_arr_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$public_user_arr_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as List<Input$public_user_insert_input>),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$public_user_on_conflict?),
+      }));
+  TRes data(
+          Iterable<Input$public_user_insert_input> Function(
+                  Iterable<
+                      CopyWith$Input$public_user_insert_input<
+                          Input$public_user_insert_input>>)
+              _fn) =>
+      call(
+          data: _fn(
+              _instance.data.map((e) => CopyWith$Input$public_user_insert_input(
+                    e,
+                    (i) => i,
+                  ))).toList());
+  CopyWith$Input$public_user_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$public_user_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$public_user_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$public_user_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$public_user_arr_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$public_user_arr_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    List<Input$public_user_insert_input>? data,
+    Input$public_user_on_conflict? on_conflict,
+  }) =>
+      _res;
+  data(_fn) => _res;
+  CopyWith$Input$public_user_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$public_user_on_conflict.stub(_res);
+}
+
+class Input$public_user_avg_order_by {
+  factory Input$public_user_avg_order_by({Enum$order_by? number}) =>
+      Input$public_user_avg_order_by._({
+        if (number != null) r'number': number,
+      });
+
+  Input$public_user_avg_order_by._(this._$data);
+
+  factory Input$public_user_avg_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('number')) {
+      final l$number = data['number'];
+      result$data['number'] = l$number == null
+          ? null
+          : fromJson$Enum$order_by((l$number as String));
+    }
+    return Input$public_user_avg_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('number')) {
+      final l$number = number;
+      result$data['number'] =
+          l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_avg_order_by<Input$public_user_avg_order_by>
+      get copyWith => CopyWith$Input$public_user_avg_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_avg_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$number = number;
+    final lOther$number = other.number;
+    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
+      return false;
+    }
+    if (l$number != lOther$number) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$number = number;
+    return Object.hashAll([_$data.containsKey('number') ? l$number : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_avg_order_by<TRes> {
+  factory CopyWith$Input$public_user_avg_order_by(
+    Input$public_user_avg_order_by instance,
+    TRes Function(Input$public_user_avg_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_avg_order_by;
+
+  factory CopyWith$Input$public_user_avg_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_avg_order_by;
+
+  TRes call({Enum$order_by? number});
+}
+
+class _CopyWithImpl$Input$public_user_avg_order_by<TRes>
+    implements CopyWith$Input$public_user_avg_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_avg_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_avg_order_by _instance;
+
+  final TRes Function(Input$public_user_avg_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? number = _undefined}) =>
+      _then(Input$public_user_avg_order_by._({
+        ..._instance._$data,
+        if (number != _undefined) 'number': (number as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$public_user_avg_order_by<TRes>
+    implements CopyWith$Input$public_user_avg_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_avg_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? number}) => _res;
+}
+
 class Input$public_user_bool_exp {
   factory Input$public_user_bool_exp({
     List<Input$public_user_bool_exp>? $_and,
     Input$public_user_bool_exp? $_not,
     List<Input$public_user_bool_exp>? $_or,
+    Input$chat_bool_exp? chats,
+    Input$chat_aggregate_bool_exp? chats_aggregate,
+    Input$String_comparison_exp? file_id,
     Input$String_comparison_exp? message,
+    Input$String_comparison_exp? name,
     Input$Int_comparison_exp? number,
+    Input$persona_bool_exp? personas,
+    Input$persona_aggregate_bool_exp? personas_aggregate,
+    Input$file_bool_exp? photo,
+    Input$user_bool_exp? user,
     Input$String_comparison_exp? user_id,
   }) =>
       Input$public_user_bool_exp._({
         if ($_and != null) r'_and': $_and,
         if ($_not != null) r'_not': $_not,
         if ($_or != null) r'_or': $_or,
+        if (chats != null) r'chats': chats,
+        if (chats_aggregate != null) r'chats_aggregate': chats_aggregate,
+        if (file_id != null) r'file_id': file_id,
         if (message != null) r'message': message,
+        if (name != null) r'name': name,
         if (number != null) r'number': number,
+        if (personas != null) r'personas': personas,
+        if (personas_aggregate != null)
+          r'personas_aggregate': personas_aggregate,
+        if (photo != null) r'photo': photo,
+        if (user != null) r'user': user,
         if (user_id != null) r'user_id': user_id,
       });
 
@@ -7270,6 +25114,26 @@ class Input$public_user_bool_exp {
               Input$public_user_bool_exp.fromJson((e as Map<String, dynamic>)))
           .toList();
     }
+    if (data.containsKey('chats')) {
+      final l$chats = data['chats'];
+      result$data['chats'] = l$chats == null
+          ? null
+          : Input$chat_bool_exp.fromJson((l$chats as Map<String, dynamic>));
+    }
+    if (data.containsKey('chats_aggregate')) {
+      final l$chats_aggregate = data['chats_aggregate'];
+      result$data['chats_aggregate'] = l$chats_aggregate == null
+          ? null
+          : Input$chat_aggregate_bool_exp.fromJson(
+              (l$chats_aggregate as Map<String, dynamic>));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$file_id as Map<String, dynamic>));
+    }
     if (data.containsKey('message')) {
       final l$message = data['message'];
       result$data['message'] = l$message == null
@@ -7277,12 +25141,45 @@ class Input$public_user_bool_exp {
           : Input$String_comparison_exp.fromJson(
               (l$message as Map<String, dynamic>));
     }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] = l$name == null
+          ? null
+          : Input$String_comparison_exp.fromJson(
+              (l$name as Map<String, dynamic>));
+    }
     if (data.containsKey('number')) {
       final l$number = data['number'];
       result$data['number'] = l$number == null
           ? null
           : Input$Int_comparison_exp.fromJson(
               (l$number as Map<String, dynamic>));
+    }
+    if (data.containsKey('personas')) {
+      final l$personas = data['personas'];
+      result$data['personas'] = l$personas == null
+          ? null
+          : Input$persona_bool_exp.fromJson(
+              (l$personas as Map<String, dynamic>));
+    }
+    if (data.containsKey('personas_aggregate')) {
+      final l$personas_aggregate = data['personas_aggregate'];
+      result$data['personas_aggregate'] = l$personas_aggregate == null
+          ? null
+          : Input$persona_aggregate_bool_exp.fromJson(
+              (l$personas_aggregate as Map<String, dynamic>));
+    }
+    if (data.containsKey('photo')) {
+      final l$photo = data['photo'];
+      result$data['photo'] = l$photo == null
+          ? null
+          : Input$file_bool_exp.fromJson((l$photo as Map<String, dynamic>));
+    }
+    if (data.containsKey('user')) {
+      final l$user = data['user'];
+      result$data['user'] = l$user == null
+          ? null
+          : Input$user_bool_exp.fromJson((l$user as Map<String, dynamic>));
     }
     if (data.containsKey('user_id')) {
       final l$user_id = data['user_id'];
@@ -7302,10 +25199,23 @@ class Input$public_user_bool_exp {
       (_$data['_not'] as Input$public_user_bool_exp?);
   List<Input$public_user_bool_exp>? get $_or =>
       (_$data['_or'] as List<Input$public_user_bool_exp>?);
+  Input$chat_bool_exp? get chats => (_$data['chats'] as Input$chat_bool_exp?);
+  Input$chat_aggregate_bool_exp? get chats_aggregate =>
+      (_$data['chats_aggregate'] as Input$chat_aggregate_bool_exp?);
+  Input$String_comparison_exp? get file_id =>
+      (_$data['file_id'] as Input$String_comparison_exp?);
   Input$String_comparison_exp? get message =>
       (_$data['message'] as Input$String_comparison_exp?);
+  Input$String_comparison_exp? get name =>
+      (_$data['name'] as Input$String_comparison_exp?);
   Input$Int_comparison_exp? get number =>
       (_$data['number'] as Input$Int_comparison_exp?);
+  Input$persona_bool_exp? get personas =>
+      (_$data['personas'] as Input$persona_bool_exp?);
+  Input$persona_aggregate_bool_exp? get personas_aggregate =>
+      (_$data['personas_aggregate'] as Input$persona_aggregate_bool_exp?);
+  Input$file_bool_exp? get photo => (_$data['photo'] as Input$file_bool_exp?);
+  Input$user_bool_exp? get user => (_$data['user'] as Input$user_bool_exp?);
   Input$String_comparison_exp? get user_id =>
       (_$data['user_id'] as Input$String_comparison_exp?);
   Map<String, dynamic> toJson() {
@@ -7322,13 +25232,45 @@ class Input$public_user_bool_exp {
       final l$$_or = $_or;
       result$data['_or'] = l$$_or?.map((e) => e.toJson()).toList();
     }
+    if (_$data.containsKey('chats')) {
+      final l$chats = chats;
+      result$data['chats'] = l$chats?.toJson();
+    }
+    if (_$data.containsKey('chats_aggregate')) {
+      final l$chats_aggregate = chats_aggregate;
+      result$data['chats_aggregate'] = l$chats_aggregate?.toJson();
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id?.toJson();
+    }
     if (_$data.containsKey('message')) {
       final l$message = message;
       result$data['message'] = l$message?.toJson();
     }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] = l$name?.toJson();
+    }
     if (_$data.containsKey('number')) {
       final l$number = number;
       result$data['number'] = l$number?.toJson();
+    }
+    if (_$data.containsKey('personas')) {
+      final l$personas = personas;
+      result$data['personas'] = l$personas?.toJson();
+    }
+    if (_$data.containsKey('personas_aggregate')) {
+      final l$personas_aggregate = personas_aggregate;
+      result$data['personas_aggregate'] = l$personas_aggregate?.toJson();
+    }
+    if (_$data.containsKey('photo')) {
+      final l$photo = photo;
+      result$data['photo'] = l$photo?.toJson();
+    }
+    if (_$data.containsKey('user')) {
+      final l$user = user;
+      result$data['user'] = l$user?.toJson();
     }
     if (_$data.containsKey('user_id')) {
       final l$user_id = user_id;
@@ -7397,6 +25339,31 @@ class Input$public_user_bool_exp {
     } else if (l$$_or != lOther$$_or) {
       return false;
     }
+    final l$chats = chats;
+    final lOther$chats = other.chats;
+    if (_$data.containsKey('chats') != other._$data.containsKey('chats')) {
+      return false;
+    }
+    if (l$chats != lOther$chats) {
+      return false;
+    }
+    final l$chats_aggregate = chats_aggregate;
+    final lOther$chats_aggregate = other.chats_aggregate;
+    if (_$data.containsKey('chats_aggregate') !=
+        other._$data.containsKey('chats_aggregate')) {
+      return false;
+    }
+    if (l$chats_aggregate != lOther$chats_aggregate) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
     final l$message = message;
     final lOther$message = other.message;
     if (_$data.containsKey('message') != other._$data.containsKey('message')) {
@@ -7405,12 +25372,54 @@ class Input$public_user_bool_exp {
     if (l$message != lOther$message) {
       return false;
     }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
     final l$number = number;
     final lOther$number = other.number;
     if (_$data.containsKey('number') != other._$data.containsKey('number')) {
       return false;
     }
     if (l$number != lOther$number) {
+      return false;
+    }
+    final l$personas = personas;
+    final lOther$personas = other.personas;
+    if (_$data.containsKey('personas') !=
+        other._$data.containsKey('personas')) {
+      return false;
+    }
+    if (l$personas != lOther$personas) {
+      return false;
+    }
+    final l$personas_aggregate = personas_aggregate;
+    final lOther$personas_aggregate = other.personas_aggregate;
+    if (_$data.containsKey('personas_aggregate') !=
+        other._$data.containsKey('personas_aggregate')) {
+      return false;
+    }
+    if (l$personas_aggregate != lOther$personas_aggregate) {
+      return false;
+    }
+    final l$photo = photo;
+    final lOther$photo = other.photo;
+    if (_$data.containsKey('photo') != other._$data.containsKey('photo')) {
+      return false;
+    }
+    if (l$photo != lOther$photo) {
+      return false;
+    }
+    final l$user = user;
+    final lOther$user = other.user;
+    if (_$data.containsKey('user') != other._$data.containsKey('user')) {
+      return false;
+    }
+    if (l$user != lOther$user) {
       return false;
     }
     final l$user_id = user_id;
@@ -7429,8 +25438,16 @@ class Input$public_user_bool_exp {
     final l$$_and = $_and;
     final l$$_not = $_not;
     final l$$_or = $_or;
+    final l$chats = chats;
+    final l$chats_aggregate = chats_aggregate;
+    final l$file_id = file_id;
     final l$message = message;
+    final l$name = name;
     final l$number = number;
+    final l$personas = personas;
+    final l$personas_aggregate = personas_aggregate;
+    final l$photo = photo;
+    final l$user = user;
     final l$user_id = user_id;
     return Object.hashAll([
       _$data.containsKey('_and')
@@ -7444,8 +25461,18 @@ class Input$public_user_bool_exp {
               ? null
               : Object.hashAll(l$$_or.map((v) => v))
           : const {},
+      _$data.containsKey('chats') ? l$chats : const {},
+      _$data.containsKey('chats_aggregate') ? l$chats_aggregate : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
       _$data.containsKey('message') ? l$message : const {},
+      _$data.containsKey('name') ? l$name : const {},
       _$data.containsKey('number') ? l$number : const {},
+      _$data.containsKey('personas') ? l$personas : const {},
+      _$data.containsKey('personas_aggregate')
+          ? l$personas_aggregate
+          : const {},
+      _$data.containsKey('photo') ? l$photo : const {},
+      _$data.containsKey('user') ? l$user : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
     ]);
   }
@@ -7464,8 +25491,16 @@ abstract class CopyWith$Input$public_user_bool_exp<TRes> {
     List<Input$public_user_bool_exp>? $_and,
     Input$public_user_bool_exp? $_not,
     List<Input$public_user_bool_exp>? $_or,
+    Input$chat_bool_exp? chats,
+    Input$chat_aggregate_bool_exp? chats_aggregate,
+    Input$String_comparison_exp? file_id,
     Input$String_comparison_exp? message,
+    Input$String_comparison_exp? name,
     Input$Int_comparison_exp? number,
+    Input$persona_bool_exp? personas,
+    Input$persona_aggregate_bool_exp? personas_aggregate,
+    Input$file_bool_exp? photo,
+    Input$user_bool_exp? user,
     Input$String_comparison_exp? user_id,
   });
   TRes $_and(
@@ -7481,8 +25516,16 @@ abstract class CopyWith$Input$public_user_bool_exp<TRes> {
                   CopyWith$Input$public_user_bool_exp<
                       Input$public_user_bool_exp>>?)
           _fn);
+  CopyWith$Input$chat_bool_exp<TRes> get chats;
+  CopyWith$Input$chat_aggregate_bool_exp<TRes> get chats_aggregate;
+  CopyWith$Input$String_comparison_exp<TRes> get file_id;
   CopyWith$Input$String_comparison_exp<TRes> get message;
+  CopyWith$Input$String_comparison_exp<TRes> get name;
   CopyWith$Input$Int_comparison_exp<TRes> get number;
+  CopyWith$Input$persona_bool_exp<TRes> get personas;
+  CopyWith$Input$persona_aggregate_bool_exp<TRes> get personas_aggregate;
+  CopyWith$Input$file_bool_exp<TRes> get photo;
+  CopyWith$Input$user_bool_exp<TRes> get user;
   CopyWith$Input$String_comparison_exp<TRes> get user_id;
 }
 
@@ -7503,8 +25546,16 @@ class _CopyWithImpl$Input$public_user_bool_exp<TRes>
     Object? $_and = _undefined,
     Object? $_not = _undefined,
     Object? $_or = _undefined,
+    Object? chats = _undefined,
+    Object? chats_aggregate = _undefined,
+    Object? file_id = _undefined,
     Object? message = _undefined,
+    Object? name = _undefined,
     Object? number = _undefined,
+    Object? personas = _undefined,
+    Object? personas_aggregate = _undefined,
+    Object? photo = _undefined,
+    Object? user = _undefined,
     Object? user_id = _undefined,
   }) =>
       _then(Input$public_user_bool_exp._({
@@ -7514,10 +25565,24 @@ class _CopyWithImpl$Input$public_user_bool_exp<TRes>
         if ($_not != _undefined) '_not': ($_not as Input$public_user_bool_exp?),
         if ($_or != _undefined)
           '_or': ($_or as List<Input$public_user_bool_exp>?),
+        if (chats != _undefined) 'chats': (chats as Input$chat_bool_exp?),
+        if (chats_aggregate != _undefined)
+          'chats_aggregate':
+              (chats_aggregate as Input$chat_aggregate_bool_exp?),
+        if (file_id != _undefined)
+          'file_id': (file_id as Input$String_comparison_exp?),
         if (message != _undefined)
           'message': (message as Input$String_comparison_exp?),
+        if (name != _undefined) 'name': (name as Input$String_comparison_exp?),
         if (number != _undefined)
           'number': (number as Input$Int_comparison_exp?),
+        if (personas != _undefined)
+          'personas': (personas as Input$persona_bool_exp?),
+        if (personas_aggregate != _undefined)
+          'personas_aggregate':
+              (personas_aggregate as Input$persona_aggregate_bool_exp?),
+        if (photo != _undefined) 'photo': (photo as Input$file_bool_exp?),
+        if (user != _undefined) 'user': (user as Input$user_bool_exp?),
         if (user_id != _undefined)
           'user_id': (user_id as Input$String_comparison_exp?),
       }));
@@ -7553,6 +25618,29 @@ class _CopyWithImpl$Input$public_user_bool_exp<TRes>
                     e,
                     (i) => i,
                   )))?.toList());
+  CopyWith$Input$chat_bool_exp<TRes> get chats {
+    final local$chats = _instance.chats;
+    return local$chats == null
+        ? CopyWith$Input$chat_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$chat_bool_exp(local$chats, (e) => call(chats: e));
+  }
+
+  CopyWith$Input$chat_aggregate_bool_exp<TRes> get chats_aggregate {
+    final local$chats_aggregate = _instance.chats_aggregate;
+    return local$chats_aggregate == null
+        ? CopyWith$Input$chat_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$chat_aggregate_bool_exp(
+            local$chats_aggregate, (e) => call(chats_aggregate: e));
+  }
+
+  CopyWith$Input$String_comparison_exp<TRes> get file_id {
+    final local$file_id = _instance.file_id;
+    return local$file_id == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$file_id, (e) => call(file_id: e));
+  }
+
   CopyWith$Input$String_comparison_exp<TRes> get message {
     final local$message = _instance.message;
     return local$message == null
@@ -7561,12 +25649,50 @@ class _CopyWithImpl$Input$public_user_bool_exp<TRes>
             local$message, (e) => call(message: e));
   }
 
+  CopyWith$Input$String_comparison_exp<TRes> get name {
+    final local$name = _instance.name;
+    return local$name == null
+        ? CopyWith$Input$String_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$String_comparison_exp(
+            local$name, (e) => call(name: e));
+  }
+
   CopyWith$Input$Int_comparison_exp<TRes> get number {
     final local$number = _instance.number;
     return local$number == null
         ? CopyWith$Input$Int_comparison_exp.stub(_then(_instance))
         : CopyWith$Input$Int_comparison_exp(
             local$number, (e) => call(number: e));
+  }
+
+  CopyWith$Input$persona_bool_exp<TRes> get personas {
+    final local$personas = _instance.personas;
+    return local$personas == null
+        ? CopyWith$Input$persona_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$persona_bool_exp(
+            local$personas, (e) => call(personas: e));
+  }
+
+  CopyWith$Input$persona_aggregate_bool_exp<TRes> get personas_aggregate {
+    final local$personas_aggregate = _instance.personas_aggregate;
+    return local$personas_aggregate == null
+        ? CopyWith$Input$persona_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$persona_aggregate_bool_exp(
+            local$personas_aggregate, (e) => call(personas_aggregate: e));
+  }
+
+  CopyWith$Input$file_bool_exp<TRes> get photo {
+    final local$photo = _instance.photo;
+    return local$photo == null
+        ? CopyWith$Input$file_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$file_bool_exp(local$photo, (e) => call(photo: e));
+  }
+
+  CopyWith$Input$user_bool_exp<TRes> get user {
+    final local$user = _instance.user;
+    return local$user == null
+        ? CopyWith$Input$user_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$user_bool_exp(local$user, (e) => call(user: e));
   }
 
   CopyWith$Input$String_comparison_exp<TRes> get user_id {
@@ -7588,8 +25714,16 @@ class _CopyWithStubImpl$Input$public_user_bool_exp<TRes>
     List<Input$public_user_bool_exp>? $_and,
     Input$public_user_bool_exp? $_not,
     List<Input$public_user_bool_exp>? $_or,
+    Input$chat_bool_exp? chats,
+    Input$chat_aggregate_bool_exp? chats_aggregate,
+    Input$String_comparison_exp? file_id,
     Input$String_comparison_exp? message,
+    Input$String_comparison_exp? name,
     Input$Int_comparison_exp? number,
+    Input$persona_bool_exp? personas,
+    Input$persona_aggregate_bool_exp? personas_aggregate,
+    Input$file_bool_exp? photo,
+    Input$user_bool_exp? user,
     Input$String_comparison_exp? user_id,
   }) =>
       _res;
@@ -7597,10 +25731,26 @@ class _CopyWithStubImpl$Input$public_user_bool_exp<TRes>
   CopyWith$Input$public_user_bool_exp<TRes> get $_not =>
       CopyWith$Input$public_user_bool_exp.stub(_res);
   $_or(_fn) => _res;
+  CopyWith$Input$chat_bool_exp<TRes> get chats =>
+      CopyWith$Input$chat_bool_exp.stub(_res);
+  CopyWith$Input$chat_aggregate_bool_exp<TRes> get chats_aggregate =>
+      CopyWith$Input$chat_aggregate_bool_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get file_id =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get message =>
+      CopyWith$Input$String_comparison_exp.stub(_res);
+  CopyWith$Input$String_comparison_exp<TRes> get name =>
       CopyWith$Input$String_comparison_exp.stub(_res);
   CopyWith$Input$Int_comparison_exp<TRes> get number =>
       CopyWith$Input$Int_comparison_exp.stub(_res);
+  CopyWith$Input$persona_bool_exp<TRes> get personas =>
+      CopyWith$Input$persona_bool_exp.stub(_res);
+  CopyWith$Input$persona_aggregate_bool_exp<TRes> get personas_aggregate =>
+      CopyWith$Input$persona_aggregate_bool_exp.stub(_res);
+  CopyWith$Input$file_bool_exp<TRes> get photo =>
+      CopyWith$Input$file_bool_exp.stub(_res);
+  CopyWith$Input$user_bool_exp<TRes> get user =>
+      CopyWith$Input$user_bool_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get user_id =>
       CopyWith$Input$String_comparison_exp.stub(_res);
 }
@@ -7709,13 +25859,25 @@ class _CopyWithStubImpl$Input$public_user_inc_input<TRes>
 
 class Input$public_user_insert_input {
   factory Input$public_user_insert_input({
+    Input$chat_arr_rel_insert_input? chats,
+    String? file_id,
     String? message,
+    String? name,
     int? number,
+    Input$persona_arr_rel_insert_input? personas,
+    Input$file_obj_rel_insert_input? photo,
+    Input$user_obj_rel_insert_input? user,
     String? user_id,
   }) =>
       Input$public_user_insert_input._({
+        if (chats != null) r'chats': chats,
+        if (file_id != null) r'file_id': file_id,
         if (message != null) r'message': message,
+        if (name != null) r'name': name,
         if (number != null) r'number': number,
+        if (personas != null) r'personas': personas,
+        if (photo != null) r'photo': photo,
+        if (user != null) r'user': user,
         if (user_id != null) r'user_id': user_id,
       });
 
@@ -7723,13 +25885,49 @@ class Input$public_user_insert_input {
 
   factory Input$public_user_insert_input.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('chats')) {
+      final l$chats = data['chats'];
+      result$data['chats'] = l$chats == null
+          ? null
+          : Input$chat_arr_rel_insert_input.fromJson(
+              (l$chats as Map<String, dynamic>));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = (l$file_id as String?);
+    }
     if (data.containsKey('message')) {
       final l$message = data['message'];
       result$data['message'] = (l$message as String?);
     }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] = (l$name as String?);
+    }
     if (data.containsKey('number')) {
       final l$number = data['number'];
       result$data['number'] = (l$number as int?);
+    }
+    if (data.containsKey('personas')) {
+      final l$personas = data['personas'];
+      result$data['personas'] = l$personas == null
+          ? null
+          : Input$persona_arr_rel_insert_input.fromJson(
+              (l$personas as Map<String, dynamic>));
+    }
+    if (data.containsKey('photo')) {
+      final l$photo = data['photo'];
+      result$data['photo'] = l$photo == null
+          ? null
+          : Input$file_obj_rel_insert_input.fromJson(
+              (l$photo as Map<String, dynamic>));
+    }
+    if (data.containsKey('user')) {
+      final l$user = data['user'];
+      result$data['user'] = l$user == null
+          ? null
+          : Input$user_obj_rel_insert_input.fromJson(
+              (l$user as Map<String, dynamic>));
     }
     if (data.containsKey('user_id')) {
       final l$user_id = data['user_id'];
@@ -7740,18 +25938,52 @@ class Input$public_user_insert_input {
 
   Map<String, dynamic> _$data;
 
+  Input$chat_arr_rel_insert_input? get chats =>
+      (_$data['chats'] as Input$chat_arr_rel_insert_input?);
+  String? get file_id => (_$data['file_id'] as String?);
   String? get message => (_$data['message'] as String?);
+  String? get name => (_$data['name'] as String?);
   int? get number => (_$data['number'] as int?);
+  Input$persona_arr_rel_insert_input? get personas =>
+      (_$data['personas'] as Input$persona_arr_rel_insert_input?);
+  Input$file_obj_rel_insert_input? get photo =>
+      (_$data['photo'] as Input$file_obj_rel_insert_input?);
+  Input$user_obj_rel_insert_input? get user =>
+      (_$data['user'] as Input$user_obj_rel_insert_input?);
   String? get user_id => (_$data['user_id'] as String?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chats')) {
+      final l$chats = chats;
+      result$data['chats'] = l$chats?.toJson();
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id;
+    }
     if (_$data.containsKey('message')) {
       final l$message = message;
       result$data['message'] = l$message;
     }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] = l$name;
+    }
     if (_$data.containsKey('number')) {
       final l$number = number;
       result$data['number'] = l$number;
+    }
+    if (_$data.containsKey('personas')) {
+      final l$personas = personas;
+      result$data['personas'] = l$personas?.toJson();
+    }
+    if (_$data.containsKey('photo')) {
+      final l$photo = photo;
+      result$data['photo'] = l$photo?.toJson();
+    }
+    if (_$data.containsKey('user')) {
+      final l$user = user;
+      result$data['user'] = l$user?.toJson();
     }
     if (_$data.containsKey('user_id')) {
       final l$user_id = user_id;
@@ -7774,12 +26006,359 @@ class Input$public_user_insert_input {
         runtimeType != other.runtimeType) {
       return false;
     }
+    final l$chats = chats;
+    final lOther$chats = other.chats;
+    if (_$data.containsKey('chats') != other._$data.containsKey('chats')) {
+      return false;
+    }
+    if (l$chats != lOther$chats) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
     final l$message = message;
     final lOther$message = other.message;
     if (_$data.containsKey('message') != other._$data.containsKey('message')) {
       return false;
     }
     if (l$message != lOther$message) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$number = number;
+    final lOther$number = other.number;
+    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
+      return false;
+    }
+    if (l$number != lOther$number) {
+      return false;
+    }
+    final l$personas = personas;
+    final lOther$personas = other.personas;
+    if (_$data.containsKey('personas') !=
+        other._$data.containsKey('personas')) {
+      return false;
+    }
+    if (l$personas != lOther$personas) {
+      return false;
+    }
+    final l$photo = photo;
+    final lOther$photo = other.photo;
+    if (_$data.containsKey('photo') != other._$data.containsKey('photo')) {
+      return false;
+    }
+    if (l$photo != lOther$photo) {
+      return false;
+    }
+    final l$user = user;
+    final lOther$user = other.user;
+    if (_$data.containsKey('user') != other._$data.containsKey('user')) {
+      return false;
+    }
+    if (l$user != lOther$user) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$chats = chats;
+    final l$file_id = file_id;
+    final l$message = message;
+    final l$name = name;
+    final l$number = number;
+    final l$personas = personas;
+    final l$photo = photo;
+    final l$user = user;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('chats') ? l$chats : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('message') ? l$message : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('number') ? l$number : const {},
+      _$data.containsKey('personas') ? l$personas : const {},
+      _$data.containsKey('photo') ? l$photo : const {},
+      _$data.containsKey('user') ? l$user : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_insert_input<TRes> {
+  factory CopyWith$Input$public_user_insert_input(
+    Input$public_user_insert_input instance,
+    TRes Function(Input$public_user_insert_input) then,
+  ) = _CopyWithImpl$Input$public_user_insert_input;
+
+  factory CopyWith$Input$public_user_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_insert_input;
+
+  TRes call({
+    Input$chat_arr_rel_insert_input? chats,
+    String? file_id,
+    String? message,
+    String? name,
+    int? number,
+    Input$persona_arr_rel_insert_input? personas,
+    Input$file_obj_rel_insert_input? photo,
+    Input$user_obj_rel_insert_input? user,
+    String? user_id,
+  });
+  CopyWith$Input$chat_arr_rel_insert_input<TRes> get chats;
+  CopyWith$Input$persona_arr_rel_insert_input<TRes> get personas;
+  CopyWith$Input$file_obj_rel_insert_input<TRes> get photo;
+  CopyWith$Input$user_obj_rel_insert_input<TRes> get user;
+}
+
+class _CopyWithImpl$Input$public_user_insert_input<TRes>
+    implements CopyWith$Input$public_user_insert_input<TRes> {
+  _CopyWithImpl$Input$public_user_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_insert_input _instance;
+
+  final TRes Function(Input$public_user_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? chats = _undefined,
+    Object? file_id = _undefined,
+    Object? message = _undefined,
+    Object? name = _undefined,
+    Object? number = _undefined,
+    Object? personas = _undefined,
+    Object? photo = _undefined,
+    Object? user = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$public_user_insert_input._({
+        ..._instance._$data,
+        if (chats != _undefined)
+          'chats': (chats as Input$chat_arr_rel_insert_input?),
+        if (file_id != _undefined) 'file_id': (file_id as String?),
+        if (message != _undefined) 'message': (message as String?),
+        if (name != _undefined) 'name': (name as String?),
+        if (number != _undefined) 'number': (number as int?),
+        if (personas != _undefined)
+          'personas': (personas as Input$persona_arr_rel_insert_input?),
+        if (photo != _undefined)
+          'photo': (photo as Input$file_obj_rel_insert_input?),
+        if (user != _undefined)
+          'user': (user as Input$user_obj_rel_insert_input?),
+        if (user_id != _undefined) 'user_id': (user_id as String?),
+      }));
+  CopyWith$Input$chat_arr_rel_insert_input<TRes> get chats {
+    final local$chats = _instance.chats;
+    return local$chats == null
+        ? CopyWith$Input$chat_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$chat_arr_rel_insert_input(
+            local$chats, (e) => call(chats: e));
+  }
+
+  CopyWith$Input$persona_arr_rel_insert_input<TRes> get personas {
+    final local$personas = _instance.personas;
+    return local$personas == null
+        ? CopyWith$Input$persona_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$persona_arr_rel_insert_input(
+            local$personas, (e) => call(personas: e));
+  }
+
+  CopyWith$Input$file_obj_rel_insert_input<TRes> get photo {
+    final local$photo = _instance.photo;
+    return local$photo == null
+        ? CopyWith$Input$file_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$file_obj_rel_insert_input(
+            local$photo, (e) => call(photo: e));
+  }
+
+  CopyWith$Input$user_obj_rel_insert_input<TRes> get user {
+    final local$user = _instance.user;
+    return local$user == null
+        ? CopyWith$Input$user_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$user_obj_rel_insert_input(
+            local$user, (e) => call(user: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$public_user_insert_input<TRes>
+    implements CopyWith$Input$public_user_insert_input<TRes> {
+  _CopyWithStubImpl$Input$public_user_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$chat_arr_rel_insert_input? chats,
+    String? file_id,
+    String? message,
+    String? name,
+    int? number,
+    Input$persona_arr_rel_insert_input? personas,
+    Input$file_obj_rel_insert_input? photo,
+    Input$user_obj_rel_insert_input? user,
+    String? user_id,
+  }) =>
+      _res;
+  CopyWith$Input$chat_arr_rel_insert_input<TRes> get chats =>
+      CopyWith$Input$chat_arr_rel_insert_input.stub(_res);
+  CopyWith$Input$persona_arr_rel_insert_input<TRes> get personas =>
+      CopyWith$Input$persona_arr_rel_insert_input.stub(_res);
+  CopyWith$Input$file_obj_rel_insert_input<TRes> get photo =>
+      CopyWith$Input$file_obj_rel_insert_input.stub(_res);
+  CopyWith$Input$user_obj_rel_insert_input<TRes> get user =>
+      CopyWith$Input$user_obj_rel_insert_input.stub(_res);
+}
+
+class Input$public_user_max_order_by {
+  factory Input$public_user_max_order_by({
+    Enum$order_by? file_id,
+    Enum$order_by? message,
+    Enum$order_by? name,
+    Enum$order_by? number,
+    Enum$order_by? user_id,
+  }) =>
+      Input$public_user_max_order_by._({
+        if (file_id != null) r'file_id': file_id,
+        if (message != null) r'message': message,
+        if (name != null) r'name': name,
+        if (number != null) r'number': number,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$public_user_max_order_by._(this._$data);
+
+  factory Input$public_user_max_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
+    if (data.containsKey('message')) {
+      final l$message = data['message'];
+      result$data['message'] = l$message == null
+          ? null
+          : fromJson$Enum$order_by((l$message as String));
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] =
+          l$name == null ? null : fromJson$Enum$order_by((l$name as String));
+    }
+    if (data.containsKey('number')) {
+      final l$number = data['number'];
+      result$data['number'] = l$number == null
+          ? null
+          : fromJson$Enum$order_by((l$number as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    return Input$public_user_max_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Enum$order_by? get message => (_$data['message'] as Enum$order_by?);
+  Enum$order_by? get name => (_$data['name'] as Enum$order_by?);
+  Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('message')) {
+      final l$message = message;
+      result$data['message'] =
+          l$message == null ? null : toJson$Enum$order_by(l$message);
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] =
+          l$name == null ? null : toJson$Enum$order_by(l$name);
+    }
+    if (_$data.containsKey('number')) {
+      final l$number = number;
+      result$data['number'] =
+          l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_max_order_by<Input$public_user_max_order_by>
+      get copyWith => CopyWith$Input$public_user_max_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_max_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$message = message;
+    final lOther$message = other.message;
+    if (_$data.containsKey('message') != other._$data.containsKey('message')) {
+      return false;
+    }
+    if (l$message != lOther$message) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
       return false;
     }
     final l$number = number;
@@ -7803,82 +26382,482 @@ class Input$public_user_insert_input {
 
   @override
   int get hashCode {
+    final l$file_id = file_id;
     final l$message = message;
+    final l$name = name;
     final l$number = number;
     final l$user_id = user_id;
     return Object.hashAll([
+      _$data.containsKey('file_id') ? l$file_id : const {},
       _$data.containsKey('message') ? l$message : const {},
+      _$data.containsKey('name') ? l$name : const {},
       _$data.containsKey('number') ? l$number : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
     ]);
   }
 }
 
-abstract class CopyWith$Input$public_user_insert_input<TRes> {
-  factory CopyWith$Input$public_user_insert_input(
-    Input$public_user_insert_input instance,
-    TRes Function(Input$public_user_insert_input) then,
-  ) = _CopyWithImpl$Input$public_user_insert_input;
+abstract class CopyWith$Input$public_user_max_order_by<TRes> {
+  factory CopyWith$Input$public_user_max_order_by(
+    Input$public_user_max_order_by instance,
+    TRes Function(Input$public_user_max_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_max_order_by;
 
-  factory CopyWith$Input$public_user_insert_input.stub(TRes res) =
-      _CopyWithStubImpl$Input$public_user_insert_input;
+  factory CopyWith$Input$public_user_max_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_max_order_by;
 
   TRes call({
-    String? message,
-    int? number,
-    String? user_id,
+    Enum$order_by? file_id,
+    Enum$order_by? message,
+    Enum$order_by? name,
+    Enum$order_by? number,
+    Enum$order_by? user_id,
   });
 }
 
-class _CopyWithImpl$Input$public_user_insert_input<TRes>
-    implements CopyWith$Input$public_user_insert_input<TRes> {
-  _CopyWithImpl$Input$public_user_insert_input(
+class _CopyWithImpl$Input$public_user_max_order_by<TRes>
+    implements CopyWith$Input$public_user_max_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_max_order_by(
     this._instance,
     this._then,
   );
 
-  final Input$public_user_insert_input _instance;
+  final Input$public_user_max_order_by _instance;
 
-  final TRes Function(Input$public_user_insert_input) _then;
+  final TRes Function(Input$public_user_max_order_by) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
+    Object? file_id = _undefined,
     Object? message = _undefined,
+    Object? name = _undefined,
     Object? number = _undefined,
     Object? user_id = _undefined,
   }) =>
-      _then(Input$public_user_insert_input._({
+      _then(Input$public_user_max_order_by._({
         ..._instance._$data,
-        if (message != _undefined) 'message': (message as String?),
-        if (number != _undefined) 'number': (number as int?),
-        if (user_id != _undefined) 'user_id': (user_id as String?),
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (message != _undefined) 'message': (message as Enum$order_by?),
+        if (name != _undefined) 'name': (name as Enum$order_by?),
+        if (number != _undefined) 'number': (number as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
       }));
 }
 
-class _CopyWithStubImpl$Input$public_user_insert_input<TRes>
-    implements CopyWith$Input$public_user_insert_input<TRes> {
-  _CopyWithStubImpl$Input$public_user_insert_input(this._res);
+class _CopyWithStubImpl$Input$public_user_max_order_by<TRes>
+    implements CopyWith$Input$public_user_max_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_max_order_by(this._res);
 
   TRes _res;
 
   call({
-    String? message,
-    int? number,
-    String? user_id,
+    Enum$order_by? file_id,
+    Enum$order_by? message,
+    Enum$order_by? name,
+    Enum$order_by? number,
+    Enum$order_by? user_id,
   }) =>
       _res;
+}
+
+class Input$public_user_min_order_by {
+  factory Input$public_user_min_order_by({
+    Enum$order_by? file_id,
+    Enum$order_by? message,
+    Enum$order_by? name,
+    Enum$order_by? number,
+    Enum$order_by? user_id,
+  }) =>
+      Input$public_user_min_order_by._({
+        if (file_id != null) r'file_id': file_id,
+        if (message != null) r'message': message,
+        if (name != null) r'name': name,
+        if (number != null) r'number': number,
+        if (user_id != null) r'user_id': user_id,
+      });
+
+  Input$public_user_min_order_by._(this._$data);
+
+  factory Input$public_user_min_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
+    if (data.containsKey('message')) {
+      final l$message = data['message'];
+      result$data['message'] = l$message == null
+          ? null
+          : fromJson$Enum$order_by((l$message as String));
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] =
+          l$name == null ? null : fromJson$Enum$order_by((l$name as String));
+    }
+    if (data.containsKey('number')) {
+      final l$number = data['number'];
+      result$data['number'] = l$number == null
+          ? null
+          : fromJson$Enum$order_by((l$number as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    return Input$public_user_min_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
+  Enum$order_by? get message => (_$data['message'] as Enum$order_by?);
+  Enum$order_by? get name => (_$data['name'] as Enum$order_by?);
+  Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
+    if (_$data.containsKey('message')) {
+      final l$message = message;
+      result$data['message'] =
+          l$message == null ? null : toJson$Enum$order_by(l$message);
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] =
+          l$name == null ? null : toJson$Enum$order_by(l$name);
+    }
+    if (_$data.containsKey('number')) {
+      final l$number = number;
+      result$data['number'] =
+          l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_min_order_by<Input$public_user_min_order_by>
+      get copyWith => CopyWith$Input$public_user_min_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_min_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
+    final l$message = message;
+    final lOther$message = other.message;
+    if (_$data.containsKey('message') != other._$data.containsKey('message')) {
+      return false;
+    }
+    if (l$message != lOther$message) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
+    final l$number = number;
+    final lOther$number = other.number;
+    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
+      return false;
+    }
+    if (l$number != lOther$number) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$file_id = file_id;
+    final l$message = message;
+    final l$name = name;
+    final l$number = number;
+    final l$user_id = user_id;
+    return Object.hashAll([
+      _$data.containsKey('file_id') ? l$file_id : const {},
+      _$data.containsKey('message') ? l$message : const {},
+      _$data.containsKey('name') ? l$name : const {},
+      _$data.containsKey('number') ? l$number : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_min_order_by<TRes> {
+  factory CopyWith$Input$public_user_min_order_by(
+    Input$public_user_min_order_by instance,
+    TRes Function(Input$public_user_min_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_min_order_by;
+
+  factory CopyWith$Input$public_user_min_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_min_order_by;
+
+  TRes call({
+    Enum$order_by? file_id,
+    Enum$order_by? message,
+    Enum$order_by? name,
+    Enum$order_by? number,
+    Enum$order_by? user_id,
+  });
+}
+
+class _CopyWithImpl$Input$public_user_min_order_by<TRes>
+    implements CopyWith$Input$public_user_min_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_min_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_min_order_by _instance;
+
+  final TRes Function(Input$public_user_min_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? file_id = _undefined,
+    Object? message = _undefined,
+    Object? name = _undefined,
+    Object? number = _undefined,
+    Object? user_id = _undefined,
+  }) =>
+      _then(Input$public_user_min_order_by._({
+        ..._instance._$data,
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
+        if (message != _undefined) 'message': (message as Enum$order_by?),
+        if (name != _undefined) 'name': (name as Enum$order_by?),
+        if (number != _undefined) 'number': (number as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$public_user_min_order_by<TRes>
+    implements CopyWith$Input$public_user_min_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_min_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? file_id,
+    Enum$order_by? message,
+    Enum$order_by? name,
+    Enum$order_by? number,
+    Enum$order_by? user_id,
+  }) =>
+      _res;
+}
+
+class Input$public_user_obj_rel_insert_input {
+  factory Input$public_user_obj_rel_insert_input({
+    required Input$public_user_insert_input data,
+    Input$public_user_on_conflict? on_conflict,
+  }) =>
+      Input$public_user_obj_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$public_user_obj_rel_insert_input._(this._$data);
+
+  factory Input$public_user_obj_rel_insert_input.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] = Input$public_user_insert_input.fromJson(
+        (l$data as Map<String, dynamic>));
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$public_user_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$public_user_obj_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$public_user_insert_input get data =>
+      (_$data['data'] as Input$public_user_insert_input);
+  Input$public_user_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$public_user_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.toJson();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_obj_rel_insert_input<
+          Input$public_user_obj_rel_insert_input>
+      get copyWith => CopyWith$Input$public_user_obj_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_obj_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data != lOther$data) {
+      return false;
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      l$data,
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_obj_rel_insert_input<TRes> {
+  factory CopyWith$Input$public_user_obj_rel_insert_input(
+    Input$public_user_obj_rel_insert_input instance,
+    TRes Function(Input$public_user_obj_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$public_user_obj_rel_insert_input;
+
+  factory CopyWith$Input$public_user_obj_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_obj_rel_insert_input;
+
+  TRes call({
+    Input$public_user_insert_input? data,
+    Input$public_user_on_conflict? on_conflict,
+  });
+  CopyWith$Input$public_user_insert_input<TRes> get data;
+  CopyWith$Input$public_user_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$public_user_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$public_user_obj_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$public_user_obj_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_obj_rel_insert_input _instance;
+
+  final TRes Function(Input$public_user_obj_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$public_user_obj_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as Input$public_user_insert_input),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$public_user_on_conflict?),
+      }));
+  CopyWith$Input$public_user_insert_input<TRes> get data {
+    final local$data = _instance.data;
+    return CopyWith$Input$public_user_insert_input(
+        local$data, (e) => call(data: e));
+  }
+
+  CopyWith$Input$public_user_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$public_user_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$public_user_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$public_user_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$public_user_obj_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$public_user_obj_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$public_user_insert_input? data,
+    Input$public_user_on_conflict? on_conflict,
+  }) =>
+      _res;
+  CopyWith$Input$public_user_insert_input<TRes> get data =>
+      CopyWith$Input$public_user_insert_input.stub(_res);
+  CopyWith$Input$public_user_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$public_user_on_conflict.stub(_res);
 }
 
 class Input$public_user_on_conflict {
   factory Input$public_user_on_conflict({
     required Enum$public_user_constraint constraint,
-    required List<Enum$public_user_update_column> update_columns,
+    List<Enum$public_user_update_column>? update_columns,
     Input$public_user_bool_exp? where,
   }) =>
       Input$public_user_on_conflict._({
         r'constraint': constraint,
-        r'update_columns': update_columns,
+        if (update_columns != null) r'update_columns': update_columns,
         if (where != null) r'where': where,
       });
 
@@ -7889,10 +26868,12 @@ class Input$public_user_on_conflict {
     final l$constraint = data['constraint'];
     result$data['constraint'] =
         fromJson$Enum$public_user_constraint((l$constraint as String));
-    final l$update_columns = data['update_columns'];
-    result$data['update_columns'] = (l$update_columns as List<dynamic>)
-        .map((e) => fromJson$Enum$public_user_update_column((e as String)))
-        .toList();
+    if (data.containsKey('update_columns')) {
+      final l$update_columns = data['update_columns'];
+      result$data['update_columns'] = (l$update_columns as List<dynamic>)
+          .map((e) => fromJson$Enum$public_user_update_column((e as String)))
+          .toList();
+    }
     if (data.containsKey('where')) {
       final l$where = data['where'];
       result$data['where'] = l$where == null
@@ -7907,8 +26888,8 @@ class Input$public_user_on_conflict {
 
   Enum$public_user_constraint get constraint =>
       (_$data['constraint'] as Enum$public_user_constraint);
-  List<Enum$public_user_update_column> get update_columns =>
-      (_$data['update_columns'] as List<Enum$public_user_update_column>);
+  List<Enum$public_user_update_column>? get update_columns =>
+      (_$data['update_columns'] as List<Enum$public_user_update_column>?);
   Input$public_user_bool_exp? get where =>
       (_$data['where'] as Input$public_user_bool_exp?);
   Map<String, dynamic> toJson() {
@@ -7916,10 +26897,13 @@ class Input$public_user_on_conflict {
     final l$constraint = constraint;
     result$data['constraint'] =
         toJson$Enum$public_user_constraint(l$constraint);
-    final l$update_columns = update_columns;
-    result$data['update_columns'] = l$update_columns
-        .map((e) => toJson$Enum$public_user_update_column(e))
-        .toList();
+    if (_$data.containsKey('update_columns')) {
+      final l$update_columns = update_columns;
+      result$data['update_columns'] =
+          (l$update_columns as List<Enum$public_user_update_column>)
+              .map((e) => toJson$Enum$public_user_update_column(e))
+              .toList();
+    }
     if (_$data.containsKey('where')) {
       final l$where = where;
       result$data['where'] = l$where?.toJson();
@@ -7948,15 +26932,23 @@ class Input$public_user_on_conflict {
     }
     final l$update_columns = update_columns;
     final lOther$update_columns = other.update_columns;
-    if (l$update_columns.length != lOther$update_columns.length) {
+    if (_$data.containsKey('update_columns') !=
+        other._$data.containsKey('update_columns')) {
       return false;
     }
-    for (int i = 0; i < l$update_columns.length; i++) {
-      final l$update_columns$entry = l$update_columns[i];
-      final lOther$update_columns$entry = lOther$update_columns[i];
-      if (l$update_columns$entry != lOther$update_columns$entry) {
+    if (l$update_columns != null && lOther$update_columns != null) {
+      if (l$update_columns.length != lOther$update_columns.length) {
         return false;
       }
+      for (int i = 0; i < l$update_columns.length; i++) {
+        final l$update_columns$entry = l$update_columns[i];
+        final lOther$update_columns$entry = lOther$update_columns[i];
+        if (l$update_columns$entry != lOther$update_columns$entry) {
+          return false;
+        }
+      }
+    } else if (l$update_columns != lOther$update_columns) {
+      return false;
     }
     final l$where = where;
     final lOther$where = other.where;
@@ -7976,7 +26968,11 @@ class Input$public_user_on_conflict {
     final l$where = where;
     return Object.hashAll([
       l$constraint,
-      Object.hashAll(l$update_columns.map((v) => v)),
+      _$data.containsKey('update_columns')
+          ? l$update_columns == null
+              ? null
+              : Object.hashAll(l$update_columns.map((v) => v))
+          : const {},
       _$data.containsKey('where') ? l$where : const {},
     ]);
   }
@@ -8054,13 +27050,26 @@ class _CopyWithStubImpl$Input$public_user_on_conflict<TRes>
 
 class Input$public_user_order_by {
   factory Input$public_user_order_by({
+    Input$chat_aggregate_order_by? chats_aggregate,
+    Enum$order_by? file_id,
     Enum$order_by? message,
+    Enum$order_by? name,
     Enum$order_by? number,
+    Input$persona_aggregate_order_by? personas_aggregate,
+    Input$file_order_by? photo,
+    Input$user_order_by? user,
     Enum$order_by? user_id,
   }) =>
       Input$public_user_order_by._({
+        if (chats_aggregate != null) r'chats_aggregate': chats_aggregate,
+        if (file_id != null) r'file_id': file_id,
         if (message != null) r'message': message,
+        if (name != null) r'name': name,
         if (number != null) r'number': number,
+        if (personas_aggregate != null)
+          r'personas_aggregate': personas_aggregate,
+        if (photo != null) r'photo': photo,
+        if (user != null) r'user': user,
         if (user_id != null) r'user_id': user_id,
       });
 
@@ -8068,17 +27077,54 @@ class Input$public_user_order_by {
 
   factory Input$public_user_order_by.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('chats_aggregate')) {
+      final l$chats_aggregate = data['chats_aggregate'];
+      result$data['chats_aggregate'] = l$chats_aggregate == null
+          ? null
+          : Input$chat_aggregate_order_by.fromJson(
+              (l$chats_aggregate as Map<String, dynamic>));
+    }
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = l$file_id == null
+          ? null
+          : fromJson$Enum$order_by((l$file_id as String));
+    }
     if (data.containsKey('message')) {
       final l$message = data['message'];
       result$data['message'] = l$message == null
           ? null
           : fromJson$Enum$order_by((l$message as String));
     }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] =
+          l$name == null ? null : fromJson$Enum$order_by((l$name as String));
+    }
     if (data.containsKey('number')) {
       final l$number = data['number'];
       result$data['number'] = l$number == null
           ? null
           : fromJson$Enum$order_by((l$number as String));
+    }
+    if (data.containsKey('personas_aggregate')) {
+      final l$personas_aggregate = data['personas_aggregate'];
+      result$data['personas_aggregate'] = l$personas_aggregate == null
+          ? null
+          : Input$persona_aggregate_order_by.fromJson(
+              (l$personas_aggregate as Map<String, dynamic>));
+    }
+    if (data.containsKey('photo')) {
+      final l$photo = data['photo'];
+      result$data['photo'] = l$photo == null
+          ? null
+          : Input$file_order_by.fromJson((l$photo as Map<String, dynamic>));
+    }
+    if (data.containsKey('user')) {
+      final l$user = data['user'];
+      result$data['user'] = l$user == null
+          ? null
+          : Input$user_order_by.fromJson((l$user as Map<String, dynamic>));
     }
     if (data.containsKey('user_id')) {
       final l$user_id = data['user_id'];
@@ -8091,20 +27137,54 @@ class Input$public_user_order_by {
 
   Map<String, dynamic> _$data;
 
+  Input$chat_aggregate_order_by? get chats_aggregate =>
+      (_$data['chats_aggregate'] as Input$chat_aggregate_order_by?);
+  Enum$order_by? get file_id => (_$data['file_id'] as Enum$order_by?);
   Enum$order_by? get message => (_$data['message'] as Enum$order_by?);
+  Enum$order_by? get name => (_$data['name'] as Enum$order_by?);
   Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Input$persona_aggregate_order_by? get personas_aggregate =>
+      (_$data['personas_aggregate'] as Input$persona_aggregate_order_by?);
+  Input$file_order_by? get photo => (_$data['photo'] as Input$file_order_by?);
+  Input$user_order_by? get user => (_$data['user'] as Input$user_order_by?);
   Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('chats_aggregate')) {
+      final l$chats_aggregate = chats_aggregate;
+      result$data['chats_aggregate'] = l$chats_aggregate?.toJson();
+    }
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] =
+          l$file_id == null ? null : toJson$Enum$order_by(l$file_id);
+    }
     if (_$data.containsKey('message')) {
       final l$message = message;
       result$data['message'] =
           l$message == null ? null : toJson$Enum$order_by(l$message);
     }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] =
+          l$name == null ? null : toJson$Enum$order_by(l$name);
+    }
     if (_$data.containsKey('number')) {
       final l$number = number;
       result$data['number'] =
           l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    if (_$data.containsKey('personas_aggregate')) {
+      final l$personas_aggregate = personas_aggregate;
+      result$data['personas_aggregate'] = l$personas_aggregate?.toJson();
+    }
+    if (_$data.containsKey('photo')) {
+      final l$photo = photo;
+      result$data['photo'] = l$photo?.toJson();
+    }
+    if (_$data.containsKey('user')) {
+      final l$user = user;
+      result$data['user'] = l$user?.toJson();
     }
     if (_$data.containsKey('user_id')) {
       final l$user_id = user_id;
@@ -8128,6 +27208,23 @@ class Input$public_user_order_by {
         runtimeType != other.runtimeType) {
       return false;
     }
+    final l$chats_aggregate = chats_aggregate;
+    final lOther$chats_aggregate = other.chats_aggregate;
+    if (_$data.containsKey('chats_aggregate') !=
+        other._$data.containsKey('chats_aggregate')) {
+      return false;
+    }
+    if (l$chats_aggregate != lOther$chats_aggregate) {
+      return false;
+    }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
     final l$message = message;
     final lOther$message = other.message;
     if (_$data.containsKey('message') != other._$data.containsKey('message')) {
@@ -8136,12 +27233,45 @@ class Input$public_user_order_by {
     if (l$message != lOther$message) {
       return false;
     }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
+      return false;
+    }
     final l$number = number;
     final lOther$number = other.number;
     if (_$data.containsKey('number') != other._$data.containsKey('number')) {
       return false;
     }
     if (l$number != lOther$number) {
+      return false;
+    }
+    final l$personas_aggregate = personas_aggregate;
+    final lOther$personas_aggregate = other.personas_aggregate;
+    if (_$data.containsKey('personas_aggregate') !=
+        other._$data.containsKey('personas_aggregate')) {
+      return false;
+    }
+    if (l$personas_aggregate != lOther$personas_aggregate) {
+      return false;
+    }
+    final l$photo = photo;
+    final lOther$photo = other.photo;
+    if (_$data.containsKey('photo') != other._$data.containsKey('photo')) {
+      return false;
+    }
+    if (l$photo != lOther$photo) {
+      return false;
+    }
+    final l$user = user;
+    final lOther$user = other.user;
+    if (_$data.containsKey('user') != other._$data.containsKey('user')) {
+      return false;
+    }
+    if (l$user != lOther$user) {
       return false;
     }
     final l$user_id = user_id;
@@ -8157,12 +27287,26 @@ class Input$public_user_order_by {
 
   @override
   int get hashCode {
+    final l$chats_aggregate = chats_aggregate;
+    final l$file_id = file_id;
     final l$message = message;
+    final l$name = name;
     final l$number = number;
+    final l$personas_aggregate = personas_aggregate;
+    final l$photo = photo;
+    final l$user = user;
     final l$user_id = user_id;
     return Object.hashAll([
+      _$data.containsKey('chats_aggregate') ? l$chats_aggregate : const {},
+      _$data.containsKey('file_id') ? l$file_id : const {},
       _$data.containsKey('message') ? l$message : const {},
+      _$data.containsKey('name') ? l$name : const {},
       _$data.containsKey('number') ? l$number : const {},
+      _$data.containsKey('personas_aggregate')
+          ? l$personas_aggregate
+          : const {},
+      _$data.containsKey('photo') ? l$photo : const {},
+      _$data.containsKey('user') ? l$user : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
     ]);
   }
@@ -8178,10 +27322,20 @@ abstract class CopyWith$Input$public_user_order_by<TRes> {
       _CopyWithStubImpl$Input$public_user_order_by;
 
   TRes call({
+    Input$chat_aggregate_order_by? chats_aggregate,
+    Enum$order_by? file_id,
     Enum$order_by? message,
+    Enum$order_by? name,
     Enum$order_by? number,
+    Input$persona_aggregate_order_by? personas_aggregate,
+    Input$file_order_by? photo,
+    Input$user_order_by? user,
     Enum$order_by? user_id,
   });
+  CopyWith$Input$chat_aggregate_order_by<TRes> get chats_aggregate;
+  CopyWith$Input$persona_aggregate_order_by<TRes> get personas_aggregate;
+  CopyWith$Input$file_order_by<TRes> get photo;
+  CopyWith$Input$user_order_by<TRes> get user;
 }
 
 class _CopyWithImpl$Input$public_user_order_by<TRes>
@@ -8198,16 +27352,61 @@ class _CopyWithImpl$Input$public_user_order_by<TRes>
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
+    Object? chats_aggregate = _undefined,
+    Object? file_id = _undefined,
     Object? message = _undefined,
+    Object? name = _undefined,
     Object? number = _undefined,
+    Object? personas_aggregate = _undefined,
+    Object? photo = _undefined,
+    Object? user = _undefined,
     Object? user_id = _undefined,
   }) =>
       _then(Input$public_user_order_by._({
         ..._instance._$data,
+        if (chats_aggregate != _undefined)
+          'chats_aggregate':
+              (chats_aggregate as Input$chat_aggregate_order_by?),
+        if (file_id != _undefined) 'file_id': (file_id as Enum$order_by?),
         if (message != _undefined) 'message': (message as Enum$order_by?),
+        if (name != _undefined) 'name': (name as Enum$order_by?),
         if (number != _undefined) 'number': (number as Enum$order_by?),
+        if (personas_aggregate != _undefined)
+          'personas_aggregate':
+              (personas_aggregate as Input$persona_aggregate_order_by?),
+        if (photo != _undefined) 'photo': (photo as Input$file_order_by?),
+        if (user != _undefined) 'user': (user as Input$user_order_by?),
         if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
       }));
+  CopyWith$Input$chat_aggregate_order_by<TRes> get chats_aggregate {
+    final local$chats_aggregate = _instance.chats_aggregate;
+    return local$chats_aggregate == null
+        ? CopyWith$Input$chat_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$chat_aggregate_order_by(
+            local$chats_aggregate, (e) => call(chats_aggregate: e));
+  }
+
+  CopyWith$Input$persona_aggregate_order_by<TRes> get personas_aggregate {
+    final local$personas_aggregate = _instance.personas_aggregate;
+    return local$personas_aggregate == null
+        ? CopyWith$Input$persona_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$persona_aggregate_order_by(
+            local$personas_aggregate, (e) => call(personas_aggregate: e));
+  }
+
+  CopyWith$Input$file_order_by<TRes> get photo {
+    final local$photo = _instance.photo;
+    return local$photo == null
+        ? CopyWith$Input$file_order_by.stub(_then(_instance))
+        : CopyWith$Input$file_order_by(local$photo, (e) => call(photo: e));
+  }
+
+  CopyWith$Input$user_order_by<TRes> get user {
+    final local$user = _instance.user;
+    return local$user == null
+        ? CopyWith$Input$user_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_order_by(local$user, (e) => call(user: e));
+  }
 }
 
 class _CopyWithStubImpl$Input$public_user_order_by<TRes>
@@ -8217,11 +27416,25 @@ class _CopyWithStubImpl$Input$public_user_order_by<TRes>
   TRes _res;
 
   call({
+    Input$chat_aggregate_order_by? chats_aggregate,
+    Enum$order_by? file_id,
     Enum$order_by? message,
+    Enum$order_by? name,
     Enum$order_by? number,
+    Input$persona_aggregate_order_by? personas_aggregate,
+    Input$file_order_by? photo,
+    Input$user_order_by? user,
     Enum$order_by? user_id,
   }) =>
       _res;
+  CopyWith$Input$chat_aggregate_order_by<TRes> get chats_aggregate =>
+      CopyWith$Input$chat_aggregate_order_by.stub(_res);
+  CopyWith$Input$persona_aggregate_order_by<TRes> get personas_aggregate =>
+      CopyWith$Input$persona_aggregate_order_by.stub(_res);
+  CopyWith$Input$file_order_by<TRes> get photo =>
+      CopyWith$Input$file_order_by.stub(_res);
+  CopyWith$Input$user_order_by<TRes> get user =>
+      CopyWith$Input$user_order_by.stub(_res);
 }
 
 class Input$public_user_pk_columns_input {
@@ -8324,12 +27537,16 @@ class _CopyWithStubImpl$Input$public_user_pk_columns_input<TRes>
 
 class Input$public_user_set_input {
   factory Input$public_user_set_input({
+    String? file_id,
     String? message,
+    String? name,
     int? number,
     String? user_id,
   }) =>
       Input$public_user_set_input._({
+        if (file_id != null) r'file_id': file_id,
         if (message != null) r'message': message,
+        if (name != null) r'name': name,
         if (number != null) r'number': number,
         if (user_id != null) r'user_id': user_id,
       });
@@ -8338,9 +27555,17 @@ class Input$public_user_set_input {
 
   factory Input$public_user_set_input.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = (l$file_id as String?);
+    }
     if (data.containsKey('message')) {
       final l$message = data['message'];
       result$data['message'] = (l$message as String?);
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] = (l$name as String?);
     }
     if (data.containsKey('number')) {
       final l$number = data['number'];
@@ -8355,14 +27580,24 @@ class Input$public_user_set_input {
 
   Map<String, dynamic> _$data;
 
+  String? get file_id => (_$data['file_id'] as String?);
   String? get message => (_$data['message'] as String?);
+  String? get name => (_$data['name'] as String?);
   int? get number => (_$data['number'] as int?);
   String? get user_id => (_$data['user_id'] as String?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id;
+    }
     if (_$data.containsKey('message')) {
       final l$message = message;
       result$data['message'] = l$message;
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] = l$name;
     }
     if (_$data.containsKey('number')) {
       final l$number = number;
@@ -8389,12 +27624,28 @@ class Input$public_user_set_input {
         runtimeType != other.runtimeType) {
       return false;
     }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
     final l$message = message;
     final lOther$message = other.message;
     if (_$data.containsKey('message') != other._$data.containsKey('message')) {
       return false;
     }
     if (l$message != lOther$message) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
       return false;
     }
     final l$number = number;
@@ -8418,11 +27669,15 @@ class Input$public_user_set_input {
 
   @override
   int get hashCode {
+    final l$file_id = file_id;
     final l$message = message;
+    final l$name = name;
     final l$number = number;
     final l$user_id = user_id;
     return Object.hashAll([
+      _$data.containsKey('file_id') ? l$file_id : const {},
       _$data.containsKey('message') ? l$message : const {},
+      _$data.containsKey('name') ? l$name : const {},
       _$data.containsKey('number') ? l$number : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
     ]);
@@ -8439,7 +27694,9 @@ abstract class CopyWith$Input$public_user_set_input<TRes> {
       _CopyWithStubImpl$Input$public_user_set_input;
 
   TRes call({
+    String? file_id,
     String? message,
+    String? name,
     int? number,
     String? user_id,
   });
@@ -8459,13 +27716,17 @@ class _CopyWithImpl$Input$public_user_set_input<TRes>
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
+    Object? file_id = _undefined,
     Object? message = _undefined,
+    Object? name = _undefined,
     Object? number = _undefined,
     Object? user_id = _undefined,
   }) =>
       _then(Input$public_user_set_input._({
         ..._instance._$data,
+        if (file_id != _undefined) 'file_id': (file_id as String?),
         if (message != _undefined) 'message': (message as String?),
+        if (name != _undefined) 'name': (name as String?),
         if (number != _undefined) 'number': (number as int?),
         if (user_id != _undefined) 'user_id': (user_id as String?),
       }));
@@ -8478,11 +27739,333 @@ class _CopyWithStubImpl$Input$public_user_set_input<TRes>
   TRes _res;
 
   call({
+    String? file_id,
     String? message,
+    String? name,
     int? number,
     String? user_id,
   }) =>
       _res;
+}
+
+class Input$public_user_stddev_order_by {
+  factory Input$public_user_stddev_order_by({Enum$order_by? number}) =>
+      Input$public_user_stddev_order_by._({
+        if (number != null) r'number': number,
+      });
+
+  Input$public_user_stddev_order_by._(this._$data);
+
+  factory Input$public_user_stddev_order_by.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('number')) {
+      final l$number = data['number'];
+      result$data['number'] = l$number == null
+          ? null
+          : fromJson$Enum$order_by((l$number as String));
+    }
+    return Input$public_user_stddev_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('number')) {
+      final l$number = number;
+      result$data['number'] =
+          l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_stddev_order_by<Input$public_user_stddev_order_by>
+      get copyWith => CopyWith$Input$public_user_stddev_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_stddev_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$number = number;
+    final lOther$number = other.number;
+    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
+      return false;
+    }
+    if (l$number != lOther$number) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$number = number;
+    return Object.hashAll([_$data.containsKey('number') ? l$number : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_stddev_order_by<TRes> {
+  factory CopyWith$Input$public_user_stddev_order_by(
+    Input$public_user_stddev_order_by instance,
+    TRes Function(Input$public_user_stddev_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_stddev_order_by;
+
+  factory CopyWith$Input$public_user_stddev_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_stddev_order_by;
+
+  TRes call({Enum$order_by? number});
+}
+
+class _CopyWithImpl$Input$public_user_stddev_order_by<TRes>
+    implements CopyWith$Input$public_user_stddev_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_stddev_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_stddev_order_by _instance;
+
+  final TRes Function(Input$public_user_stddev_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? number = _undefined}) =>
+      _then(Input$public_user_stddev_order_by._({
+        ..._instance._$data,
+        if (number != _undefined) 'number': (number as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$public_user_stddev_order_by<TRes>
+    implements CopyWith$Input$public_user_stddev_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_stddev_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? number}) => _res;
+}
+
+class Input$public_user_stddev_pop_order_by {
+  factory Input$public_user_stddev_pop_order_by({Enum$order_by? number}) =>
+      Input$public_user_stddev_pop_order_by._({
+        if (number != null) r'number': number,
+      });
+
+  Input$public_user_stddev_pop_order_by._(this._$data);
+
+  factory Input$public_user_stddev_pop_order_by.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('number')) {
+      final l$number = data['number'];
+      result$data['number'] = l$number == null
+          ? null
+          : fromJson$Enum$order_by((l$number as String));
+    }
+    return Input$public_user_stddev_pop_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('number')) {
+      final l$number = number;
+      result$data['number'] =
+          l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_stddev_pop_order_by<
+          Input$public_user_stddev_pop_order_by>
+      get copyWith => CopyWith$Input$public_user_stddev_pop_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_stddev_pop_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$number = number;
+    final lOther$number = other.number;
+    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
+      return false;
+    }
+    if (l$number != lOther$number) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$number = number;
+    return Object.hashAll([_$data.containsKey('number') ? l$number : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_stddev_pop_order_by<TRes> {
+  factory CopyWith$Input$public_user_stddev_pop_order_by(
+    Input$public_user_stddev_pop_order_by instance,
+    TRes Function(Input$public_user_stddev_pop_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_stddev_pop_order_by;
+
+  factory CopyWith$Input$public_user_stddev_pop_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_stddev_pop_order_by;
+
+  TRes call({Enum$order_by? number});
+}
+
+class _CopyWithImpl$Input$public_user_stddev_pop_order_by<TRes>
+    implements CopyWith$Input$public_user_stddev_pop_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_stddev_pop_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_stddev_pop_order_by _instance;
+
+  final TRes Function(Input$public_user_stddev_pop_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? number = _undefined}) =>
+      _then(Input$public_user_stddev_pop_order_by._({
+        ..._instance._$data,
+        if (number != _undefined) 'number': (number as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$public_user_stddev_pop_order_by<TRes>
+    implements CopyWith$Input$public_user_stddev_pop_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_stddev_pop_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? number}) => _res;
+}
+
+class Input$public_user_stddev_samp_order_by {
+  factory Input$public_user_stddev_samp_order_by({Enum$order_by? number}) =>
+      Input$public_user_stddev_samp_order_by._({
+        if (number != null) r'number': number,
+      });
+
+  Input$public_user_stddev_samp_order_by._(this._$data);
+
+  factory Input$public_user_stddev_samp_order_by.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('number')) {
+      final l$number = data['number'];
+      result$data['number'] = l$number == null
+          ? null
+          : fromJson$Enum$order_by((l$number as String));
+    }
+    return Input$public_user_stddev_samp_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('number')) {
+      final l$number = number;
+      result$data['number'] =
+          l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_stddev_samp_order_by<
+          Input$public_user_stddev_samp_order_by>
+      get copyWith => CopyWith$Input$public_user_stddev_samp_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_stddev_samp_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$number = number;
+    final lOther$number = other.number;
+    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
+      return false;
+    }
+    if (l$number != lOther$number) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$number = number;
+    return Object.hashAll([_$data.containsKey('number') ? l$number : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_stddev_samp_order_by<TRes> {
+  factory CopyWith$Input$public_user_stddev_samp_order_by(
+    Input$public_user_stddev_samp_order_by instance,
+    TRes Function(Input$public_user_stddev_samp_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_stddev_samp_order_by;
+
+  factory CopyWith$Input$public_user_stddev_samp_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_stddev_samp_order_by;
+
+  TRes call({Enum$order_by? number});
+}
+
+class _CopyWithImpl$Input$public_user_stddev_samp_order_by<TRes>
+    implements CopyWith$Input$public_user_stddev_samp_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_stddev_samp_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_stddev_samp_order_by _instance;
+
+  final TRes Function(Input$public_user_stddev_samp_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? number = _undefined}) =>
+      _then(Input$public_user_stddev_samp_order_by._({
+        ..._instance._$data,
+        if (number != _undefined) 'number': (number as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$public_user_stddev_samp_order_by<TRes>
+    implements CopyWith$Input$public_user_stddev_samp_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_stddev_samp_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? number}) => _res;
 }
 
 class Input$public_user_stream_cursor_input {
@@ -8640,12 +28223,16 @@ class _CopyWithStubImpl$Input$public_user_stream_cursor_input<TRes>
 
 class Input$public_user_stream_cursor_value_input {
   factory Input$public_user_stream_cursor_value_input({
+    String? file_id,
     String? message,
+    String? name,
     int? number,
     String? user_id,
   }) =>
       Input$public_user_stream_cursor_value_input._({
+        if (file_id != null) r'file_id': file_id,
         if (message != null) r'message': message,
+        if (name != null) r'name': name,
         if (number != null) r'number': number,
         if (user_id != null) r'user_id': user_id,
       });
@@ -8655,9 +28242,17 @@ class Input$public_user_stream_cursor_value_input {
   factory Input$public_user_stream_cursor_value_input.fromJson(
       Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('file_id')) {
+      final l$file_id = data['file_id'];
+      result$data['file_id'] = (l$file_id as String?);
+    }
     if (data.containsKey('message')) {
       final l$message = data['message'];
       result$data['message'] = (l$message as String?);
+    }
+    if (data.containsKey('name')) {
+      final l$name = data['name'];
+      result$data['name'] = (l$name as String?);
     }
     if (data.containsKey('number')) {
       final l$number = data['number'];
@@ -8672,14 +28267,24 @@ class Input$public_user_stream_cursor_value_input {
 
   Map<String, dynamic> _$data;
 
+  String? get file_id => (_$data['file_id'] as String?);
   String? get message => (_$data['message'] as String?);
+  String? get name => (_$data['name'] as String?);
   int? get number => (_$data['number'] as int?);
   String? get user_id => (_$data['user_id'] as String?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('file_id')) {
+      final l$file_id = file_id;
+      result$data['file_id'] = l$file_id;
+    }
     if (_$data.containsKey('message')) {
       final l$message = message;
       result$data['message'] = l$message;
+    }
+    if (_$data.containsKey('name')) {
+      final l$name = name;
+      result$data['name'] = l$name;
     }
     if (_$data.containsKey('number')) {
       final l$number = number;
@@ -8707,12 +28312,28 @@ class Input$public_user_stream_cursor_value_input {
         runtimeType != other.runtimeType) {
       return false;
     }
+    final l$file_id = file_id;
+    final lOther$file_id = other.file_id;
+    if (_$data.containsKey('file_id') != other._$data.containsKey('file_id')) {
+      return false;
+    }
+    if (l$file_id != lOther$file_id) {
+      return false;
+    }
     final l$message = message;
     final lOther$message = other.message;
     if (_$data.containsKey('message') != other._$data.containsKey('message')) {
       return false;
     }
     if (l$message != lOther$message) {
+      return false;
+    }
+    final l$name = name;
+    final lOther$name = other.name;
+    if (_$data.containsKey('name') != other._$data.containsKey('name')) {
+      return false;
+    }
+    if (l$name != lOther$name) {
       return false;
     }
     final l$number = number;
@@ -8736,11 +28357,15 @@ class Input$public_user_stream_cursor_value_input {
 
   @override
   int get hashCode {
+    final l$file_id = file_id;
     final l$message = message;
+    final l$name = name;
     final l$number = number;
     final l$user_id = user_id;
     return Object.hashAll([
+      _$data.containsKey('file_id') ? l$file_id : const {},
       _$data.containsKey('message') ? l$message : const {},
+      _$data.containsKey('name') ? l$name : const {},
       _$data.containsKey('number') ? l$number : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
     ]);
@@ -8757,7 +28382,9 @@ abstract class CopyWith$Input$public_user_stream_cursor_value_input<TRes> {
       _CopyWithStubImpl$Input$public_user_stream_cursor_value_input;
 
   TRes call({
+    String? file_id,
     String? message,
+    String? name,
     int? number,
     String? user_id,
   });
@@ -8777,13 +28404,17 @@ class _CopyWithImpl$Input$public_user_stream_cursor_value_input<TRes>
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
+    Object? file_id = _undefined,
     Object? message = _undefined,
+    Object? name = _undefined,
     Object? number = _undefined,
     Object? user_id = _undefined,
   }) =>
       _then(Input$public_user_stream_cursor_value_input._({
         ..._instance._$data,
+        if (file_id != _undefined) 'file_id': (file_id as String?),
         if (message != _undefined) 'message': (message as String?),
+        if (name != _undefined) 'name': (name as String?),
         if (number != _undefined) 'number': (number as int?),
         if (user_id != _undefined) 'user_id': (user_id as String?),
       }));
@@ -8796,11 +28427,118 @@ class _CopyWithStubImpl$Input$public_user_stream_cursor_value_input<TRes>
   TRes _res;
 
   call({
+    String? file_id,
     String? message,
+    String? name,
     int? number,
     String? user_id,
   }) =>
       _res;
+}
+
+class Input$public_user_sum_order_by {
+  factory Input$public_user_sum_order_by({Enum$order_by? number}) =>
+      Input$public_user_sum_order_by._({
+        if (number != null) r'number': number,
+      });
+
+  Input$public_user_sum_order_by._(this._$data);
+
+  factory Input$public_user_sum_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('number')) {
+      final l$number = data['number'];
+      result$data['number'] = l$number == null
+          ? null
+          : fromJson$Enum$order_by((l$number as String));
+    }
+    return Input$public_user_sum_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('number')) {
+      final l$number = number;
+      result$data['number'] =
+          l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_sum_order_by<Input$public_user_sum_order_by>
+      get copyWith => CopyWith$Input$public_user_sum_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_sum_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$number = number;
+    final lOther$number = other.number;
+    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
+      return false;
+    }
+    if (l$number != lOther$number) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$number = number;
+    return Object.hashAll([_$data.containsKey('number') ? l$number : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_sum_order_by<TRes> {
+  factory CopyWith$Input$public_user_sum_order_by(
+    Input$public_user_sum_order_by instance,
+    TRes Function(Input$public_user_sum_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_sum_order_by;
+
+  factory CopyWith$Input$public_user_sum_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_sum_order_by;
+
+  TRes call({Enum$order_by? number});
+}
+
+class _CopyWithImpl$Input$public_user_sum_order_by<TRes>
+    implements CopyWith$Input$public_user_sum_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_sum_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_sum_order_by _instance;
+
+  final TRes Function(Input$public_user_sum_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? number = _undefined}) =>
+      _then(Input$public_user_sum_order_by._({
+        ..._instance._$data,
+        if (number != _undefined) 'number': (number as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$public_user_sum_order_by<TRes>
+    implements CopyWith$Input$public_user_sum_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_sum_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? number}) => _res;
 }
 
 class Input$public_user_updates {
@@ -9000,6 +28738,327 @@ class _CopyWithStubImpl$Input$public_user_updates<TRes>
       CopyWith$Input$public_user_set_input.stub(_res);
   CopyWith$Input$public_user_bool_exp<TRes> get where =>
       CopyWith$Input$public_user_bool_exp.stub(_res);
+}
+
+class Input$public_user_var_pop_order_by {
+  factory Input$public_user_var_pop_order_by({Enum$order_by? number}) =>
+      Input$public_user_var_pop_order_by._({
+        if (number != null) r'number': number,
+      });
+
+  Input$public_user_var_pop_order_by._(this._$data);
+
+  factory Input$public_user_var_pop_order_by.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('number')) {
+      final l$number = data['number'];
+      result$data['number'] = l$number == null
+          ? null
+          : fromJson$Enum$order_by((l$number as String));
+    }
+    return Input$public_user_var_pop_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('number')) {
+      final l$number = number;
+      result$data['number'] =
+          l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_var_pop_order_by<
+          Input$public_user_var_pop_order_by>
+      get copyWith => CopyWith$Input$public_user_var_pop_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_var_pop_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$number = number;
+    final lOther$number = other.number;
+    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
+      return false;
+    }
+    if (l$number != lOther$number) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$number = number;
+    return Object.hashAll([_$data.containsKey('number') ? l$number : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_var_pop_order_by<TRes> {
+  factory CopyWith$Input$public_user_var_pop_order_by(
+    Input$public_user_var_pop_order_by instance,
+    TRes Function(Input$public_user_var_pop_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_var_pop_order_by;
+
+  factory CopyWith$Input$public_user_var_pop_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_var_pop_order_by;
+
+  TRes call({Enum$order_by? number});
+}
+
+class _CopyWithImpl$Input$public_user_var_pop_order_by<TRes>
+    implements CopyWith$Input$public_user_var_pop_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_var_pop_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_var_pop_order_by _instance;
+
+  final TRes Function(Input$public_user_var_pop_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? number = _undefined}) =>
+      _then(Input$public_user_var_pop_order_by._({
+        ..._instance._$data,
+        if (number != _undefined) 'number': (number as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$public_user_var_pop_order_by<TRes>
+    implements CopyWith$Input$public_user_var_pop_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_var_pop_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? number}) => _res;
+}
+
+class Input$public_user_var_samp_order_by {
+  factory Input$public_user_var_samp_order_by({Enum$order_by? number}) =>
+      Input$public_user_var_samp_order_by._({
+        if (number != null) r'number': number,
+      });
+
+  Input$public_user_var_samp_order_by._(this._$data);
+
+  factory Input$public_user_var_samp_order_by.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('number')) {
+      final l$number = data['number'];
+      result$data['number'] = l$number == null
+          ? null
+          : fromJson$Enum$order_by((l$number as String));
+    }
+    return Input$public_user_var_samp_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('number')) {
+      final l$number = number;
+      result$data['number'] =
+          l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_var_samp_order_by<
+          Input$public_user_var_samp_order_by>
+      get copyWith => CopyWith$Input$public_user_var_samp_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_var_samp_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$number = number;
+    final lOther$number = other.number;
+    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
+      return false;
+    }
+    if (l$number != lOther$number) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$number = number;
+    return Object.hashAll([_$data.containsKey('number') ? l$number : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_var_samp_order_by<TRes> {
+  factory CopyWith$Input$public_user_var_samp_order_by(
+    Input$public_user_var_samp_order_by instance,
+    TRes Function(Input$public_user_var_samp_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_var_samp_order_by;
+
+  factory CopyWith$Input$public_user_var_samp_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_var_samp_order_by;
+
+  TRes call({Enum$order_by? number});
+}
+
+class _CopyWithImpl$Input$public_user_var_samp_order_by<TRes>
+    implements CopyWith$Input$public_user_var_samp_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_var_samp_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_var_samp_order_by _instance;
+
+  final TRes Function(Input$public_user_var_samp_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? number = _undefined}) =>
+      _then(Input$public_user_var_samp_order_by._({
+        ..._instance._$data,
+        if (number != _undefined) 'number': (number as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$public_user_var_samp_order_by<TRes>
+    implements CopyWith$Input$public_user_var_samp_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_var_samp_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? number}) => _res;
+}
+
+class Input$public_user_variance_order_by {
+  factory Input$public_user_variance_order_by({Enum$order_by? number}) =>
+      Input$public_user_variance_order_by._({
+        if (number != null) r'number': number,
+      });
+
+  Input$public_user_variance_order_by._(this._$data);
+
+  factory Input$public_user_variance_order_by.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('number')) {
+      final l$number = data['number'];
+      result$data['number'] = l$number == null
+          ? null
+          : fromJson$Enum$order_by((l$number as String));
+    }
+    return Input$public_user_variance_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get number => (_$data['number'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('number')) {
+      final l$number = number;
+      result$data['number'] =
+          l$number == null ? null : toJson$Enum$order_by(l$number);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$public_user_variance_order_by<
+          Input$public_user_variance_order_by>
+      get copyWith => CopyWith$Input$public_user_variance_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$public_user_variance_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$number = number;
+    final lOther$number = other.number;
+    if (_$data.containsKey('number') != other._$data.containsKey('number')) {
+      return false;
+    }
+    if (l$number != lOther$number) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$number = number;
+    return Object.hashAll([_$data.containsKey('number') ? l$number : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$public_user_variance_order_by<TRes> {
+  factory CopyWith$Input$public_user_variance_order_by(
+    Input$public_user_variance_order_by instance,
+    TRes Function(Input$public_user_variance_order_by) then,
+  ) = _CopyWithImpl$Input$public_user_variance_order_by;
+
+  factory CopyWith$Input$public_user_variance_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$public_user_variance_order_by;
+
+  TRes call({Enum$order_by? number});
+}
+
+class _CopyWithImpl$Input$public_user_variance_order_by<TRes>
+    implements CopyWith$Input$public_user_variance_order_by<TRes> {
+  _CopyWithImpl$Input$public_user_variance_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$public_user_variance_order_by _instance;
+
+  final TRes Function(Input$public_user_variance_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? number = _undefined}) =>
+      _then(Input$public_user_variance_order_by._({
+        ..._instance._$data,
+        if (number != _undefined) 'number': (number as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$public_user_variance_order_by<TRes>
+    implements CopyWith$Input$public_user_variance_order_by<TRes> {
+  _CopyWithStubImpl$Input$public_user_variance_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? number}) => _res;
 }
 
 class Input$timestamptz_comparison_exp {
@@ -9348,14 +29407,1162 @@ class _CopyWithStubImpl$Input$timestamptz_comparison_exp<TRes>
       _res;
 }
 
+class Input$user_aggregate_bool_exp {
+  factory Input$user_aggregate_bool_exp(
+          {Input$user_aggregate_bool_exp_count? count}) =>
+      Input$user_aggregate_bool_exp._({
+        if (count != null) r'count': count,
+      });
+
+  Input$user_aggregate_bool_exp._(this._$data);
+
+  factory Input$user_aggregate_bool_exp.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] = l$count == null
+          ? null
+          : Input$user_aggregate_bool_exp_count.fromJson(
+              (l$count as Map<String, dynamic>));
+    }
+    return Input$user_aggregate_bool_exp._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$user_aggregate_bool_exp_count? get count =>
+      (_$data['count'] as Input$user_aggregate_bool_exp_count?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] = l$count?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_aggregate_bool_exp<Input$user_aggregate_bool_exp>
+      get copyWith => CopyWith$Input$user_aggregate_bool_exp(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_aggregate_bool_exp) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$count = count;
+    return Object.hashAll([_$data.containsKey('count') ? l$count : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$user_aggregate_bool_exp<TRes> {
+  factory CopyWith$Input$user_aggregate_bool_exp(
+    Input$user_aggregate_bool_exp instance,
+    TRes Function(Input$user_aggregate_bool_exp) then,
+  ) = _CopyWithImpl$Input$user_aggregate_bool_exp;
+
+  factory CopyWith$Input$user_aggregate_bool_exp.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_aggregate_bool_exp;
+
+  TRes call({Input$user_aggregate_bool_exp_count? count});
+  CopyWith$Input$user_aggregate_bool_exp_count<TRes> get count;
+}
+
+class _CopyWithImpl$Input$user_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$user_aggregate_bool_exp<TRes> {
+  _CopyWithImpl$Input$user_aggregate_bool_exp(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_aggregate_bool_exp _instance;
+
+  final TRes Function(Input$user_aggregate_bool_exp) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? count = _undefined}) =>
+      _then(Input$user_aggregate_bool_exp._({
+        ..._instance._$data,
+        if (count != _undefined)
+          'count': (count as Input$user_aggregate_bool_exp_count?),
+      }));
+  CopyWith$Input$user_aggregate_bool_exp_count<TRes> get count {
+    final local$count = _instance.count;
+    return local$count == null
+        ? CopyWith$Input$user_aggregate_bool_exp_count.stub(_then(_instance))
+        : CopyWith$Input$user_aggregate_bool_exp_count(
+            local$count, (e) => call(count: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$user_aggregate_bool_exp<TRes>
+    implements CopyWith$Input$user_aggregate_bool_exp<TRes> {
+  _CopyWithStubImpl$Input$user_aggregate_bool_exp(this._res);
+
+  TRes _res;
+
+  call({Input$user_aggregate_bool_exp_count? count}) => _res;
+  CopyWith$Input$user_aggregate_bool_exp_count<TRes> get count =>
+      CopyWith$Input$user_aggregate_bool_exp_count.stub(_res);
+}
+
+class Input$user_aggregate_bool_exp_count {
+  factory Input$user_aggregate_bool_exp_count({
+    List<Enum$user_select_column>? arguments,
+    bool? distinct,
+    Input$user_bool_exp? filter,
+    required Input$Int_comparison_exp predicate,
+  }) =>
+      Input$user_aggregate_bool_exp_count._({
+        if (arguments != null) r'arguments': arguments,
+        if (distinct != null) r'distinct': distinct,
+        if (filter != null) r'filter': filter,
+        r'predicate': predicate,
+      });
+
+  Input$user_aggregate_bool_exp_count._(this._$data);
+
+  factory Input$user_aggregate_bool_exp_count.fromJson(
+      Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('arguments')) {
+      final l$arguments = data['arguments'];
+      result$data['arguments'] = (l$arguments as List<dynamic>?)
+          ?.map((e) => fromJson$Enum$user_select_column((e as String)))
+          .toList();
+    }
+    if (data.containsKey('distinct')) {
+      final l$distinct = data['distinct'];
+      result$data['distinct'] = (l$distinct as bool?);
+    }
+    if (data.containsKey('filter')) {
+      final l$filter = data['filter'];
+      result$data['filter'] = l$filter == null
+          ? null
+          : Input$user_bool_exp.fromJson((l$filter as Map<String, dynamic>));
+    }
+    final l$predicate = data['predicate'];
+    result$data['predicate'] = Input$Int_comparison_exp.fromJson(
+        (l$predicate as Map<String, dynamic>));
+    return Input$user_aggregate_bool_exp_count._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Enum$user_select_column>? get arguments =>
+      (_$data['arguments'] as List<Enum$user_select_column>?);
+  bool? get distinct => (_$data['distinct'] as bool?);
+  Input$user_bool_exp? get filter => (_$data['filter'] as Input$user_bool_exp?);
+  Input$Int_comparison_exp get predicate =>
+      (_$data['predicate'] as Input$Int_comparison_exp);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('arguments')) {
+      final l$arguments = arguments;
+      result$data['arguments'] =
+          l$arguments?.map((e) => toJson$Enum$user_select_column(e)).toList();
+    }
+    if (_$data.containsKey('distinct')) {
+      final l$distinct = distinct;
+      result$data['distinct'] = l$distinct;
+    }
+    if (_$data.containsKey('filter')) {
+      final l$filter = filter;
+      result$data['filter'] = l$filter?.toJson();
+    }
+    final l$predicate = predicate;
+    result$data['predicate'] = l$predicate.toJson();
+    return result$data;
+  }
+
+  CopyWith$Input$user_aggregate_bool_exp_count<
+          Input$user_aggregate_bool_exp_count>
+      get copyWith => CopyWith$Input$user_aggregate_bool_exp_count(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_aggregate_bool_exp_count) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$arguments = arguments;
+    final lOther$arguments = other.arguments;
+    if (_$data.containsKey('arguments') !=
+        other._$data.containsKey('arguments')) {
+      return false;
+    }
+    if (l$arguments != null && lOther$arguments != null) {
+      if (l$arguments.length != lOther$arguments.length) {
+        return false;
+      }
+      for (int i = 0; i < l$arguments.length; i++) {
+        final l$arguments$entry = l$arguments[i];
+        final lOther$arguments$entry = lOther$arguments[i];
+        if (l$arguments$entry != lOther$arguments$entry) {
+          return false;
+        }
+      }
+    } else if (l$arguments != lOther$arguments) {
+      return false;
+    }
+    final l$distinct = distinct;
+    final lOther$distinct = other.distinct;
+    if (_$data.containsKey('distinct') !=
+        other._$data.containsKey('distinct')) {
+      return false;
+    }
+    if (l$distinct != lOther$distinct) {
+      return false;
+    }
+    final l$filter = filter;
+    final lOther$filter = other.filter;
+    if (_$data.containsKey('filter') != other._$data.containsKey('filter')) {
+      return false;
+    }
+    if (l$filter != lOther$filter) {
+      return false;
+    }
+    final l$predicate = predicate;
+    final lOther$predicate = other.predicate;
+    if (l$predicate != lOther$predicate) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$arguments = arguments;
+    final l$distinct = distinct;
+    final l$filter = filter;
+    final l$predicate = predicate;
+    return Object.hashAll([
+      _$data.containsKey('arguments')
+          ? l$arguments == null
+              ? null
+              : Object.hashAll(l$arguments.map((v) => v))
+          : const {},
+      _$data.containsKey('distinct') ? l$distinct : const {},
+      _$data.containsKey('filter') ? l$filter : const {},
+      l$predicate,
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$user_aggregate_bool_exp_count<TRes> {
+  factory CopyWith$Input$user_aggregate_bool_exp_count(
+    Input$user_aggregate_bool_exp_count instance,
+    TRes Function(Input$user_aggregate_bool_exp_count) then,
+  ) = _CopyWithImpl$Input$user_aggregate_bool_exp_count;
+
+  factory CopyWith$Input$user_aggregate_bool_exp_count.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_aggregate_bool_exp_count;
+
+  TRes call({
+    List<Enum$user_select_column>? arguments,
+    bool? distinct,
+    Input$user_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  });
+  CopyWith$Input$user_bool_exp<TRes> get filter;
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate;
+}
+
+class _CopyWithImpl$Input$user_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$user_aggregate_bool_exp_count<TRes> {
+  _CopyWithImpl$Input$user_aggregate_bool_exp_count(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_aggregate_bool_exp_count _instance;
+
+  final TRes Function(Input$user_aggregate_bool_exp_count) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? arguments = _undefined,
+    Object? distinct = _undefined,
+    Object? filter = _undefined,
+    Object? predicate = _undefined,
+  }) =>
+      _then(Input$user_aggregate_bool_exp_count._({
+        ..._instance._$data,
+        if (arguments != _undefined)
+          'arguments': (arguments as List<Enum$user_select_column>?),
+        if (distinct != _undefined) 'distinct': (distinct as bool?),
+        if (filter != _undefined) 'filter': (filter as Input$user_bool_exp?),
+        if (predicate != _undefined && predicate != null)
+          'predicate': (predicate as Input$Int_comparison_exp),
+      }));
+  CopyWith$Input$user_bool_exp<TRes> get filter {
+    final local$filter = _instance.filter;
+    return local$filter == null
+        ? CopyWith$Input$user_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$user_bool_exp(local$filter, (e) => call(filter: e));
+  }
+
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate {
+    final local$predicate = _instance.predicate;
+    return CopyWith$Input$Int_comparison_exp(
+        local$predicate, (e) => call(predicate: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$user_aggregate_bool_exp_count<TRes>
+    implements CopyWith$Input$user_aggregate_bool_exp_count<TRes> {
+  _CopyWithStubImpl$Input$user_aggregate_bool_exp_count(this._res);
+
+  TRes _res;
+
+  call({
+    List<Enum$user_select_column>? arguments,
+    bool? distinct,
+    Input$user_bool_exp? filter,
+    Input$Int_comparison_exp? predicate,
+  }) =>
+      _res;
+  CopyWith$Input$user_bool_exp<TRes> get filter =>
+      CopyWith$Input$user_bool_exp.stub(_res);
+  CopyWith$Input$Int_comparison_exp<TRes> get predicate =>
+      CopyWith$Input$Int_comparison_exp.stub(_res);
+}
+
+class Input$user_aggregate_order_by {
+  factory Input$user_aggregate_order_by({
+    Input$user_avg_order_by? avg,
+    Enum$order_by? count,
+    Input$user_max_order_by? max,
+    Input$user_min_order_by? min,
+    Input$user_stddev_order_by? stddev,
+    Input$user_stddev_pop_order_by? stddev_pop,
+    Input$user_stddev_samp_order_by? stddev_samp,
+    Input$user_sum_order_by? sum,
+    Input$user_var_pop_order_by? var_pop,
+    Input$user_var_samp_order_by? var_samp,
+    Input$user_variance_order_by? variance,
+  }) =>
+      Input$user_aggregate_order_by._({
+        if (avg != null) r'avg': avg,
+        if (count != null) r'count': count,
+        if (max != null) r'max': max,
+        if (min != null) r'min': min,
+        if (stddev != null) r'stddev': stddev,
+        if (stddev_pop != null) r'stddev_pop': stddev_pop,
+        if (stddev_samp != null) r'stddev_samp': stddev_samp,
+        if (sum != null) r'sum': sum,
+        if (var_pop != null) r'var_pop': var_pop,
+        if (var_samp != null) r'var_samp': var_samp,
+        if (variance != null) r'variance': variance,
+      });
+
+  Input$user_aggregate_order_by._(this._$data);
+
+  factory Input$user_aggregate_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('avg')) {
+      final l$avg = data['avg'];
+      result$data['avg'] = l$avg == null
+          ? null
+          : Input$user_avg_order_by.fromJson((l$avg as Map<String, dynamic>));
+    }
+    if (data.containsKey('count')) {
+      final l$count = data['count'];
+      result$data['count'] =
+          l$count == null ? null : fromJson$Enum$order_by((l$count as String));
+    }
+    if (data.containsKey('max')) {
+      final l$max = data['max'];
+      result$data['max'] = l$max == null
+          ? null
+          : Input$user_max_order_by.fromJson((l$max as Map<String, dynamic>));
+    }
+    if (data.containsKey('min')) {
+      final l$min = data['min'];
+      result$data['min'] = l$min == null
+          ? null
+          : Input$user_min_order_by.fromJson((l$min as Map<String, dynamic>));
+    }
+    if (data.containsKey('stddev')) {
+      final l$stddev = data['stddev'];
+      result$data['stddev'] = l$stddev == null
+          ? null
+          : Input$user_stddev_order_by.fromJson(
+              (l$stddev as Map<String, dynamic>));
+    }
+    if (data.containsKey('stddev_pop')) {
+      final l$stddev_pop = data['stddev_pop'];
+      result$data['stddev_pop'] = l$stddev_pop == null
+          ? null
+          : Input$user_stddev_pop_order_by.fromJson(
+              (l$stddev_pop as Map<String, dynamic>));
+    }
+    if (data.containsKey('stddev_samp')) {
+      final l$stddev_samp = data['stddev_samp'];
+      result$data['stddev_samp'] = l$stddev_samp == null
+          ? null
+          : Input$user_stddev_samp_order_by.fromJson(
+              (l$stddev_samp as Map<String, dynamic>));
+    }
+    if (data.containsKey('sum')) {
+      final l$sum = data['sum'];
+      result$data['sum'] = l$sum == null
+          ? null
+          : Input$user_sum_order_by.fromJson((l$sum as Map<String, dynamic>));
+    }
+    if (data.containsKey('var_pop')) {
+      final l$var_pop = data['var_pop'];
+      result$data['var_pop'] = l$var_pop == null
+          ? null
+          : Input$user_var_pop_order_by.fromJson(
+              (l$var_pop as Map<String, dynamic>));
+    }
+    if (data.containsKey('var_samp')) {
+      final l$var_samp = data['var_samp'];
+      result$data['var_samp'] = l$var_samp == null
+          ? null
+          : Input$user_var_samp_order_by.fromJson(
+              (l$var_samp as Map<String, dynamic>));
+    }
+    if (data.containsKey('variance')) {
+      final l$variance = data['variance'];
+      result$data['variance'] = l$variance == null
+          ? null
+          : Input$user_variance_order_by.fromJson(
+              (l$variance as Map<String, dynamic>));
+    }
+    return Input$user_aggregate_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$user_avg_order_by? get avg =>
+      (_$data['avg'] as Input$user_avg_order_by?);
+  Enum$order_by? get count => (_$data['count'] as Enum$order_by?);
+  Input$user_max_order_by? get max =>
+      (_$data['max'] as Input$user_max_order_by?);
+  Input$user_min_order_by? get min =>
+      (_$data['min'] as Input$user_min_order_by?);
+  Input$user_stddev_order_by? get stddev =>
+      (_$data['stddev'] as Input$user_stddev_order_by?);
+  Input$user_stddev_pop_order_by? get stddev_pop =>
+      (_$data['stddev_pop'] as Input$user_stddev_pop_order_by?);
+  Input$user_stddev_samp_order_by? get stddev_samp =>
+      (_$data['stddev_samp'] as Input$user_stddev_samp_order_by?);
+  Input$user_sum_order_by? get sum =>
+      (_$data['sum'] as Input$user_sum_order_by?);
+  Input$user_var_pop_order_by? get var_pop =>
+      (_$data['var_pop'] as Input$user_var_pop_order_by?);
+  Input$user_var_samp_order_by? get var_samp =>
+      (_$data['var_samp'] as Input$user_var_samp_order_by?);
+  Input$user_variance_order_by? get variance =>
+      (_$data['variance'] as Input$user_variance_order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('avg')) {
+      final l$avg = avg;
+      result$data['avg'] = l$avg?.toJson();
+    }
+    if (_$data.containsKey('count')) {
+      final l$count = count;
+      result$data['count'] =
+          l$count == null ? null : toJson$Enum$order_by(l$count);
+    }
+    if (_$data.containsKey('max')) {
+      final l$max = max;
+      result$data['max'] = l$max?.toJson();
+    }
+    if (_$data.containsKey('min')) {
+      final l$min = min;
+      result$data['min'] = l$min?.toJson();
+    }
+    if (_$data.containsKey('stddev')) {
+      final l$stddev = stddev;
+      result$data['stddev'] = l$stddev?.toJson();
+    }
+    if (_$data.containsKey('stddev_pop')) {
+      final l$stddev_pop = stddev_pop;
+      result$data['stddev_pop'] = l$stddev_pop?.toJson();
+    }
+    if (_$data.containsKey('stddev_samp')) {
+      final l$stddev_samp = stddev_samp;
+      result$data['stddev_samp'] = l$stddev_samp?.toJson();
+    }
+    if (_$data.containsKey('sum')) {
+      final l$sum = sum;
+      result$data['sum'] = l$sum?.toJson();
+    }
+    if (_$data.containsKey('var_pop')) {
+      final l$var_pop = var_pop;
+      result$data['var_pop'] = l$var_pop?.toJson();
+    }
+    if (_$data.containsKey('var_samp')) {
+      final l$var_samp = var_samp;
+      result$data['var_samp'] = l$var_samp?.toJson();
+    }
+    if (_$data.containsKey('variance')) {
+      final l$variance = variance;
+      result$data['variance'] = l$variance?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_aggregate_order_by<Input$user_aggregate_order_by>
+      get copyWith => CopyWith$Input$user_aggregate_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_aggregate_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$avg = avg;
+    final lOther$avg = other.avg;
+    if (_$data.containsKey('avg') != other._$data.containsKey('avg')) {
+      return false;
+    }
+    if (l$avg != lOther$avg) {
+      return false;
+    }
+    final l$count = count;
+    final lOther$count = other.count;
+    if (_$data.containsKey('count') != other._$data.containsKey('count')) {
+      return false;
+    }
+    if (l$count != lOther$count) {
+      return false;
+    }
+    final l$max = max;
+    final lOther$max = other.max;
+    if (_$data.containsKey('max') != other._$data.containsKey('max')) {
+      return false;
+    }
+    if (l$max != lOther$max) {
+      return false;
+    }
+    final l$min = min;
+    final lOther$min = other.min;
+    if (_$data.containsKey('min') != other._$data.containsKey('min')) {
+      return false;
+    }
+    if (l$min != lOther$min) {
+      return false;
+    }
+    final l$stddev = stddev;
+    final lOther$stddev = other.stddev;
+    if (_$data.containsKey('stddev') != other._$data.containsKey('stddev')) {
+      return false;
+    }
+    if (l$stddev != lOther$stddev) {
+      return false;
+    }
+    final l$stddev_pop = stddev_pop;
+    final lOther$stddev_pop = other.stddev_pop;
+    if (_$data.containsKey('stddev_pop') !=
+        other._$data.containsKey('stddev_pop')) {
+      return false;
+    }
+    if (l$stddev_pop != lOther$stddev_pop) {
+      return false;
+    }
+    final l$stddev_samp = stddev_samp;
+    final lOther$stddev_samp = other.stddev_samp;
+    if (_$data.containsKey('stddev_samp') !=
+        other._$data.containsKey('stddev_samp')) {
+      return false;
+    }
+    if (l$stddev_samp != lOther$stddev_samp) {
+      return false;
+    }
+    final l$sum = sum;
+    final lOther$sum = other.sum;
+    if (_$data.containsKey('sum') != other._$data.containsKey('sum')) {
+      return false;
+    }
+    if (l$sum != lOther$sum) {
+      return false;
+    }
+    final l$var_pop = var_pop;
+    final lOther$var_pop = other.var_pop;
+    if (_$data.containsKey('var_pop') != other._$data.containsKey('var_pop')) {
+      return false;
+    }
+    if (l$var_pop != lOther$var_pop) {
+      return false;
+    }
+    final l$var_samp = var_samp;
+    final lOther$var_samp = other.var_samp;
+    if (_$data.containsKey('var_samp') !=
+        other._$data.containsKey('var_samp')) {
+      return false;
+    }
+    if (l$var_samp != lOther$var_samp) {
+      return false;
+    }
+    final l$variance = variance;
+    final lOther$variance = other.variance;
+    if (_$data.containsKey('variance') !=
+        other._$data.containsKey('variance')) {
+      return false;
+    }
+    if (l$variance != lOther$variance) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$avg = avg;
+    final l$count = count;
+    final l$max = max;
+    final l$min = min;
+    final l$stddev = stddev;
+    final l$stddev_pop = stddev_pop;
+    final l$stddev_samp = stddev_samp;
+    final l$sum = sum;
+    final l$var_pop = var_pop;
+    final l$var_samp = var_samp;
+    final l$variance = variance;
+    return Object.hashAll([
+      _$data.containsKey('avg') ? l$avg : const {},
+      _$data.containsKey('count') ? l$count : const {},
+      _$data.containsKey('max') ? l$max : const {},
+      _$data.containsKey('min') ? l$min : const {},
+      _$data.containsKey('stddev') ? l$stddev : const {},
+      _$data.containsKey('stddev_pop') ? l$stddev_pop : const {},
+      _$data.containsKey('stddev_samp') ? l$stddev_samp : const {},
+      _$data.containsKey('sum') ? l$sum : const {},
+      _$data.containsKey('var_pop') ? l$var_pop : const {},
+      _$data.containsKey('var_samp') ? l$var_samp : const {},
+      _$data.containsKey('variance') ? l$variance : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$user_aggregate_order_by<TRes> {
+  factory CopyWith$Input$user_aggregate_order_by(
+    Input$user_aggregate_order_by instance,
+    TRes Function(Input$user_aggregate_order_by) then,
+  ) = _CopyWithImpl$Input$user_aggregate_order_by;
+
+  factory CopyWith$Input$user_aggregate_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_aggregate_order_by;
+
+  TRes call({
+    Input$user_avg_order_by? avg,
+    Enum$order_by? count,
+    Input$user_max_order_by? max,
+    Input$user_min_order_by? min,
+    Input$user_stddev_order_by? stddev,
+    Input$user_stddev_pop_order_by? stddev_pop,
+    Input$user_stddev_samp_order_by? stddev_samp,
+    Input$user_sum_order_by? sum,
+    Input$user_var_pop_order_by? var_pop,
+    Input$user_var_samp_order_by? var_samp,
+    Input$user_variance_order_by? variance,
+  });
+  CopyWith$Input$user_avg_order_by<TRes> get avg;
+  CopyWith$Input$user_max_order_by<TRes> get max;
+  CopyWith$Input$user_min_order_by<TRes> get min;
+  CopyWith$Input$user_stddev_order_by<TRes> get stddev;
+  CopyWith$Input$user_stddev_pop_order_by<TRes> get stddev_pop;
+  CopyWith$Input$user_stddev_samp_order_by<TRes> get stddev_samp;
+  CopyWith$Input$user_sum_order_by<TRes> get sum;
+  CopyWith$Input$user_var_pop_order_by<TRes> get var_pop;
+  CopyWith$Input$user_var_samp_order_by<TRes> get var_samp;
+  CopyWith$Input$user_variance_order_by<TRes> get variance;
+}
+
+class _CopyWithImpl$Input$user_aggregate_order_by<TRes>
+    implements CopyWith$Input$user_aggregate_order_by<TRes> {
+  _CopyWithImpl$Input$user_aggregate_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_aggregate_order_by _instance;
+
+  final TRes Function(Input$user_aggregate_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? avg = _undefined,
+    Object? count = _undefined,
+    Object? max = _undefined,
+    Object? min = _undefined,
+    Object? stddev = _undefined,
+    Object? stddev_pop = _undefined,
+    Object? stddev_samp = _undefined,
+    Object? sum = _undefined,
+    Object? var_pop = _undefined,
+    Object? var_samp = _undefined,
+    Object? variance = _undefined,
+  }) =>
+      _then(Input$user_aggregate_order_by._({
+        ..._instance._$data,
+        if (avg != _undefined) 'avg': (avg as Input$user_avg_order_by?),
+        if (count != _undefined) 'count': (count as Enum$order_by?),
+        if (max != _undefined) 'max': (max as Input$user_max_order_by?),
+        if (min != _undefined) 'min': (min as Input$user_min_order_by?),
+        if (stddev != _undefined)
+          'stddev': (stddev as Input$user_stddev_order_by?),
+        if (stddev_pop != _undefined)
+          'stddev_pop': (stddev_pop as Input$user_stddev_pop_order_by?),
+        if (stddev_samp != _undefined)
+          'stddev_samp': (stddev_samp as Input$user_stddev_samp_order_by?),
+        if (sum != _undefined) 'sum': (sum as Input$user_sum_order_by?),
+        if (var_pop != _undefined)
+          'var_pop': (var_pop as Input$user_var_pop_order_by?),
+        if (var_samp != _undefined)
+          'var_samp': (var_samp as Input$user_var_samp_order_by?),
+        if (variance != _undefined)
+          'variance': (variance as Input$user_variance_order_by?),
+      }));
+  CopyWith$Input$user_avg_order_by<TRes> get avg {
+    final local$avg = _instance.avg;
+    return local$avg == null
+        ? CopyWith$Input$user_avg_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_avg_order_by(local$avg, (e) => call(avg: e));
+  }
+
+  CopyWith$Input$user_max_order_by<TRes> get max {
+    final local$max = _instance.max;
+    return local$max == null
+        ? CopyWith$Input$user_max_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_max_order_by(local$max, (e) => call(max: e));
+  }
+
+  CopyWith$Input$user_min_order_by<TRes> get min {
+    final local$min = _instance.min;
+    return local$min == null
+        ? CopyWith$Input$user_min_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_min_order_by(local$min, (e) => call(min: e));
+  }
+
+  CopyWith$Input$user_stddev_order_by<TRes> get stddev {
+    final local$stddev = _instance.stddev;
+    return local$stddev == null
+        ? CopyWith$Input$user_stddev_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_stddev_order_by(
+            local$stddev, (e) => call(stddev: e));
+  }
+
+  CopyWith$Input$user_stddev_pop_order_by<TRes> get stddev_pop {
+    final local$stddev_pop = _instance.stddev_pop;
+    return local$stddev_pop == null
+        ? CopyWith$Input$user_stddev_pop_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_stddev_pop_order_by(
+            local$stddev_pop, (e) => call(stddev_pop: e));
+  }
+
+  CopyWith$Input$user_stddev_samp_order_by<TRes> get stddev_samp {
+    final local$stddev_samp = _instance.stddev_samp;
+    return local$stddev_samp == null
+        ? CopyWith$Input$user_stddev_samp_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_stddev_samp_order_by(
+            local$stddev_samp, (e) => call(stddev_samp: e));
+  }
+
+  CopyWith$Input$user_sum_order_by<TRes> get sum {
+    final local$sum = _instance.sum;
+    return local$sum == null
+        ? CopyWith$Input$user_sum_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_sum_order_by(local$sum, (e) => call(sum: e));
+  }
+
+  CopyWith$Input$user_var_pop_order_by<TRes> get var_pop {
+    final local$var_pop = _instance.var_pop;
+    return local$var_pop == null
+        ? CopyWith$Input$user_var_pop_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_var_pop_order_by(
+            local$var_pop, (e) => call(var_pop: e));
+  }
+
+  CopyWith$Input$user_var_samp_order_by<TRes> get var_samp {
+    final local$var_samp = _instance.var_samp;
+    return local$var_samp == null
+        ? CopyWith$Input$user_var_samp_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_var_samp_order_by(
+            local$var_samp, (e) => call(var_samp: e));
+  }
+
+  CopyWith$Input$user_variance_order_by<TRes> get variance {
+    final local$variance = _instance.variance;
+    return local$variance == null
+        ? CopyWith$Input$user_variance_order_by.stub(_then(_instance))
+        : CopyWith$Input$user_variance_order_by(
+            local$variance, (e) => call(variance: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$user_aggregate_order_by<TRes>
+    implements CopyWith$Input$user_aggregate_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_aggregate_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Input$user_avg_order_by? avg,
+    Enum$order_by? count,
+    Input$user_max_order_by? max,
+    Input$user_min_order_by? min,
+    Input$user_stddev_order_by? stddev,
+    Input$user_stddev_pop_order_by? stddev_pop,
+    Input$user_stddev_samp_order_by? stddev_samp,
+    Input$user_sum_order_by? sum,
+    Input$user_var_pop_order_by? var_pop,
+    Input$user_var_samp_order_by? var_samp,
+    Input$user_variance_order_by? variance,
+  }) =>
+      _res;
+  CopyWith$Input$user_avg_order_by<TRes> get avg =>
+      CopyWith$Input$user_avg_order_by.stub(_res);
+  CopyWith$Input$user_max_order_by<TRes> get max =>
+      CopyWith$Input$user_max_order_by.stub(_res);
+  CopyWith$Input$user_min_order_by<TRes> get min =>
+      CopyWith$Input$user_min_order_by.stub(_res);
+  CopyWith$Input$user_stddev_order_by<TRes> get stddev =>
+      CopyWith$Input$user_stddev_order_by.stub(_res);
+  CopyWith$Input$user_stddev_pop_order_by<TRes> get stddev_pop =>
+      CopyWith$Input$user_stddev_pop_order_by.stub(_res);
+  CopyWith$Input$user_stddev_samp_order_by<TRes> get stddev_samp =>
+      CopyWith$Input$user_stddev_samp_order_by.stub(_res);
+  CopyWith$Input$user_sum_order_by<TRes> get sum =>
+      CopyWith$Input$user_sum_order_by.stub(_res);
+  CopyWith$Input$user_var_pop_order_by<TRes> get var_pop =>
+      CopyWith$Input$user_var_pop_order_by.stub(_res);
+  CopyWith$Input$user_var_samp_order_by<TRes> get var_samp =>
+      CopyWith$Input$user_var_samp_order_by.stub(_res);
+  CopyWith$Input$user_variance_order_by<TRes> get variance =>
+      CopyWith$Input$user_variance_order_by.stub(_res);
+}
+
+class Input$user_arr_rel_insert_input {
+  factory Input$user_arr_rel_insert_input({
+    required List<Input$user_insert_input> data,
+    Input$user_on_conflict? on_conflict,
+  }) =>
+      Input$user_arr_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$user_arr_rel_insert_input._(this._$data);
+
+  factory Input$user_arr_rel_insert_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] = (l$data as List<dynamic>)
+        .map((e) =>
+            Input$user_insert_input.fromJson((e as Map<String, dynamic>)))
+        .toList();
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$user_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$user_arr_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  List<Input$user_insert_input> get data =>
+      (_$data['data'] as List<Input$user_insert_input>);
+  Input$user_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$user_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.map((e) => e.toJson()).toList();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_arr_rel_insert_input<Input$user_arr_rel_insert_input>
+      get copyWith => CopyWith$Input$user_arr_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_arr_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data.length != lOther$data.length) {
+      return false;
+    }
+    for (int i = 0; i < l$data.length; i++) {
+      final l$data$entry = l$data[i];
+      final lOther$data$entry = lOther$data[i];
+      if (l$data$entry != lOther$data$entry) {
+        return false;
+      }
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      Object.hashAll(l$data.map((v) => v)),
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$user_arr_rel_insert_input<TRes> {
+  factory CopyWith$Input$user_arr_rel_insert_input(
+    Input$user_arr_rel_insert_input instance,
+    TRes Function(Input$user_arr_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$user_arr_rel_insert_input;
+
+  factory CopyWith$Input$user_arr_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_arr_rel_insert_input;
+
+  TRes call({
+    List<Input$user_insert_input>? data,
+    Input$user_on_conflict? on_conflict,
+  });
+  TRes data(
+      Iterable<Input$user_insert_input> Function(
+              Iterable<
+                  CopyWith$Input$user_insert_input<Input$user_insert_input>>)
+          _fn);
+  CopyWith$Input$user_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$user_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$user_arr_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$user_arr_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_arr_rel_insert_input _instance;
+
+  final TRes Function(Input$user_arr_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$user_arr_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as List<Input$user_insert_input>),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$user_on_conflict?),
+      }));
+  TRes data(
+          Iterable<Input$user_insert_input> Function(
+                  Iterable<
+                      CopyWith$Input$user_insert_input<
+                          Input$user_insert_input>>)
+              _fn) =>
+      call(
+          data: _fn(_instance.data.map((e) => CopyWith$Input$user_insert_input(
+                e,
+                (i) => i,
+              ))).toList());
+  CopyWith$Input$user_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$user_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$user_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$user_arr_rel_insert_input<TRes>
+    implements CopyWith$Input$user_arr_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$user_arr_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    List<Input$user_insert_input>? data,
+    Input$user_on_conflict? on_conflict,
+  }) =>
+      _res;
+  data(_fn) => _res;
+  CopyWith$Input$user_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$user_on_conflict.stub(_res);
+}
+
+class Input$user_avg_order_by {
+  factory Input$user_avg_order_by({Enum$order_by? token}) =>
+      Input$user_avg_order_by._({
+        if (token != null) r'token': token,
+      });
+
+  Input$user_avg_order_by._(this._$data);
+
+  factory Input$user_avg_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
+    }
+    return Input$user_avg_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_avg_order_by<Input$user_avg_order_by> get copyWith =>
+      CopyWith$Input$user_avg_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_avg_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    return Object.hashAll([_$data.containsKey('token') ? l$token : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$user_avg_order_by<TRes> {
+  factory CopyWith$Input$user_avg_order_by(
+    Input$user_avg_order_by instance,
+    TRes Function(Input$user_avg_order_by) then,
+  ) = _CopyWithImpl$Input$user_avg_order_by;
+
+  factory CopyWith$Input$user_avg_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_avg_order_by;
+
+  TRes call({Enum$order_by? token});
+}
+
+class _CopyWithImpl$Input$user_avg_order_by<TRes>
+    implements CopyWith$Input$user_avg_order_by<TRes> {
+  _CopyWithImpl$Input$user_avg_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_avg_order_by _instance;
+
+  final TRes Function(Input$user_avg_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? token = _undefined}) => _then(Input$user_avg_order_by._({
+        ..._instance._$data,
+        if (token != _undefined) 'token': (token as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$user_avg_order_by<TRes>
+    implements CopyWith$Input$user_avg_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_avg_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? token}) => _res;
+}
+
 class Input$user_bool_exp {
   factory Input$user_bool_exp({
     List<Input$user_bool_exp>? $_and,
     Input$user_bool_exp? $_not,
     List<Input$user_bool_exp>? $_or,
     Input$timestamptz_comparison_exp? created_at,
+    Input$public_user_bool_exp? publicUserByUserId,
+    Input$public_user_bool_exp? public_user,
+    Input$public_user_aggregate_bool_exp? public_user_aggregate,
     Input$ENUM_ROLE_enum_comparison_exp? role,
+    Input$Int_comparison_exp? token,
     Input$timestamptz_comparison_exp? updated_at,
+    Input$ENUM_ROLE_bool_exp? user_ENUM_ROLE,
+    Input$file_bool_exp? user_files,
+    Input$file_aggregate_bool_exp? user_files_aggregate,
     Input$String_comparison_exp? user_id,
     Input$String_comparison_exp? user_phone,
   }) =>
@@ -9364,8 +30571,18 @@ class Input$user_bool_exp {
         if ($_not != null) r'_not': $_not,
         if ($_or != null) r'_or': $_or,
         if (created_at != null) r'created_at': created_at,
+        if (publicUserByUserId != null)
+          r'publicUserByUserId': publicUserByUserId,
+        if (public_user != null) r'public_user': public_user,
+        if (public_user_aggregate != null)
+          r'public_user_aggregate': public_user_aggregate,
         if (role != null) r'role': role,
+        if (token != null) r'token': token,
         if (updated_at != null) r'updated_at': updated_at,
+        if (user_ENUM_ROLE != null) r'user_ENUM_ROLE': user_ENUM_ROLE,
+        if (user_files != null) r'user_files': user_files,
+        if (user_files_aggregate != null)
+          r'user_files_aggregate': user_files_aggregate,
         if (user_id != null) r'user_id': user_id,
         if (user_phone != null) r'user_phone': user_phone,
       });
@@ -9401,6 +30618,27 @@ class Input$user_bool_exp {
           : Input$timestamptz_comparison_exp.fromJson(
               (l$created_at as Map<String, dynamic>));
     }
+    if (data.containsKey('publicUserByUserId')) {
+      final l$publicUserByUserId = data['publicUserByUserId'];
+      result$data['publicUserByUserId'] = l$publicUserByUserId == null
+          ? null
+          : Input$public_user_bool_exp.fromJson(
+              (l$publicUserByUserId as Map<String, dynamic>));
+    }
+    if (data.containsKey('public_user')) {
+      final l$public_user = data['public_user'];
+      result$data['public_user'] = l$public_user == null
+          ? null
+          : Input$public_user_bool_exp.fromJson(
+              (l$public_user as Map<String, dynamic>));
+    }
+    if (data.containsKey('public_user_aggregate')) {
+      final l$public_user_aggregate = data['public_user_aggregate'];
+      result$data['public_user_aggregate'] = l$public_user_aggregate == null
+          ? null
+          : Input$public_user_aggregate_bool_exp.fromJson(
+              (l$public_user_aggregate as Map<String, dynamic>));
+    }
     if (data.containsKey('role')) {
       final l$role = data['role'];
       result$data['role'] = l$role == null
@@ -9408,12 +30646,40 @@ class Input$user_bool_exp {
           : Input$ENUM_ROLE_enum_comparison_exp.fromJson(
               (l$role as Map<String, dynamic>));
     }
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] = l$token == null
+          ? null
+          : Input$Int_comparison_exp.fromJson(
+              (l$token as Map<String, dynamic>));
+    }
     if (data.containsKey('updated_at')) {
       final l$updated_at = data['updated_at'];
       result$data['updated_at'] = l$updated_at == null
           ? null
           : Input$timestamptz_comparison_exp.fromJson(
               (l$updated_at as Map<String, dynamic>));
+    }
+    if (data.containsKey('user_ENUM_ROLE')) {
+      final l$user_ENUM_ROLE = data['user_ENUM_ROLE'];
+      result$data['user_ENUM_ROLE'] = l$user_ENUM_ROLE == null
+          ? null
+          : Input$ENUM_ROLE_bool_exp.fromJson(
+              (l$user_ENUM_ROLE as Map<String, dynamic>));
+    }
+    if (data.containsKey('user_files')) {
+      final l$user_files = data['user_files'];
+      result$data['user_files'] = l$user_files == null
+          ? null
+          : Input$file_bool_exp.fromJson(
+              (l$user_files as Map<String, dynamic>));
+    }
+    if (data.containsKey('user_files_aggregate')) {
+      final l$user_files_aggregate = data['user_files_aggregate'];
+      result$data['user_files_aggregate'] = l$user_files_aggregate == null
+          ? null
+          : Input$file_aggregate_bool_exp.fromJson(
+              (l$user_files_aggregate as Map<String, dynamic>));
     }
     if (data.containsKey('user_id')) {
       final l$user_id = data['user_id'];
@@ -9441,10 +30707,25 @@ class Input$user_bool_exp {
       (_$data['_or'] as List<Input$user_bool_exp>?);
   Input$timestamptz_comparison_exp? get created_at =>
       (_$data['created_at'] as Input$timestamptz_comparison_exp?);
+  Input$public_user_bool_exp? get publicUserByUserId =>
+      (_$data['publicUserByUserId'] as Input$public_user_bool_exp?);
+  Input$public_user_bool_exp? get public_user =>
+      (_$data['public_user'] as Input$public_user_bool_exp?);
+  Input$public_user_aggregate_bool_exp? get public_user_aggregate =>
+      (_$data['public_user_aggregate']
+          as Input$public_user_aggregate_bool_exp?);
   Input$ENUM_ROLE_enum_comparison_exp? get role =>
       (_$data['role'] as Input$ENUM_ROLE_enum_comparison_exp?);
+  Input$Int_comparison_exp? get token =>
+      (_$data['token'] as Input$Int_comparison_exp?);
   Input$timestamptz_comparison_exp? get updated_at =>
       (_$data['updated_at'] as Input$timestamptz_comparison_exp?);
+  Input$ENUM_ROLE_bool_exp? get user_ENUM_ROLE =>
+      (_$data['user_ENUM_ROLE'] as Input$ENUM_ROLE_bool_exp?);
+  Input$file_bool_exp? get user_files =>
+      (_$data['user_files'] as Input$file_bool_exp?);
+  Input$file_aggregate_bool_exp? get user_files_aggregate =>
+      (_$data['user_files_aggregate'] as Input$file_aggregate_bool_exp?);
   Input$String_comparison_exp? get user_id =>
       (_$data['user_id'] as Input$String_comparison_exp?);
   Input$String_comparison_exp? get user_phone =>
@@ -9467,13 +30748,41 @@ class Input$user_bool_exp {
       final l$created_at = created_at;
       result$data['created_at'] = l$created_at?.toJson();
     }
+    if (_$data.containsKey('publicUserByUserId')) {
+      final l$publicUserByUserId = publicUserByUserId;
+      result$data['publicUserByUserId'] = l$publicUserByUserId?.toJson();
+    }
+    if (_$data.containsKey('public_user')) {
+      final l$public_user = public_user;
+      result$data['public_user'] = l$public_user?.toJson();
+    }
+    if (_$data.containsKey('public_user_aggregate')) {
+      final l$public_user_aggregate = public_user_aggregate;
+      result$data['public_user_aggregate'] = l$public_user_aggregate?.toJson();
+    }
     if (_$data.containsKey('role')) {
       final l$role = role;
       result$data['role'] = l$role?.toJson();
     }
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] = l$token?.toJson();
+    }
     if (_$data.containsKey('updated_at')) {
       final l$updated_at = updated_at;
       result$data['updated_at'] = l$updated_at?.toJson();
+    }
+    if (_$data.containsKey('user_ENUM_ROLE')) {
+      final l$user_ENUM_ROLE = user_ENUM_ROLE;
+      result$data['user_ENUM_ROLE'] = l$user_ENUM_ROLE?.toJson();
+    }
+    if (_$data.containsKey('user_files')) {
+      final l$user_files = user_files;
+      result$data['user_files'] = l$user_files?.toJson();
+    }
+    if (_$data.containsKey('user_files_aggregate')) {
+      final l$user_files_aggregate = user_files_aggregate;
+      result$data['user_files_aggregate'] = l$user_files_aggregate?.toJson();
     }
     if (_$data.containsKey('user_id')) {
       final l$user_id = user_id;
@@ -9554,12 +30863,47 @@ class Input$user_bool_exp {
     if (l$created_at != lOther$created_at) {
       return false;
     }
+    final l$publicUserByUserId = publicUserByUserId;
+    final lOther$publicUserByUserId = other.publicUserByUserId;
+    if (_$data.containsKey('publicUserByUserId') !=
+        other._$data.containsKey('publicUserByUserId')) {
+      return false;
+    }
+    if (l$publicUserByUserId != lOther$publicUserByUserId) {
+      return false;
+    }
+    final l$public_user = public_user;
+    final lOther$public_user = other.public_user;
+    if (_$data.containsKey('public_user') !=
+        other._$data.containsKey('public_user')) {
+      return false;
+    }
+    if (l$public_user != lOther$public_user) {
+      return false;
+    }
+    final l$public_user_aggregate = public_user_aggregate;
+    final lOther$public_user_aggregate = other.public_user_aggregate;
+    if (_$data.containsKey('public_user_aggregate') !=
+        other._$data.containsKey('public_user_aggregate')) {
+      return false;
+    }
+    if (l$public_user_aggregate != lOther$public_user_aggregate) {
+      return false;
+    }
     final l$role = role;
     final lOther$role = other.role;
     if (_$data.containsKey('role') != other._$data.containsKey('role')) {
       return false;
     }
     if (l$role != lOther$role) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
       return false;
     }
     final l$updated_at = updated_at;
@@ -9569,6 +30913,33 @@ class Input$user_bool_exp {
       return false;
     }
     if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_ENUM_ROLE = user_ENUM_ROLE;
+    final lOther$user_ENUM_ROLE = other.user_ENUM_ROLE;
+    if (_$data.containsKey('user_ENUM_ROLE') !=
+        other._$data.containsKey('user_ENUM_ROLE')) {
+      return false;
+    }
+    if (l$user_ENUM_ROLE != lOther$user_ENUM_ROLE) {
+      return false;
+    }
+    final l$user_files = user_files;
+    final lOther$user_files = other.user_files;
+    if (_$data.containsKey('user_files') !=
+        other._$data.containsKey('user_files')) {
+      return false;
+    }
+    if (l$user_files != lOther$user_files) {
+      return false;
+    }
+    final l$user_files_aggregate = user_files_aggregate;
+    final lOther$user_files_aggregate = other.user_files_aggregate;
+    if (_$data.containsKey('user_files_aggregate') !=
+        other._$data.containsKey('user_files_aggregate')) {
+      return false;
+    }
+    if (l$user_files_aggregate != lOther$user_files_aggregate) {
       return false;
     }
     final l$user_id = user_id;
@@ -9597,8 +30968,15 @@ class Input$user_bool_exp {
     final l$$_not = $_not;
     final l$$_or = $_or;
     final l$created_at = created_at;
+    final l$publicUserByUserId = publicUserByUserId;
+    final l$public_user = public_user;
+    final l$public_user_aggregate = public_user_aggregate;
     final l$role = role;
+    final l$token = token;
     final l$updated_at = updated_at;
+    final l$user_ENUM_ROLE = user_ENUM_ROLE;
+    final l$user_files = user_files;
+    final l$user_files_aggregate = user_files_aggregate;
     final l$user_id = user_id;
     final l$user_phone = user_phone;
     return Object.hashAll([
@@ -9614,8 +30992,21 @@ class Input$user_bool_exp {
               : Object.hashAll(l$$_or.map((v) => v))
           : const {},
       _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('publicUserByUserId')
+          ? l$publicUserByUserId
+          : const {},
+      _$data.containsKey('public_user') ? l$public_user : const {},
+      _$data.containsKey('public_user_aggregate')
+          ? l$public_user_aggregate
+          : const {},
       _$data.containsKey('role') ? l$role : const {},
+      _$data.containsKey('token') ? l$token : const {},
       _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_ENUM_ROLE') ? l$user_ENUM_ROLE : const {},
+      _$data.containsKey('user_files') ? l$user_files : const {},
+      _$data.containsKey('user_files_aggregate')
+          ? l$user_files_aggregate
+          : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
       _$data.containsKey('user_phone') ? l$user_phone : const {},
     ]);
@@ -9636,8 +31027,15 @@ abstract class CopyWith$Input$user_bool_exp<TRes> {
     Input$user_bool_exp? $_not,
     List<Input$user_bool_exp>? $_or,
     Input$timestamptz_comparison_exp? created_at,
+    Input$public_user_bool_exp? publicUserByUserId,
+    Input$public_user_bool_exp? public_user,
+    Input$public_user_aggregate_bool_exp? public_user_aggregate,
     Input$ENUM_ROLE_enum_comparison_exp? role,
+    Input$Int_comparison_exp? token,
     Input$timestamptz_comparison_exp? updated_at,
+    Input$ENUM_ROLE_bool_exp? user_ENUM_ROLE,
+    Input$file_bool_exp? user_files,
+    Input$file_aggregate_bool_exp? user_files_aggregate,
     Input$String_comparison_exp? user_id,
     Input$String_comparison_exp? user_phone,
   });
@@ -9651,8 +31049,15 @@ abstract class CopyWith$Input$user_bool_exp<TRes> {
               Iterable<CopyWith$Input$user_bool_exp<Input$user_bool_exp>>?)
           _fn);
   CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at;
+  CopyWith$Input$public_user_bool_exp<TRes> get publicUserByUserId;
+  CopyWith$Input$public_user_bool_exp<TRes> get public_user;
+  CopyWith$Input$public_user_aggregate_bool_exp<TRes> get public_user_aggregate;
   CopyWith$Input$ENUM_ROLE_enum_comparison_exp<TRes> get role;
+  CopyWith$Input$Int_comparison_exp<TRes> get token;
   CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at;
+  CopyWith$Input$ENUM_ROLE_bool_exp<TRes> get user_ENUM_ROLE;
+  CopyWith$Input$file_bool_exp<TRes> get user_files;
+  CopyWith$Input$file_aggregate_bool_exp<TRes> get user_files_aggregate;
   CopyWith$Input$String_comparison_exp<TRes> get user_id;
   CopyWith$Input$String_comparison_exp<TRes> get user_phone;
 }
@@ -9675,8 +31080,15 @@ class _CopyWithImpl$Input$user_bool_exp<TRes>
     Object? $_not = _undefined,
     Object? $_or = _undefined,
     Object? created_at = _undefined,
+    Object? publicUserByUserId = _undefined,
+    Object? public_user = _undefined,
+    Object? public_user_aggregate = _undefined,
     Object? role = _undefined,
+    Object? token = _undefined,
     Object? updated_at = _undefined,
+    Object? user_ENUM_ROLE = _undefined,
+    Object? user_files = _undefined,
+    Object? user_files_aggregate = _undefined,
     Object? user_id = _undefined,
     Object? user_phone = _undefined,
   }) =>
@@ -9687,10 +31099,26 @@ class _CopyWithImpl$Input$user_bool_exp<TRes>
         if ($_or != _undefined) '_or': ($_or as List<Input$user_bool_exp>?),
         if (created_at != _undefined)
           'created_at': (created_at as Input$timestamptz_comparison_exp?),
+        if (publicUserByUserId != _undefined)
+          'publicUserByUserId':
+              (publicUserByUserId as Input$public_user_bool_exp?),
+        if (public_user != _undefined)
+          'public_user': (public_user as Input$public_user_bool_exp?),
+        if (public_user_aggregate != _undefined)
+          'public_user_aggregate':
+              (public_user_aggregate as Input$public_user_aggregate_bool_exp?),
         if (role != _undefined)
           'role': (role as Input$ENUM_ROLE_enum_comparison_exp?),
+        if (token != _undefined) 'token': (token as Input$Int_comparison_exp?),
         if (updated_at != _undefined)
           'updated_at': (updated_at as Input$timestamptz_comparison_exp?),
+        if (user_ENUM_ROLE != _undefined)
+          'user_ENUM_ROLE': (user_ENUM_ROLE as Input$ENUM_ROLE_bool_exp?),
+        if (user_files != _undefined)
+          'user_files': (user_files as Input$file_bool_exp?),
+        if (user_files_aggregate != _undefined)
+          'user_files_aggregate':
+              (user_files_aggregate as Input$file_aggregate_bool_exp?),
         if (user_id != _undefined)
           'user_id': (user_id as Input$String_comparison_exp?),
         if (user_phone != _undefined)
@@ -9729,6 +31157,31 @@ class _CopyWithImpl$Input$user_bool_exp<TRes>
             local$created_at, (e) => call(created_at: e));
   }
 
+  CopyWith$Input$public_user_bool_exp<TRes> get publicUserByUserId {
+    final local$publicUserByUserId = _instance.publicUserByUserId;
+    return local$publicUserByUserId == null
+        ? CopyWith$Input$public_user_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$public_user_bool_exp(
+            local$publicUserByUserId, (e) => call(publicUserByUserId: e));
+  }
+
+  CopyWith$Input$public_user_bool_exp<TRes> get public_user {
+    final local$public_user = _instance.public_user;
+    return local$public_user == null
+        ? CopyWith$Input$public_user_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$public_user_bool_exp(
+            local$public_user, (e) => call(public_user: e));
+  }
+
+  CopyWith$Input$public_user_aggregate_bool_exp<TRes>
+      get public_user_aggregate {
+    final local$public_user_aggregate = _instance.public_user_aggregate;
+    return local$public_user_aggregate == null
+        ? CopyWith$Input$public_user_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$public_user_aggregate_bool_exp(
+            local$public_user_aggregate, (e) => call(public_user_aggregate: e));
+  }
+
   CopyWith$Input$ENUM_ROLE_enum_comparison_exp<TRes> get role {
     final local$role = _instance.role;
     return local$role == null
@@ -9737,12 +31190,43 @@ class _CopyWithImpl$Input$user_bool_exp<TRes>
             local$role, (e) => call(role: e));
   }
 
+  CopyWith$Input$Int_comparison_exp<TRes> get token {
+    final local$token = _instance.token;
+    return local$token == null
+        ? CopyWith$Input$Int_comparison_exp.stub(_then(_instance))
+        : CopyWith$Input$Int_comparison_exp(local$token, (e) => call(token: e));
+  }
+
   CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at {
     final local$updated_at = _instance.updated_at;
     return local$updated_at == null
         ? CopyWith$Input$timestamptz_comparison_exp.stub(_then(_instance))
         : CopyWith$Input$timestamptz_comparison_exp(
             local$updated_at, (e) => call(updated_at: e));
+  }
+
+  CopyWith$Input$ENUM_ROLE_bool_exp<TRes> get user_ENUM_ROLE {
+    final local$user_ENUM_ROLE = _instance.user_ENUM_ROLE;
+    return local$user_ENUM_ROLE == null
+        ? CopyWith$Input$ENUM_ROLE_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$ENUM_ROLE_bool_exp(
+            local$user_ENUM_ROLE, (e) => call(user_ENUM_ROLE: e));
+  }
+
+  CopyWith$Input$file_bool_exp<TRes> get user_files {
+    final local$user_files = _instance.user_files;
+    return local$user_files == null
+        ? CopyWith$Input$file_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$file_bool_exp(
+            local$user_files, (e) => call(user_files: e));
+  }
+
+  CopyWith$Input$file_aggregate_bool_exp<TRes> get user_files_aggregate {
+    final local$user_files_aggregate = _instance.user_files_aggregate;
+    return local$user_files_aggregate == null
+        ? CopyWith$Input$file_aggregate_bool_exp.stub(_then(_instance))
+        : CopyWith$Input$file_aggregate_bool_exp(
+            local$user_files_aggregate, (e) => call(user_files_aggregate: e));
   }
 
   CopyWith$Input$String_comparison_exp<TRes> get user_id {
@@ -9773,8 +31257,15 @@ class _CopyWithStubImpl$Input$user_bool_exp<TRes>
     Input$user_bool_exp? $_not,
     List<Input$user_bool_exp>? $_or,
     Input$timestamptz_comparison_exp? created_at,
+    Input$public_user_bool_exp? publicUserByUserId,
+    Input$public_user_bool_exp? public_user,
+    Input$public_user_aggregate_bool_exp? public_user_aggregate,
     Input$ENUM_ROLE_enum_comparison_exp? role,
+    Input$Int_comparison_exp? token,
     Input$timestamptz_comparison_exp? updated_at,
+    Input$ENUM_ROLE_bool_exp? user_ENUM_ROLE,
+    Input$file_bool_exp? user_files,
+    Input$file_aggregate_bool_exp? user_files_aggregate,
     Input$String_comparison_exp? user_id,
     Input$String_comparison_exp? user_phone,
   }) =>
@@ -9785,28 +31276,153 @@ class _CopyWithStubImpl$Input$user_bool_exp<TRes>
   $_or(_fn) => _res;
   CopyWith$Input$timestamptz_comparison_exp<TRes> get created_at =>
       CopyWith$Input$timestamptz_comparison_exp.stub(_res);
+  CopyWith$Input$public_user_bool_exp<TRes> get publicUserByUserId =>
+      CopyWith$Input$public_user_bool_exp.stub(_res);
+  CopyWith$Input$public_user_bool_exp<TRes> get public_user =>
+      CopyWith$Input$public_user_bool_exp.stub(_res);
+  CopyWith$Input$public_user_aggregate_bool_exp<TRes>
+      get public_user_aggregate =>
+          CopyWith$Input$public_user_aggregate_bool_exp.stub(_res);
   CopyWith$Input$ENUM_ROLE_enum_comparison_exp<TRes> get role =>
       CopyWith$Input$ENUM_ROLE_enum_comparison_exp.stub(_res);
+  CopyWith$Input$Int_comparison_exp<TRes> get token =>
+      CopyWith$Input$Int_comparison_exp.stub(_res);
   CopyWith$Input$timestamptz_comparison_exp<TRes> get updated_at =>
       CopyWith$Input$timestamptz_comparison_exp.stub(_res);
+  CopyWith$Input$ENUM_ROLE_bool_exp<TRes> get user_ENUM_ROLE =>
+      CopyWith$Input$ENUM_ROLE_bool_exp.stub(_res);
+  CopyWith$Input$file_bool_exp<TRes> get user_files =>
+      CopyWith$Input$file_bool_exp.stub(_res);
+  CopyWith$Input$file_aggregate_bool_exp<TRes> get user_files_aggregate =>
+      CopyWith$Input$file_aggregate_bool_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get user_id =>
       CopyWith$Input$String_comparison_exp.stub(_res);
   CopyWith$Input$String_comparison_exp<TRes> get user_phone =>
       CopyWith$Input$String_comparison_exp.stub(_res);
 }
 
+class Input$user_inc_input {
+  factory Input$user_inc_input({int? token}) => Input$user_inc_input._({
+        if (token != null) r'token': token,
+      });
+
+  Input$user_inc_input._(this._$data);
+
+  factory Input$user_inc_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] = (l$token as int?);
+    }
+    return Input$user_inc_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  int? get token => (_$data['token'] as int?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] = l$token;
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_inc_input<Input$user_inc_input> get copyWith =>
+      CopyWith$Input$user_inc_input(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_inc_input) || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    return Object.hashAll([_$data.containsKey('token') ? l$token : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$user_inc_input<TRes> {
+  factory CopyWith$Input$user_inc_input(
+    Input$user_inc_input instance,
+    TRes Function(Input$user_inc_input) then,
+  ) = _CopyWithImpl$Input$user_inc_input;
+
+  factory CopyWith$Input$user_inc_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_inc_input;
+
+  TRes call({int? token});
+}
+
+class _CopyWithImpl$Input$user_inc_input<TRes>
+    implements CopyWith$Input$user_inc_input<TRes> {
+  _CopyWithImpl$Input$user_inc_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_inc_input _instance;
+
+  final TRes Function(Input$user_inc_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? token = _undefined}) => _then(Input$user_inc_input._({
+        ..._instance._$data,
+        if (token != _undefined) 'token': (token as int?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$user_inc_input<TRes>
+    implements CopyWith$Input$user_inc_input<TRes> {
+  _CopyWithStubImpl$Input$user_inc_input(this._res);
+
+  TRes _res;
+
+  call({int? token}) => _res;
+}
+
 class Input$user_insert_input {
   factory Input$user_insert_input({
     String? created_at,
+    Input$public_user_obj_rel_insert_input? publicUserByUserId,
+    Input$public_user_arr_rel_insert_input? public_user,
     Enum$ENUM_ROLE_enum? role,
+    int? token,
     String? updated_at,
+    Input$ENUM_ROLE_obj_rel_insert_input? user_ENUM_ROLE,
+    Input$file_arr_rel_insert_input? user_files,
     String? user_id,
     String? user_phone,
   }) =>
       Input$user_insert_input._({
         if (created_at != null) r'created_at': created_at,
+        if (publicUserByUserId != null)
+          r'publicUserByUserId': publicUserByUserId,
+        if (public_user != null) r'public_user': public_user,
         if (role != null) r'role': role,
+        if (token != null) r'token': token,
         if (updated_at != null) r'updated_at': updated_at,
+        if (user_ENUM_ROLE != null) r'user_ENUM_ROLE': user_ENUM_ROLE,
+        if (user_files != null) r'user_files': user_files,
         if (user_id != null) r'user_id': user_id,
         if (user_phone != null) r'user_phone': user_phone,
       });
@@ -9819,15 +31435,47 @@ class Input$user_insert_input {
       final l$created_at = data['created_at'];
       result$data['created_at'] = (l$created_at as String?);
     }
+    if (data.containsKey('publicUserByUserId')) {
+      final l$publicUserByUserId = data['publicUserByUserId'];
+      result$data['publicUserByUserId'] = l$publicUserByUserId == null
+          ? null
+          : Input$public_user_obj_rel_insert_input.fromJson(
+              (l$publicUserByUserId as Map<String, dynamic>));
+    }
+    if (data.containsKey('public_user')) {
+      final l$public_user = data['public_user'];
+      result$data['public_user'] = l$public_user == null
+          ? null
+          : Input$public_user_arr_rel_insert_input.fromJson(
+              (l$public_user as Map<String, dynamic>));
+    }
     if (data.containsKey('role')) {
       final l$role = data['role'];
       result$data['role'] = l$role == null
           ? null
           : fromJson$Enum$ENUM_ROLE_enum((l$role as String));
     }
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] = (l$token as int?);
+    }
     if (data.containsKey('updated_at')) {
       final l$updated_at = data['updated_at'];
       result$data['updated_at'] = (l$updated_at as String?);
+    }
+    if (data.containsKey('user_ENUM_ROLE')) {
+      final l$user_ENUM_ROLE = data['user_ENUM_ROLE'];
+      result$data['user_ENUM_ROLE'] = l$user_ENUM_ROLE == null
+          ? null
+          : Input$ENUM_ROLE_obj_rel_insert_input.fromJson(
+              (l$user_ENUM_ROLE as Map<String, dynamic>));
+    }
+    if (data.containsKey('user_files')) {
+      final l$user_files = data['user_files'];
+      result$data['user_files'] = l$user_files == null
+          ? null
+          : Input$file_arr_rel_insert_input.fromJson(
+              (l$user_files as Map<String, dynamic>));
     }
     if (data.containsKey('user_id')) {
       final l$user_id = data['user_id'];
@@ -9843,8 +31491,17 @@ class Input$user_insert_input {
   Map<String, dynamic> _$data;
 
   String? get created_at => (_$data['created_at'] as String?);
+  Input$public_user_obj_rel_insert_input? get publicUserByUserId =>
+      (_$data['publicUserByUserId'] as Input$public_user_obj_rel_insert_input?);
+  Input$public_user_arr_rel_insert_input? get public_user =>
+      (_$data['public_user'] as Input$public_user_arr_rel_insert_input?);
   Enum$ENUM_ROLE_enum? get role => (_$data['role'] as Enum$ENUM_ROLE_enum?);
+  int? get token => (_$data['token'] as int?);
   String? get updated_at => (_$data['updated_at'] as String?);
+  Input$ENUM_ROLE_obj_rel_insert_input? get user_ENUM_ROLE =>
+      (_$data['user_ENUM_ROLE'] as Input$ENUM_ROLE_obj_rel_insert_input?);
+  Input$file_arr_rel_insert_input? get user_files =>
+      (_$data['user_files'] as Input$file_arr_rel_insert_input?);
   String? get user_id => (_$data['user_id'] as String?);
   String? get user_phone => (_$data['user_phone'] as String?);
   Map<String, dynamic> toJson() {
@@ -9853,14 +31510,34 @@ class Input$user_insert_input {
       final l$created_at = created_at;
       result$data['created_at'] = l$created_at;
     }
+    if (_$data.containsKey('publicUserByUserId')) {
+      final l$publicUserByUserId = publicUserByUserId;
+      result$data['publicUserByUserId'] = l$publicUserByUserId?.toJson();
+    }
+    if (_$data.containsKey('public_user')) {
+      final l$public_user = public_user;
+      result$data['public_user'] = l$public_user?.toJson();
+    }
     if (_$data.containsKey('role')) {
       final l$role = role;
       result$data['role'] =
           l$role == null ? null : toJson$Enum$ENUM_ROLE_enum(l$role);
     }
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] = l$token;
+    }
     if (_$data.containsKey('updated_at')) {
       final l$updated_at = updated_at;
       result$data['updated_at'] = l$updated_at;
+    }
+    if (_$data.containsKey('user_ENUM_ROLE')) {
+      final l$user_ENUM_ROLE = user_ENUM_ROLE;
+      result$data['user_ENUM_ROLE'] = l$user_ENUM_ROLE?.toJson();
+    }
+    if (_$data.containsKey('user_files')) {
+      final l$user_files = user_files;
+      result$data['user_files'] = l$user_files?.toJson();
     }
     if (_$data.containsKey('user_id')) {
       final l$user_id = user_id;
@@ -9896,12 +31573,369 @@ class Input$user_insert_input {
     if (l$created_at != lOther$created_at) {
       return false;
     }
+    final l$publicUserByUserId = publicUserByUserId;
+    final lOther$publicUserByUserId = other.publicUserByUserId;
+    if (_$data.containsKey('publicUserByUserId') !=
+        other._$data.containsKey('publicUserByUserId')) {
+      return false;
+    }
+    if (l$publicUserByUserId != lOther$publicUserByUserId) {
+      return false;
+    }
+    final l$public_user = public_user;
+    final lOther$public_user = other.public_user;
+    if (_$data.containsKey('public_user') !=
+        other._$data.containsKey('public_user')) {
+      return false;
+    }
+    if (l$public_user != lOther$public_user) {
+      return false;
+    }
     final l$role = role;
     final lOther$role = other.role;
     if (_$data.containsKey('role') != other._$data.containsKey('role')) {
       return false;
     }
     if (l$role != lOther$role) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_ENUM_ROLE = user_ENUM_ROLE;
+    final lOther$user_ENUM_ROLE = other.user_ENUM_ROLE;
+    if (_$data.containsKey('user_ENUM_ROLE') !=
+        other._$data.containsKey('user_ENUM_ROLE')) {
+      return false;
+    }
+    if (l$user_ENUM_ROLE != lOther$user_ENUM_ROLE) {
+      return false;
+    }
+    final l$user_files = user_files;
+    final lOther$user_files = other.user_files;
+    if (_$data.containsKey('user_files') !=
+        other._$data.containsKey('user_files')) {
+      return false;
+    }
+    if (l$user_files != lOther$user_files) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    final l$user_phone = user_phone;
+    final lOther$user_phone = other.user_phone;
+    if (_$data.containsKey('user_phone') !=
+        other._$data.containsKey('user_phone')) {
+      return false;
+    }
+    if (l$user_phone != lOther$user_phone) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$created_at = created_at;
+    final l$publicUserByUserId = publicUserByUserId;
+    final l$public_user = public_user;
+    final l$role = role;
+    final l$token = token;
+    final l$updated_at = updated_at;
+    final l$user_ENUM_ROLE = user_ENUM_ROLE;
+    final l$user_files = user_files;
+    final l$user_id = user_id;
+    final l$user_phone = user_phone;
+    return Object.hashAll([
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('publicUserByUserId')
+          ? l$publicUserByUserId
+          : const {},
+      _$data.containsKey('public_user') ? l$public_user : const {},
+      _$data.containsKey('role') ? l$role : const {},
+      _$data.containsKey('token') ? l$token : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_ENUM_ROLE') ? l$user_ENUM_ROLE : const {},
+      _$data.containsKey('user_files') ? l$user_files : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+      _$data.containsKey('user_phone') ? l$user_phone : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$user_insert_input<TRes> {
+  factory CopyWith$Input$user_insert_input(
+    Input$user_insert_input instance,
+    TRes Function(Input$user_insert_input) then,
+  ) = _CopyWithImpl$Input$user_insert_input;
+
+  factory CopyWith$Input$user_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_insert_input;
+
+  TRes call({
+    String? created_at,
+    Input$public_user_obj_rel_insert_input? publicUserByUserId,
+    Input$public_user_arr_rel_insert_input? public_user,
+    Enum$ENUM_ROLE_enum? role,
+    int? token,
+    String? updated_at,
+    Input$ENUM_ROLE_obj_rel_insert_input? user_ENUM_ROLE,
+    Input$file_arr_rel_insert_input? user_files,
+    String? user_id,
+    String? user_phone,
+  });
+  CopyWith$Input$public_user_obj_rel_insert_input<TRes> get publicUserByUserId;
+  CopyWith$Input$public_user_arr_rel_insert_input<TRes> get public_user;
+  CopyWith$Input$ENUM_ROLE_obj_rel_insert_input<TRes> get user_ENUM_ROLE;
+  CopyWith$Input$file_arr_rel_insert_input<TRes> get user_files;
+}
+
+class _CopyWithImpl$Input$user_insert_input<TRes>
+    implements CopyWith$Input$user_insert_input<TRes> {
+  _CopyWithImpl$Input$user_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_insert_input _instance;
+
+  final TRes Function(Input$user_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? created_at = _undefined,
+    Object? publicUserByUserId = _undefined,
+    Object? public_user = _undefined,
+    Object? role = _undefined,
+    Object? token = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_ENUM_ROLE = _undefined,
+    Object? user_files = _undefined,
+    Object? user_id = _undefined,
+    Object? user_phone = _undefined,
+  }) =>
+      _then(Input$user_insert_input._({
+        ..._instance._$data,
+        if (created_at != _undefined) 'created_at': (created_at as String?),
+        if (publicUserByUserId != _undefined)
+          'publicUserByUserId':
+              (publicUserByUserId as Input$public_user_obj_rel_insert_input?),
+        if (public_user != _undefined)
+          'public_user':
+              (public_user as Input$public_user_arr_rel_insert_input?),
+        if (role != _undefined) 'role': (role as Enum$ENUM_ROLE_enum?),
+        if (token != _undefined) 'token': (token as int?),
+        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
+        if (user_ENUM_ROLE != _undefined)
+          'user_ENUM_ROLE':
+              (user_ENUM_ROLE as Input$ENUM_ROLE_obj_rel_insert_input?),
+        if (user_files != _undefined)
+          'user_files': (user_files as Input$file_arr_rel_insert_input?),
+        if (user_id != _undefined) 'user_id': (user_id as String?),
+        if (user_phone != _undefined) 'user_phone': (user_phone as String?),
+      }));
+  CopyWith$Input$public_user_obj_rel_insert_input<TRes> get publicUserByUserId {
+    final local$publicUserByUserId = _instance.publicUserByUserId;
+    return local$publicUserByUserId == null
+        ? CopyWith$Input$public_user_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$public_user_obj_rel_insert_input(
+            local$publicUserByUserId, (e) => call(publicUserByUserId: e));
+  }
+
+  CopyWith$Input$public_user_arr_rel_insert_input<TRes> get public_user {
+    final local$public_user = _instance.public_user;
+    return local$public_user == null
+        ? CopyWith$Input$public_user_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$public_user_arr_rel_insert_input(
+            local$public_user, (e) => call(public_user: e));
+  }
+
+  CopyWith$Input$ENUM_ROLE_obj_rel_insert_input<TRes> get user_ENUM_ROLE {
+    final local$user_ENUM_ROLE = _instance.user_ENUM_ROLE;
+    return local$user_ENUM_ROLE == null
+        ? CopyWith$Input$ENUM_ROLE_obj_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$ENUM_ROLE_obj_rel_insert_input(
+            local$user_ENUM_ROLE, (e) => call(user_ENUM_ROLE: e));
+  }
+
+  CopyWith$Input$file_arr_rel_insert_input<TRes> get user_files {
+    final local$user_files = _instance.user_files;
+    return local$user_files == null
+        ? CopyWith$Input$file_arr_rel_insert_input.stub(_then(_instance))
+        : CopyWith$Input$file_arr_rel_insert_input(
+            local$user_files, (e) => call(user_files: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$user_insert_input<TRes>
+    implements CopyWith$Input$user_insert_input<TRes> {
+  _CopyWithStubImpl$Input$user_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    String? created_at,
+    Input$public_user_obj_rel_insert_input? publicUserByUserId,
+    Input$public_user_arr_rel_insert_input? public_user,
+    Enum$ENUM_ROLE_enum? role,
+    int? token,
+    String? updated_at,
+    Input$ENUM_ROLE_obj_rel_insert_input? user_ENUM_ROLE,
+    Input$file_arr_rel_insert_input? user_files,
+    String? user_id,
+    String? user_phone,
+  }) =>
+      _res;
+  CopyWith$Input$public_user_obj_rel_insert_input<TRes>
+      get publicUserByUserId =>
+          CopyWith$Input$public_user_obj_rel_insert_input.stub(_res);
+  CopyWith$Input$public_user_arr_rel_insert_input<TRes> get public_user =>
+      CopyWith$Input$public_user_arr_rel_insert_input.stub(_res);
+  CopyWith$Input$ENUM_ROLE_obj_rel_insert_input<TRes> get user_ENUM_ROLE =>
+      CopyWith$Input$ENUM_ROLE_obj_rel_insert_input.stub(_res);
+  CopyWith$Input$file_arr_rel_insert_input<TRes> get user_files =>
+      CopyWith$Input$file_arr_rel_insert_input.stub(_res);
+}
+
+class Input$user_max_order_by {
+  factory Input$user_max_order_by({
+    Enum$order_by? created_at,
+    Enum$order_by? token,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+    Enum$order_by? user_phone,
+  }) =>
+      Input$user_max_order_by._({
+        if (created_at != null) r'created_at': created_at,
+        if (token != null) r'token': token,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+        if (user_phone != null) r'user_phone': user_phone,
+      });
+
+  Input$user_max_order_by._(this._$data);
+
+  factory Input$user_max_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    if (data.containsKey('user_phone')) {
+      final l$user_phone = data['user_phone'];
+      result$data['user_phone'] = l$user_phone == null
+          ? null
+          : fromJson$Enum$order_by((l$user_phone as String));
+    }
+    return Input$user_max_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Enum$order_by? get user_phone => (_$data['user_phone'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    if (_$data.containsKey('user_phone')) {
+      final l$user_phone = user_phone;
+      result$data['user_phone'] =
+          l$user_phone == null ? null : toJson$Enum$order_by(l$user_phone);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_max_order_by<Input$user_max_order_by> get copyWith =>
+      CopyWith$Input$user_max_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_max_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
       return false;
     }
     final l$updated_at = updated_at;
@@ -9936,13 +31970,13 @@ class Input$user_insert_input {
   @override
   int get hashCode {
     final l$created_at = created_at;
-    final l$role = role;
+    final l$token = token;
     final l$updated_at = updated_at;
     final l$user_id = user_id;
     final l$user_phone = user_phone;
     return Object.hashAll([
       _$data.containsKey('created_at') ? l$created_at : const {},
-      _$data.containsKey('role') ? l$role : const {},
+      _$data.containsKey('token') ? l$token : const {},
       _$data.containsKey('updated_at') ? l$updated_at : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
       _$data.containsKey('user_phone') ? l$user_phone : const {},
@@ -9950,79 +31984,473 @@ class Input$user_insert_input {
   }
 }
 
-abstract class CopyWith$Input$user_insert_input<TRes> {
-  factory CopyWith$Input$user_insert_input(
-    Input$user_insert_input instance,
-    TRes Function(Input$user_insert_input) then,
-  ) = _CopyWithImpl$Input$user_insert_input;
+abstract class CopyWith$Input$user_max_order_by<TRes> {
+  factory CopyWith$Input$user_max_order_by(
+    Input$user_max_order_by instance,
+    TRes Function(Input$user_max_order_by) then,
+  ) = _CopyWithImpl$Input$user_max_order_by;
 
-  factory CopyWith$Input$user_insert_input.stub(TRes res) =
-      _CopyWithStubImpl$Input$user_insert_input;
+  factory CopyWith$Input$user_max_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_max_order_by;
 
   TRes call({
-    String? created_at,
-    Enum$ENUM_ROLE_enum? role,
-    String? updated_at,
-    String? user_id,
-    String? user_phone,
+    Enum$order_by? created_at,
+    Enum$order_by? token,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+    Enum$order_by? user_phone,
   });
 }
 
-class _CopyWithImpl$Input$user_insert_input<TRes>
-    implements CopyWith$Input$user_insert_input<TRes> {
-  _CopyWithImpl$Input$user_insert_input(
+class _CopyWithImpl$Input$user_max_order_by<TRes>
+    implements CopyWith$Input$user_max_order_by<TRes> {
+  _CopyWithImpl$Input$user_max_order_by(
     this._instance,
     this._then,
   );
 
-  final Input$user_insert_input _instance;
+  final Input$user_max_order_by _instance;
 
-  final TRes Function(Input$user_insert_input) _then;
+  final TRes Function(Input$user_max_order_by) _then;
 
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
     Object? created_at = _undefined,
-    Object? role = _undefined,
+    Object? token = _undefined,
     Object? updated_at = _undefined,
     Object? user_id = _undefined,
     Object? user_phone = _undefined,
   }) =>
-      _then(Input$user_insert_input._({
+      _then(Input$user_max_order_by._({
         ..._instance._$data,
-        if (created_at != _undefined) 'created_at': (created_at as String?),
-        if (role != _undefined) 'role': (role as Enum$ENUM_ROLE_enum?),
-        if (updated_at != _undefined) 'updated_at': (updated_at as String?),
-        if (user_id != _undefined) 'user_id': (user_id as String?),
-        if (user_phone != _undefined) 'user_phone': (user_phone as String?),
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (token != _undefined) 'token': (token as Enum$order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
+        if (user_phone != _undefined)
+          'user_phone': (user_phone as Enum$order_by?),
       }));
 }
 
-class _CopyWithStubImpl$Input$user_insert_input<TRes>
-    implements CopyWith$Input$user_insert_input<TRes> {
-  _CopyWithStubImpl$Input$user_insert_input(this._res);
+class _CopyWithStubImpl$Input$user_max_order_by<TRes>
+    implements CopyWith$Input$user_max_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_max_order_by(this._res);
 
   TRes _res;
 
   call({
-    String? created_at,
-    Enum$ENUM_ROLE_enum? role,
-    String? updated_at,
-    String? user_id,
-    String? user_phone,
+    Enum$order_by? created_at,
+    Enum$order_by? token,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+    Enum$order_by? user_phone,
   }) =>
       _res;
+}
+
+class Input$user_min_order_by {
+  factory Input$user_min_order_by({
+    Enum$order_by? created_at,
+    Enum$order_by? token,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+    Enum$order_by? user_phone,
+  }) =>
+      Input$user_min_order_by._({
+        if (created_at != null) r'created_at': created_at,
+        if (token != null) r'token': token,
+        if (updated_at != null) r'updated_at': updated_at,
+        if (user_id != null) r'user_id': user_id,
+        if (user_phone != null) r'user_phone': user_phone,
+      });
+
+  Input$user_min_order_by._(this._$data);
+
+  factory Input$user_min_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('created_at')) {
+      final l$created_at = data['created_at'];
+      result$data['created_at'] = l$created_at == null
+          ? null
+          : fromJson$Enum$order_by((l$created_at as String));
+    }
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
+    }
+    if (data.containsKey('updated_at')) {
+      final l$updated_at = data['updated_at'];
+      result$data['updated_at'] = l$updated_at == null
+          ? null
+          : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    if (data.containsKey('user_id')) {
+      final l$user_id = data['user_id'];
+      result$data['user_id'] = l$user_id == null
+          ? null
+          : fromJson$Enum$order_by((l$user_id as String));
+    }
+    if (data.containsKey('user_phone')) {
+      final l$user_phone = data['user_phone'];
+      result$data['user_phone'] = l$user_phone == null
+          ? null
+          : fromJson$Enum$order_by((l$user_phone as String));
+    }
+    return Input$user_min_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
+  Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
+  Enum$order_by? get user_phone => (_$data['user_phone'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('created_at')) {
+      final l$created_at = created_at;
+      result$data['created_at'] =
+          l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
+    }
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
+    if (_$data.containsKey('updated_at')) {
+      final l$updated_at = updated_at;
+      result$data['updated_at'] =
+          l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    if (_$data.containsKey('user_id')) {
+      final l$user_id = user_id;
+      result$data['user_id'] =
+          l$user_id == null ? null : toJson$Enum$order_by(l$user_id);
+    }
+    if (_$data.containsKey('user_phone')) {
+      final l$user_phone = user_phone;
+      result$data['user_phone'] =
+          l$user_phone == null ? null : toJson$Enum$order_by(l$user_phone);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_min_order_by<Input$user_min_order_by> get copyWith =>
+      CopyWith$Input$user_min_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_min_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$created_at = created_at;
+    final lOther$created_at = other.created_at;
+    if (_$data.containsKey('created_at') !=
+        other._$data.containsKey('created_at')) {
+      return false;
+    }
+    if (l$created_at != lOther$created_at) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    final l$updated_at = updated_at;
+    final lOther$updated_at = other.updated_at;
+    if (_$data.containsKey('updated_at') !=
+        other._$data.containsKey('updated_at')) {
+      return false;
+    }
+    if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_id = user_id;
+    final lOther$user_id = other.user_id;
+    if (_$data.containsKey('user_id') != other._$data.containsKey('user_id')) {
+      return false;
+    }
+    if (l$user_id != lOther$user_id) {
+      return false;
+    }
+    final l$user_phone = user_phone;
+    final lOther$user_phone = other.user_phone;
+    if (_$data.containsKey('user_phone') !=
+        other._$data.containsKey('user_phone')) {
+      return false;
+    }
+    if (l$user_phone != lOther$user_phone) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$created_at = created_at;
+    final l$token = token;
+    final l$updated_at = updated_at;
+    final l$user_id = user_id;
+    final l$user_phone = user_phone;
+    return Object.hashAll([
+      _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('token') ? l$token : const {},
+      _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_id') ? l$user_id : const {},
+      _$data.containsKey('user_phone') ? l$user_phone : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$user_min_order_by<TRes> {
+  factory CopyWith$Input$user_min_order_by(
+    Input$user_min_order_by instance,
+    TRes Function(Input$user_min_order_by) then,
+  ) = _CopyWithImpl$Input$user_min_order_by;
+
+  factory CopyWith$Input$user_min_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_min_order_by;
+
+  TRes call({
+    Enum$order_by? created_at,
+    Enum$order_by? token,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+    Enum$order_by? user_phone,
+  });
+}
+
+class _CopyWithImpl$Input$user_min_order_by<TRes>
+    implements CopyWith$Input$user_min_order_by<TRes> {
+  _CopyWithImpl$Input$user_min_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_min_order_by _instance;
+
+  final TRes Function(Input$user_min_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? created_at = _undefined,
+    Object? token = _undefined,
+    Object? updated_at = _undefined,
+    Object? user_id = _undefined,
+    Object? user_phone = _undefined,
+  }) =>
+      _then(Input$user_min_order_by._({
+        ..._instance._$data,
+        if (created_at != _undefined)
+          'created_at': (created_at as Enum$order_by?),
+        if (token != _undefined) 'token': (token as Enum$order_by?),
+        if (updated_at != _undefined)
+          'updated_at': (updated_at as Enum$order_by?),
+        if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
+        if (user_phone != _undefined)
+          'user_phone': (user_phone as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$user_min_order_by<TRes>
+    implements CopyWith$Input$user_min_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_min_order_by(this._res);
+
+  TRes _res;
+
+  call({
+    Enum$order_by? created_at,
+    Enum$order_by? token,
+    Enum$order_by? updated_at,
+    Enum$order_by? user_id,
+    Enum$order_by? user_phone,
+  }) =>
+      _res;
+}
+
+class Input$user_obj_rel_insert_input {
+  factory Input$user_obj_rel_insert_input({
+    required Input$user_insert_input data,
+    Input$user_on_conflict? on_conflict,
+  }) =>
+      Input$user_obj_rel_insert_input._({
+        r'data': data,
+        if (on_conflict != null) r'on_conflict': on_conflict,
+      });
+
+  Input$user_obj_rel_insert_input._(this._$data);
+
+  factory Input$user_obj_rel_insert_input.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$data = data['data'];
+    result$data['data'] =
+        Input$user_insert_input.fromJson((l$data as Map<String, dynamic>));
+    if (data.containsKey('on_conflict')) {
+      final l$on_conflict = data['on_conflict'];
+      result$data['on_conflict'] = l$on_conflict == null
+          ? null
+          : Input$user_on_conflict.fromJson(
+              (l$on_conflict as Map<String, dynamic>));
+    }
+    return Input$user_obj_rel_insert_input._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$user_insert_input get data =>
+      (_$data['data'] as Input$user_insert_input);
+  Input$user_on_conflict? get on_conflict =>
+      (_$data['on_conflict'] as Input$user_on_conflict?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$data = data;
+    result$data['data'] = l$data.toJson();
+    if (_$data.containsKey('on_conflict')) {
+      final l$on_conflict = on_conflict;
+      result$data['on_conflict'] = l$on_conflict?.toJson();
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_obj_rel_insert_input<Input$user_obj_rel_insert_input>
+      get copyWith => CopyWith$Input$user_obj_rel_insert_input(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_obj_rel_insert_input) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$data = data;
+    final lOther$data = other.data;
+    if (l$data != lOther$data) {
+      return false;
+    }
+    final l$on_conflict = on_conflict;
+    final lOther$on_conflict = other.on_conflict;
+    if (_$data.containsKey('on_conflict') !=
+        other._$data.containsKey('on_conflict')) {
+      return false;
+    }
+    if (l$on_conflict != lOther$on_conflict) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$data = data;
+    final l$on_conflict = on_conflict;
+    return Object.hashAll([
+      l$data,
+      _$data.containsKey('on_conflict') ? l$on_conflict : const {},
+    ]);
+  }
+}
+
+abstract class CopyWith$Input$user_obj_rel_insert_input<TRes> {
+  factory CopyWith$Input$user_obj_rel_insert_input(
+    Input$user_obj_rel_insert_input instance,
+    TRes Function(Input$user_obj_rel_insert_input) then,
+  ) = _CopyWithImpl$Input$user_obj_rel_insert_input;
+
+  factory CopyWith$Input$user_obj_rel_insert_input.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_obj_rel_insert_input;
+
+  TRes call({
+    Input$user_insert_input? data,
+    Input$user_on_conflict? on_conflict,
+  });
+  CopyWith$Input$user_insert_input<TRes> get data;
+  CopyWith$Input$user_on_conflict<TRes> get on_conflict;
+}
+
+class _CopyWithImpl$Input$user_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$user_obj_rel_insert_input<TRes> {
+  _CopyWithImpl$Input$user_obj_rel_insert_input(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_obj_rel_insert_input _instance;
+
+  final TRes Function(Input$user_obj_rel_insert_input) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({
+    Object? data = _undefined,
+    Object? on_conflict = _undefined,
+  }) =>
+      _then(Input$user_obj_rel_insert_input._({
+        ..._instance._$data,
+        if (data != _undefined && data != null)
+          'data': (data as Input$user_insert_input),
+        if (on_conflict != _undefined)
+          'on_conflict': (on_conflict as Input$user_on_conflict?),
+      }));
+  CopyWith$Input$user_insert_input<TRes> get data {
+    final local$data = _instance.data;
+    return CopyWith$Input$user_insert_input(local$data, (e) => call(data: e));
+  }
+
+  CopyWith$Input$user_on_conflict<TRes> get on_conflict {
+    final local$on_conflict = _instance.on_conflict;
+    return local$on_conflict == null
+        ? CopyWith$Input$user_on_conflict.stub(_then(_instance))
+        : CopyWith$Input$user_on_conflict(
+            local$on_conflict, (e) => call(on_conflict: e));
+  }
+}
+
+class _CopyWithStubImpl$Input$user_obj_rel_insert_input<TRes>
+    implements CopyWith$Input$user_obj_rel_insert_input<TRes> {
+  _CopyWithStubImpl$Input$user_obj_rel_insert_input(this._res);
+
+  TRes _res;
+
+  call({
+    Input$user_insert_input? data,
+    Input$user_on_conflict? on_conflict,
+  }) =>
+      _res;
+  CopyWith$Input$user_insert_input<TRes> get data =>
+      CopyWith$Input$user_insert_input.stub(_res);
+  CopyWith$Input$user_on_conflict<TRes> get on_conflict =>
+      CopyWith$Input$user_on_conflict.stub(_res);
 }
 
 class Input$user_on_conflict {
   factory Input$user_on_conflict({
     required Enum$user_constraint constraint,
-    required List<Enum$user_update_column> update_columns,
+    List<Enum$user_update_column>? update_columns,
     Input$user_bool_exp? where,
   }) =>
       Input$user_on_conflict._({
         r'constraint': constraint,
-        r'update_columns': update_columns,
+        if (update_columns != null) r'update_columns': update_columns,
         if (where != null) r'where': where,
       });
 
@@ -10033,10 +32461,12 @@ class Input$user_on_conflict {
     final l$constraint = data['constraint'];
     result$data['constraint'] =
         fromJson$Enum$user_constraint((l$constraint as String));
-    final l$update_columns = data['update_columns'];
-    result$data['update_columns'] = (l$update_columns as List<dynamic>)
-        .map((e) => fromJson$Enum$user_update_column((e as String)))
-        .toList();
+    if (data.containsKey('update_columns')) {
+      final l$update_columns = data['update_columns'];
+      result$data['update_columns'] = (l$update_columns as List<dynamic>)
+          .map((e) => fromJson$Enum$user_update_column((e as String)))
+          .toList();
+    }
     if (data.containsKey('where')) {
       final l$where = data['where'];
       result$data['where'] = l$where == null
@@ -10050,16 +32480,20 @@ class Input$user_on_conflict {
 
   Enum$user_constraint get constraint =>
       (_$data['constraint'] as Enum$user_constraint);
-  List<Enum$user_update_column> get update_columns =>
-      (_$data['update_columns'] as List<Enum$user_update_column>);
+  List<Enum$user_update_column>? get update_columns =>
+      (_$data['update_columns'] as List<Enum$user_update_column>?);
   Input$user_bool_exp? get where => (_$data['where'] as Input$user_bool_exp?);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$constraint = constraint;
     result$data['constraint'] = toJson$Enum$user_constraint(l$constraint);
-    final l$update_columns = update_columns;
-    result$data['update_columns'] =
-        l$update_columns.map((e) => toJson$Enum$user_update_column(e)).toList();
+    if (_$data.containsKey('update_columns')) {
+      final l$update_columns = update_columns;
+      result$data['update_columns'] =
+          (l$update_columns as List<Enum$user_update_column>)
+              .map((e) => toJson$Enum$user_update_column(e))
+              .toList();
+    }
     if (_$data.containsKey('where')) {
       final l$where = where;
       result$data['where'] = l$where?.toJson();
@@ -10088,15 +32522,23 @@ class Input$user_on_conflict {
     }
     final l$update_columns = update_columns;
     final lOther$update_columns = other.update_columns;
-    if (l$update_columns.length != lOther$update_columns.length) {
+    if (_$data.containsKey('update_columns') !=
+        other._$data.containsKey('update_columns')) {
       return false;
     }
-    for (int i = 0; i < l$update_columns.length; i++) {
-      final l$update_columns$entry = l$update_columns[i];
-      final lOther$update_columns$entry = lOther$update_columns[i];
-      if (l$update_columns$entry != lOther$update_columns$entry) {
+    if (l$update_columns != null && lOther$update_columns != null) {
+      if (l$update_columns.length != lOther$update_columns.length) {
         return false;
       }
+      for (int i = 0; i < l$update_columns.length; i++) {
+        final l$update_columns$entry = l$update_columns[i];
+        final lOther$update_columns$entry = lOther$update_columns[i];
+        if (l$update_columns$entry != lOther$update_columns$entry) {
+          return false;
+        }
+      }
+    } else if (l$update_columns != lOther$update_columns) {
+      return false;
     }
     final l$where = where;
     final lOther$where = other.where;
@@ -10116,7 +32558,11 @@ class Input$user_on_conflict {
     final l$where = where;
     return Object.hashAll([
       l$constraint,
-      Object.hashAll(l$update_columns.map((v) => v)),
+      _$data.containsKey('update_columns')
+          ? l$update_columns == null
+              ? null
+              : Object.hashAll(l$update_columns.map((v) => v))
+          : const {},
       _$data.containsKey('where') ? l$where : const {},
     ]);
   }
@@ -10192,15 +32638,28 @@ class _CopyWithStubImpl$Input$user_on_conflict<TRes>
 class Input$user_order_by {
   factory Input$user_order_by({
     Enum$order_by? created_at,
+    Input$public_user_order_by? publicUserByUserId,
+    Input$public_user_aggregate_order_by? public_user_aggregate,
     Enum$order_by? role,
+    Enum$order_by? token,
     Enum$order_by? updated_at,
+    Input$ENUM_ROLE_order_by? user_ENUM_ROLE,
+    Input$file_aggregate_order_by? user_files_aggregate,
     Enum$order_by? user_id,
     Enum$order_by? user_phone,
   }) =>
       Input$user_order_by._({
         if (created_at != null) r'created_at': created_at,
+        if (publicUserByUserId != null)
+          r'publicUserByUserId': publicUserByUserId,
+        if (public_user_aggregate != null)
+          r'public_user_aggregate': public_user_aggregate,
         if (role != null) r'role': role,
+        if (token != null) r'token': token,
         if (updated_at != null) r'updated_at': updated_at,
+        if (user_ENUM_ROLE != null) r'user_ENUM_ROLE': user_ENUM_ROLE,
+        if (user_files_aggregate != null)
+          r'user_files_aggregate': user_files_aggregate,
         if (user_id != null) r'user_id': user_id,
         if (user_phone != null) r'user_phone': user_phone,
       });
@@ -10215,16 +32674,49 @@ class Input$user_order_by {
           ? null
           : fromJson$Enum$order_by((l$created_at as String));
     }
+    if (data.containsKey('publicUserByUserId')) {
+      final l$publicUserByUserId = data['publicUserByUserId'];
+      result$data['publicUserByUserId'] = l$publicUserByUserId == null
+          ? null
+          : Input$public_user_order_by.fromJson(
+              (l$publicUserByUserId as Map<String, dynamic>));
+    }
+    if (data.containsKey('public_user_aggregate')) {
+      final l$public_user_aggregate = data['public_user_aggregate'];
+      result$data['public_user_aggregate'] = l$public_user_aggregate == null
+          ? null
+          : Input$public_user_aggregate_order_by.fromJson(
+              (l$public_user_aggregate as Map<String, dynamic>));
+    }
     if (data.containsKey('role')) {
       final l$role = data['role'];
       result$data['role'] =
           l$role == null ? null : fromJson$Enum$order_by((l$role as String));
+    }
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
     }
     if (data.containsKey('updated_at')) {
       final l$updated_at = data['updated_at'];
       result$data['updated_at'] = l$updated_at == null
           ? null
           : fromJson$Enum$order_by((l$updated_at as String));
+    }
+    if (data.containsKey('user_ENUM_ROLE')) {
+      final l$user_ENUM_ROLE = data['user_ENUM_ROLE'];
+      result$data['user_ENUM_ROLE'] = l$user_ENUM_ROLE == null
+          ? null
+          : Input$ENUM_ROLE_order_by.fromJson(
+              (l$user_ENUM_ROLE as Map<String, dynamic>));
+    }
+    if (data.containsKey('user_files_aggregate')) {
+      final l$user_files_aggregate = data['user_files_aggregate'];
+      result$data['user_files_aggregate'] = l$user_files_aggregate == null
+          ? null
+          : Input$file_aggregate_order_by.fromJson(
+              (l$user_files_aggregate as Map<String, dynamic>));
     }
     if (data.containsKey('user_id')) {
       final l$user_id = data['user_id'];
@@ -10244,8 +32736,18 @@ class Input$user_order_by {
   Map<String, dynamic> _$data;
 
   Enum$order_by? get created_at => (_$data['created_at'] as Enum$order_by?);
+  Input$public_user_order_by? get publicUserByUserId =>
+      (_$data['publicUserByUserId'] as Input$public_user_order_by?);
+  Input$public_user_aggregate_order_by? get public_user_aggregate =>
+      (_$data['public_user_aggregate']
+          as Input$public_user_aggregate_order_by?);
   Enum$order_by? get role => (_$data['role'] as Enum$order_by?);
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
   Enum$order_by? get updated_at => (_$data['updated_at'] as Enum$order_by?);
+  Input$ENUM_ROLE_order_by? get user_ENUM_ROLE =>
+      (_$data['user_ENUM_ROLE'] as Input$ENUM_ROLE_order_by?);
+  Input$file_aggregate_order_by? get user_files_aggregate =>
+      (_$data['user_files_aggregate'] as Input$file_aggregate_order_by?);
   Enum$order_by? get user_id => (_$data['user_id'] as Enum$order_by?);
   Enum$order_by? get user_phone => (_$data['user_phone'] as Enum$order_by?);
   Map<String, dynamic> toJson() {
@@ -10255,15 +32757,36 @@ class Input$user_order_by {
       result$data['created_at'] =
           l$created_at == null ? null : toJson$Enum$order_by(l$created_at);
     }
+    if (_$data.containsKey('publicUserByUserId')) {
+      final l$publicUserByUserId = publicUserByUserId;
+      result$data['publicUserByUserId'] = l$publicUserByUserId?.toJson();
+    }
+    if (_$data.containsKey('public_user_aggregate')) {
+      final l$public_user_aggregate = public_user_aggregate;
+      result$data['public_user_aggregate'] = l$public_user_aggregate?.toJson();
+    }
     if (_$data.containsKey('role')) {
       final l$role = role;
       result$data['role'] =
           l$role == null ? null : toJson$Enum$order_by(l$role);
     }
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
     if (_$data.containsKey('updated_at')) {
       final l$updated_at = updated_at;
       result$data['updated_at'] =
           l$updated_at == null ? null : toJson$Enum$order_by(l$updated_at);
+    }
+    if (_$data.containsKey('user_ENUM_ROLE')) {
+      final l$user_ENUM_ROLE = user_ENUM_ROLE;
+      result$data['user_ENUM_ROLE'] = l$user_ENUM_ROLE?.toJson();
+    }
+    if (_$data.containsKey('user_files_aggregate')) {
+      final l$user_files_aggregate = user_files_aggregate;
+      result$data['user_files_aggregate'] = l$user_files_aggregate?.toJson();
     }
     if (_$data.containsKey('user_id')) {
       final l$user_id = user_id;
@@ -10300,12 +32823,38 @@ class Input$user_order_by {
     if (l$created_at != lOther$created_at) {
       return false;
     }
+    final l$publicUserByUserId = publicUserByUserId;
+    final lOther$publicUserByUserId = other.publicUserByUserId;
+    if (_$data.containsKey('publicUserByUserId') !=
+        other._$data.containsKey('publicUserByUserId')) {
+      return false;
+    }
+    if (l$publicUserByUserId != lOther$publicUserByUserId) {
+      return false;
+    }
+    final l$public_user_aggregate = public_user_aggregate;
+    final lOther$public_user_aggregate = other.public_user_aggregate;
+    if (_$data.containsKey('public_user_aggregate') !=
+        other._$data.containsKey('public_user_aggregate')) {
+      return false;
+    }
+    if (l$public_user_aggregate != lOther$public_user_aggregate) {
+      return false;
+    }
     final l$role = role;
     final lOther$role = other.role;
     if (_$data.containsKey('role') != other._$data.containsKey('role')) {
       return false;
     }
     if (l$role != lOther$role) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
       return false;
     }
     final l$updated_at = updated_at;
@@ -10315,6 +32864,24 @@ class Input$user_order_by {
       return false;
     }
     if (l$updated_at != lOther$updated_at) {
+      return false;
+    }
+    final l$user_ENUM_ROLE = user_ENUM_ROLE;
+    final lOther$user_ENUM_ROLE = other.user_ENUM_ROLE;
+    if (_$data.containsKey('user_ENUM_ROLE') !=
+        other._$data.containsKey('user_ENUM_ROLE')) {
+      return false;
+    }
+    if (l$user_ENUM_ROLE != lOther$user_ENUM_ROLE) {
+      return false;
+    }
+    final l$user_files_aggregate = user_files_aggregate;
+    final lOther$user_files_aggregate = other.user_files_aggregate;
+    if (_$data.containsKey('user_files_aggregate') !=
+        other._$data.containsKey('user_files_aggregate')) {
+      return false;
+    }
+    if (l$user_files_aggregate != lOther$user_files_aggregate) {
       return false;
     }
     final l$user_id = user_id;
@@ -10340,14 +32907,30 @@ class Input$user_order_by {
   @override
   int get hashCode {
     final l$created_at = created_at;
+    final l$publicUserByUserId = publicUserByUserId;
+    final l$public_user_aggregate = public_user_aggregate;
     final l$role = role;
+    final l$token = token;
     final l$updated_at = updated_at;
+    final l$user_ENUM_ROLE = user_ENUM_ROLE;
+    final l$user_files_aggregate = user_files_aggregate;
     final l$user_id = user_id;
     final l$user_phone = user_phone;
     return Object.hashAll([
       _$data.containsKey('created_at') ? l$created_at : const {},
+      _$data.containsKey('publicUserByUserId')
+          ? l$publicUserByUserId
+          : const {},
+      _$data.containsKey('public_user_aggregate')
+          ? l$public_user_aggregate
+          : const {},
       _$data.containsKey('role') ? l$role : const {},
+      _$data.containsKey('token') ? l$token : const {},
       _$data.containsKey('updated_at') ? l$updated_at : const {},
+      _$data.containsKey('user_ENUM_ROLE') ? l$user_ENUM_ROLE : const {},
+      _$data.containsKey('user_files_aggregate')
+          ? l$user_files_aggregate
+          : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
       _$data.containsKey('user_phone') ? l$user_phone : const {},
     ]);
@@ -10365,11 +32948,20 @@ abstract class CopyWith$Input$user_order_by<TRes> {
 
   TRes call({
     Enum$order_by? created_at,
+    Input$public_user_order_by? publicUserByUserId,
+    Input$public_user_aggregate_order_by? public_user_aggregate,
     Enum$order_by? role,
+    Enum$order_by? token,
     Enum$order_by? updated_at,
+    Input$ENUM_ROLE_order_by? user_ENUM_ROLE,
+    Input$file_aggregate_order_by? user_files_aggregate,
     Enum$order_by? user_id,
     Enum$order_by? user_phone,
   });
+  CopyWith$Input$public_user_order_by<TRes> get publicUserByUserId;
+  CopyWith$Input$public_user_aggregate_order_by<TRes> get public_user_aggregate;
+  CopyWith$Input$ENUM_ROLE_order_by<TRes> get user_ENUM_ROLE;
+  CopyWith$Input$file_aggregate_order_by<TRes> get user_files_aggregate;
 }
 
 class _CopyWithImpl$Input$user_order_by<TRes>
@@ -10387,8 +32979,13 @@ class _CopyWithImpl$Input$user_order_by<TRes>
 
   TRes call({
     Object? created_at = _undefined,
+    Object? publicUserByUserId = _undefined,
+    Object? public_user_aggregate = _undefined,
     Object? role = _undefined,
+    Object? token = _undefined,
     Object? updated_at = _undefined,
+    Object? user_ENUM_ROLE = _undefined,
+    Object? user_files_aggregate = _undefined,
     Object? user_id = _undefined,
     Object? user_phone = _undefined,
   }) =>
@@ -10396,13 +32993,57 @@ class _CopyWithImpl$Input$user_order_by<TRes>
         ..._instance._$data,
         if (created_at != _undefined)
           'created_at': (created_at as Enum$order_by?),
+        if (publicUserByUserId != _undefined)
+          'publicUserByUserId':
+              (publicUserByUserId as Input$public_user_order_by?),
+        if (public_user_aggregate != _undefined)
+          'public_user_aggregate':
+              (public_user_aggregate as Input$public_user_aggregate_order_by?),
         if (role != _undefined) 'role': (role as Enum$order_by?),
+        if (token != _undefined) 'token': (token as Enum$order_by?),
         if (updated_at != _undefined)
           'updated_at': (updated_at as Enum$order_by?),
+        if (user_ENUM_ROLE != _undefined)
+          'user_ENUM_ROLE': (user_ENUM_ROLE as Input$ENUM_ROLE_order_by?),
+        if (user_files_aggregate != _undefined)
+          'user_files_aggregate':
+              (user_files_aggregate as Input$file_aggregate_order_by?),
         if (user_id != _undefined) 'user_id': (user_id as Enum$order_by?),
         if (user_phone != _undefined)
           'user_phone': (user_phone as Enum$order_by?),
       }));
+  CopyWith$Input$public_user_order_by<TRes> get publicUserByUserId {
+    final local$publicUserByUserId = _instance.publicUserByUserId;
+    return local$publicUserByUserId == null
+        ? CopyWith$Input$public_user_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_order_by(
+            local$publicUserByUserId, (e) => call(publicUserByUserId: e));
+  }
+
+  CopyWith$Input$public_user_aggregate_order_by<TRes>
+      get public_user_aggregate {
+    final local$public_user_aggregate = _instance.public_user_aggregate;
+    return local$public_user_aggregate == null
+        ? CopyWith$Input$public_user_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$public_user_aggregate_order_by(
+            local$public_user_aggregate, (e) => call(public_user_aggregate: e));
+  }
+
+  CopyWith$Input$ENUM_ROLE_order_by<TRes> get user_ENUM_ROLE {
+    final local$user_ENUM_ROLE = _instance.user_ENUM_ROLE;
+    return local$user_ENUM_ROLE == null
+        ? CopyWith$Input$ENUM_ROLE_order_by.stub(_then(_instance))
+        : CopyWith$Input$ENUM_ROLE_order_by(
+            local$user_ENUM_ROLE, (e) => call(user_ENUM_ROLE: e));
+  }
+
+  CopyWith$Input$file_aggregate_order_by<TRes> get user_files_aggregate {
+    final local$user_files_aggregate = _instance.user_files_aggregate;
+    return local$user_files_aggregate == null
+        ? CopyWith$Input$file_aggregate_order_by.stub(_then(_instance))
+        : CopyWith$Input$file_aggregate_order_by(
+            local$user_files_aggregate, (e) => call(user_files_aggregate: e));
+  }
 }
 
 class _CopyWithStubImpl$Input$user_order_by<TRes>
@@ -10413,12 +33054,26 @@ class _CopyWithStubImpl$Input$user_order_by<TRes>
 
   call({
     Enum$order_by? created_at,
+    Input$public_user_order_by? publicUserByUserId,
+    Input$public_user_aggregate_order_by? public_user_aggregate,
     Enum$order_by? role,
+    Enum$order_by? token,
     Enum$order_by? updated_at,
+    Input$ENUM_ROLE_order_by? user_ENUM_ROLE,
+    Input$file_aggregate_order_by? user_files_aggregate,
     Enum$order_by? user_id,
     Enum$order_by? user_phone,
   }) =>
       _res;
+  CopyWith$Input$public_user_order_by<TRes> get publicUserByUserId =>
+      CopyWith$Input$public_user_order_by.stub(_res);
+  CopyWith$Input$public_user_aggregate_order_by<TRes>
+      get public_user_aggregate =>
+          CopyWith$Input$public_user_aggregate_order_by.stub(_res);
+  CopyWith$Input$ENUM_ROLE_order_by<TRes> get user_ENUM_ROLE =>
+      CopyWith$Input$ENUM_ROLE_order_by.stub(_res);
+  CopyWith$Input$file_aggregate_order_by<TRes> get user_files_aggregate =>
+      CopyWith$Input$file_aggregate_order_by.stub(_res);
 }
 
 class Input$user_pk_columns_input {
@@ -10521,6 +33176,7 @@ class Input$user_set_input {
   factory Input$user_set_input({
     String? created_at,
     Enum$ENUM_ROLE_enum? role,
+    int? token,
     String? updated_at,
     String? user_id,
     String? user_phone,
@@ -10528,6 +33184,7 @@ class Input$user_set_input {
       Input$user_set_input._({
         if (created_at != null) r'created_at': created_at,
         if (role != null) r'role': role,
+        if (token != null) r'token': token,
         if (updated_at != null) r'updated_at': updated_at,
         if (user_id != null) r'user_id': user_id,
         if (user_phone != null) r'user_phone': user_phone,
@@ -10546,6 +33203,10 @@ class Input$user_set_input {
       result$data['role'] = l$role == null
           ? null
           : fromJson$Enum$ENUM_ROLE_enum((l$role as String));
+    }
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] = (l$token as int?);
     }
     if (data.containsKey('updated_at')) {
       final l$updated_at = data['updated_at'];
@@ -10566,6 +33227,7 @@ class Input$user_set_input {
 
   String? get created_at => (_$data['created_at'] as String?);
   Enum$ENUM_ROLE_enum? get role => (_$data['role'] as Enum$ENUM_ROLE_enum?);
+  int? get token => (_$data['token'] as int?);
   String? get updated_at => (_$data['updated_at'] as String?);
   String? get user_id => (_$data['user_id'] as String?);
   String? get user_phone => (_$data['user_phone'] as String?);
@@ -10579,6 +33241,10 @@ class Input$user_set_input {
       final l$role = role;
       result$data['role'] =
           l$role == null ? null : toJson$Enum$ENUM_ROLE_enum(l$role);
+    }
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] = l$token;
     }
     if (_$data.containsKey('updated_at')) {
       final l$updated_at = updated_at;
@@ -10625,6 +33291,14 @@ class Input$user_set_input {
     if (l$role != lOther$role) {
       return false;
     }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
     final l$updated_at = updated_at;
     final lOther$updated_at = other.updated_at;
     if (_$data.containsKey('updated_at') !=
@@ -10658,12 +33332,14 @@ class Input$user_set_input {
   int get hashCode {
     final l$created_at = created_at;
     final l$role = role;
+    final l$token = token;
     final l$updated_at = updated_at;
     final l$user_id = user_id;
     final l$user_phone = user_phone;
     return Object.hashAll([
       _$data.containsKey('created_at') ? l$created_at : const {},
       _$data.containsKey('role') ? l$role : const {},
+      _$data.containsKey('token') ? l$token : const {},
       _$data.containsKey('updated_at') ? l$updated_at : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
       _$data.containsKey('user_phone') ? l$user_phone : const {},
@@ -10683,6 +33359,7 @@ abstract class CopyWith$Input$user_set_input<TRes> {
   TRes call({
     String? created_at,
     Enum$ENUM_ROLE_enum? role,
+    int? token,
     String? updated_at,
     String? user_id,
     String? user_phone,
@@ -10705,6 +33382,7 @@ class _CopyWithImpl$Input$user_set_input<TRes>
   TRes call({
     Object? created_at = _undefined,
     Object? role = _undefined,
+    Object? token = _undefined,
     Object? updated_at = _undefined,
     Object? user_id = _undefined,
     Object? user_phone = _undefined,
@@ -10713,6 +33391,7 @@ class _CopyWithImpl$Input$user_set_input<TRes>
         ..._instance._$data,
         if (created_at != _undefined) 'created_at': (created_at as String?),
         if (role != _undefined) 'role': (role as Enum$ENUM_ROLE_enum?),
+        if (token != _undefined) 'token': (token as int?),
         if (updated_at != _undefined) 'updated_at': (updated_at as String?),
         if (user_id != _undefined) 'user_id': (user_id as String?),
         if (user_phone != _undefined) 'user_phone': (user_phone as String?),
@@ -10728,11 +33407,324 @@ class _CopyWithStubImpl$Input$user_set_input<TRes>
   call({
     String? created_at,
     Enum$ENUM_ROLE_enum? role,
+    int? token,
     String? updated_at,
     String? user_id,
     String? user_phone,
   }) =>
       _res;
+}
+
+class Input$user_stddev_order_by {
+  factory Input$user_stddev_order_by({Enum$order_by? token}) =>
+      Input$user_stddev_order_by._({
+        if (token != null) r'token': token,
+      });
+
+  Input$user_stddev_order_by._(this._$data);
+
+  factory Input$user_stddev_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
+    }
+    return Input$user_stddev_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_stddev_order_by<Input$user_stddev_order_by>
+      get copyWith => CopyWith$Input$user_stddev_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_stddev_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    return Object.hashAll([_$data.containsKey('token') ? l$token : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$user_stddev_order_by<TRes> {
+  factory CopyWith$Input$user_stddev_order_by(
+    Input$user_stddev_order_by instance,
+    TRes Function(Input$user_stddev_order_by) then,
+  ) = _CopyWithImpl$Input$user_stddev_order_by;
+
+  factory CopyWith$Input$user_stddev_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_stddev_order_by;
+
+  TRes call({Enum$order_by? token});
+}
+
+class _CopyWithImpl$Input$user_stddev_order_by<TRes>
+    implements CopyWith$Input$user_stddev_order_by<TRes> {
+  _CopyWithImpl$Input$user_stddev_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_stddev_order_by _instance;
+
+  final TRes Function(Input$user_stddev_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? token = _undefined}) =>
+      _then(Input$user_stddev_order_by._({
+        ..._instance._$data,
+        if (token != _undefined) 'token': (token as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$user_stddev_order_by<TRes>
+    implements CopyWith$Input$user_stddev_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_stddev_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? token}) => _res;
+}
+
+class Input$user_stddev_pop_order_by {
+  factory Input$user_stddev_pop_order_by({Enum$order_by? token}) =>
+      Input$user_stddev_pop_order_by._({
+        if (token != null) r'token': token,
+      });
+
+  Input$user_stddev_pop_order_by._(this._$data);
+
+  factory Input$user_stddev_pop_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
+    }
+    return Input$user_stddev_pop_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_stddev_pop_order_by<Input$user_stddev_pop_order_by>
+      get copyWith => CopyWith$Input$user_stddev_pop_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_stddev_pop_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    return Object.hashAll([_$data.containsKey('token') ? l$token : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$user_stddev_pop_order_by<TRes> {
+  factory CopyWith$Input$user_stddev_pop_order_by(
+    Input$user_stddev_pop_order_by instance,
+    TRes Function(Input$user_stddev_pop_order_by) then,
+  ) = _CopyWithImpl$Input$user_stddev_pop_order_by;
+
+  factory CopyWith$Input$user_stddev_pop_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_stddev_pop_order_by;
+
+  TRes call({Enum$order_by? token});
+}
+
+class _CopyWithImpl$Input$user_stddev_pop_order_by<TRes>
+    implements CopyWith$Input$user_stddev_pop_order_by<TRes> {
+  _CopyWithImpl$Input$user_stddev_pop_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_stddev_pop_order_by _instance;
+
+  final TRes Function(Input$user_stddev_pop_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? token = _undefined}) =>
+      _then(Input$user_stddev_pop_order_by._({
+        ..._instance._$data,
+        if (token != _undefined) 'token': (token as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$user_stddev_pop_order_by<TRes>
+    implements CopyWith$Input$user_stddev_pop_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_stddev_pop_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? token}) => _res;
+}
+
+class Input$user_stddev_samp_order_by {
+  factory Input$user_stddev_samp_order_by({Enum$order_by? token}) =>
+      Input$user_stddev_samp_order_by._({
+        if (token != null) r'token': token,
+      });
+
+  Input$user_stddev_samp_order_by._(this._$data);
+
+  factory Input$user_stddev_samp_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
+    }
+    return Input$user_stddev_samp_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_stddev_samp_order_by<Input$user_stddev_samp_order_by>
+      get copyWith => CopyWith$Input$user_stddev_samp_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_stddev_samp_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    return Object.hashAll([_$data.containsKey('token') ? l$token : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$user_stddev_samp_order_by<TRes> {
+  factory CopyWith$Input$user_stddev_samp_order_by(
+    Input$user_stddev_samp_order_by instance,
+    TRes Function(Input$user_stddev_samp_order_by) then,
+  ) = _CopyWithImpl$Input$user_stddev_samp_order_by;
+
+  factory CopyWith$Input$user_stddev_samp_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_stddev_samp_order_by;
+
+  TRes call({Enum$order_by? token});
+}
+
+class _CopyWithImpl$Input$user_stddev_samp_order_by<TRes>
+    implements CopyWith$Input$user_stddev_samp_order_by<TRes> {
+  _CopyWithImpl$Input$user_stddev_samp_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_stddev_samp_order_by _instance;
+
+  final TRes Function(Input$user_stddev_samp_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? token = _undefined}) =>
+      _then(Input$user_stddev_samp_order_by._({
+        ..._instance._$data,
+        if (token != _undefined) 'token': (token as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$user_stddev_samp_order_by<TRes>
+    implements CopyWith$Input$user_stddev_samp_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_stddev_samp_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? token}) => _res;
 }
 
 class Input$user_stream_cursor_input {
@@ -10889,6 +33881,7 @@ class Input$user_stream_cursor_value_input {
   factory Input$user_stream_cursor_value_input({
     String? created_at,
     Enum$ENUM_ROLE_enum? role,
+    int? token,
     String? updated_at,
     String? user_id,
     String? user_phone,
@@ -10896,6 +33889,7 @@ class Input$user_stream_cursor_value_input {
       Input$user_stream_cursor_value_input._({
         if (created_at != null) r'created_at': created_at,
         if (role != null) r'role': role,
+        if (token != null) r'token': token,
         if (updated_at != null) r'updated_at': updated_at,
         if (user_id != null) r'user_id': user_id,
         if (user_phone != null) r'user_phone': user_phone,
@@ -10916,6 +33910,10 @@ class Input$user_stream_cursor_value_input {
           ? null
           : fromJson$Enum$ENUM_ROLE_enum((l$role as String));
     }
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] = (l$token as int?);
+    }
     if (data.containsKey('updated_at')) {
       final l$updated_at = data['updated_at'];
       result$data['updated_at'] = (l$updated_at as String?);
@@ -10935,6 +33933,7 @@ class Input$user_stream_cursor_value_input {
 
   String? get created_at => (_$data['created_at'] as String?);
   Enum$ENUM_ROLE_enum? get role => (_$data['role'] as Enum$ENUM_ROLE_enum?);
+  int? get token => (_$data['token'] as int?);
   String? get updated_at => (_$data['updated_at'] as String?);
   String? get user_id => (_$data['user_id'] as String?);
   String? get user_phone => (_$data['user_phone'] as String?);
@@ -10948,6 +33947,10 @@ class Input$user_stream_cursor_value_input {
       final l$role = role;
       result$data['role'] =
           l$role == null ? null : toJson$Enum$ENUM_ROLE_enum(l$role);
+    }
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] = l$token;
     }
     if (_$data.containsKey('updated_at')) {
       final l$updated_at = updated_at;
@@ -10996,6 +33999,14 @@ class Input$user_stream_cursor_value_input {
     if (l$role != lOther$role) {
       return false;
     }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
     final l$updated_at = updated_at;
     final lOther$updated_at = other.updated_at;
     if (_$data.containsKey('updated_at') !=
@@ -11029,12 +34040,14 @@ class Input$user_stream_cursor_value_input {
   int get hashCode {
     final l$created_at = created_at;
     final l$role = role;
+    final l$token = token;
     final l$updated_at = updated_at;
     final l$user_id = user_id;
     final l$user_phone = user_phone;
     return Object.hashAll([
       _$data.containsKey('created_at') ? l$created_at : const {},
       _$data.containsKey('role') ? l$role : const {},
+      _$data.containsKey('token') ? l$token : const {},
       _$data.containsKey('updated_at') ? l$updated_at : const {},
       _$data.containsKey('user_id') ? l$user_id : const {},
       _$data.containsKey('user_phone') ? l$user_phone : const {},
@@ -11054,6 +34067,7 @@ abstract class CopyWith$Input$user_stream_cursor_value_input<TRes> {
   TRes call({
     String? created_at,
     Enum$ENUM_ROLE_enum? role,
+    int? token,
     String? updated_at,
     String? user_id,
     String? user_phone,
@@ -11076,6 +34090,7 @@ class _CopyWithImpl$Input$user_stream_cursor_value_input<TRes>
   TRes call({
     Object? created_at = _undefined,
     Object? role = _undefined,
+    Object? token = _undefined,
     Object? updated_at = _undefined,
     Object? user_id = _undefined,
     Object? user_phone = _undefined,
@@ -11084,6 +34099,7 @@ class _CopyWithImpl$Input$user_stream_cursor_value_input<TRes>
         ..._instance._$data,
         if (created_at != _undefined) 'created_at': (created_at as String?),
         if (role != _undefined) 'role': (role as Enum$ENUM_ROLE_enum?),
+        if (token != _undefined) 'token': (token as int?),
         if (updated_at != _undefined) 'updated_at': (updated_at as String?),
         if (user_id != _undefined) 'user_id': (user_id as String?),
         if (user_phone != _undefined) 'user_phone': (user_phone as String?),
@@ -11099,6 +34115,7 @@ class _CopyWithStubImpl$Input$user_stream_cursor_value_input<TRes>
   call({
     String? created_at,
     Enum$ENUM_ROLE_enum? role,
+    int? token,
     String? updated_at,
     String? user_id,
     String? user_phone,
@@ -11106,12 +34123,117 @@ class _CopyWithStubImpl$Input$user_stream_cursor_value_input<TRes>
       _res;
 }
 
+class Input$user_sum_order_by {
+  factory Input$user_sum_order_by({Enum$order_by? token}) =>
+      Input$user_sum_order_by._({
+        if (token != null) r'token': token,
+      });
+
+  Input$user_sum_order_by._(this._$data);
+
+  factory Input$user_sum_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
+    }
+    return Input$user_sum_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_sum_order_by<Input$user_sum_order_by> get copyWith =>
+      CopyWith$Input$user_sum_order_by(
+        this,
+        (i) => i,
+      );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_sum_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    return Object.hashAll([_$data.containsKey('token') ? l$token : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$user_sum_order_by<TRes> {
+  factory CopyWith$Input$user_sum_order_by(
+    Input$user_sum_order_by instance,
+    TRes Function(Input$user_sum_order_by) then,
+  ) = _CopyWithImpl$Input$user_sum_order_by;
+
+  factory CopyWith$Input$user_sum_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_sum_order_by;
+
+  TRes call({Enum$order_by? token});
+}
+
+class _CopyWithImpl$Input$user_sum_order_by<TRes>
+    implements CopyWith$Input$user_sum_order_by<TRes> {
+  _CopyWithImpl$Input$user_sum_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_sum_order_by _instance;
+
+  final TRes Function(Input$user_sum_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? token = _undefined}) => _then(Input$user_sum_order_by._({
+        ..._instance._$data,
+        if (token != _undefined) 'token': (token as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$user_sum_order_by<TRes>
+    implements CopyWith$Input$user_sum_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_sum_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? token}) => _res;
+}
+
 class Input$user_updates {
   factory Input$user_updates({
+    Input$user_inc_input? $_inc,
     Input$user_set_input? $_set,
     required Input$user_bool_exp where,
   }) =>
       Input$user_updates._({
+        if ($_inc != null) r'_inc': $_inc,
         if ($_set != null) r'_set': $_set,
         r'where': where,
       });
@@ -11120,6 +34242,12 @@ class Input$user_updates {
 
   factory Input$user_updates.fromJson(Map<String, dynamic> data) {
     final result$data = <String, dynamic>{};
+    if (data.containsKey('_inc')) {
+      final l$$_inc = data['_inc'];
+      result$data['_inc'] = l$$_inc == null
+          ? null
+          : Input$user_inc_input.fromJson((l$$_inc as Map<String, dynamic>));
+    }
     if (data.containsKey('_set')) {
       final l$$_set = data['_set'];
       result$data['_set'] = l$$_set == null
@@ -11134,10 +34262,15 @@ class Input$user_updates {
 
   Map<String, dynamic> _$data;
 
+  Input$user_inc_input? get $_inc => (_$data['_inc'] as Input$user_inc_input?);
   Input$user_set_input? get $_set => (_$data['_set'] as Input$user_set_input?);
   Input$user_bool_exp get where => (_$data['where'] as Input$user_bool_exp);
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
+    if (_$data.containsKey('_inc')) {
+      final l$$_inc = $_inc;
+      result$data['_inc'] = l$$_inc?.toJson();
+    }
     if (_$data.containsKey('_set')) {
       final l$$_set = $_set;
       result$data['_set'] = l$$_set?.toJson();
@@ -11160,6 +34293,14 @@ class Input$user_updates {
     if (!(other is Input$user_updates) || runtimeType != other.runtimeType) {
       return false;
     }
+    final l$$_inc = $_inc;
+    final lOther$$_inc = other.$_inc;
+    if (_$data.containsKey('_inc') != other._$data.containsKey('_inc')) {
+      return false;
+    }
+    if (l$$_inc != lOther$$_inc) {
+      return false;
+    }
     final l$$_set = $_set;
     final lOther$$_set = other.$_set;
     if (_$data.containsKey('_set') != other._$data.containsKey('_set')) {
@@ -11178,9 +34319,11 @@ class Input$user_updates {
 
   @override
   int get hashCode {
+    final l$$_inc = $_inc;
     final l$$_set = $_set;
     final l$where = where;
     return Object.hashAll([
+      _$data.containsKey('_inc') ? l$$_inc : const {},
       _$data.containsKey('_set') ? l$$_set : const {},
       l$where,
     ]);
@@ -11197,9 +34340,11 @@ abstract class CopyWith$Input$user_updates<TRes> {
       _CopyWithStubImpl$Input$user_updates;
 
   TRes call({
+    Input$user_inc_input? $_inc,
     Input$user_set_input? $_set,
     Input$user_bool_exp? where,
   });
+  CopyWith$Input$user_inc_input<TRes> get $_inc;
   CopyWith$Input$user_set_input<TRes> get $_set;
   CopyWith$Input$user_bool_exp<TRes> get where;
 }
@@ -11218,15 +34363,24 @@ class _CopyWithImpl$Input$user_updates<TRes>
   static const _undefined = <dynamic, dynamic>{};
 
   TRes call({
+    Object? $_inc = _undefined,
     Object? $_set = _undefined,
     Object? where = _undefined,
   }) =>
       _then(Input$user_updates._({
         ..._instance._$data,
+        if ($_inc != _undefined) '_inc': ($_inc as Input$user_inc_input?),
         if ($_set != _undefined) '_set': ($_set as Input$user_set_input?),
         if (where != _undefined && where != null)
           'where': (where as Input$user_bool_exp),
       }));
+  CopyWith$Input$user_inc_input<TRes> get $_inc {
+    final local$$_inc = _instance.$_inc;
+    return local$$_inc == null
+        ? CopyWith$Input$user_inc_input.stub(_then(_instance))
+        : CopyWith$Input$user_inc_input(local$$_inc, (e) => call($_inc: e));
+  }
+
   CopyWith$Input$user_set_input<TRes> get $_set {
     final local$$_set = _instance.$_set;
     return local$$_set == null
@@ -11247,14 +34401,329 @@ class _CopyWithStubImpl$Input$user_updates<TRes>
   TRes _res;
 
   call({
+    Input$user_inc_input? $_inc,
     Input$user_set_input? $_set,
     Input$user_bool_exp? where,
   }) =>
       _res;
+  CopyWith$Input$user_inc_input<TRes> get $_inc =>
+      CopyWith$Input$user_inc_input.stub(_res);
   CopyWith$Input$user_set_input<TRes> get $_set =>
       CopyWith$Input$user_set_input.stub(_res);
   CopyWith$Input$user_bool_exp<TRes> get where =>
       CopyWith$Input$user_bool_exp.stub(_res);
+}
+
+class Input$user_var_pop_order_by {
+  factory Input$user_var_pop_order_by({Enum$order_by? token}) =>
+      Input$user_var_pop_order_by._({
+        if (token != null) r'token': token,
+      });
+
+  Input$user_var_pop_order_by._(this._$data);
+
+  factory Input$user_var_pop_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
+    }
+    return Input$user_var_pop_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_var_pop_order_by<Input$user_var_pop_order_by>
+      get copyWith => CopyWith$Input$user_var_pop_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_var_pop_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    return Object.hashAll([_$data.containsKey('token') ? l$token : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$user_var_pop_order_by<TRes> {
+  factory CopyWith$Input$user_var_pop_order_by(
+    Input$user_var_pop_order_by instance,
+    TRes Function(Input$user_var_pop_order_by) then,
+  ) = _CopyWithImpl$Input$user_var_pop_order_by;
+
+  factory CopyWith$Input$user_var_pop_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_var_pop_order_by;
+
+  TRes call({Enum$order_by? token});
+}
+
+class _CopyWithImpl$Input$user_var_pop_order_by<TRes>
+    implements CopyWith$Input$user_var_pop_order_by<TRes> {
+  _CopyWithImpl$Input$user_var_pop_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_var_pop_order_by _instance;
+
+  final TRes Function(Input$user_var_pop_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? token = _undefined}) =>
+      _then(Input$user_var_pop_order_by._({
+        ..._instance._$data,
+        if (token != _undefined) 'token': (token as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$user_var_pop_order_by<TRes>
+    implements CopyWith$Input$user_var_pop_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_var_pop_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? token}) => _res;
+}
+
+class Input$user_var_samp_order_by {
+  factory Input$user_var_samp_order_by({Enum$order_by? token}) =>
+      Input$user_var_samp_order_by._({
+        if (token != null) r'token': token,
+      });
+
+  Input$user_var_samp_order_by._(this._$data);
+
+  factory Input$user_var_samp_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
+    }
+    return Input$user_var_samp_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_var_samp_order_by<Input$user_var_samp_order_by>
+      get copyWith => CopyWith$Input$user_var_samp_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_var_samp_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    return Object.hashAll([_$data.containsKey('token') ? l$token : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$user_var_samp_order_by<TRes> {
+  factory CopyWith$Input$user_var_samp_order_by(
+    Input$user_var_samp_order_by instance,
+    TRes Function(Input$user_var_samp_order_by) then,
+  ) = _CopyWithImpl$Input$user_var_samp_order_by;
+
+  factory CopyWith$Input$user_var_samp_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_var_samp_order_by;
+
+  TRes call({Enum$order_by? token});
+}
+
+class _CopyWithImpl$Input$user_var_samp_order_by<TRes>
+    implements CopyWith$Input$user_var_samp_order_by<TRes> {
+  _CopyWithImpl$Input$user_var_samp_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_var_samp_order_by _instance;
+
+  final TRes Function(Input$user_var_samp_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? token = _undefined}) =>
+      _then(Input$user_var_samp_order_by._({
+        ..._instance._$data,
+        if (token != _undefined) 'token': (token as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$user_var_samp_order_by<TRes>
+    implements CopyWith$Input$user_var_samp_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_var_samp_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? token}) => _res;
+}
+
+class Input$user_variance_order_by {
+  factory Input$user_variance_order_by({Enum$order_by? token}) =>
+      Input$user_variance_order_by._({
+        if (token != null) r'token': token,
+      });
+
+  Input$user_variance_order_by._(this._$data);
+
+  factory Input$user_variance_order_by.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    if (data.containsKey('token')) {
+      final l$token = data['token'];
+      result$data['token'] =
+          l$token == null ? null : fromJson$Enum$order_by((l$token as String));
+    }
+    return Input$user_variance_order_by._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Enum$order_by? get token => (_$data['token'] as Enum$order_by?);
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    if (_$data.containsKey('token')) {
+      final l$token = token;
+      result$data['token'] =
+          l$token == null ? null : toJson$Enum$order_by(l$token);
+    }
+    return result$data;
+  }
+
+  CopyWith$Input$user_variance_order_by<Input$user_variance_order_by>
+      get copyWith => CopyWith$Input$user_variance_order_by(
+            this,
+            (i) => i,
+          );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is Input$user_variance_order_by) ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (_$data.containsKey('token') != other._$data.containsKey('token')) {
+      return false;
+    }
+    if (l$token != lOther$token) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    return Object.hashAll([_$data.containsKey('token') ? l$token : const {}]);
+  }
+}
+
+abstract class CopyWith$Input$user_variance_order_by<TRes> {
+  factory CopyWith$Input$user_variance_order_by(
+    Input$user_variance_order_by instance,
+    TRes Function(Input$user_variance_order_by) then,
+  ) = _CopyWithImpl$Input$user_variance_order_by;
+
+  factory CopyWith$Input$user_variance_order_by.stub(TRes res) =
+      _CopyWithStubImpl$Input$user_variance_order_by;
+
+  TRes call({Enum$order_by? token});
+}
+
+class _CopyWithImpl$Input$user_variance_order_by<TRes>
+    implements CopyWith$Input$user_variance_order_by<TRes> {
+  _CopyWithImpl$Input$user_variance_order_by(
+    this._instance,
+    this._then,
+  );
+
+  final Input$user_variance_order_by _instance;
+
+  final TRes Function(Input$user_variance_order_by) _then;
+
+  static const _undefined = <dynamic, dynamic>{};
+
+  TRes call({Object? token = _undefined}) =>
+      _then(Input$user_variance_order_by._({
+        ..._instance._$data,
+        if (token != _undefined) 'token': (token as Enum$order_by?),
+      }));
+}
+
+class _CopyWithStubImpl$Input$user_variance_order_by<TRes>
+    implements CopyWith$Input$user_variance_order_by<TRes> {
+  _CopyWithStubImpl$Input$user_variance_order_by(this._res);
+
+  TRes _res;
+
+  call({Enum$order_by? token}) => _res;
 }
 
 enum Enum$ENUM_ROLE_constraint { ENUM_ROLE_pkey, $unknown }
@@ -11277,12 +34746,14 @@ Enum$ENUM_ROLE_constraint fromJson$Enum$ENUM_ROLE_constraint(String value) {
   }
 }
 
-enum Enum$ENUM_ROLE_enum { admin, user, $unknown }
+enum Enum$ENUM_ROLE_enum { admin, persona, user, $unknown }
 
 String toJson$Enum$ENUM_ROLE_enum(Enum$ENUM_ROLE_enum e) {
   switch (e) {
     case Enum$ENUM_ROLE_enum.admin:
       return r'admin';
+    case Enum$ENUM_ROLE_enum.persona:
+      return r'persona';
     case Enum$ENUM_ROLE_enum.user:
       return r'user';
     case Enum$ENUM_ROLE_enum.$unknown:
@@ -11294,6 +34765,8 @@ Enum$ENUM_ROLE_enum fromJson$Enum$ENUM_ROLE_enum(String value) {
   switch (value) {
     case r'admin':
       return Enum$ENUM_ROLE_enum.admin;
+    case r'persona':
+      return Enum$ENUM_ROLE_enum.persona;
     case r'user':
       return Enum$ENUM_ROLE_enum.user;
     default:
@@ -11372,6 +34845,7 @@ Enum$app_constraint fromJson$Enum$app_constraint(String value) {
 }
 
 enum Enum$app_select_column {
+  message,
   name,
   storage_bucket,
   version_latest,
@@ -11381,6 +34855,8 @@ enum Enum$app_select_column {
 
 String toJson$Enum$app_select_column(Enum$app_select_column e) {
   switch (e) {
+    case Enum$app_select_column.message:
+      return r'message';
     case Enum$app_select_column.name:
       return r'name';
     case Enum$app_select_column.storage_bucket:
@@ -11396,6 +34872,8 @@ String toJson$Enum$app_select_column(Enum$app_select_column e) {
 
 Enum$app_select_column fromJson$Enum$app_select_column(String value) {
   switch (value) {
+    case r'message':
+      return Enum$app_select_column.message;
     case r'name':
       return Enum$app_select_column.name;
     case r'storage_bucket':
@@ -11410,6 +34888,7 @@ Enum$app_select_column fromJson$Enum$app_select_column(String value) {
 }
 
 enum Enum$app_update_column {
+  message,
   name,
   storage_bucket,
   version_latest,
@@ -11419,6 +34898,8 @@ enum Enum$app_update_column {
 
 String toJson$Enum$app_update_column(Enum$app_update_column e) {
   switch (e) {
+    case Enum$app_update_column.message:
+      return r'message';
     case Enum$app_update_column.name:
       return r'name';
     case Enum$app_update_column.storage_bucket:
@@ -11434,6 +34915,8 @@ String toJson$Enum$app_update_column(Enum$app_update_column e) {
 
 Enum$app_update_column fromJson$Enum$app_update_column(String value) {
   switch (value) {
+    case r'message':
+      return Enum$app_update_column.message;
     case r'name':
       return Enum$app_update_column.name;
     case r'storage_bucket':
@@ -11444,6 +34927,186 @@ Enum$app_update_column fromJson$Enum$app_update_column(String value) {
       return Enum$app_update_column.version_supported;
     default:
       return Enum$app_update_column.$unknown;
+  }
+}
+
+enum Enum$chat_constraint { chat_pkey, $unknown }
+
+String toJson$Enum$chat_constraint(Enum$chat_constraint e) {
+  switch (e) {
+    case Enum$chat_constraint.chat_pkey:
+      return r'chat_pkey';
+    case Enum$chat_constraint.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$chat_constraint fromJson$Enum$chat_constraint(String value) {
+  switch (value) {
+    case r'chat_pkey':
+      return Enum$chat_constraint.chat_pkey;
+    default:
+      return Enum$chat_constraint.$unknown;
+  }
+}
+
+enum Enum$chat_select_column {
+  chat_id,
+  created_at,
+  is_typing,
+  persona_id,
+  updated_at,
+  user_id,
+  $unknown
+}
+
+String toJson$Enum$chat_select_column(Enum$chat_select_column e) {
+  switch (e) {
+    case Enum$chat_select_column.chat_id:
+      return r'chat_id';
+    case Enum$chat_select_column.created_at:
+      return r'created_at';
+    case Enum$chat_select_column.is_typing:
+      return r'is_typing';
+    case Enum$chat_select_column.persona_id:
+      return r'persona_id';
+    case Enum$chat_select_column.updated_at:
+      return r'updated_at';
+    case Enum$chat_select_column.user_id:
+      return r'user_id';
+    case Enum$chat_select_column.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$chat_select_column fromJson$Enum$chat_select_column(String value) {
+  switch (value) {
+    case r'chat_id':
+      return Enum$chat_select_column.chat_id;
+    case r'created_at':
+      return Enum$chat_select_column.created_at;
+    case r'is_typing':
+      return Enum$chat_select_column.is_typing;
+    case r'persona_id':
+      return Enum$chat_select_column.persona_id;
+    case r'updated_at':
+      return Enum$chat_select_column.updated_at;
+    case r'user_id':
+      return Enum$chat_select_column.user_id;
+    default:
+      return Enum$chat_select_column.$unknown;
+  }
+}
+
+enum Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns {
+  is_typing,
+  $unknown
+}
+
+String
+    toJson$Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns(
+        Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns
+            e) {
+  switch (e) {
+    case Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns
+          .is_typing:
+      return r'is_typing';
+    case Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns
+          .$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns
+    fromJson$Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns(
+        String value) {
+  switch (value) {
+    case r'is_typing':
+      return Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns
+          .is_typing;
+    default:
+      return Enum$chat_select_column_chat_aggregate_bool_exp_bool_and_arguments_columns
+          .$unknown;
+  }
+}
+
+enum Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns {
+  is_typing,
+  $unknown
+}
+
+String
+    toJson$Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns(
+        Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns
+            e) {
+  switch (e) {
+    case Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns
+          .is_typing:
+      return r'is_typing';
+    case Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns
+          .$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns
+    fromJson$Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns(
+        String value) {
+  switch (value) {
+    case r'is_typing':
+      return Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns
+          .is_typing;
+    default:
+      return Enum$chat_select_column_chat_aggregate_bool_exp_bool_or_arguments_columns
+          .$unknown;
+  }
+}
+
+enum Enum$chat_update_column {
+  chat_id,
+  created_at,
+  is_typing,
+  persona_id,
+  updated_at,
+  user_id,
+  $unknown
+}
+
+String toJson$Enum$chat_update_column(Enum$chat_update_column e) {
+  switch (e) {
+    case Enum$chat_update_column.chat_id:
+      return r'chat_id';
+    case Enum$chat_update_column.created_at:
+      return r'created_at';
+    case Enum$chat_update_column.is_typing:
+      return r'is_typing';
+    case Enum$chat_update_column.persona_id:
+      return r'persona_id';
+    case Enum$chat_update_column.updated_at:
+      return r'updated_at';
+    case Enum$chat_update_column.user_id:
+      return r'user_id';
+    case Enum$chat_update_column.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$chat_update_column fromJson$Enum$chat_update_column(String value) {
+  switch (value) {
+    case r'chat_id':
+      return Enum$chat_update_column.chat_id;
+    case r'created_at':
+      return Enum$chat_update_column.created_at;
+    case r'is_typing':
+      return Enum$chat_update_column.is_typing;
+    case r'persona_id':
+      return Enum$chat_update_column.persona_id;
+    case r'updated_at':
+      return Enum$chat_update_column.updated_at;
+    case r'user_id':
+      return Enum$chat_update_column.user_id;
+    default:
+      return Enum$chat_update_column.$unknown;
   }
 }
 
@@ -11539,6 +35202,70 @@ Enum$file_select_column fromJson$Enum$file_select_column(String value) {
   }
 }
 
+enum Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns {
+  public,
+  $unknown
+}
+
+String
+    toJson$Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns(
+        Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns
+            e) {
+  switch (e) {
+    case Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns
+          .public:
+      return r'public';
+    case Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns
+          .$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns
+    fromJson$Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns(
+        String value) {
+  switch (value) {
+    case r'public':
+      return Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns
+          .public;
+    default:
+      return Enum$file_select_column_file_aggregate_bool_exp_bool_and_arguments_columns
+          .$unknown;
+  }
+}
+
+enum Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns {
+  public,
+  $unknown
+}
+
+String
+    toJson$Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns(
+        Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns
+            e) {
+  switch (e) {
+    case Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns
+          .public:
+      return r'public';
+    case Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns
+          .$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns
+    fromJson$Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns(
+        String value) {
+  switch (value) {
+    case r'public':
+      return Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns
+          .public;
+    default:
+      return Enum$file_select_column_file_aggregate_bool_exp_bool_or_arguments_columns
+          .$unknown;
+  }
+}
+
 enum Enum$file_update_column {
   file_id,
   name,
@@ -11584,6 +35311,204 @@ Enum$file_update_column fromJson$Enum$file_update_column(String value) {
       return Enum$file_update_column.user_id;
     default:
       return Enum$file_update_column.$unknown;
+  }
+}
+
+enum Enum$message_constraint { message_pkey, $unknown }
+
+String toJson$Enum$message_constraint(Enum$message_constraint e) {
+  switch (e) {
+    case Enum$message_constraint.message_pkey:
+      return r'message_pkey';
+    case Enum$message_constraint.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$message_constraint fromJson$Enum$message_constraint(String value) {
+  switch (value) {
+    case r'message_pkey':
+      return Enum$message_constraint.message_pkey;
+    default:
+      return Enum$message_constraint.$unknown;
+  }
+}
+
+enum Enum$message_select_column {
+  chat_id,
+  created_at,
+  file_id,
+  indexed,
+  message_id,
+  sender,
+  text,
+  updated_at,
+  $unknown
+}
+
+String toJson$Enum$message_select_column(Enum$message_select_column e) {
+  switch (e) {
+    case Enum$message_select_column.chat_id:
+      return r'chat_id';
+    case Enum$message_select_column.created_at:
+      return r'created_at';
+    case Enum$message_select_column.file_id:
+      return r'file_id';
+    case Enum$message_select_column.indexed:
+      return r'indexed';
+    case Enum$message_select_column.message_id:
+      return r'message_id';
+    case Enum$message_select_column.sender:
+      return r'sender';
+    case Enum$message_select_column.text:
+      return r'text';
+    case Enum$message_select_column.updated_at:
+      return r'updated_at';
+    case Enum$message_select_column.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$message_select_column fromJson$Enum$message_select_column(String value) {
+  switch (value) {
+    case r'chat_id':
+      return Enum$message_select_column.chat_id;
+    case r'created_at':
+      return Enum$message_select_column.created_at;
+    case r'file_id':
+      return Enum$message_select_column.file_id;
+    case r'indexed':
+      return Enum$message_select_column.indexed;
+    case r'message_id':
+      return Enum$message_select_column.message_id;
+    case r'sender':
+      return Enum$message_select_column.sender;
+    case r'text':
+      return Enum$message_select_column.text;
+    case r'updated_at':
+      return Enum$message_select_column.updated_at;
+    default:
+      return Enum$message_select_column.$unknown;
+  }
+}
+
+enum Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns {
+  indexed,
+  $unknown
+}
+
+String toJson$Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns(
+    Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns
+        e) {
+  switch (e) {
+    case Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns
+          .indexed:
+      return r'indexed';
+    case Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns
+          .$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns
+    fromJson$Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns(
+        String value) {
+  switch (value) {
+    case r'indexed':
+      return Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns
+          .indexed;
+    default:
+      return Enum$message_select_column_message_aggregate_bool_exp_bool_and_arguments_columns
+          .$unknown;
+  }
+}
+
+enum Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns {
+  indexed,
+  $unknown
+}
+
+String toJson$Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns(
+    Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns
+        e) {
+  switch (e) {
+    case Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns
+          .indexed:
+      return r'indexed';
+    case Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns
+          .$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns
+    fromJson$Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns(
+        String value) {
+  switch (value) {
+    case r'indexed':
+      return Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns
+          .indexed;
+    default:
+      return Enum$message_select_column_message_aggregate_bool_exp_bool_or_arguments_columns
+          .$unknown;
+  }
+}
+
+enum Enum$message_update_column {
+  chat_id,
+  created_at,
+  file_id,
+  indexed,
+  message_id,
+  sender,
+  text,
+  updated_at,
+  $unknown
+}
+
+String toJson$Enum$message_update_column(Enum$message_update_column e) {
+  switch (e) {
+    case Enum$message_update_column.chat_id:
+      return r'chat_id';
+    case Enum$message_update_column.created_at:
+      return r'created_at';
+    case Enum$message_update_column.file_id:
+      return r'file_id';
+    case Enum$message_update_column.indexed:
+      return r'indexed';
+    case Enum$message_update_column.message_id:
+      return r'message_id';
+    case Enum$message_update_column.sender:
+      return r'sender';
+    case Enum$message_update_column.text:
+      return r'text';
+    case Enum$message_update_column.updated_at:
+      return r'updated_at';
+    case Enum$message_update_column.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$message_update_column fromJson$Enum$message_update_column(String value) {
+  switch (value) {
+    case r'chat_id':
+      return Enum$message_update_column.chat_id;
+    case r'created_at':
+      return Enum$message_update_column.created_at;
+    case r'file_id':
+      return Enum$message_update_column.file_id;
+    case r'indexed':
+      return Enum$message_update_column.indexed;
+    case r'message_id':
+      return Enum$message_update_column.message_id;
+    case r'sender':
+      return Enum$message_update_column.sender;
+    case r'text':
+      return Enum$message_update_column.text;
+    case r'updated_at':
+      return Enum$message_update_column.updated_at;
+    default:
+      return Enum$message_update_column.$unknown;
   }
 }
 
@@ -11635,6 +35560,146 @@ Enum$order_by fromJson$Enum$order_by(String value) {
   }
 }
 
+enum Enum$persona_constraint { persona_persona_id_key, persona_pkey, $unknown }
+
+String toJson$Enum$persona_constraint(Enum$persona_constraint e) {
+  switch (e) {
+    case Enum$persona_constraint.persona_persona_id_key:
+      return r'persona_persona_id_key';
+    case Enum$persona_constraint.persona_pkey:
+      return r'persona_pkey';
+    case Enum$persona_constraint.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$persona_constraint fromJson$Enum$persona_constraint(String value) {
+  switch (value) {
+    case r'persona_persona_id_key':
+      return Enum$persona_constraint.persona_persona_id_key;
+    case r'persona_pkey':
+      return Enum$persona_constraint.persona_pkey;
+    default:
+      return Enum$persona_constraint.$unknown;
+  }
+}
+
+enum Enum$persona_select_column {
+  created_at,
+  description,
+  file_id,
+  name,
+  persona_id,
+  system_prompt,
+  updated_at,
+  user_id,
+  $unknown
+}
+
+String toJson$Enum$persona_select_column(Enum$persona_select_column e) {
+  switch (e) {
+    case Enum$persona_select_column.created_at:
+      return r'created_at';
+    case Enum$persona_select_column.description:
+      return r'description';
+    case Enum$persona_select_column.file_id:
+      return r'file_id';
+    case Enum$persona_select_column.name:
+      return r'name';
+    case Enum$persona_select_column.persona_id:
+      return r'persona_id';
+    case Enum$persona_select_column.system_prompt:
+      return r'system_prompt';
+    case Enum$persona_select_column.updated_at:
+      return r'updated_at';
+    case Enum$persona_select_column.user_id:
+      return r'user_id';
+    case Enum$persona_select_column.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$persona_select_column fromJson$Enum$persona_select_column(String value) {
+  switch (value) {
+    case r'created_at':
+      return Enum$persona_select_column.created_at;
+    case r'description':
+      return Enum$persona_select_column.description;
+    case r'file_id':
+      return Enum$persona_select_column.file_id;
+    case r'name':
+      return Enum$persona_select_column.name;
+    case r'persona_id':
+      return Enum$persona_select_column.persona_id;
+    case r'system_prompt':
+      return Enum$persona_select_column.system_prompt;
+    case r'updated_at':
+      return Enum$persona_select_column.updated_at;
+    case r'user_id':
+      return Enum$persona_select_column.user_id;
+    default:
+      return Enum$persona_select_column.$unknown;
+  }
+}
+
+enum Enum$persona_update_column {
+  created_at,
+  description,
+  file_id,
+  name,
+  persona_id,
+  system_prompt,
+  updated_at,
+  user_id,
+  $unknown
+}
+
+String toJson$Enum$persona_update_column(Enum$persona_update_column e) {
+  switch (e) {
+    case Enum$persona_update_column.created_at:
+      return r'created_at';
+    case Enum$persona_update_column.description:
+      return r'description';
+    case Enum$persona_update_column.file_id:
+      return r'file_id';
+    case Enum$persona_update_column.name:
+      return r'name';
+    case Enum$persona_update_column.persona_id:
+      return r'persona_id';
+    case Enum$persona_update_column.system_prompt:
+      return r'system_prompt';
+    case Enum$persona_update_column.updated_at:
+      return r'updated_at';
+    case Enum$persona_update_column.user_id:
+      return r'user_id';
+    case Enum$persona_update_column.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$persona_update_column fromJson$Enum$persona_update_column(String value) {
+  switch (value) {
+    case r'created_at':
+      return Enum$persona_update_column.created_at;
+    case r'description':
+      return Enum$persona_update_column.description;
+    case r'file_id':
+      return Enum$persona_update_column.file_id;
+    case r'name':
+      return Enum$persona_update_column.name;
+    case r'persona_id':
+      return Enum$persona_update_column.persona_id;
+    case r'system_prompt':
+      return Enum$persona_update_column.system_prompt;
+    case r'updated_at':
+      return Enum$persona_update_column.updated_at;
+    case r'user_id':
+      return Enum$persona_update_column.user_id;
+    default:
+      return Enum$persona_update_column.$unknown;
+  }
+}
+
 enum Enum$public_user_constraint { public_user_pkey, $unknown }
 
 String toJson$Enum$public_user_constraint(Enum$public_user_constraint e) {
@@ -11655,12 +35720,23 @@ Enum$public_user_constraint fromJson$Enum$public_user_constraint(String value) {
   }
 }
 
-enum Enum$public_user_select_column { message, number, user_id, $unknown }
+enum Enum$public_user_select_column {
+  file_id,
+  message,
+  name,
+  number,
+  user_id,
+  $unknown
+}
 
 String toJson$Enum$public_user_select_column(Enum$public_user_select_column e) {
   switch (e) {
+    case Enum$public_user_select_column.file_id:
+      return r'file_id';
     case Enum$public_user_select_column.message:
       return r'message';
+    case Enum$public_user_select_column.name:
+      return r'name';
     case Enum$public_user_select_column.number:
       return r'number';
     case Enum$public_user_select_column.user_id:
@@ -11673,8 +35749,12 @@ String toJson$Enum$public_user_select_column(Enum$public_user_select_column e) {
 Enum$public_user_select_column fromJson$Enum$public_user_select_column(
     String value) {
   switch (value) {
+    case r'file_id':
+      return Enum$public_user_select_column.file_id;
     case r'message':
       return Enum$public_user_select_column.message;
+    case r'name':
+      return Enum$public_user_select_column.name;
     case r'number':
       return Enum$public_user_select_column.number;
     case r'user_id':
@@ -11684,12 +35764,23 @@ Enum$public_user_select_column fromJson$Enum$public_user_select_column(
   }
 }
 
-enum Enum$public_user_update_column { message, number, user_id, $unknown }
+enum Enum$public_user_update_column {
+  file_id,
+  message,
+  name,
+  number,
+  user_id,
+  $unknown
+}
 
 String toJson$Enum$public_user_update_column(Enum$public_user_update_column e) {
   switch (e) {
+    case Enum$public_user_update_column.file_id:
+      return r'file_id';
     case Enum$public_user_update_column.message:
       return r'message';
+    case Enum$public_user_update_column.name:
+      return r'name';
     case Enum$public_user_update_column.number:
       return r'number';
     case Enum$public_user_update_column.user_id:
@@ -11702,8 +35793,12 @@ String toJson$Enum$public_user_update_column(Enum$public_user_update_column e) {
 Enum$public_user_update_column fromJson$Enum$public_user_update_column(
     String value) {
   switch (value) {
+    case r'file_id':
+      return Enum$public_user_update_column.file_id;
     case r'message':
       return Enum$public_user_update_column.message;
+    case r'name':
+      return Enum$public_user_update_column.name;
     case r'number':
       return Enum$public_user_update_column.number;
     case r'user_id':
@@ -11740,6 +35835,7 @@ Enum$user_constraint fromJson$Enum$user_constraint(String value) {
 enum Enum$user_select_column {
   created_at,
   role,
+  token,
   updated_at,
   user_id,
   user_phone,
@@ -11752,6 +35848,8 @@ String toJson$Enum$user_select_column(Enum$user_select_column e) {
       return r'created_at';
     case Enum$user_select_column.role:
       return r'role';
+    case Enum$user_select_column.token:
+      return r'token';
     case Enum$user_select_column.updated_at:
       return r'updated_at';
     case Enum$user_select_column.user_id:
@@ -11769,6 +35867,8 @@ Enum$user_select_column fromJson$Enum$user_select_column(String value) {
       return Enum$user_select_column.created_at;
     case r'role':
       return Enum$user_select_column.role;
+    case r'token':
+      return Enum$user_select_column.token;
     case r'updated_at':
       return Enum$user_select_column.updated_at;
     case r'user_id':
@@ -11783,6 +35883,7 @@ Enum$user_select_column fromJson$Enum$user_select_column(String value) {
 enum Enum$user_update_column {
   created_at,
   role,
+  token,
   updated_at,
   user_id,
   user_phone,
@@ -11795,6 +35896,8 @@ String toJson$Enum$user_update_column(Enum$user_update_column e) {
       return r'created_at';
     case Enum$user_update_column.role:
       return r'role';
+    case Enum$user_update_column.token:
+      return r'token';
     case Enum$user_update_column.updated_at:
       return r'updated_at';
     case Enum$user_update_column.user_id:
@@ -11812,6 +35915,8 @@ Enum$user_update_column fromJson$Enum$user_update_column(String value) {
       return Enum$user_update_column.created_at;
     case r'role':
       return Enum$user_update_column.role;
+    case r'token':
+      return Enum$user_update_column.token;
     case r'updated_at':
       return Enum$user_update_column.updated_at;
     case r'user_id':
@@ -11820,6 +35925,177 @@ Enum$user_update_column fromJson$Enum$user_update_column(String value) {
       return Enum$user_update_column.user_phone;
     default:
       return Enum$user_update_column.$unknown;
+  }
+}
+
+enum Enum$__TypeKind {
+  SCALAR,
+  OBJECT,
+  INTERFACE,
+  UNION,
+  ENUM,
+  INPUT_OBJECT,
+  LIST,
+  NON_NULL,
+  $unknown
+}
+
+String toJson$Enum$__TypeKind(Enum$__TypeKind e) {
+  switch (e) {
+    case Enum$__TypeKind.SCALAR:
+      return r'SCALAR';
+    case Enum$__TypeKind.OBJECT:
+      return r'OBJECT';
+    case Enum$__TypeKind.INTERFACE:
+      return r'INTERFACE';
+    case Enum$__TypeKind.UNION:
+      return r'UNION';
+    case Enum$__TypeKind.ENUM:
+      return r'ENUM';
+    case Enum$__TypeKind.INPUT_OBJECT:
+      return r'INPUT_OBJECT';
+    case Enum$__TypeKind.LIST:
+      return r'LIST';
+    case Enum$__TypeKind.NON_NULL:
+      return r'NON_NULL';
+    case Enum$__TypeKind.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$__TypeKind fromJson$Enum$__TypeKind(String value) {
+  switch (value) {
+    case r'SCALAR':
+      return Enum$__TypeKind.SCALAR;
+    case r'OBJECT':
+      return Enum$__TypeKind.OBJECT;
+    case r'INTERFACE':
+      return Enum$__TypeKind.INTERFACE;
+    case r'UNION':
+      return Enum$__TypeKind.UNION;
+    case r'ENUM':
+      return Enum$__TypeKind.ENUM;
+    case r'INPUT_OBJECT':
+      return Enum$__TypeKind.INPUT_OBJECT;
+    case r'LIST':
+      return Enum$__TypeKind.LIST;
+    case r'NON_NULL':
+      return Enum$__TypeKind.NON_NULL;
+    default:
+      return Enum$__TypeKind.$unknown;
+  }
+}
+
+enum Enum$__DirectiveLocation {
+  QUERY,
+  MUTATION,
+  SUBSCRIPTION,
+  FIELD,
+  FRAGMENT_DEFINITION,
+  FRAGMENT_SPREAD,
+  INLINE_FRAGMENT,
+  VARIABLE_DEFINITION,
+  SCHEMA,
+  SCALAR,
+  OBJECT,
+  FIELD_DEFINITION,
+  ARGUMENT_DEFINITION,
+  INTERFACE,
+  UNION,
+  ENUM,
+  ENUM_VALUE,
+  INPUT_OBJECT,
+  INPUT_FIELD_DEFINITION,
+  $unknown
+}
+
+String toJson$Enum$__DirectiveLocation(Enum$__DirectiveLocation e) {
+  switch (e) {
+    case Enum$__DirectiveLocation.QUERY:
+      return r'QUERY';
+    case Enum$__DirectiveLocation.MUTATION:
+      return r'MUTATION';
+    case Enum$__DirectiveLocation.SUBSCRIPTION:
+      return r'SUBSCRIPTION';
+    case Enum$__DirectiveLocation.FIELD:
+      return r'FIELD';
+    case Enum$__DirectiveLocation.FRAGMENT_DEFINITION:
+      return r'FRAGMENT_DEFINITION';
+    case Enum$__DirectiveLocation.FRAGMENT_SPREAD:
+      return r'FRAGMENT_SPREAD';
+    case Enum$__DirectiveLocation.INLINE_FRAGMENT:
+      return r'INLINE_FRAGMENT';
+    case Enum$__DirectiveLocation.VARIABLE_DEFINITION:
+      return r'VARIABLE_DEFINITION';
+    case Enum$__DirectiveLocation.SCHEMA:
+      return r'SCHEMA';
+    case Enum$__DirectiveLocation.SCALAR:
+      return r'SCALAR';
+    case Enum$__DirectiveLocation.OBJECT:
+      return r'OBJECT';
+    case Enum$__DirectiveLocation.FIELD_DEFINITION:
+      return r'FIELD_DEFINITION';
+    case Enum$__DirectiveLocation.ARGUMENT_DEFINITION:
+      return r'ARGUMENT_DEFINITION';
+    case Enum$__DirectiveLocation.INTERFACE:
+      return r'INTERFACE';
+    case Enum$__DirectiveLocation.UNION:
+      return r'UNION';
+    case Enum$__DirectiveLocation.ENUM:
+      return r'ENUM';
+    case Enum$__DirectiveLocation.ENUM_VALUE:
+      return r'ENUM_VALUE';
+    case Enum$__DirectiveLocation.INPUT_OBJECT:
+      return r'INPUT_OBJECT';
+    case Enum$__DirectiveLocation.INPUT_FIELD_DEFINITION:
+      return r'INPUT_FIELD_DEFINITION';
+    case Enum$__DirectiveLocation.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$__DirectiveLocation fromJson$Enum$__DirectiveLocation(String value) {
+  switch (value) {
+    case r'QUERY':
+      return Enum$__DirectiveLocation.QUERY;
+    case r'MUTATION':
+      return Enum$__DirectiveLocation.MUTATION;
+    case r'SUBSCRIPTION':
+      return Enum$__DirectiveLocation.SUBSCRIPTION;
+    case r'FIELD':
+      return Enum$__DirectiveLocation.FIELD;
+    case r'FRAGMENT_DEFINITION':
+      return Enum$__DirectiveLocation.FRAGMENT_DEFINITION;
+    case r'FRAGMENT_SPREAD':
+      return Enum$__DirectiveLocation.FRAGMENT_SPREAD;
+    case r'INLINE_FRAGMENT':
+      return Enum$__DirectiveLocation.INLINE_FRAGMENT;
+    case r'VARIABLE_DEFINITION':
+      return Enum$__DirectiveLocation.VARIABLE_DEFINITION;
+    case r'SCHEMA':
+      return Enum$__DirectiveLocation.SCHEMA;
+    case r'SCALAR':
+      return Enum$__DirectiveLocation.SCALAR;
+    case r'OBJECT':
+      return Enum$__DirectiveLocation.OBJECT;
+    case r'FIELD_DEFINITION':
+      return Enum$__DirectiveLocation.FIELD_DEFINITION;
+    case r'ARGUMENT_DEFINITION':
+      return Enum$__DirectiveLocation.ARGUMENT_DEFINITION;
+    case r'INTERFACE':
+      return Enum$__DirectiveLocation.INTERFACE;
+    case r'UNION':
+      return Enum$__DirectiveLocation.UNION;
+    case r'ENUM':
+      return Enum$__DirectiveLocation.ENUM;
+    case r'ENUM_VALUE':
+      return Enum$__DirectiveLocation.ENUM_VALUE;
+    case r'INPUT_OBJECT':
+      return Enum$__DirectiveLocation.INPUT_OBJECT;
+    case r'INPUT_FIELD_DEFINITION':
+      return Enum$__DirectiveLocation.INPUT_FIELD_DEFINITION;
+    default:
+      return Enum$__DirectiveLocation.$unknown;
   }
 }
 

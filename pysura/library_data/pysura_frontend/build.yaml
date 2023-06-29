@@ -19,6 +19,8 @@ targets:
               type: double
             timestamptz:
               type: String
+            uuid:
+              type: String
 
 # In terminal run the following command to generate graphql classes
 # dart run build_runner build

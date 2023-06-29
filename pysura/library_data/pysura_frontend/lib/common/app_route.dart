@@ -1,83 +1,58 @@
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-import '../pages/misc/splash/splash_page.dart';
-import '../pages/misc/splash/splash_page_controller.dart';
-import '../pages/misc/error_page.dart';
-import '../pages/misc/loading_page.dart';
-import '../pages/auth/login_page.dart';
-import '../pages/auth/login_page_controller.dart';
-import '../pages/main/main_page.dart';
-import '../pages/main/main_page_controller.dart';
-import '../pages/main/main_page_middleware.dart';
-import '../pages/main/home/home_page_controller.dart';
-import '../pages/main/action/action_page_controller.dart';
-import '../pages/main/settings/settings_page.dart';
-import '../pages/main/settings/settings_page_controller.dart';
+import '/pages/auth/login_page.dart';
+import '/pages/auth/login_page_provider.dart';
+import '/pages/main/home_page.dart';
+import '/pages/main/home_page_provider.dart';
+import '/pages/misc/splash_page.dart';
+import '/pages/misc/error_page.dart';
+import '/providers/auth_provider.dart';
 
-class AppRoute {
-  static const String kSplashRoute = '/splash';
-  static const String kLoginRoute = '/login';
-  static const String kMainRoute = '/main/';
-  static const String kMainTabRoute = '/main/:tab';
-  static const String kSettingsRoute = '/settings';
-  static const String kErrorRoute = '/error';
-  static const String kLoadingRoute = '/loading';
+const kSplashRoute = '/splash';
+const kLoginRoute = '/login';
+const kHomeRoute = '/home';
 
-  static const String kHomeTab = 'home';
-  static const String kActionTab = 'action';
-
-  static List<GetPage> setupPageRoutes() {
-    return [
-      GetPage(
-        name: kSplashRoute,
-        page: () => const SplashPage(),
-        binding: BindingsBuilder(() {
-          Get.put(SplashPageController());
-        }),
+final router = GoRouter(
+  initialLocation: kSplashRoute,
+  redirect: (context, state) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (authProvider.user == null) {
+      return kLoginRoute;
+    }
+    return null;
+  },
+  errorPageBuilder: (context, state) => const MaterialPage(
+    child: ErrorPage(),
+  ),
+  routes: [
+    // Splash route
+    GoRoute(
+      path: kSplashRoute,
+      pageBuilder: (context, state) => const MaterialPage(
+        child: SplashPage(),
       ),
-      GetPage(
-        name: kLoginRoute,
-        page: () => const LoginPage(),
-        binding: BindingsBuilder(() {
-          Get.put(LoginPageController());
-        }),
+    ),
+    // Login route
+    GoRoute(
+      path: kLoginRoute,
+      pageBuilder: (context, state) => MaterialPage(
+        child: ChangeNotifierProvider(
+          create: (context) => LoginPageProvider(context),
+          child: const LoginPage(),
+        ),
       ),
-      GetPage(
-        name: kMainRoute,
-        page: () => const MainPage(),
-        binding: BindingsBuilder(() {
-          Get.put(HomePageController());
-          Get.put(ActionPageController());
-          Get.put(MainPageController());
-        }),
+    ),
+    // Home route
+    GoRoute(
+      path: kHomeRoute,
+      pageBuilder: (context, state) => MaterialPage(
+        child: ChangeNotifierProvider(
+          create: (context) => HomePageProvider(context: context),
+          child: const HomePage(),
+        ),
       ),
-      GetPage(
-        name: kMainTabRoute,
-        page: () => const MainPage(),
-        binding: BindingsBuilder(() {
-          Get.put(HomePageController());
-          Get.put(ActionPageController());
-          Get.put(MainPageController());
-        }),
-        middlewares: [
-          MainPageMiddleware(),
-        ],
-      ),
-      GetPage(
-        name: kSettingsRoute,
-        page: () => const SettingsPage(),
-        binding: BindingsBuilder(() {
-          Get.put(SettingsPageController());
-        }),
-      ),
-      GetPage(
-        name: kErrorRoute,
-        page: () => const ErrorPage(),
-      ),
-      GetPage(
-        name: kLoadingRoute,
-        page: () => const LoadingPage(),
-      ),
-    ];
-  }
-}
+    ),
+  ],
+);

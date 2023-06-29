@@ -4,4 +4,6 @@ class Constants {
   static const bool kEnableWebsockets = true;
   static const String kGraphqlHttpUrl = "HTTPS_URL";
   static const String kGraphqlWsUrl = "WS_URL";
+
+  static const int kMinWidth = 600;
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../common/app_color.dart';
-
 class SecondaryButton extends StatelessWidget {
   final String title;
   final TextStyle textStyle;
@@ -13,11 +11,12 @@ class SecondaryButton extends StatelessWidget {
     required this.title,
     required this.textStyle,
     this.onPressed,
-    required this.isBusy,
+    this.isBusy = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return OutlinedButton(
       onPressed: isBusy ? null : onPressed,
       style: ButtonStyle(
@@ -26,12 +25,14 @@ class SecondaryButton extends StatelessWidget {
         textStyle: MaterialStateProperty.all(textStyle),
       ),
       child: isBusy
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: AppColor.primary,
-                strokeWidth: 2,
+          ? Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: colorScheme.primary,
+                  strokeWidth: 2,
+                ),
               ),
             )
           : Text(title),

@@ -1,10 +1,5 @@
-query ActionQueryPing($message: String, $number: Int) {
-    action_query_ping(action_query_ping_input: {message: $message, number: $number}) {
-        response_name
-        response_value
-        errors {
-            message
-        }
+query ActionPing($user_id: String!) {
+    action_query_ping(action_query_ping_input: {user_id: $user_id}) {
         data {
             message
             number
@@ -12,32 +7,10 @@ query ActionQueryPing($message: String, $number: Int) {
     }
 }
 
-mutation ActionMutationPong($message: String!, $number: Int!) {
-    action_mutation_pong(action_mutation_pong_input: {message: $message, number: $number}) {
-        response_name
-        response_value
+mutation ActionPong($user_id: String!, $message: String!, $number: Int!) {
+    action_mutation_pong(action_mutation_pong_input: {user_id: $user_id, message: $message, number: $number}) {
         data {
-            message
-            number
-        }
-        errors {
-            message
+            user_id
         }
     }
 }
-
-#
-#mutation ActionUploadFile(fileData: String!, fileName: String!, fileType: String!) {
-#    action_upload_file(action_upload_file_input: {fileData: $fileData, fileName: $fileName, fileType: $fileType}) {
-#        response_name
-#        response_value
-#        data {
-#            fileData
-#            fileName
-#            fileType
-#        }
-#        errors {
-#            message
-#        }
-#    }
-#}

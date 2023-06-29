@@ -459,8 +459,12 @@
         "name": "ActionMutationPongInput",
         "fields": [
           {
-            "name": "message",
+            "name": "user_id",
             "type": "String!"
+          },
+          {
+            "name": "message",
+            "type": "String"
           },
           {
             "name": "number",
@@ -472,12 +476,8 @@
         "name": "ActionQueryPingInput",
         "fields": [
           {
-            "name": "message",
-            "type": "String"
-          },
-          {
-            "name": "number",
-            "type": "Int"
+            "name": "user_id",
+            "type": "String!"
           }
         ]
       },
@@ -533,12 +533,8 @@
         "name": "ActionMutationPongOutputData",
         "fields": [
           {
-            "name": "message",
+            "name": "user_id",
             "type": "String!"
-          },
-          {
-            "name": "number",
-            "type": "Int!"
           }
         ]
       },
@@ -594,7 +590,7 @@
         "fields": [
           {
             "name": "message",
-            "type": "String!"
+            "type": "String"
           },
           {
             "name": "number",

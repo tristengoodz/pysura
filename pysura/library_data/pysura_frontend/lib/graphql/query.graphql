@@ -1,0 +1,6 @@
+query QueryData($user_id: String!) {
+    public_user_by_pk(user_id: $user_id) {
+        message
+        number
+    }
+}
