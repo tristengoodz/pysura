@@ -40,7 +40,7 @@ async def action_mutation_pong(_: Request,
                                ))):
     # (BUSINESS-LOGIC-START) - DO NOT DELETE THIS LINE!
     user_id = provider.user_identity.user_id
-    provider.graphql.execute(
+    response = provider.graphql.execute(
         query="""mutation Pong($user_id: String = "", $message: String = "", $number: Int = 10) {
   update_public_user_by_pk(pk_columns: {user_id: $user_id}, _set: {message: $message, number: $number}) {
     user_id
@@ -52,10 +52,11 @@ async def action_mutation_pong(_: Request,
             "number": action_mutation_pong_input.number
         }
     )
+    data = response["data"]["update_public_user_by_pk"]
+
     response = ActionMutationPongOutput(
         data=ActionMutationPongOutputData(
-            message=action_mutation_pong_input.message,
-            number=action_mutation_pong_input.number
+            **data
         ),
         nodes=None,
         response_name=ApiResponse.SUCCESS.name,

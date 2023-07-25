@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/app_text_style.dart';
-import '../../../common/constants.dart';
-import '../../../common/app_color.dart';
+import '/common/constants.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: Center(
         child: Column(
@@ -16,13 +16,13 @@ class SplashPage extends StatelessWidget {
           children: [
             Text(
               '${Constants.kAppName} is loading...',
-              style: AppTextStyle.bodyMedium,
+              style: textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32.0),
               child: LinearProgressIndicator(
-                color: AppColor.primary,
+                color: colorScheme.primary,
               ),
             ),
           ],

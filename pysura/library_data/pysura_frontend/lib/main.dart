@@ -1,65 +1,67 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:url_strategy/url_strategy.dart';
 
+import 'common/app_config.dart';
 import 'common/app_route.dart';
 import 'common/app_theme.dart';
-import 'controllers/auth_controller.dart';
-import 'controllers/graphql_controller.dart';
-import 'controllers/data_controller.dart';
-import 'controllers/theme_controller.dart';
-import 'widgets/graphql_provider_widget.dart';
-import 'pages/misc/error_page.dart';
-import 'pages/main/main_page_controller.dart';
+import 'providers/auth_provider.dart';
+import 'providers/graphql_provider.dart';
+import 'providers/theme_provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  /// Init Hive
+  await AppConfig.init();
+
+  /// Remove # from web url path
+  if (kIsWeb) {
+    setPathUrlStrategy();
+  }
+
   /// Init Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  /// Inject Common Controllers
-  Get.put(AuthController());
-  Get.put(GraphQLController());
-  Get.put(DataController());
-  Get.put(ThemeController());
-
-  runApp(const GraphQLProviderWidget(
-    child: MyApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => GraphqlProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
-    return Obx(
-      () {
-        return GetMaterialApp(
-          theme: AppTheme.fromSeedColor(
-            themeController.seedColor,
+    return Consumer<ThemeProvider>(
+      builder: (_, themeProvider, __) {
+        final isDarkMode = themeProvider.isDarkMode;
+        final seedColor = themeProvider.seedColor;
+        return ChangeNotifierProvider(
+          create: (context) => AuthProvider(
+            context: context,
+            goRouter: router,
           ),
-          darkTheme: AppTheme.fromSeedColor(
-            themeController.seedColor,
-            darkMode: true,
-          ),
-          themeMode:
-              themeController.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          debugShowCheckedModeBanner: false,
-          initialRoute: AppRoute.kSplashRoute,
-          unknownRoute: GetPage(
-            name: AppRoute.kErrorRoute,
-            page: () => const ErrorPage(),
-          ),
-          getPages: AppRoute.setupPageRoutes(),
-          initialBinding: BindingsBuilder(
-            () {
-              Get.put(MainPageController());
-            },
+          child: MaterialApp.router(
+            theme: AppTheme.fromSeedColor(
+              seedColor,
+            ),
+            darkTheme: AppTheme.fromSeedColor(
+              seedColor,
+              darkMode: true,
+            ),
+            themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            debugShowCheckedModeBanner: false,
+            routerConfig: router,
           ),
         );
       },

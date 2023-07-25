@@ -1,24 +1,39 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../common/constants.dart';
-import '../common/utils.dart';
+import '/common/constants.dart';
+import '/common/utils.dart';
 
-class GraphQLController extends GetxController {
-  final _client = Rxn<GraphQLClient>();
+class GraphqlProvider extends ChangeNotifier {
+  GraphQLClient? _client;
   GraphQLClient? get client {
-    if (_client.value == null) {
-      client = _graphqlClient();
-    }
-    return _client.value;
+    _client ??= _graphqlClient();
+    return _client;
   }
 
-  set client(GraphQLClient? value) => _client.value = value;
+  set client(GraphQLClient? value) {
+    _client = value;
+    notifyListeners();
+  }
 
-  final _token = Rxn<String>();
-  String? get token => _token.value;
-  set token(String? value) => _token.value = value;
+  String? _token;
+  String? get token => _token;
+  set token(String? value) {
+    _token = value;
+    notifyListeners();
+  }
+
+  GraphqlProvider() {
+    appLog("GraphQLProvider created");
+    client = _graphqlClient();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    appLog("GraphQLProvider disposed");
+  }
 
   GraphQLClient _graphqlClient() {
     final httpLink = HttpLink(Constants.kGraphqlHttpUrl);
@@ -56,16 +71,10 @@ class GraphQLController extends GetxController {
     );
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    appLog("GraphqlController onInit");
-    client = _graphqlClient();
-  }
-
   Future<String> getToken() async {
     var user = FirebaseAuth.instance.currentUser;
     if (user == null) {
+      appLog('user is null');
       return "";
     }
 
